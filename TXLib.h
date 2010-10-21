@@ -154,6 +154,79 @@ namespace TX {
 //! \endcond Namespaces
 //=============================================================================
 
+// Function prototypes for actual library code. Most of TX::tx... calls are
+// only wrappers. This is done so because when a programmer calls some function
+// wrong, GCC generates error in three lines: (1) name of function containing
+// the error, (2) location of function which is called wrong, (3) "at this point
+// in file" message pointing to actual error line. In some frequently used IDEs,
+// when a programmer clicks to line (2), IDE opens TXLib.h code opens and points
+// to function declaration. This is frequently makes a programmer to think that
+// he found error in TXLib.h. So, the wrappers contain specific comments about
+// this is actually his error, not TXLib.h. A programmer should always click
+// to "at this point in file" message, but beginners don't know about this.
+
+int         _txExtractColor (COLORREF color, COLORREF component);
+COLORREF    _txRGB2HSL (COLORREF rgbColor);
+COLORREF    _txHSL2RGB (COLORREF hslColor);
+bool        _txCreateWindow (double sizeX, double sizeY, bool centered);
+bool        _txOK();
+POINT       _txGetExtent();
+int         _txGetExtentX();
+int         _txGetExtentY();
+bool        _txSetDefaults();
+bool        _txSetColor (COLORREF color, int thickness);
+bool        _txColor (double red, double green, double blue);
+COLORREF    _txGetColor();
+bool        _txSetFillColor (COLORREF color);
+bool        _txFillColor (double red, double green, double blue);
+COLORREF    _txGetFillColor();
+bool        _txSetROP2 (int mode);
+bool        _txClear();
+bool        _txSetPixel (double x, double y, COLORREF color);
+bool        _txPixel (double x, double y, double red, double green, double blue);
+COLORREF    _txGetPixel (double x, double y);
+bool        _txLine (double x0, double y0, double x1, double y1);
+bool        _txRectangle (double x0, double y0, double x1, double y1);
+bool        _txPolygon (POINT* points, int numPoints);
+bool        _txEllipse (double x0, double y0, double x1, double y1);
+bool        _txCircle (double x, double y, double r); bool       txArc (double x0, double y0, double x1, double y1, double startAngle, double totalAngle);
+bool        _txArc (double x0, double y0, double x1, double y1, double startAngle, double totalAngle);
+bool        _txPie (double x0, double y0, double x1, double y1, double startAngle, double totalAngle);
+bool        _txChord (double x0, double y0, double x1, double y1, double startAngle, double totalAngle);
+bool        _txTextOut (double x, double y, const char text[]);
+bool        _txSelectFont (const char* name, double sizeY, double sizeX, int bold, bool italic, bool underline, bool strikeout);
+SIZE        _txGetTextExtent (const char* text);
+int         _txGetTextExtentX (const char* text);
+int         _txGetTextExtentY (const char* text);
+bool        _txSetTextAlign (unsigned align);
+LOGFONT*    _txFontExist (const char* name);
+bool        _txFloodFill (double x, double y, COLORREF color, DWORD mode);
+bool        _txSelectRegion (double x0, double y0, double x1, double y1);
+bool        _txSelectObject (HGDIOBJ obj);
+int         _txBegin();
+int         _txEnd();
+bool        _txUpdateWindow (bool update);
+bool        _txTextCursor (bool blink);
+HDC         _txCreateCompatibleDC (double sizeX, double sizeY, HBITMAP bitmap);
+HDC         _txLoadImage (LPCTSTR filename);
+bool        _txDeleteDC (HDC dc);
+bool        _txBitBlt (HDC dest, double xDest, double yDest, double width, double height, HDC src, double xSrc, double ySrc, DWORD rOp);
+bool        _txTransparentBlt (HDC dest, double xDest, double yDest, double width, double height,
+                               HDC src, double xSrc, double ySrc, COLORREF transColor);
+bool        _txAlphaBlend (HDC dest, double xDest, double yDest, double width, double height,
+                           HDC src, double xSrc, double ySrc, double alpha);
+double      _txMouseX();
+double      _txMouseY();
+int         _txMouseButtons();
+const char* _txInputBox (const char* text, const char* caption, const char* input);
+HDC         _txDC();
+HWND        _txWindow();
+bool        _txLock (bool wait);
+bool        _txUnlock();
+const char* _txVersion();
+bool        _txSleep (int time);
+bool        _txPlaySound (const char* filename, DWORD mode);
+
 //=============================================================================
 //! \name    Цвета
 //=============================================================================
@@ -245,9 +318,13 @@ COLORREF RGB (red,       //!< Количество красного цвета в интервале [0; 255]
 //! \endcode
 //-----------------------------------------------------------------------------
 
-int txExtractColor (COLORREF color,     //!< Смешанный цвет
+int txExtractColor // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+                   (COLORREF color,     //!< Смешанный цвет
                     COLORREF component  //!< Извлекаемая компонента, см. \ref txColors
-                    );
+                    )
+    {
+    return _txExtractColor (color, component);
+    }
 
 //---------------------------------------------------------------------------
 //! \ingroup Drawing
@@ -274,8 +351,12 @@ int txExtractColor (COLORREF color,     //!< Смешанный цвет
 //! \endcode
 //-----------------------------------------------------------------------------
 
-COLORREF txRGB2HSL (COLORREF rgbColor   //!< Преобразуемый цвет в формате RGB
-                    );
+COLORREF txRGB2HSL // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+                   (COLORREF rgbColor   //!< Преобразуемый цвет в формате RGB
+                    )
+    {
+    return _txRGB2HSL (rgbColor);
+    }
 
 //---------------------------------------------------------------------------
 //! \ingroup Drawing
@@ -304,17 +385,21 @@ COLORREF txRGB2HSL (COLORREF rgbColor   //!< Преобразуемый цвет в формате RGB
 //! \endcode
 //-----------------------------------------------------------------------------
 
-COLORREF txHSL2RGB (COLORREF hslColor   //!< Преобразуемый цвет в формате HSL
-                    );
+COLORREF txHSL2RGB // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+                   (COLORREF hslColor   //!< Преобразуемый цвет в формате HSL
+                    )
+    {
+    return _txHSL2RGB (hslColor);
+    }
 
 //=============================================================================
-//  \name    Инициализация и параметры рисования
+//  \name    Инициализация библиотеки и параметры рисования
 //=============================================================================
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
 //! \brief   Создание окна рисования
-//! \return  Успех операции
+//! \return  Если операция была успешна - true, иначе - false.
 //! \see     txOk()
 //! \examples
 //! \code
@@ -323,10 +408,14 @@ COLORREF txHSL2RGB (COLORREF hslColor   //!< Преобразуемый цвет в формате HSL
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool  txCreateWindow (double sizeX,        //!< Размер окна по горизонтали (в пикселях)
-                      double sizeY,        //!< Размер окна по горизонтали (в пикселях)
-                      bool centered = true //!< Центрирование окна на дисплее
-                      );
+bool txCreateWindow // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+                    (double sizeX,        //!< Размер окна по горизонтали (в пикселях)
+                     double sizeY,        //!< Размер окна по горизонтали (в пикселях)
+                     bool centered = true //!< Центрирование окна на дисплее
+                     )
+    {
+    return _txCreateWindow (sizeX, sizeY, centered);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
@@ -344,7 +433,10 @@ bool  txCreateWindow (double sizeX,        //!< Размер окна по горизонтали (в пи
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool  txOK();
+bool txOK() // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+    {
+    return _txOK();
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
@@ -359,7 +451,10 @@ bool  txOK();
 //! \endcode
 //-----------------------------------------------------------------------------
 
-POINT txGetExtent();
+POINT txGetExtent() // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+    {
+    return _txGetExtent();
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
@@ -373,7 +468,10 @@ POINT txGetExtent();
 //! \endcode
 //-----------------------------------------------------------------------------
 
-int txGetExtentX();
+int txGetExtentX() // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+    {
+    return _txGetExtentX();
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
@@ -388,7 +486,10 @@ int txGetExtentX();
 //! \endcode
 //-----------------------------------------------------------------------------
 
-int txGetExtentY();
+int txGetExtentY() // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+    {
+    return _txGetExtentY();
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
@@ -400,7 +501,7 @@ int txGetExtentY();
 //!          - Шрифт - Системный шрифт, цвет белый (TX_WHITE)
 //!          - Логическая растровая операция - копирование цвета (R2_COPYPEN)
 //!
-//! \return  Успех операции.
+//! \return  Если операция была успешна - true, иначе - false.
 //! \see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), \ref txColors, RGB()
 //!          txSelectFont(), txSelectRegion(), txSetROP2()
 //! \examples
@@ -409,12 +510,15 @@ int txGetExtentY();
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool txSetDefaults();
+bool txSetDefaults() // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+    {
+    return _txSetDefaults();
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
 //! \brief   Устанавливает текущий цвет и толщину линий, цвет текста.
-//! \return  Успех операции.
+//! \return  Если операция была успешна - true, иначе - false.
 //! \see     txColor(), txGetColor(), txFillColor(), txGetFillColor(), \ref txColors, RGB()
 //! \examples
 //! \code
@@ -423,14 +527,18 @@ bool txSetDefaults();
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool txSetColor (COLORREF color,   //!< Цвет линий и текста, см. \ref txColors, RGB()
+bool txSetColor // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+                (COLORREF color,   //!< Цвет линий и текста, см. \ref txColors, RGB()
                  int thickness = 1 //!< Толщина линий
-                 );
+                 )
+    {
+    return _txSetColor (color, thickness);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
 //! \brief   Устанавливает текущий цвет линий и текста.
-//! \return  Успех операции.
+//! \return  Если операция была успешна - true, иначе - false.
 //! \see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor()
 //! \examples
 //! \code
@@ -438,10 +546,14 @@ bool txSetColor (COLORREF color,   //!< Цвет линий и текста, см. \ref txColors, 
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool txColor (double red,     //!< Количество красного цвета в интервале [0; 1]
+bool txColor // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+             (double red,     //!< Количество красного цвета в интервале [0; 1]
               double green,   //!< Количество зеленого цвета в интервале [0; 1]
               double blue     //!< Количество синего цвета в интервале [0; 1]
-              );
+              )
+    {
+    return _txColor (red, green, blue);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
@@ -454,12 +566,15 @@ bool txColor (double red,     //!< Количество красного цвета в интервале [0; 1]
 //! \endcode
 //-----------------------------------------------------------------------------
 
-COLORREF txGetColor();
+COLORREF txGetColor() // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+    {
+    return _txGetColor();
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
 //! \brief   Устанавливает текущий цвет заполнения фигур.
-//! \return  Успех операции.
+//! \return  Если операция была успешна - true, иначе - false.
 //! \see     txFillColor(), txGetFillColor(), txColor(), txGetColor(), \ref txColors, RGB()
 //! \examples
 //! \code
@@ -468,13 +583,17 @@ COLORREF txGetColor();
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool txSetFillColor (COLORREF color  //!< Цвет заполнения, см. \ref txColors, RGB()
-                     );
+bool txSetFillColor // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+                    (COLORREF color  //!< Цвет заполнения, см. \ref txColors, RGB()
+                     )
+    {
+    return _txSetFillColor (color);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
 //! \brief   Устанавливает текущий цвет заполнения фигур.
-//! \return  Успех операции.
+//! \return  Если операция была успешна - true, иначе - false.
 //! \see     txSetFillColor(), txGetFillColor(), txSetColor(), txGetColor()
 //! \examples
 //! \code
@@ -482,10 +601,14 @@ bool txSetFillColor (COLORREF color  //!< Цвет заполнения, см. \ref txColors, RG
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool txFillColor (double red,   //!< Количество красного цвета в интервале [0; 1]
+bool txFillColor // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+                 (double red,   //!< Количество красного цвета в интервале [0; 1]
                   double green, //!< Количество зеленого цвета в интервале [0; 1]
                   double blue   //!< Количество синего цвета в интервале [0; 1]
-                  );
+                  )
+    {
+    return _txFillColor (red, green, blue);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
@@ -498,7 +621,10 @@ bool txFillColor (double red,   //!< Количество красного цвета в интервале [0; 1
 //! \endcode
 //-----------------------------------------------------------------------------
 
-COLORREF txGetFillColor();
+COLORREF txGetFillColor() // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+    {
+    return _txGetFillColor();
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
@@ -543,8 +669,12 @@ COLORREF txGetFillColor();
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool txSetROP2 (int mode         //!< Режим смешивания цветов
-                );
+bool txSetROP2 // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+               (int mode         //!< Режим смешивания цветов
+                )
+    {
+    return _txSetROP2 (mode);
+    }
 
 //=============================================================================
 //  \name    Фигуры
@@ -553,7 +683,7 @@ bool txSetROP2 (int mode         //!< Режим смешивания цветов
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
 //! \brief   Стирает холст текущим цветом заполнения.
-//! \return  Успех операции.
+//! \return  Если операция была успешна - true, иначе - false.
 //! \see     txSetFillColor(), txFillColor(), txGetFillColor(), \ref txColors, RGB()
 //! \examples
 //! \code
@@ -561,12 +691,15 @@ bool txSetROP2 (int mode         //!< Режим смешивания цветов
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool  txClear();
+bool txClear() // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+    {
+    return _txClear();
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
 //! \brief   Рисует пиксель (точку на экране).
-//! \return  Успех операции.
+//! \return  Если операция была успешна - true, иначе - false.
 //! \see     txPixel(), txGetPixel(), \ref txColors, RGB()
 //! \examples
 //! \code
@@ -575,15 +708,19 @@ bool  txClear();
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool  txSetPixel (double x,      //!< Х-координата точки
-                  double y,      //!< Y-координата точки
-                  COLORREF color //!< Цвет точки, см. \ref txColors, RGB()
-                  );
+bool txSetPixel // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+                (double x,      //!< Х-координата точки
+                 double y,      //!< Y-координата точки
+                 COLORREF color //!< Цвет точки, см. \ref txColors, RGB()
+                 )
+    {
+    return _txSetPixel (x, y, color);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
 //! \brief   Рисует пиксель (точку на экране).
-//! \return  Успех операции.
+//! \return  Если операция была успешна - true, иначе - false.
 //! \see     txSetPixel(), txGetPixel()
 //! \examples
 //! \code
@@ -591,12 +728,16 @@ bool  txSetPixel (double x,      //!< Х-координата точки
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool  txPixel (double x,         //!< Х-координата точки
-               double y,         //!< Y-координата точки
-               double red,       //!< Количество красного цвета в интервале [0; 1]
-               double green,     //!< Количество зеленого цвета в интервале [0; 1]
-               double blue       //!< Количество синего цвета в интервале [0; 1]
-               );
+bool txPixel // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+             (double x,         //!< Х-координата точки
+              double y,         //!< Y-координата точки
+              double red,       //!< Количество красного цвета в интервале [0; 1]
+              double green,     //!< Количество зеленого цвета в интервале [0; 1]
+              double blue       //!< Количество синего цвета в интервале [0; 1]
+              )
+    {
+    return _txPixel (x, y, red, green, blue);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
@@ -611,15 +752,19 @@ bool  txPixel (double x,         //!< Х-координата точки
 //! \endcode
 //-----------------------------------------------------------------------------
 
-COLORREF txGetPixel (double x,  //!< Х-координата точки
+COLORREF txGetPixel // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+                    (double x,  //!< Х-координата точки
                      double y   //!< Y-координата точки
-                     );
+                     )
+    {
+    return _txGetPixel (x, y);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
 //! \brief   Рисует линию.
 //!          Цвет и толщина линии задается функцией txSetColor().
-//! \return  Успех операции.
+//! \return  Если операция была успешна - true, иначе - false.
 //! \see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), \ref txColors, RGB()
 //!          txLine(), txRectangle(), txPolygon(), txEllipse(), txCircle(), txArc(), txPie(), txChord()
 //! \examples
@@ -628,17 +773,21 @@ COLORREF txGetPixel (double x,  //!< Х-координата точки
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool  txLine (double x0,        //!< X-координата начальной точки
-              double y0,        //!< Y-координата начальной точки
-              double x1,        //!< X-координата конечной точки
-              double y1         //!< Y-координата конечной точки
-              );
+bool txLine // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+            (double x0,        //!< X-координата начальной точки
+             double y0,        //!< Y-координата начальной точки
+             double x1,        //!< X-координата конечной  точки
+             double y1         //!< Y-координата конечной  точки
+             )
+    {
+    return _txLine (x0, y0, x1, y1);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
 //! \brief   Рисует прямоугольник.
 //!          Цвет и толщина линий задается функцией txSetColor(), цвет заполнения - txSetFillColor().
-//! \return  Успех операции.
+//! \return  Если операция была успешна - true, иначе - false.
 //! \see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), \ref txColors, RGB()
 //!          txLine(), txRectangle(), txPolygon(), txEllipse(), txCircle(), txArc(), txPie(), txChord()
 //! \examples
@@ -647,17 +796,21 @@ bool  txLine (double x0,        //!< X-координата начальной точки
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool  txRectangle (double x0,   //!< X-координата верхнего левого угла
-                   double y0,   //!< Y-координата верхнего левого угла
-                   double x1,   //!< X-координата нижнего правого угла
-                   double y1    //!< Y-координата нижнего правого угла
-                   );
+bool txRectangle // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+                 (double x0,   //!< X-координата верхнего левого угла
+                  double y0,   //!< Y-координата верхнего левого угла
+                  double x1,   //!< X-координата нижнего правого угла
+                  double y1    //!< Y-координата нижнего правого угла
+                  )
+    {
+    return _txRectangle (x0, y0, x1, y1);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
 //! \brief   Рисует ломаную линию или многоугольник.
 //!          Цвет и толщина линий задается функцией txSetColor(), цвет заполнения - txSetFillColor().
-//! \return  Успех операции.
+//! \return  Если операция была успешна - true, иначе - false.
 //! \see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), \ref txColors, RGB()
 //!          txLine(), txRectangle(), txPolygon(), txEllipse(), txCircle(), txArc(), txPie(), txChord()
 //! \examples
@@ -667,15 +820,19 @@ bool  txRectangle (double x0,   //!< X-координата верхнего левого угла
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool  txPolygon (POINT* points, //!< Массив структур POINT с координатами точек
-                 int npoints    //!< Количество точек в массиве
-                 );
+bool txPolygon // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+               (POINT* points, //!< Массив структур POINT с координатами точек
+                int numPoints  //!< Количество точек в массиве
+                )
+    {
+    return _txPolygon (points, numPoints);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
 //! \brief   Рисует эллипс.
 //!          Цвет и толщина линий задается функцией txSetColor(), цвет заполнения - txSetFillColor().
-//! \return  Успех операции.
+//! \return  Если операция была успешна - true, иначе - false.
 //! \see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), \ref txColors, RGB()
 //!          txLine(), txRectangle(), txPolygon(), txEllipse(), txCircle(), txArc(), txPie(), txChord()
 //! \examples
@@ -684,17 +841,21 @@ bool  txPolygon (POINT* points, //!< Массив структур POINT с координатами точек
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool  txEllipse (double x0,     //!< X-координата верхнего левого угла описанного прямоугольника
-                 double y0,     //!< Y-координата верхнего левого угла описанного прямоугольника
-                 double x1,     //!< X-координата нижнего правого угла описанного прямоугольника
-                 double y1      //!< Y-координата нижнего правого угла описанного прямоугольника
-                 );
+bool txEllipse // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+               (double x0,     //!< X-координата верхнего левого угла описанного прямоугольника
+                double y0,     //!< Y-координата верхнего левого угла описанного прямоугольника
+                double x1,     //!< X-координата нижнего правого угла описанного прямоугольника
+                double y1      //!< Y-координата нижнего правого угла описанного прямоугольника
+                )
+    {
+    return _txEllipse (x0, y0, x1, y1);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
 //! \brief   Рисует окружность или круг.
 //!          Цвет и толщина линий задается функцией txSetColor(), цвет заполнения - txSetFillColor().
-//! \return  Успех операции.
+//! \return  Если операция была успешна - true, иначе - false.
 //! \see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), \ref txColors, RGB()
 //!          txLine(), txRectangle(), txPolygon(), txEllipse(), txCircle(), txArc(), txPie(), txChord()
 //! \examples
@@ -703,16 +864,20 @@ bool  txEllipse (double x0,     //!< X-координата верхнего левого угла описанног
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool  txCircle (double x,       //!< Х-координата центра
-                double y,       //!< Y-координата центра
-                double r        //!< Радиус
-                );
+bool txCircle // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+              (double x,       //!< Х-координата центра
+               double y,       //!< Y-координата центра
+               double r        //!< Радиус
+               )
+    {
+    return _txCircle (x, y, r);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
 //! \brief   Рисует дугу эллипса.
 //!          Цвет и толщина линий задается функцией txSetColor(), цвет заполнения - txSetFillColor().
-//! \return  Успех операции.
+//! \return  Если операция была успешна - true, иначе - false.
 //! \see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), \ref txColors, RGB()
 //!          txLine(), txRectangle(), txPolygon(), txEllipse(), txCircle(), txArc(), txPie(), txChord()
 //! \examples
@@ -721,20 +886,24 @@ bool  txCircle (double x,       //!< Х-координата центра
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool  txArc (double x0,         //!< X-координата верхнего левого угла прямоугольника,
-                                //!<   описанного вокруг эллипса, содержащего дугу
-             double y0,         //!< Y-координата верхнего левого угла прямоугольника
-             double x1,         //!< X-координата нижнего правого угла прямоугольника
-             double y1,         //!< Y-координата нижнего правого угла прямоугольника
-             double startAngle, //!< Угол между направлением оси OX и началом дуги (в градусах)
-             double totalAngle  //!< Величина дуги (в градусах)
-             );
+bool txArc // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+           (double x0,         //!< X-координата верхнего левого угла прямоугольника,
+                               //!<   описанного вокруг эллипса, содержащего дугу
+            double y0,         //!< Y-координата верхнего левого угла прямоугольника
+            double x1,         //!< X-координата нижнего правого угла прямоугольника
+            double y1,         //!< Y-координата нижнего правого угла прямоугольника
+            double startAngle, //!< Угол между направлением оси OX и началом дуги (в градусах)
+            double totalAngle  //!< Величина дуги (в градусах)
+            )
+    {
+    return _txArc (x0, y0, x1, y1, startAngle, totalAngle);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
 //! \brief   Рисует сектор эллипса.
 //!          Цвет и толщина линий задается функцией txSetColor(), цвет заполнения - txSetFillColor().
-//! \return  Успех операции.
+//! \return  Если операция была успешна - true, иначе - false.
 //! \see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), \ref txColors, RGB()
 //!          txLine(), txRectangle(), txPolygon(), txEllipse(), txCircle(), txArc(), txPie(), txChord()
 //! \examples
@@ -743,20 +912,24 @@ bool  txArc (double x0,         //!< X-координата верхнего левого угла прямоугол
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool  txPie (double x0,         //!< X-координата верхнего левого угла прямоугольника,
-                                //!<   описанного вокруг эллипса, содержащего сектор
-             double y0,         //!< Y-координата верхнего левого угла прямоугольника
-             double x1,         //!< X-координата нижнего правого угла прямоугольника
-             double y1,         //!< Y-координата нижнего правого угла прямоугольника
-             double startAngle, //!< Угол между направлением оси OX и началом сектора (в градусах)
-             double totalAngle  //!< Величина сектора (в градусах)
-             );
+bool txPie // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+           (double x0,         //!< X-координата верхнего левого угла прямоугольника,
+                               //!<   описанного вокруг эллипса, содержащего сектор
+            double y0,         //!< Y-координата верхнего левого угла прямоугольника
+            double x1,         //!< X-координата нижнего правого угла прямоугольника
+            double y1,         //!< Y-координата нижнего правого угла прямоугольника
+            double startAngle, //!< Угол между направлением оси OX и началом сектора (в градусах)
+            double totalAngle  //!< Величина сектора (в градусах)
+            )
+    {
+    return _txPie (x0, y0, x1, y1, startAngle, totalAngle);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
 //! \brief   Рисует хорду эллипса.
 //!          Цвет и толщина линий задается функцией txSetColor(), цвет заполнения - txSetFillColor().
-//! \return  Успех операции.
+//! \return  Если операция была успешна - true, иначе - false.
 //! \see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), \ref txColors, RGB()
 //!          txLine(), txRectangle(), txPolygon(), txEllipse(), txCircle(), txArc(), txPie(), txChord()
 //! \examples
@@ -765,14 +938,18 @@ bool  txPie (double x0,         //!< X-координата верхнего левого угла прямоугол
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool  txChord (double x0,         //!< X-координата верхнего левого угла прямоугольника,
-                                  //!<   описанного вокруг эллипса, содержащего хорду
-               double y0,         //!< Y-координата верхнего левого угла прямоугольника
-               double x1,         //!< X-координата нижнего правого угла прямоугольника
-               double y1,         //!< Y-координата нижнего правого угла прямоугольника
-               double startAngle, //!< Угол между направлением оси OX и началом хорды (в градусах)
-               double totalAngle  //!< Величина хорды (в градусах)
-               );
+bool txChord // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+             (double x0,         //!< X-координата верхнего левого угла прямоугольника,
+                                 //!<   описанного вокруг эллипса, содержащего хорду
+              double y0,         //!< Y-координата верхнего левого угла прямоугольника
+              double x1,         //!< X-координата нижнего правого угла прямоугольника
+              double y1,         //!< Y-координата нижнего правого угла прямоугольника
+              double startAngle, //!< Угол между направлением оси OX и началом хорды (в градусах)
+              double totalAngle  //!< Величина хорды (в градусах)
+              )
+    {
+    return _txChord (x0, y0, x1, y1, startAngle, totalAngle);
+    }
 
 //=============================================================================
 //  \name    Работа с текстом
@@ -782,7 +959,7 @@ bool  txChord (double x0,         //!< X-координата верхнего левого угла прямоуг
 //! \ingroup Drawing
 //! \brief   Рисует текст.
 //!          Цвет текста задается функцией txSetColor().
-//! \return  Успех операции.
+//! \return  Если операция была успешна - true, иначе - false.
 //! \see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), \ref txColors, RGB()
 //!          txTextOut(), txSelectFont(), txGetTextExtent(), txGetTextExtentX(), txGetTextExtentY()
 //! \examples
@@ -791,15 +968,19 @@ bool  txChord (double x0,         //!< X-координата верхнего левого угла прямоуг
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool  txTextOut (double x,         //!< Х-координата начальной точки текста
-                 double y,         //!< Y-координата начальной точки текста
-                 const char text[] //!< Текстовая строка
-                 );
+bool txTextOut // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+               (double x,         //!< Х-координата начальной точки текста
+                double y,         //!< Y-координата начальной точки текста
+                const char text[] //!< Текстовая строка
+                )
+    {
+    return _txTextOut (x, y, text);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
 //! \brief   Выбирает текущий шрифт.
-//! \return  Успех операции.
+//! \return  Если операция была успешна - true, иначе - false.
 //! \see     txTextOut()
 //! \examples
 //! \code
@@ -810,14 +991,18 @@ bool  txTextOut (double x,         //!< Х-координата начальной точки текста
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool  txSelectFont (const char* name,       //!< Название шрифта
-                    double sizeY,           //!< Высота букв (размер по Y)
-                    double sizeX = 0,       //!< Ширина букв
-                    int bold = FW_DONTCARE, //!< Жирность шрифта (от 0 до 1000)
-                    bool italic = false,    //!< Курсив
-                    bool underline = false, //!< Подчеркивание
-                    bool strikeout = false  //!< Зачеркивание
-                    );
+bool txSelectFont // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+                  (const char* name,       //!< Название шрифта
+                   double sizeY,           //!< Высота букв (размер по Y)
+                   double sizeX = 0,       //!< Ширина букв
+                   int bold = FW_DONTCARE, //!< Жирность шрифта (от 0 до 1000)
+                   bool italic = false,    //!< Курсив
+                   bool underline = false, //!< Подчеркивание
+                   bool strikeout = false  //!< Зачеркивание
+                   )
+    {
+    return _txSelectFont (name, sizeY, sizeX, bold, italic, underline, strikeout);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
@@ -831,8 +1016,12 @@ bool  txSelectFont (const char* name,       //!< Название шрифта
 //! \endcode
 //-----------------------------------------------------------------------------
 
-SIZE  txGetTextExtent (const char* text     //!< Текстовая строка
-                      );
+SIZE txGetTextExtent // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+                     (const char* text     //!< Текстовая строка
+                     )
+    {
+    return _txGetTextExtent (text);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
@@ -845,8 +1034,12 @@ SIZE  txGetTextExtent (const char* text     //!< Текстовая строка
 //! \endcode
 //-----------------------------------------------------------------------------
 
-int txGetTextExtentX (const char* text      //!< Текстовая строка
-                     );
+int txGetTextExtentX // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+                     (const char* text      //!< Текстовая строка
+                     )
+    {
+    return _txGetTextExtentX (text);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
@@ -859,8 +1052,12 @@ int txGetTextExtentX (const char* text      //!< Текстовая строка
 //! \endcode
 //-----------------------------------------------------------------------------
 
-int txGetTextExtentY (const char* text      //!< Текстовая строка
-                     );
+int txGetTextExtentY // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+                     (const char* text      //!< Текстовая строка
+                     )
+    {
+    return _txGetTextExtentY (text);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
@@ -882,7 +1079,7 @@ int txGetTextExtentY (const char* text      //!< Текстовая строка
 //!                              (текст лежит левее этой точки).  \endtr
 //!          \endtable
 //!
-//! \return  Успех операции.
+//! \return  Если операция была успешна - true, иначе - false.
 //! \see     txTextOut(), txSelectFont(), txGetTextExtent(), txGetTextExtentX(), txGetTextExtentY()
 //! \examples
 //! \code
@@ -892,8 +1089,12 @@ int txGetTextExtentY (const char* text      //!< Текстовая строка
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool txSetTextAlign (unsigned align = TA_CENTER | TA_BASELINE //!< Флаги выравнивания
-                     );
+bool txSetTextAlign // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+                    (unsigned align = TA_CENTER | TA_BASELINE //!< Флаги выравнивания
+                     )
+    {
+    return _txSetTextAlign (align);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
@@ -908,8 +1109,12 @@ bool txSetTextAlign (unsigned align = TA_CENTER | TA_BASELINE //!< Флаги выравни
 //! \endcode
 //-----------------------------------------------------------------------------
 
-LOGFONT* txFontExist (const char* name      //!< Название шрифта
-                     );
+LOGFONT* txFontExist // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+                     (const char* name      //!< Название шрифта
+                     )
+    {
+    return _txFontExist (name);
+    }
 
 //=============================================================================
 //  \name    Разное
@@ -926,7 +1131,7 @@ LOGFONT* txFontExist (const char* name      //!< Название шрифта
 //!          FLOODFILLSURFACE - Заливать область, куазанную цветом color.\n
 //!          FLOODFILLBORDER  - Заливать до границы, указанной цветом color.
 //!
-//! \return  Успех операции.
+//! \return  Если операция была успешна - true, иначе - false.
 //! \see     txSetFillColor(), txGetFillColor(), \ref txColors, RGB()
 //!          txLine(), txRectangle(), txPolygon(), txEllipse(), txCircle(), txArc(), txPie(), txChord()
 //! \examples
@@ -935,17 +1140,25 @@ LOGFONT* txFontExist (const char* name      //!< Название шрифта
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool txFloodFill (double x,                        //!< Х-координата точки начала заливки
+bool txFloodFill // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+                 (double x,                        //!< Х-координата точки начала заливки
                   double y,                        //!< Y-координата точки начала заливки
                   COLORREF color = TX_TRANSPARENT, //!< Цвет заливаемой области (TX_TRANSPARENT - автоопределение)
                   DWORD mode = FLOODFILLSURFACE    //!< Режим заливки (FLOODFILLSURFACE - заливка однородного фона)
-                  );
+                  )
+    {
+    return _txFloodFill (x, y, color, mode);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
 //! \brief   Устанавливает текущий прямоугольный регион отсечения.
 //!          Всё, что оказывается вне региона отсечения, не рисуется.
-//! \return  Успех операции.
+//!
+//!          Непрямоугольные регионы устанавливайте самостоятельно
+//!          через стандартные функции работы с регионами из Win32 API.
+//!
+//! \return  Если операция была успешна - true, иначе - false.
 //! \see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), \ref txColors, RGB()
 //! \examples
 //! \code
@@ -953,16 +1166,20 @@ bool txFloodFill (double x,                        //!< Х-координата точки начал
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool txSelectRegion (double x0,   //!< X-координата верхнего левого угла
+bool txSelectRegion // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+                    (double x0,   //!< X-координата верхнего левого угла
                      double y0,   //!< Y-координата верхнего левого угла
                      double x1,   //!< X-координата нижнего правого угла
                      double y1    //!< Y-координата нижнего правого угла
-                     );
+                     )
+    {
+    return _txSelectRegion (x0, y0, x1, y1);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Service
 //! \brief   Устанавливает текущий объект GDI.
-//! \return  Успех операции.
+//! \return  Если операция была успешна - true, иначе - false.
 //! \see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), \ref txColors, RGB()
 //!          txSelectFont(), txSelectRegion()
 //! \examples
@@ -972,8 +1189,12 @@ bool txSelectRegion (double x0,   //!< X-координата верхнего левого угла
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool txSelectObject (HGDIOBJ obj     //!< Дескриптор объекта GDI
-                     );
+bool txSelectObject // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+                    (HGDIOBJ obj     //!< Дескриптор объекта GDI
+                     )
+    {
+    return _txSelectObject (obj);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
@@ -996,7 +1217,10 @@ bool txSelectObject (HGDIOBJ obj     //!< Дескриптор объекта GDI
 //! \endcode
 //-----------------------------------------------------------------------------
 
-int txBegin();
+int txBegin() // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+    {
+    return _txBegin();
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
@@ -1018,7 +1242,10 @@ int txBegin();
 //! \endcode
 //-----------------------------------------------------------------------------
 
-int txEnd();
+int txEnd() // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+    {
+    return _txEnd();
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Service
@@ -1041,8 +1268,12 @@ int txEnd();
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool txUpdateWindow (bool update = true //!< Режим обновления (false - запретить обновление)
-                     );
+bool txUpdateWindow // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+                    (bool update = true //!< Режим обновления (false - запретить обновление)
+                     )
+    {
+    return _txUpdateWindow (update);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
@@ -1057,17 +1288,21 @@ bool txUpdateWindow (bool update = true //!< Режим обновления (false - запретить
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool txTextCursor (bool blink = true    //!< false - блокировать мигающий курсор
-                   );
+bool txTextCursor // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+                  (bool blink = true    //!< false - блокировать мигающий курсор
+                   )
+    {
+    return _txTextCursor (blink);
+    }
 
 //=============================================================================
-//  \name    Рисование в памяти (на "виртуальном экране") и загрузка изображений
+//  \name    Рисование в памяти (на "виртуальном холсте") и загрузка изображений
 //=============================================================================
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
 //! \brief   Создает дополнительный холст (контекст рисования, Device Context, DC) в памяти.
-//! \return  Дескриптор (обозначение) созданного холста (контекста рисования).
+//! \return  Дескриптор (системный номер, выданный Windows) созданного холста (контекста рисования).
 //! \see     txCreateWindow(), txCreateCompatibleDC(), txLoadImage(), txDeleteDC()
 //!
 //! \remarks Созданный контекст затем будет нужно удалить при помощи txDeleteDC().
@@ -1077,10 +1312,14 @@ bool txTextCursor (bool blink = true    //!< false - блокировать мигающий курсор
 //! \endcode
 //-----------------------------------------------------------------------------
 
-HDC txCreateCompatibleDC (double sizeX,            //!< Ширина холста
+HDC txCreateCompatibleDC // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+                         (double sizeX,            //!< Ширина холста
                           double sizeY,            //!< Высота холста
                           HBITMAP bitmap = NULL    //!< Bitmap associated with DC
-                          );
+                          )
+    {
+    return _txCreateCompatibleDC (sizeX, sizeY, bitmap);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
@@ -1088,21 +1327,28 @@ HDC txCreateCompatibleDC (double sizeX,            //!< Ширина холста
 //! \return  Дескриптор созданного контекста рисования в памяти, с загруженным изображением.
 //! \see     txCreateWindow(), txCreateCompatibleDC(), txLoadImage(), txDeleteDC(), txBitBlt(), txAlphaBlend(), txTransparentBlt(),
 //!
-//! \remarks Изображение загружается в создаваемый контекст рисования (холст),
-//!          который затем будет нужно удалить при помощи txDeleteDC().
+//! \remarks Изображение загружается в создаваемый контекст рисования в памяти ("виртуальный холст"),
+//!          который затем будет нужно ОБЯЗАТЕЛЬНО удалить при помощи txDeleteDC().
+//!
+//!          Изображения поддерживаются только в формате BMP. Если взять файл другого формата, например JPG, и переименовать
+//!          его со сменой расширения на BMP, то от этого формат не изменится. Такое изображение загружено не будет.
 //! \examples
 //! \code
 //!          [example]
 //! \endcode
 //-----------------------------------------------------------------------------
 
-HDC txLoadImage (LPCTSTR name      //!< Имя файла с изображением
-                 );
+HDC txLoadImage // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+                (LPCTSTR filename  //!< Имя файла с изображением в формате BMP
+                 )
+    {
+    return _txLoadImage (filename);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
 //! \brief   Уничтожает холст (контекст рисования, DC) в памяти.
-//! \return  Успех операции.
+//! \return  Если операция была успешна - true, иначе - false.
 //! \see     txCreateWindow(), txCreateCompatibleDC(), txLoadImage(), txDeleteDC()
 //! \examples
 //! \code
@@ -1110,8 +1356,12 @@ HDC txLoadImage (LPCTSTR name      //!< Имя файла с изображением
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool txDeleteDC (HDC dc            //!< Контекст рисования для уничтожения
-                 );
+bool txDeleteDC // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+                (HDC dc            //!< Контекст рисования для уничтожения
+                 )
+    {
+    return _txDeleteDC (dc);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
@@ -1139,7 +1389,7 @@ bool txDeleteDC (HDC dc            //!< Контекст рисования для уничтожения
 //!          \tr SRCPAINT    \td Приемник =  приемник | источник \endtr
 //!          \endtable
 //!
-//! \return  Успех операции.
+//! \return  Если операция была успешна - true, иначе - false.
 //! \see     txAlphaBlend(), txTransparentBlt(), txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), \ref txColors, RGB()
 //! \examples
 //! \code
@@ -1147,7 +1397,8 @@ bool txDeleteDC (HDC dc            //!< Контекст рисования для уничтожения
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool txBitBlt (HDC dest,           //!< Контекст назначения (куда копировать)
+bool txBitBlt // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+              (HDC dest,           //!< Контекст назначения (куда копировать)
                double xDest,       //!< Х-координата верхнего левого угла изображения-приемника
                double yDest,       //!< Y-координата верхнего левого угла изображения-приемника
                double width,       //!< Ширина копируемого изображения
@@ -1156,13 +1407,18 @@ bool txBitBlt (HDC dest,           //!< Контекст назначения (куда копировать)
                double xSrc,        //!< Х-координата верхнего левого угла изображения-источника
                double ySrc,        //!< Y-координата верхнего левого угла изображения-источника
                DWORD rOp = SRCCOPY //!< Растровая операция копирования
-               );
+               )
+    {
+    return _txBitBlt (dest, xDest, yDest, width, height,
+                      src,  xSrc,  ySrc,
+                      rOp);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
 //! \brief   Копирует изображение с одного холста (контекста рисования, DC) на другой
 //! \brief   с учетом прозрачности.
-//! \return  Успех операции.
+//! \return  Если операция была успешна - true, иначе - false.
 //! \see     txBitBlt(), txTransparentBlt(), txLoadImage(), txCreateCompatibleDC()
 //! \examples
 //! \code
@@ -1170,7 +1426,8 @@ bool txBitBlt (HDC dest,           //!< Контекст назначения (куда копировать)
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool txTransparentBlt (HDC dest,                 //!< Контекст назначения (куда копировать)
+bool txTransparentBlt // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+                      (HDC dest,                 //!< Контекст назначения (куда копировать)
                        double xDest,             //!< Х-координата верхнего левого угла изображения-приемника
                        double yDest,             //!< Y-координата верхнего левого угла изображения-приемника
                        double width,             //!< Ширина копируемого изображения
@@ -1179,7 +1436,12 @@ bool txTransparentBlt (HDC dest,                 //!< Контекст назначения (куда 
                        double xSrc,              //!< Х-координата верхнего левого угла изображения-источника
                        double ySrc,              //!< Y-координата верхнего левого угла изображения-источника
                        COLORREF transColor = TX_BLACK //!< Цвет, который будет считаться прозрачным
-                       );
+                       )
+    {
+    return _txTransparentBlt (dest, xDest, yDest, width, height,
+                              src,  xSrc,  ySrc,
+                              transColor);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Drawing
@@ -1196,7 +1458,11 @@ bool txTransparentBlt (HDC dest,                 //!< Контекст назначения (куда 
 //!          полной непрозрачности. При этом в прозрачных областях само изображение
 //!          (в канале RGB) должно быть черным.
 //!
-//! \return  Успех операции.
+//!          Стандартная функция AlphaBlend из Win32 API может масштабировать изображение.
+//!          В txAlphaBlend это убрано для упрощения использования. Если масштабирование нужно,
+//!          используйте стандартную функцию AlphaBlend (см. реализацию функции \ref _txAlhaBlend).
+//!
+//! \return  Если операция была успешна - true, иначе - false.
 //! \see     txBitBlt(), txTransparentBlt(), txLoadImage(), txCreateCompatibleDC()
 //! \examples
 //! \code
@@ -1204,7 +1470,8 @@ bool txTransparentBlt (HDC dest,                 //!< Контекст назначения (куда 
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool txAlphaBlend (HDC dest,                     //!< Контекст назначения (куда копировать)
+bool txAlphaBlend // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+                  (HDC dest,                     //!< Контекст назначения (куда копировать)
                    double xDest,                 //!< Х-координата верхнего левого угла изображения-приемника
                    double yDest,                 //!< Y-координата верхнего левого угла изображения-приемника
                    double width,                 //!< Ширина копируемого изображения
@@ -1214,7 +1481,12 @@ bool txAlphaBlend (HDC dest,                     //!< Контекст назначения (куда 
                    double ySrc,                  //!< Y-координата верхнего левого угла изображения-источника
                    double alpha = 1.0            //!< Общая прозрачность изображения, в дополнение к альфа-каналу.\n
                                                  //!<   (0 - все прозрачно, 1 - использовать только альфа-канал)
-                   );
+                   )
+    {
+    return _txBitBlt (dest, xDest, yDest, width, height,
+                      src,  xSrc,  ySrc,
+                      alpha);
+    }
 
 //=============================================================================
 //
@@ -1233,7 +1505,10 @@ bool txAlphaBlend (HDC dest,                     //!< Контекст назначения (куда 
 //! \endcode
 //-----------------------------------------------------------------------------
 
-double txMouseX();
+double txMouseX() // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+    {
+    return _txMouseX();
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Mouse
@@ -1246,7 +1521,10 @@ double txMouseX();
 //! \endcode
 //-----------------------------------------------------------------------------
 
-double txMouseY();
+double txMouseY() // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+    {
+    return _txMouseY();
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Mouse
@@ -1265,7 +1543,10 @@ double txMouseY();
 //! \endcode
 //-----------------------------------------------------------------------------
 
-int txMouseButtons();
+int txMouseButtons() // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+    {
+    return _txMouseButtons();
+    }
 
 //=============================================================================
 //
@@ -1286,10 +1567,14 @@ int txMouseButtons();
 //! \endcode
 //-----------------------------------------------------------------------------
 
-const char* txInputBox (const char* text    = NULL, //!< Текст с вопросом
+const char* txInputBox // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+                       (const char* text    = NULL, //!< Текст с вопросом
                         const char* caption = NULL, //!< Заголовок окна
                         const char* input   = NULL  //!< Значение строки по умолчанию
-                        );
+                        )
+    {
+    return _txInputBox (text, caption, input);
+    }
 
 //-----------------------------------------------------------------------------
 //! \brief   Базовый класс для диалоговых окон.
@@ -1617,7 +1902,7 @@ void* _tx_DLGTEMPLATE_Create (void* globalMem,     //!< Буфер памяти для заполне
 void* _tx_DLGTEMPLATE_Add (void* dlgTemplatePtr,   //!< Буфер памяти для заполнения
                            size_t bufsize,         //!< Размер буфера (0 - не проверяется)
                            DWORD style,            //!< Стиль контрола
-                           DWORD exStyle,          //!< Расширенный стиль
+                           DWORD exStyle,          //!< Расширенный стиль контрола
                            short x,                //!< Координата верхнего левого угла
                            short y,                //!< Координата нижнего правого угла
                            short cx,               //!< Размер по X
@@ -1635,7 +1920,7 @@ void* _tx_DLGTEMPLATE_Add (void* dlgTemplatePtr,   //!< Буфер памяти для заполне
 
 //-----------------------------------------------------------------------------
 //! \ingroup Service
-//! \brief   Возвращает дескриптор контекста рисования холста
+//! \brief   Возвращает дескриптор контекста рисования (DC) холста
 //! \return  Дескриптор контекста рисования холста
 //! \see     txWindow(), txLock(), txUnlock(), txGDI()
 //! \examples
@@ -1644,7 +1929,10 @@ void* _tx_DLGTEMPLATE_Add (void* dlgTemplatePtr,   //!< Буфер памяти для заполне
 //! \endcode
 //-----------------------------------------------------------------------------
 
-HDC  txDC();
+HDC txDC() // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+    {
+    return _txDC();
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Service
@@ -1657,11 +1945,14 @@ HDC  txDC();
 //! \endcode
 //-----------------------------------------------------------------------------
 
-HWND txWindow();
+HWND txWindow() // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+    {
+    return _txWindow();
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Service
-//! \brief   Блокировка холста (поверхности рисования).
+//! \brief   Блокировка холста (контекста рисования).
 //!
 //!          Перед вызовом любых функций Win32 GDI необходимо заблокировать
 //!          холст функцией txLock() и затем разблокировать с помощью txUnlock().
@@ -1672,7 +1963,8 @@ HWND txWindow();
 //!
 //!          txLock() использует EnterCriticalSection(), и физически
 //!          приостанавливает поток, обновляющий окно, так что надолго
-//!          блокировать нельзя.
+//!          блокировать нельзя. Иначе тормозится обработка оконных сообщений
+//!          и окно перестает реагировать на действия пользователя.
 //!
 //!          txLock()/txUnlock() - низкоуровневый механизм, он отличается от
 //!          высокоуровневого механизма txBegin()/txEnd()/txUpdateWindow(),
@@ -1687,9 +1979,13 @@ HWND txWindow();
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool txLock (bool wait = true          //!< Ожидать конца перерисовки окна
+bool txLock // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+            (bool wait = true          //!< Ожидать конца перерисовки окна
                                        //!< вспомогательным потоком
-            );
+            )
+    {
+    return _txLock (wait);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Service
@@ -1702,10 +1998,13 @@ bool txLock (bool wait = true          //!< Ожидать конца перерисовки окна
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool txUnlock();
+bool txUnlock() // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+    {
+    return _txUnlock();
+    }
 
 //! \cond    Internal
-template <typename T> inline T txUnlock (T value);
+template <typename T> inline T _txUnlock (T value); // Needed for txGDI() macro
 //! \endcond Internal
 
 //-----------------------------------------------------------------------------
@@ -1713,18 +2012,17 @@ template <typename T> inline T txUnlock (T value);
 //! \brief   Вызов функции Win32 GDI с автоматической блокировкой и разблокировкой
 //! \return  Значение, возвращаемое вызываемой функцией GDI.
 //! \param   cmd Команда GDI (возможно, возвращающая значение)
-//! \note    Если в вызове функции GDI используются запятые, то используйте
-//!          двойные скобки, чтобы получился один параметр, так как txGDI() все-таки макрос:
-//!          txGDI <b>((</b> Rectangle (txDC(), x1, y1, x2, y2) <b>))</b>;
+//! \note    Если в вызове функции GDI используются запятые, то используйте двойные
+//!          скобки, чтобы получился один параметр, так как txGDI() все-таки макрос.
 //! \see     txDC(), txLock(), txUnlock(), txGDI()
 //! \hideinitializer
 //! \examples
 //! \code
-//!          [example]
+//!          txGDI <b>((</b> Rectangle (txDC(), x1, y1, x2, y2) <b>))</b>;
 //! \endcode
 //-----------------------------------------------------------------------------
 
-#define txGDI( cmd ) txUnlock ((txLock(), (cmd)))
+#define txGDI( cmd ) _txUnlock ( (_txLock (true), (cmd)) )
 
 //-----------------------------------------------------------------------------
 //! \ingroup Technical
@@ -1736,11 +2034,14 @@ template <typename T> inline T txUnlock (T value);
 //! \endcode
 //-----------------------------------------------------------------------------
 
-const char* txVersion();
+const char* txVersion() // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+    {
+    return _txVersion();
+    }
 
 //=============================================================================
 //
-// \name     Misc functions
+// \name     Miscellanous functions
 //
 //=============================================================================
 
@@ -1771,10 +2072,12 @@ const char* txVersion();
 //-----------------------------------------------------------------------------
 
 template <typename T>
-inline bool In (T x, //!< Проверяемый параметр
-                T a, //!< Левая граница (включительно)
-                T b  //!< Правая граница (включительно)
-                )
+inline
+bool In // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+        (T x, //!< Проверяемый параметр
+         T a, //!< Левая граница (включительно)
+         T b  //!< Правая граница (включительно)
+         )
     {
     return a <= x && x <= b;
     }
@@ -1789,11 +2092,13 @@ inline bool In (T x, //!< Проверяемый параметр
 //! \endcode
 //-----------------------------------------------------------------------------
 
-inline bool In (const COORD& pt,       //!< Проверяемая точка
+inline bool In // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+               (const COORD& pt,       //!< Проверяемая точка
                 const SMALL_RECT& rect //!< Прямоугольник
                 )
     {
-    return In (pt.X, rect.Left, rect.Right) && In (pt.Y, rect.Top, rect.Bottom);
+    return In (pt.X, rect.Left, rect.Right) &&
+           In (pt.Y, rect.Top,  rect.Bottom);
     }
 
 //-----------------------------------------------------------------------------
@@ -1852,12 +2157,16 @@ inline bool In (const COORD& pt,       //!< Проверяемая точка
 //! \see     txUpdateWindow()
 //! \examples
 //! \code
-//!          [example]
+//!          txSleep (500); // Поспать полсекунды
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool txSleep (int time   //!< Задержка в миллисекундах
-              );
+bool txSleep // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+             (int time   //!< Задержка в миллисекундах
+              )
+    {
+    return _txSleep (time);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Misc
@@ -1881,17 +2190,21 @@ bool txSleep (int time   //!< Задержка в миллисекундах
 //!                                  для данного типа звуковых файлов. \endtr
 //!          \endtable
 //!
-//! \return  Успех операции.
+//! \return  Если операция была успешна - true, иначе - false.
 //! \examples
 //! \code
 //!          [example]
 //! \endcode
 //-----------------------------------------------------------------------------
 
-bool txPlaySound (const char* filename = NULL, //!< Имя звукового файла.
+bool txPlaySound // ЭТО НЕ ОШИБКА В TXLib.h! См. "Описания - Пример: Простейший" в TXLib Help!
+                 (const char* filename = NULL, //!< Имя звукового файла.
                                                //!< Если NULL - останавливает звук.
                   DWORD mode = SND_ASYNC       //!< Режим воспроизведения
-                  );
+                  )
+    {
+    return _txPlaySound (filename, mode);
+    }
 
 //-----------------------------------------------------------------------------
 //! \ingroup Misc
@@ -1905,6 +2218,7 @@ bool txPlaySound (const char* filename = NULL, //!< Имя звукового файла.
 //-----------------------------------------------------------------------------
 
 #ifdef FOR_DOXYGEN_ONLY
+
 bool TX_THROW (msg                             //!< Сообщение в формате printf().\n
                                                //!< Можно использовать %d, %s и т.д., при этом
                                                //!< части сообщения <b>разделяются символом
@@ -1912,6 +2226,7 @@ bool TX_THROW (msg                             //!< Сообщение в формате printf()
                                                //!<
                                                //!< msg может быть NULL.
          );
+
 #endif
 
 //-----------------------------------------------------------------------------
@@ -2058,7 +2373,7 @@ const int    _TX_WINDOW_UPDATE_INTERVAL   = 10;
 //!          Эта константа автоматически обновляется при обновлении версии.
 //! \see     txVersion()
 
-#define      _TX_VERSION                    "[Version 0.01 alpha, build 71]"
+#define      _TX_VERSION                    "[Version 0.01 alpha, build 72]"
 
 //=============================================================================
 //
@@ -2067,11 +2382,6 @@ const int    _TX_WINDOW_UPDATE_INTERVAL   = 10;
 //=============================================================================
 //! \cond    Internal
 //@{
-
-namespace Internal
-{
-
-//-----------------------------------------------------------------------------
 
 bool _txInitialize (int sizeX, int sizeY, bool centered);
 bool _txCleanup();
@@ -2099,7 +2409,7 @@ LRESULT CALLBACK _txCanvas_WndProc (HWND wnd, UINT msg, WPARAM wpar, LPARAM lpar
 
 HDC  _txBuffer_Create (HWND wnd, const POINT* size = NULL, HBITMAP bmap = NULL);
 bool _txBuffer_Delete (HDC dc);
-bool _txSelect (HGDIOBJ obj, HDC dc = txDC());
+bool _txSelect (HGDIOBJ obj, HDC dc);
 
 bool _txConsole_Attach();
 bool _txConsole_OK();
@@ -2145,8 +2455,8 @@ int  _txReturn1()        { return 1; }
 #define assert(p)         ( !(p)? (TX_THROW ("\aAssertion failed: \"%s\"" _ #p), 0) : _txReturn1() )
 #define TX_NEEDED         || TX_THROW (NULL)
 
-#define TX_THROW( msg )   _txThrow (__FILE__, __LINE__, __FUNCTION__, (DWORD)(-1), msg)
-#define TX_PRINT_HERE()   printf ("%s (%d) %s(): Here... :)\n", __FILE__, __LINE__, __FUNCTION__)
+#define TX_THROW( msg )   _txThrow (__FILE__, __LINE__, __TX_FUNCTION__, (DWORD)(-1), msg)
+#define TX_PRINT_HERE()   printf ("%s (%d) %s(): Here... :)\n", __FILE__, __LINE__, __TX_FUNCTION__)
 
 #else
 
@@ -2276,38 +2586,31 @@ bool             _txConsole_CursorMode = true;
 bool             _txRunning            = false;
 bool             _txExit               = false;
 
-int              _txMouseX             = 0;
-int              _txMouseY             = 0;
-int              _txMouseButtons       = 0;
+int              _txCurMouseX          = 0;
+int              _txCurMouseY          = 0;
+int              _txCurMouseButtons    = 0;
 
 //=============================================================================
-// Идентификаторы меню
+// Идентификаторы дополнительных пунктов системного меню окна TXLib
 //=============================================================================
 
 #define _txIDM_ABOUT        40000
 #define _txIDM_CONSOLE      40001
 
-//-----------------------------------------------------------------------------
-
-//! \cond Namespaces
-}  // namespace Internal
-using namespace Internal;
-//! \endcond Namespaces
-
 //=============================================================================
 // Реализация функций интерфейса
 //=============================================================================
 
-bool txCreateWindow (double sizeX, double sizeY, bool centered)
+bool _txCreateWindow (double sizeX, double sizeY, bool centered)
     {
-$   if (txOK()) return false;
+$   if (_txOK()) return false;
 $   return _txInitialize ((int)sizeX, (int)sizeY, centered);
     }
 
 //-----------------------------------------------------------------------------
 
 inline
-bool txOK()
+bool _txOK()
     {
 $   return _txConsole_OK() &&
            _txCanvas_OK();
@@ -2315,7 +2618,7 @@ $   return _txConsole_OK() &&
 
 //-----------------------------------------------------------------------------
 
-const char* txVersion()
+const char* _txVersion()
     {
 $   return _TX_VERSION;
     }
@@ -2323,7 +2626,7 @@ $   return _TX_VERSION;
 //-----------------------------------------------------------------------------
 
 inline
-HDC txDC()
+HDC _txDC()
     {
 $   return _txCanvas_BackBuf[0];
     }
@@ -2331,63 +2634,63 @@ $   return _txCanvas_BackBuf[0];
 //-----------------------------------------------------------------------------
 
 inline
-HWND txWindow()
+HWND _txWindow()
     {
 $   return _txCanvas_Wnd;
     }
 
 //-----------------------------------------------------------------------------
 
-POINT txGetExtent()
+POINT _txGetExtent()
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
 
 $   RECT r = {0};
-$   GetClientRect (txWindow(), &r);
+$   GetClientRect (_txWindow(), &r);
 $   POINT size = { r.right - r.left, r.bottom - r.top };
 $   return size;
     }
 
-inline int txGetExtentX() { $ return txGetExtent().x; }
-inline int txGetExtentY() { $ return txGetExtent().y; }
+inline int _txGetExtentX() { $ return _txGetExtent().x; }
+inline int _txGetExtentY() { $ return _txGetExtent().y; }
 
 //-----------------------------------------------------------------------------
 
-bool txClear()
+bool _txClear()
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
-$   POINT size = txGetExtent();
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
+$   POINT size = _txGetExtent();
 
-$   return txGDI ((Win32::PatBlt (txDC(), 0, 0, size.x, size.y, PATCOPY) != 0));
+$   return txGDI ((Win32::PatBlt (_txDC(), 0, 0, size.x, size.y, PATCOPY) != 0));
     }
 
 //-----------------------------------------------------------------------------
 
-bool txSetColor (COLORREF color, int thickness)
+bool _txSetColor (COLORREF color, int thickness)
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
 
-$   return _txSelect (Win32::CreatePen ((color == TX_TRANSPARENT? PS_NULL : PS_SOLID), thickness, color)) &&
-            txGDI   ((Win32::SetTextColor (txDC(), color) != 0));
+$   return _txSelect (Win32::CreatePen ((color == TX_TRANSPARENT? PS_NULL : PS_SOLID), thickness, color), _txDC()) &&
+            txGDI   ((Win32::SetTextColor (_txDC(), color) != 0));
     }
 
 //-----------------------------------------------------------------------------
 
-bool txColor (double r, double g, double b)
+bool _txColor (double r, double g, double b)
     {
 $   if (r > 1) r = 1; if (r < 0) r = 0;
 $   if (g > 1) g = 1; if (g < 0) g = 0;
 $   if (b > 1) b = 1; if (b < 0) b = 0;
-$   return txSetColor (RGB (r*255, g*255, b*255));
+$   return _txSetColor (RGB (r*255, g*255, b*255), 1);
     }
 
 //-----------------------------------------------------------------------------
 
-COLORREF txGetColor()
+COLORREF _txGetColor()
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
 
-$   HGDIOBJ obj = txGDI ((Win32::GetCurrentObject (txDC(), OBJ_PEN))); obj TX_NEEDED;
+$   HGDIOBJ obj = txGDI ((Win32::GetCurrentObject (_txDC(), OBJ_PEN))); obj TX_NEEDED;
 
 $   char buf [MAX (sizeof (LOGPEN), sizeof (EXTLOGPEN))] = {0};
 
@@ -2399,31 +2702,32 @@ $   return (size == sizeof (LOGPEN))? ((LOGPEN*)buf)->lopnColor : ((EXTLOGPEN*)b
 
 //-----------------------------------------------------------------------------
 
-bool txSetFillColor (COLORREF color)
+bool _txSetFillColor (COLORREF color)
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
 
 $   return _txSelect ((color == TX_TRANSPARENT)? Win32::GetStockObject   (HOLLOW_BRUSH) :
-                                                 Win32::CreateSolidBrush (color));
+                                                 Win32::CreateSolidBrush (color),
+                      _txDC());
     }
 
 //-----------------------------------------------------------------------------
 
-bool txFillColor (double r, double g, double b)
+bool _txFillColor (double r, double g, double b)
     {
 $   if (r > 1) r = 1; if (r < 0) r = 0;
 $   if (g > 1) g = 1; if (g < 0) g = 0;
 $   if (b > 1) b = 1; if (b < 0) b = 0;
-$   return txSetFillColor (RGB (r*255, g*255, b*255));
+$   return _txSetFillColor (RGB (r*255, g*255, b*255));
     }
 
 //-----------------------------------------------------------------------------
 
-COLORREF txGetFillColor()
+COLORREF _txGetFillColor()
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
 
-$   HGDIOBJ obj = txGDI ((Win32::GetCurrentObject (txDC(), OBJ_BRUSH))); obj TX_NEEDED;
+$   HGDIOBJ obj = txGDI ((Win32::GetCurrentObject (_txDC(), OBJ_BRUSH))); obj TX_NEEDED;
 
 $   LOGBRUSH buf = {0};
 $   txGDI ((Win32::GetObject (obj, sizeof (buf), &buf))) TX_NEEDED;
@@ -2433,7 +2737,7 @@ $   return buf.lbColor;
 
 //-----------------------------------------------------------------------------
 
-int txExtractColor (COLORREF color, COLORREF component)
+int _txExtractColor (COLORREF color, COLORREF component)
     {
 $   switch (component)
         {
@@ -2452,11 +2756,11 @@ $   switch (component)
 
 //---------------------------------------------------------------------------
 
-COLORREF txRGB2HSL (COLORREF color)
+COLORREF _txRGB2HSL (COLORREF color)
     {
-$   int r = txExtractColor (color, TX_RED),
-        g = txExtractColor (color, TX_GREEN),
-        b = txExtractColor (color, TX_BLUE);
+$   int r = _txExtractColor (color, TX_RED),
+        g = _txExtractColor (color, TX_GREEN),
+        b = _txExtractColor (color, TX_BLUE);
 
 $   double m1 = MAX (MAX (r, g), b) / 255.0,
            m2 = MIN (MIN (r, g), b) / 255.0,
@@ -2491,7 +2795,7 @@ $   return RGB ((int)(ih >= 0? ih*60 : ih*60 + 360), (int)(is*255), (int)(il*255
 
 //---------------------------------------------------------------------------
 
-COLORREF txHSL2RGB (COLORREF color)
+COLORREF _txHSL2RGB (COLORREF color)
     {
     struct xRGB
         {
@@ -2507,9 +2811,9 @@ $           return (h <  60)? m1 + (m2-m1) *      h  / 60 :
             }
         };
 
-$   int h = txExtractColor (color, TX_HUE),
-        s = txExtractColor (color, TX_SATURATION),
-        l = txExtractColor (color, TX_LIGHTNESS);
+$   int h = _txExtractColor (color, TX_HUE),
+        s = _txExtractColor (color, TX_SATURATION),
+        l = _txExtractColor (color, TX_LIGHTNESS);
 
 $   double ih = h,
            il = l / 100.0,
@@ -2527,198 +2831,200 @@ $   return RGB (ir * 255, ig * 255, ib * 255);
 
 //-----------------------------------------------------------------------------
 
-bool txSetPixel (double x, double y, COLORREF color)
+bool _txSetPixel (double x, double y, COLORREF color)
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
 
-$   txGDI ((Win32::SetPixel (txDC(), (int)x, (int)y, color)));
+$   txGDI ((Win32::SetPixel (_txDC(), (int)x, (int)y, color)));
 
 $   RECT r = { (int)x, (int)y, (int)x, (int)y };
-$   InvalidateRect (txWindow(), &r, false) TX_NEEDED;
+$   InvalidateRect (_txWindow(), &r, false) TX_NEEDED;
 $   return true;
     }
 
 //-----------------------------------------------------------------------------
 
-bool txSetPixel (double x, double y, double r, double g, double b)
+bool _txPixel (double x, double y, double r, double g, double b)
     {
 $   if (r > 1) r = 1; if (r < 0) r = 0;
 $   if (g > 1) g = 1; if (g < 0) g = 0;
 $   if (b > 1) b = 1; if (b < 0) b = 0;
-$   return txSetPixel (x, y, RGB (r*255, g*255, b*255));
+$   return _txSetPixel (x, y, RGB (r*255, g*255, b*255));
     }
 
 //-----------------------------------------------------------------------------
 
-COLORREF txGetPixel (double x, double y)
+COLORREF _txGetPixel (double x, double y)
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
 
-$   return txGDI ((Win32::GetPixel (txDC(), (int)x, (int)y)));
+$   return txGDI ((Win32::GetPixel (_txDC(), (int)x, (int)y)));
     }
 
 //-----------------------------------------------------------------------------
 
-bool txLine (double x0, double y0, double x1, double y1)
+bool _txLine (double x0, double y0, double x1, double y1)
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
 
-$   txGDI ((Win32::MoveToEx (txDC(), (int)x0, (int)y0, NULL))) TX_NEEDED;
-$   txGDI ((Win32::LineTo   (txDC(), (int)x1, (int)y1)))       TX_NEEDED;
+$   txGDI ((Win32::MoveToEx (_txDC(), (int)x0, (int)y0, NULL))) TX_NEEDED;
+$   txGDI ((Win32::LineTo   (_txDC(), (int)x1, (int)y1)))       TX_NEEDED;
 
 $   RECT r = { (int)x0, (int)y0, (int)x1, (int)y1 };
-$   InvalidateRect (txWindow(), &r, false) TX_NEEDED;
+$   InvalidateRect (_txWindow(), &r, false) TX_NEEDED;
 $   return true;
     }
 
 //-----------------------------------------------------------------------------
 
-bool txRectangle (double x0, double y0, double x1, double y1)
+bool _txRectangle (double x0, double y0, double x1, double y1)
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
 
-$   txGDI ((Win32::Rectangle (txDC(), (int)x0, (int)y0, (int)x1, (int)y1))) TX_NEEDED;
+$   txGDI ((Win32::Rectangle (_txDC(), (int)x0, (int)y0, (int)x1, (int)y1))) TX_NEEDED;
 
 $   RECT r = { (int)x0, (int)y0, (int)x1, (int)y1 };
-$   InvalidateRect (txWindow(), &r, false) TX_NEEDED;
+$   InvalidateRect (_txWindow(), &r, false) TX_NEEDED;
 $   return true;
     }
 
 //-----------------------------------------------------------------------------
 
-bool txPolygon (POINT* points, int npoints)
+bool _txPolygon (POINT* points, int npoints)
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
 
-$   return txGDI ((Win32::Polygon (txDC(), points, npoints) != 0));
+$   return txGDI ((Win32::Polygon (_txDC(), points, npoints) != 0));
     }
 
 //-----------------------------------------------------------------------------
 
-bool txEllipse (double x0, double y0, double x1, double y1)
+bool _txEllipse (double x0, double y0, double x1, double y1)
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
 
-$   txGDI ((Win32::Ellipse (txDC(), (int)x0, (int)y0, (int)x1, (int)y1))) TX_NEEDED;
+$   txGDI ((Win32::Ellipse (_txDC(), (int)x0, (int)y0, (int)x1, (int)y1))) TX_NEEDED;
 
 $   RECT r = { (int)x0, (int)y0, (int)x1, (int)y1 };
-$   InvalidateRect (txWindow(), &r, false) TX_NEEDED;
+$   InvalidateRect (_txWindow(), &r, false) TX_NEEDED;
 $   return true;
     }
 
 //-----------------------------------------------------------------------------
 
-bool txCircle (double x, double y, double r)
+bool _txCircle (double x, double y, double r)
     {
-$   return txEllipse (x-r, y-r, x+r, y+r);
+$   return _txEllipse (x-r, y-r, x+r, y+r);
     }
 
 //-----------------------------------------------------------------------------
 
-bool txArc (double x0, double y0, double x1, double y1, double startAngle, double totalAngle)
+bool _txArc (double x0, double y0, double x1, double y1, double startAngle, double totalAngle)
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
 
 $   double start = startAngle * txPI / 180, end = (startAngle + totalAngle) * txPI / 180;
 $   POINT center = { (int)((x0+x1)/2), (int)((y0+y1)/2) };
 
-$   return txGDI ((Win32::Arc (txDC(), (int)x0, (int)y0, (int)x1, (int)y1,
+$   return txGDI ((Win32::Arc (_txDC(), (int)x0, (int)y0, (int)x1, (int)y1,
                                         center.x + (int)(100*cos (start)), center.y - (int)(100*sin (start)),
                                         center.x + (int)(100*cos (end)),   center.y - (int)(100*sin (end))) != 0));
     }
 
 //-----------------------------------------------------------------------------
 
-bool txPie (double x0, double y0, double x1, double y1, double startAngle, double totalAngle)
+bool _txPie (double x0, double y0, double x1, double y1, double startAngle, double totalAngle)
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
 
 $   double start = startAngle * txPI / 180, end = (startAngle + totalAngle) * txPI / 180;
 $   POINT center = { (int)((x0+x1)/2), (int)((y0+y1)/2) };
 
-$   return txGDI ((Win32::Pie (txDC(), (int)x0, (int)y0, (int)x1, (int)y1,
+$   return txGDI ((Win32::Pie (_txDC(), (int)x0, (int)y0, (int)x1, (int)y1,
                                         center.x + (int)(100*cos (start)), center.y - (int)(100*sin (start)),
                                         center.x + (int)(100*cos (end)),   center.y - (int)(100*sin (end))) != 0));
     }
 
 //-----------------------------------------------------------------------------
 
-bool txChord (double x0, double y0, double x1, double y1, double startAngle, double totalAngle)
+bool _txChord (double x0, double y0, double x1, double y1, double startAngle, double totalAngle)
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
 
 $   double start = startAngle * txPI / 180, end = (startAngle + totalAngle) * txPI / 180;
 $   POINT center = { (int)((x0+x1)/2), (int)((y0+y1)/2) };
 
-$   return txGDI ((Win32::Chord (txDC(), (int)x0, (int)y0, (int)x1, (int)y1,
+$   return txGDI ((Win32::Chord (_txDC(), (int)x0, (int)y0, (int)x1, (int)y1,
                                           center.x + (int)(100*cos (start)), center.y - (int)(100*sin (start)),
                                           center.x + (int)(100*cos (end)),   center.y - (int)(100*sin (end))) != 0));
     }
 
 //-----------------------------------------------------------------------------
 
-bool txTextOut (double x, double y, const char text[])
+bool _txTextOut (double x, double y, const char text[])
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
 
 $   int len = (int) strlen (text);
-$   txGDI ((Win32::TextOut (txDC(), (int)x, (int)y, text, len))) TX_NEEDED;
+$   txGDI ((Win32::TextOut (_txDC(), (int)x, (int)y, text, len))) TX_NEEDED;
 
 $   SIZE size = {0};
-$   txGDI ((Win32::GetTextExtentPoint32 (txDC(), text, len, &size))) TX_NEEDED;
+$   txGDI ((Win32::GetTextExtentPoint32 (_txDC(), text, len, &size))) TX_NEEDED;
 
 $   RECT r = { (int)x, (int)y, (int)x + size.cx, (int)y + size.cy };
-$   InvalidateRect (txWindow(), &r, false) TX_NEEDED;
+$   InvalidateRect (_txWindow(), &r, false) TX_NEEDED;
 $   return true;
     }
 
 //-----------------------------------------------------------------------------
 
-SIZE txGetTextExtent (const char* text)
+SIZE _txGetTextExtent (const char* text)
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
 
 $   SIZE size = {0};
-$   txGDI ((Win32::GetTextExtentPoint32 (txDC(), text, (int) strlen (text), &size))) TX_NEEDED;
+$   txGDI ((Win32::GetTextExtentPoint32 (_txDC(), text, (int) strlen (text), &size))) TX_NEEDED;
 
 $   return size;
     }
 
-inline int txGetTextExtentX (const char* text) { $ return txGetTextExtent (text) . cx; }
-inline int txGetTextExtentY (const char* text) { $ return txGetTextExtent (text) . cy; }
+inline int _txGetTextExtentX (const char* text) { $ return _txGetTextExtent (text) . cx; }
+inline int _txGetTextExtentY (const char* text) { $ return _txGetTextExtent (text) . cy; }
 
 //-----------------------------------------------------------------------------
 
-bool txSelectFont (const char* name, double sizeY, double sizeX,
-                   int bold, bool italic, bool underline, bool strikeout)
+bool _txSelectFont (const char* name, double sizeY, double sizeX,
+                    int bold, bool italic, bool underline, bool strikeout)
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
 
-$   _txSelect (txFontExist (name)? CreateFont ((int)sizeY, (int) ((int)sizeX? sizeX : sizeY/3), 0, 0,
-                                               bold, italic, underline, strikeout,
-                                               DEFAULT_CHARSET,
-                                               OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
-                                               DEFAULT_QUALITY, FIXED_PITCH, name)
+$   _txSelect (_txFontExist (name)? CreateFont ((int)sizeY, (int) ((int)sizeX? sizeX : sizeY/3), 0, 0,
+                                                bold, italic, underline, strikeout,
+                                                DEFAULT_CHARSET,
+                                                OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
+                                                DEFAULT_QUALITY, FIXED_PITCH, name)
                                    :
-                                   GetStockObject (SYSTEM_FIXED_FONT));
+                                   GetStockObject (SYSTEM_FIXED_FONT),
+               _txDC());
+
 $   return true;
     }
 
 //-----------------------------------------------------------------------------
 
-bool txSetTextAlign (unsigned align)
+bool _txSetTextAlign (unsigned align)
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
 
-$   txGDI ((Win32::SetTextAlign (txDC(), align)));
+$   txGDI ((Win32::SetTextAlign (_txDC(), align)));
 $   return true;
     }
 
 //-----------------------------------------------------------------------------
 
-LOGFONT* txFontExist (const char* name)
+LOGFONT* _txFontExist (const char* name)
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
 
 $   static LOGFONT font = {0};
 $   font.lfCharSet = DEFAULT_CHARSET;
@@ -2737,66 +3043,66 @@ $           return  strncmp  (fnt->lfFaceName, ((LOGFONT*)data)->lfFaceName, LF_
             }
         };
 
-$   return txGDI ((Win32::EnumFontFamiliesEx (txDC(), &font, enumFonts::Proc, (LPARAM)&font, 0) == 0? &font : NULL));
+$   return txGDI ((Win32::EnumFontFamiliesEx (_txDC(), &font, enumFonts::Proc, (LPARAM)&font, 0) == 0? &font : NULL));
     }
 
 //-----------------------------------------------------------------------------
 
-bool txFloodFill (double x, double y, COLORREF color, DWORD mode)
+bool _txFloodFill (double x, double y, COLORREF color, DWORD mode)
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
-$   if (color == TX_TRANSPARENT) color = txGetPixel (x, y);
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
+$   if (color == TX_TRANSPARENT) color = _txGetPixel (x, y);
 
-$   return txGDI ((Win32::ExtFloodFill (txDC(), (int)x, (int)y, color, mode) != 0));
+$   return txGDI ((Win32::ExtFloodFill (_txDC(), (int)x, (int)y, color, mode) != 0));
     }
 
 //-----------------------------------------------------------------------------
 
-bool txSetROP2 (int mode)
+bool _txSetROP2 (int mode)
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
 
-$   return txGDI ((Win32::SetROP2 (txDC(), mode) != 0));
+$   return txGDI ((Win32::SetROP2 (_txDC(), mode) != 0));
     }
 
 //-----------------------------------------------------------------------------
 
-HDC txCreateCompatibleDC (double sizeX, double sizeY, HBITMAP bitmap)
+HDC _txCreateCompatibleDC (double sizeX, double sizeY, HBITMAP bitmap)
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
 $   POINT size = { (int)sizeX, (int)sizeY };
-$   HDC dc = _txBuffer_Create (txWindow(), &size, bitmap); dc TX_NEEDED;
+$   HDC dc = _txBuffer_Create (_txWindow(), &size, bitmap); dc TX_NEEDED;
 $   return dc;
     }
 
 //-----------------------------------------------------------------------------
 
-HDC txLoadImage (LPCTSTR name)
+HDC _txLoadImage (LPCTSTR name)
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
 
 $   HBITMAP image = (HBITMAP) LoadImage (NULL, name, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 $   if (!image) return NULL;
 
-$   HDC dc = txCreateCompatibleDC (0, 0, image);
+$   HDC dc = _txCreateCompatibleDC (0, 0, image);
 
 $   return dc;
     }
 
 //-----------------------------------------------------------------------------
 
-bool txDeleteDC (HDC dc)
+bool _txDeleteDC (HDC dc)
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
 $   return _txBuffer_Delete (dc);
     }
 
 //-----------------------------------------------------------------------------
 
-bool txBitBlt (HDC dest, double xDest, double yDest, double width, double height,
-               HDC src,  double xSrc,  double ySrc,  DWORD rOp)
+bool _txBitBlt (HDC dest, double xDest, double yDest, double width, double height,
+                HDC src,  double xSrc,  double ySrc,  DWORD rOp)
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
 
 $   return txGDI ((Win32::BitBlt (dest, (int)xDest, (int)yDest, (int)width, (int)height,
                                   src,  (int)xSrc,  (int)ySrc, rOp) != 0));
@@ -2804,10 +3110,10 @@ $   return txGDI ((Win32::BitBlt (dest, (int)xDest, (int)yDest, (int)width, (int
 
 //-----------------------------------------------------------------------------
 
-bool txTransparentBlt (HDC dest, double destX, double destY, double sizeX, double sizeY,
-                       HDC src,  double srcX,  double srcY,  COLORREF transColor)
+bool _txTransparentBlt (HDC dest, double destX, double destY, double sizeX, double sizeY,
+                        HDC src,  double srcX,  double srcY,  COLORREF transColor)
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
 $   if (!TransparentBlt) return false;
 
 $   return Win32::TransparentBlt (dest, (int)destX, (int)destY, (int)sizeX, (int)sizeY,
@@ -2816,10 +3122,10 @@ $   return Win32::TransparentBlt (dest, (int)destX, (int)destY, (int)sizeX, (int
 
 //-----------------------------------------------------------------------------
 
-bool txAlphaBlend (HDC dest, double destX, double destY, double sizeX, double sizeY,
-                   HDC src,  double srcX,  double srcY,  double alpha)
+bool _txAlphaBlend (HDC dest, double destX, double destY, double sizeX, double sizeY,
+                    HDC src,  double srcX,  double srcY,  double alpha)
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
 $   if (!AlphaBlend) return false;
 
 $   if (alpha < 0) alpha = 0;
@@ -2837,26 +3143,26 @@ $   return Win32::AlphaBlend (dest, (int)destX, (int)destY, (int)sizeX, (int)siz
 
 //-----------------------------------------------------------------------------
 
-bool txSelectRegion (double x0, double y0, double x1, double y1)
+bool _txSelectRegion (double x0, double y0, double x1, double y1)
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
 
 $   HRGN rgn = CreateRectRgn ((int)x0, (int)y0, (int)x1, (int)y1);
-$   return txSelectObject (rgn);
+$   return _txSelectObject (rgn);
     }
 
 //-----------------------------------------------------------------------------
 
-bool txSelectObject (HGDIOBJ obj)
+bool _txSelectObject (HGDIOBJ obj)
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
-$   return _txSelect (obj);
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
+$   return _txSelect (obj, _txDC());
     }
 
 //-----------------------------------------------------------------------------
 
 inline
-int txBegin()
+int _txBegin()
     {
 $   _txCanvas_SetLockRefresh (_txCanvas_LockRefresh + 1);
 $   return _txCanvas_LockRefresh;
@@ -2865,7 +3171,7 @@ $   return _txCanvas_LockRefresh;
 //-----------------------------------------------------------------------------
 
 inline
-int txEnd()
+int _txEnd()
     {
 $   _txCanvas_SetLockRefresh (_txCanvas_LockRefresh - 1);
 $   return _txCanvas_LockRefresh;
@@ -2874,7 +3180,7 @@ $   return _txCanvas_LockRefresh;
 //-----------------------------------------------------------------------------
 
 inline
-bool txUpdateWindow (bool update)
+bool _txUpdateWindow (bool update)
     {
 $   return _txCanvas_SetLockRefresh (update? 0 : 1) != 0;
     }
@@ -2882,7 +3188,7 @@ $   return _txCanvas_SetLockRefresh (update? 0 : 1) != 0;
 //-----------------------------------------------------------------------------
 
 inline
-bool txSleep (int time)
+bool _txSleep (int time)
     {
 $   int old = _txCanvas_SetLockRefresh (0);
 
@@ -2894,7 +3200,7 @@ $   return old != 0;
 
 //-----------------------------------------------------------------------------
 
-bool txTextCursor (bool mode)
+bool _txTextCursor (bool mode)
     {
 $   bool old = _txConsole_CursorMode;
 
@@ -2906,7 +3212,7 @@ $   return old;
 //-----------------------------------------------------------------------------
 
 inline
-bool txLock (bool wait)
+bool _txLock (bool wait)
     {
 $   if (wait) { return    EnterCriticalSection (&_txCanvas_LockBackBuf), true; }
     else      { return TryEnterCriticalSection (&_txCanvas_LockBackBuf) != 0;  }
@@ -2915,7 +3221,7 @@ $   if (wait) { return    EnterCriticalSection (&_txCanvas_LockBackBuf), true; }
 //-----------------------------------------------------------------------------
 
 inline
-bool txUnlock()
+bool _txUnlock()
     {
 $   LeaveCriticalSection (&_txCanvas_LockBackBuf);
 $   return true;
@@ -2924,21 +3230,21 @@ $   return true;
 //-----------------------------------------------------------------------------
 
 template <typename T> inline
-T txUnlock (T value)
+T _txUnlock (T value)
     {
-$   txUnlock();
+$   _txUnlock();
 $   return value;
     }
 
 //-----------------------------------------------------------------------------
 
-inline double  txMouseX()       { $ return _txMouseX;       }
-inline double  txMouseY()       { $ return _txMouseY;       }
-inline int     txMouseButtons() { $ return _txMouseButtons; }
+inline double  _txMouseX()       { $ return _txCurMouseX;       }
+inline double  _txMouseY()       { $ return _txCurMouseY;       }
+inline int     _txMouseButtons() { $ return _txCurMouseButtons; }
 
 //-----------------------------------------------------------------------------
 
-bool txPlaySound (const char* filename, DWORD mode)
+bool _txPlaySound (const char* filename, DWORD mode)
     {
 $   mode |= SND_FILENAME | SND_NODEFAULT | SND_NOWAIT;
 $   if (mode & SND_LOOP) mode = (mode & ~SND_SYNC) | SND_ASYNC;
@@ -2949,9 +3255,9 @@ $   return PlaySound (filename, NULL, mode) != 0;
 
 //-----------------------------------------------------------------------------
 
-bool txSetDefaults()
+bool _txSetDefaults()
     {
-$   _txCheck (__FUNCTION__); assert (txOK());
+$   _txCheck (__TX_FUNCTION__); assert (_txOK());
 
 $   return _txCanvas_SetDefaults() &&
            _txConsole_SetDefaults();
@@ -2961,7 +3267,7 @@ $   return _txCanvas_SetDefaults() &&
 // Работа с диалоговыми окнами
 //=============================================================================
 
-const char* txInputBox (const char* text, const char* caption, const char* input)
+const char* _txInputBox (const char* text, const char* caption, const char* input)
     {
 
     // Получение имени EXE-файла, на случай, если кое-кто поленился задать название диалога
@@ -3154,7 +3460,7 @@ $   switch (msg)
         case WM_COMMAND:    $ switch (LOWORD (wParam))
             {
             case IDOK:
-            case IDCANCEL:  $ SetForegroundWindow (txWindow());
+            case IDCANCEL:  $ SetForegroundWindow (_txWindow());
                             $ EndDialog (wnd, (INT_PTR) this__); break;
             default:        $ break;
             }
@@ -3266,12 +3572,6 @@ $   return pw;
     }
 
 //=============================================================================
-
-//! \cond Namespaces
-namespace Internal {
-//! \endcond Namespaces
-
-//=============================================================================
 //
 // Детали реализации
 //
@@ -3288,7 +3588,7 @@ $   atexit (_txOnExit);
 $   _txExit    = false;
 $   _txRunning = false;
 
-$   txUpdateWindow (false);
+$   _txUpdateWindow (false);
 
 $   InitializeCriticalSection (&_txCanvas_LockBackBuf);
 
@@ -3319,9 +3619,9 @@ $   _txCanvas_Thread || TX_THROW ("Cannot create _txCanvas_Thread: CreateThread(
 $   _txWaitFor (_txCanvas_OK());
 $   _txCanvas_OK() || TX_THROW ("Cannot create canvas");
 
-$   txSetDefaults();
+$   _txSetDefaults();
 
-$   txUpdateWindow (true);
+$   _txUpdateWindow (true);
 
 $   return true;
     }
@@ -3330,7 +3630,7 @@ $   return true;
 
 bool _txCheck (const char msg[])
     {
-$   if (txOK()) return true;
+$   if (_txOK()) return true;
 
 $   MessageBox (NULL, "Ошибка: Окно рисования не создано!    ", (msg && *msg)? msg : "Ошибка программы", MB_ICONSTOP);
 
@@ -3346,6 +3646,7 @@ void _txOnExit()
     {
 $   _txRunning = false;
 
+$   Sleep (10);
 $   if (!_txExit) WaitForSingleObject (_txCanvas_Thread, INFINITE);
 
 $   _txCleanup();
@@ -3380,27 +3681,28 @@ $   return true;
 
 bool _txCanvas_SetDefaults()
     {
-$   assert (txOK());
+$   assert (_txOK());
 
-$   txLock();
+$   _txLock (true);
 
 $   RECT r = {0};
 $   GetClientRect (_txConsole_Wnd, &r) TX_NEEDED;
 $   SIZE size = { r.right - r.left, r.bottom - r.top };
 
-$   _txSelect (GetStockObject (WHITE_PEN))   TX_NEEDED;
-$   _txSelect (GetStockObject (WHITE_BRUSH)) TX_NEEDED;
+$   _txSelect (GetStockObject (WHITE_PEN),   _txDC()) TX_NEEDED;
+$   _txSelect (GetStockObject (WHITE_BRUSH), _txDC()) TX_NEEDED;
 $   _txSelect (CreateFont (size.cy/25, size.cx/80, 0, 0,
                          FW_REGULAR, FALSE, FALSE, FALSE,
                          DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
-                         DEFAULT_QUALITY, DEFAULT_PITCH, _TX_CONSOLE_FONT)) TX_NEEDED;
+                         DEFAULT_QUALITY, DEFAULT_PITCH, _TX_CONSOLE_FONT),
+                         _txDC()) TX_NEEDED;
 
-$   Win32::SetTextColor (txDC(), RGB (255, 255, 255));
-$   Win32::SetBkMode    (txDC(), TRANSPARENT) TX_NEEDED;
+$   Win32::SetTextColor (_txDC(), RGB (255, 255, 255));
+$   Win32::SetBkMode    (_txDC(), TRANSPARENT) TX_NEEDED;
 
-$   Win32::SetROP2      (txDC(), R2_COPYPEN) TX_NEEDED;
+$   Win32::SetROP2      (_txDC(), R2_COPYPEN) TX_NEEDED;
 
-$   txUnlock();
+$   _txUnlock();
 $   return true;
     }
 
@@ -3408,9 +3710,9 @@ $   return true;
 
 bool _txConsole_SetDefaults()
     {
-$   assert (txOK());
+$   assert (_txOK());
 
-$   txLock();
+$   _txLock (true);
 
 $   HDC dc = _txCanvas_BackBuf[1];
 
@@ -3430,19 +3732,19 @@ $   POINT size = { r.right - r.left, r.bottom - r.top };
 $   POINT fontSize = { (SHORT) ((1.0 * phy.x / log.X) / (1.0 * phy.x / size.x)),
                                 (SHORT) ((1.0 * phy.y / log.Y) / (1.0 * phy.y / size.y)) };
 
-$   _txSelect (txFontExist (_TX_CONSOLE_FONT)? CreateFont (fontSize.y * 8/10, fontSize.x, 0, 0,
-                                                           FW_REGULAR, FALSE, FALSE, FALSE,
-                                                           DEFAULT_CHARSET,
-                                                           OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
-                                                           DEFAULT_QUALITY, FIXED_PITCH, _TX_CONSOLE_FONT)
-                                             :
-                                             GetStockObject (SYSTEM_FIXED_FONT),
+$   _txSelect (_txFontExist (_TX_CONSOLE_FONT)? CreateFont (fontSize.y * 8/10, fontSize.x, 0, 0,
+                                                            FW_REGULAR, FALSE, FALSE, FALSE,
+                                                            DEFAULT_CHARSET,
+                                                            OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
+                                                            DEFAULT_QUALITY, FIXED_PITCH, _TX_CONSOLE_FONT)
+                                              :
+                                              GetStockObject (SYSTEM_FIXED_FONT),
                dc) TX_NEEDED;
 
 $   Win32::SetTextColor (dc, _TX_CONSOLE_COLOR);
 $   Win32::SetBkMode    (dc, TRANSPARENT) TX_NEEDED;
 
-$   txUnlock();
+$   _txUnlock();
 $   return true;
     }
 
@@ -3656,7 +3958,7 @@ $   PAINTSTRUCT ps = {0};
 $   HDC dc = BeginPaint (wnd, &ps);
 $   if (!dc) return false;
 
-$   if (!txLock (false))
+$   if (!_txLock (false))
       {
 $     EndPaint (wnd, &ps) TX_NEEDED;
 $     return false;
@@ -3668,7 +3970,7 @@ $   POINT size = { r.right - r.left, r.bottom - r.top };
 
 $   if (!_txCanvas_LockRefresh)
       {
-$     Win32::BitBlt (_txCanvas_BackBuf[1], 0, 0, size.x, size.y, txDC(), 0, 0, SRCCOPY);
+$     Win32::BitBlt (_txCanvas_BackBuf[1], 0, 0, size.x, size.y, _txDC(), 0, 0, SRCCOPY);
 
 $     if (_txConsole_OK())
           {
@@ -3678,7 +3980,7 @@ $         _txConsole_Draw (_txCanvas_BackBuf[1]);
 
 $   Win32::BitBlt (dc, 0, 0, size.x, size.y, _txCanvas_BackBuf[1], 0, 0, SRCCOPY);
 
-$   txUnlock();
+$   _txUnlock();
 
 $   EndPaint (wnd, &ps) TX_NEEDED;
 
@@ -3713,9 +4015,9 @@ bool _txCanvas_OnMouse (HWND, WPARAM buttons, LPARAM coords)
     {
 $   if (!_txCanvas_OK()) return false;
 
-$   _txMouseX       = LOWORD (coords);
-$   _txMouseY       = HIWORD (coords);
-$   _txMouseButtons = (int) buttons;
+$   _txCurMouseX       = LOWORD (coords);
+$   _txCurMouseY       = HIWORD (coords);
+$   _txCurMouseButtons = (int) buttons;
 
 $   return true;
     }
@@ -3840,7 +4142,7 @@ bool _txConsole_Draw (HDC dc)
     {
 $   assert (_txConsole_OK()); assert (_txCanvas_OK());
 
-$   if (!txLock (false)) return false;
+$   if (!_txLock (false)) return false;
 
 $   CONSOLE_SCREEN_BUFFER_INFO con = {{0}};
 $   GetConsoleScreenBufferInfo (GetStdHandle (STD_OUTPUT_HANDLE), &con) TX_NEEDED;
@@ -3871,7 +4173,7 @@ $     Win32::TextOut (dc,
                       "_", 1);
       }
 
-$   txUnlock();
+$   _txUnlock();
 
 $   return true;
     }
@@ -3913,7 +4215,7 @@ HDC _txBuffer_Create (HWND wnd, const POINT* size, HBITMAP bitmap)
     {
 $   assert (wnd);
 
-$   txLock();
+$   _txLock (true);
 
 $   HDC wndDC = GetDC (wnd); wndDC TX_NEEDED;
 $   (Win32::GetDeviceCaps (wndDC, RASTERCAPS) & RC_BITBLT) || TX_THROW ("GetDeviceCaps(): RASTERCAPS: RC_BITBLT not supported");
@@ -3935,7 +4237,7 @@ $   if (!bitmap) Win32::PatBlt (dc, 0, 0, size->x, size->y, BLACKNESS) TX_NEEDED
 
 $   ReleaseDC (wnd, wndDC) TX_NEEDED;
 
-$   txUnlock();
+$   _txUnlock();
 $   return dc;
     }
 
@@ -3945,7 +4247,7 @@ bool _txBuffer_Delete (HDC dc)
     {
 $   if (!dc) return false;
 
-$   txLock();
+$   _txLock (true);
 
 $   _txSelect (Win32::GetStockObject (NULL_PEN),    dc) TX_NEEDED;
 $   _txSelect (Win32::GetStockObject (NULL_BRUSH),  dc) TX_NEEDED;
@@ -3956,7 +4258,7 @@ $   Win32::DeleteObject (Win32::GetCurrentObject (dc, OBJ_REGION));
 
 $   Win32::DeleteDC (dc) TX_NEEDED;
 
-$   txUnlock();
+$   _txUnlock();
 $   return true;
     }
 
@@ -3964,12 +4266,12 @@ $   return true;
 
 bool _txSelect (HGDIOBJ obj, HDC dc)
     {
-$   txLock();
+$   _txLock (true);
 
 $   obj = Win32::SelectObject (dc, obj); obj TX_NEEDED;
 $   if (obj) Win32::DeleteObject (obj);
 
-$   txUnlock();
+$   _txUnlock();
 
 $   return obj != NULL;
     }
@@ -4053,12 +4355,11 @@ bool _txThrow (const char file[], int line, const char func[], DWORD error,
 //=============================================================================
 //! \cond Namespaces
 
-} // namespace Internal
 } // namespace TX
 } // anonymous namespace
 
 using namespace TX;
-using namespace TX::Internal::Win32;
+using namespace TX::Win32;
 
 //! \endcond Namespaces
 //=============================================================================
