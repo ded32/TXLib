@@ -86,9 +86,6 @@
 //! @defgroup Service   Служебное
 //! @defgroup Misc      Разное
 //! @defgroup Technical Технические детали
-//! @cond     Internal
-//! @defgroup Internal  Детали реализации
-//! @endcond
 //=============================================================================
 
 #ifndef __TXLIB_H
@@ -99,7 +96,6 @@
 // Адаптация к компиляторам и платформам
 //
 //-----------------------------------------------------------------------------
-//! @cond Internal
 
 #undef  UNICODE
 
@@ -133,7 +129,6 @@
 #define _vsnprintf_s _vsnprintf                 // functions, so use unsecure ones
 #endif
 
-//! @endcond Internal
 //-----------------------------------------------------------------------------
 
 #include <stdio.h>
@@ -149,12 +144,10 @@
 #include <windows.h>
 
 //=============================================================================
-//! @cond    Namespaces
 
 namespace {
 namespace TX {
 
-//! @endcond Namespaces
 //=============================================================================
 
 //=============================================================================
@@ -322,7 +315,10 @@ const int    _txIDM_CONSOLE               = 40001;
 
 //-----------------------------------------------------------------------------
 //! @ingroup Misc
-//! @brief   Замена стандартного макроса assert(), с выдачей сообщения через MessageBox().
+//! @brief   Замена стандартного макроса assert(), с выдачей сообщения через MessageBox(),
+//!          консоль и OutputDebugString().
+//! @return  1, если assert() не сработал, и 0, если он сработал (но в этом случае
+//!          фактически ничего не вернется, т.к. программа будет прервана).
 //! @hideinitializer
 //-----------------------------------------------------------------------------
 
@@ -396,6 +392,18 @@ const int    _txIDM_CONSOLE               = 40001;
 #define MIN( a, b )      ( (a) < (b) ? (a) : (b) )
 
 //-----------------------------------------------------------------------------
+//! @ingroup Misc
+//! @brief   Число Пи
+//! @return  Число Пи
+//! @examples
+//! @code
+//!          [example]
+//! @endcode
+//-----------------------------------------------------------------------------
+
+const double txPI = asin (1.0) * 2;
+
+//-----------------------------------------------------------------------------
 //! @ingroup Technical
 //! @brief   Включает/отключает внутреннюю трассировку исполнения кода библиотеки.
 //!
@@ -445,7 +453,7 @@ const int    _txIDM_CONSOLE               = 40001;
 #ifndef NDEBUG
 int  _txInitTrace = (OutputDebugString ("\n"),
                      OutputDebugString ("The Dumb Artist Library (TXLib) "
-                                        _TX_VERSION " (c) Ded, 2005-08 (Ilya Dedinsky <ded@concord.ru>, http://ded32.net.ru): "
+                                        _TX_VERSION " (c) Ded, 2005-10 (Ilya Dedinsky <ded@concord.ru>, http://ded32.net.ru): "
                                         "\"" __FILE__ "\", compiled "__DATE__ " " __TIME__ "\n"),
                      OutputDebugString ("\n"), 1);
 #endif
@@ -455,8 +463,6 @@ int  _txInitTrace = (OutputDebugString ("\n"),
 // Прототипы функций библиотеки
 //
 //=============================================================================
-
-//! @cond Internal
 
 int         txExtractColor (COLORREF color, COLORREF component);
 COLORREF    txRGB2HSL (COLORREF rgbColor);
@@ -503,7 +509,7 @@ HDC         txCreateCompatibleDC (double sizeX, double sizeY, HBITMAP bitmap = N
 HDC         txLoadImage (LPCTSTR filename);
 bool        txDeleteDC (HDC dc);
 bool        txBitBlt         (HDC dest, double xDest, double yDest, double width, double height,
-                              HDC src,  double xSrc,  double ySrc,  DWORD rOp = R2_COPYPEN);
+                              HDC src,  double xSrc,  double ySrc,  DWORD rOp = SRCCOPY);
 bool        txTransparentBlt (HDC dest, double xDest, double yDest, double width, double height,
                               HDC src,  double xSrc,  double ySrc,  COLORREF transColor = RGB (0, 0, 0));
 bool        txAlphaBlend     (HDC dest, double xDest, double yDest, double width, double height,
@@ -519,6 +525,12 @@ bool        txUnlock();
 const char* txVersion();
 bool        txSleep (int time);
 bool        txPlaySound (const char* filename, DWORD mode);
+void* _tx_DLGTEMPLATE_Create (void* globalMem, size_t bufsize, DWORD style, DWORD exStyle, WORD controls,
+                              short x, short y, short cx, short cy,
+                              const char caption[], const char font[], WORD fontsize, HANDLE menu = NULL);
+void* _tx_DLGTEMPLATE_Add    (void* dlgTemplatePtr, size_t bufsize, DWORD style, DWORD exStyle,
+                              short x, short y, short cx, short cy,
+                              WORD id, const char wclass[], const char caption[]);
 
 bool       _txCleanup();
 void       _txOnExit();
@@ -585,9 +597,7 @@ $   return addr;
 // Dev-CPP doesn't link with GDI32 by default, so do sunrise by hand. :(
 // <tears>
 
-//! @cond Namespaces
 namespace Win32 {
-//! @endcond Namespaces
 
 _TX_IMPORT ("GDI32", int,      GetDeviceCaps,          (HDC dc, int index));
 _TX_IMPORT ("GDI32", HDC,      CreateCompatibleDC,     (HDC dc));
@@ -643,16 +653,15 @@ _TX_IMPORT_OPT ("MSImg32",BOOL,TransparentBlt,         (HDC dest, int destX, int
 _TX_IMPORT_OPT ("MSImg32",BOOL,AlphaBlend,             (HDC dest, int destX, int destY, int destWidth, int destHeight,
                                                         HDC src,  int srcX,  int srcY,  int srcWidth,  int srcHeight,
                                                         BLENDFUNCTION blending));
-//! @cond Namespaces
 }  // namespace Win32
 using namespace Win32;
-//! @endcond Namespaces
 
 // </tears>
 
 //=============================================================================
 //
-// Глобальные данные
+// Глобальные данные.
+// Не упакованы в структуру или класс, для того, чтобы это сделали Вы сами :)
 //
 //=============================================================================
 
@@ -669,11 +678,9 @@ bool             _txConsole_CursorMode = true;
 bool             _txRunning            = false;
 bool             _txExit               = false;
 
-int              _txCurMouseX          = 0;
-int              _txCurMouseY          = 0;
-int              _txCurMouseButtons    = 0;
-
-//! @endcond Internal
+int              _txMouseX             = 0;
+int              _txMouseY             = 0;
+int              _txMouseButtons       = 0;
 
 //=============================================================================
 //
@@ -684,7 +691,6 @@ int              _txCurMouseButtons    = 0;
 //-----------------------------------------------------------------------------
 //! @ingroup Drawing
 //! @brief   Названия предопределенных цветов
-//  @note    The TX_* constants are the wrappers around my teacher's bug on 20050915 :)
 //! @see     txSetColor(), txSetFillColor(), txGetColor(), txGetFillColor(), txGetPixel()
 //! @examples
 //! @code
@@ -720,7 +726,7 @@ enum txColors {
     txTRANSPARENT  = 0xFFFFFFFF,          TX_TRANSPARENT   = txTRANSPARENT,  //!< Прозрачный цвет
     txNULL         = txTRANSPARENT,       TX_NULL          = txNULL,         //!< Прозрачный цвет
 
-// Цветовые каналы (компоненты) - см. @ref txExtractColor(), @ref txRGB2HSL(), @ref txHSL2RGB()
+//! Цветовые каналы (компоненты) - см. @ref txExtractColor(), @ref txRGB2HSL(), @ref txHSL2RGB()
 
     txHUE          = 0x04000000,          TX_HUE           = txHUE,          //!< Цветовой тон
     txSATURATION   = 0x05000000,          TX_SATURATION    = txSATURATION,   //!< Насыщенность
@@ -858,15 +864,15 @@ $   return RGB ((int)(ih >= 0? ih*60 : ih*60 + 360), (int)(is*255), (int)(il*255
 //!
 //!          Формат RGB определяется как
 //!
-//!          - Красная компонента цвета (Red), от 0 до 255.
+//!          - Красная компонента цвета (Red),   от 0 до 255.
 //!          - Зеленая компонента цвета (Green), от 0 до 255.
-//!          - Синяя компонента цвета (Blue), от 0 до 255.
+//!          - Синяя   компонента цвета (Blue),  от 0 до 255.
 //!
 //!          Формат HSL определяется как
 //!
-//!          - Цветовой тон (Hue), от 0 до 360.
+//!          - Цветовой тон (Hue),        от 0 до 360.
 //!          - Насыщенность (Saturation), от 0 до 255.
-//!          - Светлота (Lightness), от 0 до 255.
+//!          - Светлота     (Lightness),  от 0 до 255.
 //!
 //! @return  Созданный цвет в виде COLORREF.
 //! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), @ref txColors
@@ -917,7 +923,7 @@ $   return RGB (ir * 255, ig * 255, ib * 255);
 
 //=============================================================================
 //
-//  @name    Инициализация библиотеки и установка параметров рисования
+//  @name    Инициализация библиотеки, установка параметров, получение информации
 //
 //=============================================================================
 
@@ -957,20 +963,10 @@ $   InitializeCriticalSection (&_txCanvas_LockBackBuf);
 
 $   _txConsole_Attach();
 
-/*
-!!!
-setlocale (LC_CTYPE, "");      // for active CP
-setlocale (LC_CTYPE, ".OEM");  // for CP866
+$     setlocale (LC_CTYPE,  "Russian");
+$   _wsetlocale (LC_CTYPE, L"Russian_Russia.ACP");
 
-setlocale (LC_CTYPE, ".1251")
-setlocale (LC_CTYPE, "Russian");
-std::locale::global (std::locale ("rus"));
-_wsetlocale (LC_CTYPE, L"Russian_Russia.ACP");
-
-system ("mode con cp select=1251");
-*/
-
-$   SetConsoleCP (1251);
+$   SetConsoleCP       (1251);
 $   SetConsoleOutputCP (1251);
 
 $   POINT size = { sizeX, sizeY };
@@ -980,7 +976,7 @@ $   DWORD id = 0;
 $   _txCanvas_Thread = CreateThread (NULL, 0, _txCanvas_ThreadProc, &size, 0, &id);
 $   _txCanvas_Thread || TX_THROW ("Cannot create _txCanvas_Thread: CreateThread() failed");
 $   _txWaitFor (_txCanvas_OK());
-$   _txCanvas_OK() || TX_THROW ("Cannot create canvas");
+$   _txCanvas_OK()   || TX_THROW ("Cannot create canvas");
 
 $   txUpdateWindow (false);
 
@@ -1034,6 +1030,7 @@ $   Win32::SetBkMode    (dc, TRANSPARENT) TX_NEEDED;
 
 $   txUpdateWindow (true);
 
+$   SetLastError (0);
 $   return true;
     }
 
@@ -1053,6 +1050,7 @@ $   return true;
 //! @endcode
 //-----------------------------------------------------------------------------
 
+inline
 bool txOK() // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
     {
 $   return _txConsole_OK() &&
@@ -1094,6 +1092,7 @@ $   return size;
 //! @endcode
 //-----------------------------------------------------------------------------
 
+inline
 double txGetExtentX() // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
     {
 $   return txGetExtent().x;
@@ -1112,10 +1111,30 @@ $   return txGetExtent().x;
 //! @endcode
 //-----------------------------------------------------------------------------
 
+inline
 double txGetExtentY() // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
     {
 $   return txGetExtent().y;
     }
+
+//-----------------------------------------------------------------------------
+//! @ingroup Service
+//! @brief   Вызов функции Win32 GDI с автоматической блокировкой и разблокировкой
+//! @return  Значение, возвращаемое вызываемой функцией GDI.
+//! @param   cmd Команда GDI (возможно, возвращающая значение)
+//! @note    Если в вызове функции GDI используются запятые, то используйте двойные
+//!          скобки, чтобы получился один параметр, так как txGDI() все-таки макрос.
+//! @see     txDC(), txLock(), txUnlock(), txGDI()
+//! @hideinitializer
+//! @examples
+//! @code
+//!          txGDI <b>((</b> Rectangle (txDC(), x1, y1, x2, y2) <b>))</b>;
+//! @endcode
+//-----------------------------------------------------------------------------
+
+#define txGDI( cmd ) txUnlock ( (txLock(), (cmd)) )
+
+template <typename T> inline T txUnlock (T value);
 
 //-----------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1131,7 +1150,7 @@ $   return txGetExtent().y;
 
 bool txSetColor // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
                 (COLORREF color,   //!< Цвет линий и текста, см. @ref txColors, RGB()
-                 int thickness = 1 //!< Толщина линий
+                 double thickness  //!< Толщина линий
                  )
     {
 $   _txCheck (__FUNCTION__); assert (txOK());
@@ -1157,11 +1176,11 @@ bool txColor // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Про
               double blue     //!< Количество синего цвета в интервале [0; 1]
               )
     {
-$   if (r > 1) r = 1; if (r < 0) r = 0;
-$   if (g > 1) g = 1; if (g < 0) g = 0;
-$   if (b > 1) b = 1; if (b < 0) b = 0;
+$   if (red   > 1) red   = 1; if (red   < 0) red   = 0;
+$   if (green > 1) green = 1; if (green < 0) green = 0;
+$   if (blue  > 1) blue  = 1; if (blue  < 0) blue  = 0;
 
-$   return txSetColor (RGB (r*255, g*255, b*255));
+$   return txSetColor (RGB (red * 255, green * 255, blue * 255));
     }
 
 //-----------------------------------------------------------------------------
@@ -1228,11 +1247,11 @@ bool txFillColor // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример:
                   double blue   //!< Количество синего цвета в интервале [0; 1]
                   )
     {
-$   if (r > 1) r = 1; if (r < 0) r = 0;
-$   if (g > 1) g = 1; if (g < 0) g = 0;
-$   if (b > 1) b = 1; if (b < 0) b = 0;
+$   if (red   > 1) red   = 1; if (red   < 0) red   = 0;
+$   if (green > 1) green = 1; if (green < 0) green = 0;
+$   if (blue  > 1) blue  = 1; if (blue  < 0) blue  = 0;
 
-$   return txSetFillColor (RGB (r*255, g*255, b*255));
+$   return txSetFillColor (RGB (red * 255, green * 255, blue * 255));
     }
 
 //-----------------------------------------------------------------------------
@@ -1381,11 +1400,11 @@ bool txPixel // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Про
               double blue       //!< Количество синего цвета в интервале [0; 1]
               )
     {
-$   if (r > 1) r = 1; if (r < 0) r = 0;
-$   if (g > 1) g = 1; if (g < 0) g = 0;
-$   if (b > 1) b = 1; if (b < 0) b = 0;
+$   if (red   > 1) red   = 1; if (red   < 0) red   = 0;
+$   if (green > 1) green = 1; if (green < 0) green = 0;
+$   if (blue  > 1) blue  = 1; if (blue  < 0) blue  = 0;
 
-$   return txSetPixel (x, y, RGB (r*255, g*255, b*255));
+$   return txSetPixel (x, y, RGB (red * 255, green * 255, blue * 255));
     }
 
 //-----------------------------------------------------------------------------
@@ -1491,7 +1510,7 @@ bool txPolygon // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: П
     {
 $   _txCheck (__FUNCTION__); assert (txOK());
 
-$   return txGDI ((Win32::Polygon (txDC(), points, npoints) != 0));
+$   return txGDI ((Win32::Polygon (txDC(), points, numPoints) != 0));
     }
 
 //-----------------------------------------------------------------------------
@@ -1753,9 +1772,9 @@ $   return size;
 //! @endcode
 //-----------------------------------------------------------------------------
 
-int txGetTextExtentX // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
-                     (const char* text      //!< Текстовая строка
-                     )
+double txGetTextExtentX // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
+                        (const char text[]     //!< Текстовая строка
+                        )
     {
 $   return txGetTextExtent (text) .cx;
     }
@@ -1771,9 +1790,9 @@ $   return txGetTextExtent (text) .cx;
 //! @endcode
 //-----------------------------------------------------------------------------
 
-int txGetTextExtentY // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
-                     (const char* text      //!< Текстовая строка
-                     )
+double txGetTextExtentY // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
+                        (const char text[]     //!< Текстовая строка
+                        )
     {
 $   return txGetTextExtent (text) .cy;
     }
@@ -1939,7 +1958,7 @@ $   return txSelectObject (rgn);
 //-----------------------------------------------------------------------------
 
 bool txSelectObject // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
-                    (HGDIOBJ obj     //!< Дескриптор объекта GDI
+                    (HGDIOBJ obj   //!< Дескриптор объекта GDI
                      )
     {
 $   _txCheck (__FUNCTION__); assert (txOK());
@@ -2027,7 +2046,7 @@ $   return _txCanvas_LockRefresh;
 
 inline
 bool txUpdateWindow // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
-                    (bool update = true //!< Режим обновления (false - запретить обновление)
+                    (bool update   //!< Режим обновления (false - запретить обновление)
                      )
     {
 $   return _txCanvas_SetLockRefresh (update? 0 : 1) != 0;
@@ -2047,12 +2066,12 @@ $   return _txCanvas_SetLockRefresh (update? 0 : 1) != 0;
 //-----------------------------------------------------------------------------
 
 bool txTextCursor // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
-                  (bool blink = true    //!< false - блокировать мигающий курсор
+                  (bool blink   //!< false - блокировать мигающий курсор
                    )
     {
 $   bool old = _txConsole_CursorMode;
 
-$   _txConsole_CursorMode = mode;
+$   _txConsole_CursorMode = blink;
 
 $   return old;
     }
@@ -2077,9 +2096,9 @@ $   return old;
 //-----------------------------------------------------------------------------
 
 HDC txCreateCompatibleDC // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
-                         (double sizeX,            //!< Ширина холста
-                          double sizeY,            //!< Высота холста
-                          HBITMAP bitmap = NULL    //!< Bitmap associated with DC
+                         (double sizeX,     //!< Ширина холста
+                          double sizeY,     //!< Высота холста
+                          HBITMAP bitmap    //!< Bitmap associated with DC
                           )
     {
 $   _txCheck (__FUNCTION__); assert (txOK());
@@ -2112,7 +2131,7 @@ HDC txLoadImage // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: 
     {
 $   _txCheck (__FUNCTION__); assert (txOK());
 
-$   HBITMAP image = (HBITMAP) LoadImage (NULL, name, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+$   HBITMAP image = (HBITMAP) LoadImage (NULL, filename, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 $   if (!image) return NULL;
 
 $   HDC dc = txCreateCompatibleDC (0, 0, image);
@@ -2175,15 +2194,15 @@ $   return _txBuffer_Delete (dc);
 //-----------------------------------------------------------------------------
 
 bool txBitBlt // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
-              (HDC dest,           //!< Контекст назначения (куда копировать)
-               double xDest,       //!< Х-координата верхнего левого угла изображения-приемника
-               double yDest,       //!< Y-координата верхнего левого угла изображения-приемника
-               double width,       //!< Ширина копируемого изображения
-               double height,      //!< Высота копируемого изображения
-               HDC src,            //!< Контекст источника (откуда копировать)
-               double xSrc,        //!< Х-координата верхнего левого угла изображения-источника
-               double ySrc,        //!< Y-координата верхнего левого угла изображения-источника
-               DWORD rOp = SRCCOPY //!< Растровая операция копирования
+              (HDC dest,        //!< Контекст назначения (куда копировать)
+               double xDest,    //!< Х-координата верхнего левого угла изображения-приемника
+               double yDest,    //!< Y-координата верхнего левого угла изображения-приемника
+               double width,    //!< Ширина копируемого изображения
+               double height,   //!< Высота копируемого изображения
+               HDC src,         //!< Контекст источника (откуда копировать)
+               double xSrc,     //!< Х-координата верхнего левого угла изображения-источника
+               double ySrc,     //!< Y-координата верхнего левого угла изображения-источника
+               DWORD rOp        //!< Растровая операция копирования
                )
     {
 $   _txCheck (__FUNCTION__); assert (txOK());
@@ -2196,6 +2215,11 @@ $   return txGDI ((Win32::BitBlt (dest, (int)xDest, (int)yDest, (int)width, (int
 //! @ingroup Drawing
 //! @brief   Копирует изображение с одного холста (контекста рисования, DC) на другой
 //! @brief   с учетом прозрачности.
+//!
+//!          Стандартная функция TransparentBlt из Win32 API может масштабировать изображение.
+//!          В txAlphaBlend это убрано для упрощения использования. Если масштабирование нужно,
+//!          используйте стандартную функцию TransparentBlt (см. реализацию функции TransparentBlt).
+//!
 //! @return  Если операция была успешна - true, иначе - false.
 //! @see     txBitBlt(), txTransparentBlt(), txLoadImage(), txCreateCompatibleDC()
 //! @examples
@@ -2205,23 +2229,23 @@ $   return txGDI ((Win32::BitBlt (dest, (int)xDest, (int)yDest, (int)width, (int
 //-----------------------------------------------------------------------------
 
 bool txTransparentBlt // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
-                      (HDC dest,                 //!< Контекст назначения (куда копировать)
-                       double xDest,             //!< Х-координата верхнего левого угла изображения-приемника
-                       double yDest,             //!< Y-координата верхнего левого угла изображения-приемника
-                       double width,             //!< Ширина копируемого изображения
-                       double height,            //!< Высота копируемого изображения
-                       HDC src,                  //!< Контекст источника (откуда копировать)
-                       double xSrc,              //!< Х-координата верхнего левого угла изображения-источника
-                       double ySrc,              //!< Y-координата верхнего левого угла изображения-источника
-                       COLORREF transColor = TX_BLACK //!< Цвет, который будет считаться прозрачным
+                      (HDC dest,             //!< Контекст назначения (куда копировать)
+                       double xDest,         //!< Х-координата верхнего левого угла изображения-приемника
+                       double yDest,         //!< Y-координата верхнего левого угла изображения-приемника
+                       double width,         //!< Ширина копируемого изображения
+                       double height,        //!< Высота копируемого изображения
+                       HDC src,              //!< Контекст источника (откуда копировать)
+                       double xSrc,          //!< Х-координата верхнего левого угла изображения-источника
+                       double ySrc,          //!< Y-координата верхнего левого угла изображения-источника
+                       COLORREF transColor   //!< Цвет, который будет считаться прозрачным
                        )
     {
 $   _txCheck (__FUNCTION__); assert (txOK());
 
 $   if (!TransparentBlt) return false;
 
-$   return Win32::TransparentBlt (dest, (int)destX, (int)destY, (int)sizeX, (int)sizeY,
-                                  src,  (int)srcX,  (int)srcY,  (int)sizeX, (int)sizeY, transColor) != 0;
+$   return Win32::TransparentBlt (dest, (int)xDest, (int)yDest, (int)width, (int)height,
+                                  src,  (int)xSrc,  (int)ySrc,  (int)width, (int)height, transColor) != 0;
     }
 
 //-----------------------------------------------------------------------------
@@ -2241,7 +2265,7 @@ $   return Win32::TransparentBlt (dest, (int)destX, (int)destY, (int)sizeX, (int
 //!
 //!          Стандартная функция AlphaBlend из Win32 API может масштабировать изображение.
 //!          В txAlphaBlend это убрано для упрощения использования. Если масштабирование нужно,
-//!          используйте стандартную функцию AlphaBlend (см. реализацию функции @ref _txAlhaBlend).
+//!          используйте стандартную функцию AlphaBlend (см. реализацию функции txAlhaBlend).
 //!
 //! @return  Если операция была успешна - true, иначе - false.
 //! @see     txBitBlt(), txTransparentBlt(), txLoadImage(), txCreateCompatibleDC()
@@ -2252,16 +2276,16 @@ $   return Win32::TransparentBlt (dest, (int)destX, (int)destY, (int)sizeX, (int
 //-----------------------------------------------------------------------------
 
 bool txAlphaBlend // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
-                  (HDC dest,                     //!< Контекст назначения (куда копировать)
-                   double xDest,                 //!< Х-координата верхнего левого угла изображения-приемника
-                   double yDest,                 //!< Y-координата верхнего левого угла изображения-приемника
-                   double width,                 //!< Ширина копируемого изображения
-                   double height,                //!< Высота копируемого изображения
-                   HDC src,                      //!< Контекст источника (откуда копировать)
-                   double xSrc,                  //!< Х-координата верхнего левого угла изображения-источника
-                   double ySrc,                  //!< Y-координата верхнего левого угла изображения-источника
-                   double alpha = 1.0            //!< Общая прозрачность изображения, в дополнение к альфа-каналу.\n
-                                                 //!<   (0 - все прозрачно, 1 - использовать только альфа-канал)
+                  (HDC dest,        //!< Контекст назначения (куда копировать)
+                   double xDest,    //!< Х-координата верхнего левого угла изображения-приемника
+                   double yDest,    //!< Y-координата верхнего левого угла изображения-приемника
+                   double width,    //!< Ширина копируемого изображения
+                   double height,   //!< Высота копируемого изображения
+                   HDC src,         //!< Контекст источника (откуда копировать)
+                   double xSrc,     //!< Х-координата верхнего левого угла изображения-источника
+                   double ySrc,     //!< Y-координата верхнего левого угла изображения-источника
+                   double alpha     //!< Общая прозрачность изображения, в дополнение к альфа-каналу.\n
+                                    //!<   (0 - все прозрачно, 1 - использовать только альфа-канал)
                    )
     {
 $   _txCheck (__FUNCTION__); assert (txOK());
@@ -2277,8 +2301,8 @@ $   if (alpha > 1) alpha = 1;
 
 $   BLENDFUNCTION blend = {AC_SRC_OVER, 0, (BYTE) (alpha * 255), AC_SRC_ALPHA};
 
-$   return Win32::AlphaBlend (dest, (int)destX, (int)destY, (int)sizeX, (int)sizeY,
-                              src,  (int)srcX,  (int)srcY,  (int)sizeX, (int)sizeY, blend) != 0;
+$   return Win32::AlphaBlend (dest, (int)xDest, (int)yDest, (int)width, (int)height,
+                              src,  (int)xSrc,  (int)ySrc,  (int)width, (int)height, blend) != 0;
     }
 
 //=============================================================================
@@ -2933,8 +2957,7 @@ $   return _txCanvas_Wnd;
 
 inline
 bool txLock // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
-            (bool wait = true          //!< Ожидать конца перерисовки окна
-                                       //!< вспомогательным потоком
+            (bool wait   //!< Ожидать конца перерисовки окна вспомогательным потоком
             )
     {
 $   if (wait) { return    EnterCriticalSection (&_txCanvas_LockBackBuf), true; }
@@ -2959,26 +2982,13 @@ $   LeaveCriticalSection (&_txCanvas_LockBackBuf);
 $   return true;
     }
 
-//! @cond    Internal
-template <typename T> inline T txUnlock (T value); // Needed for txGDI() macro, see below
-//! @endcond Internal
-
-//-----------------------------------------------------------------------------
-//! @ingroup Service
-//! @brief   Вызов функции Win32 GDI с автоматической блокировкой и разблокировкой
-//! @return  Значение, возвращаемое вызываемой функцией GDI.
-//! @param   cmd Команда GDI (возможно, возвращающая значение)
-//! @note    Если в вызове функции GDI используются запятые, то используйте двойные
-//!          скобки, чтобы получился один параметр, так как txGDI() все-таки макрос.
-//! @see     txDC(), txLock(), txUnlock(), txGDI()
-//! @hideinitializer
-//! @examples
-//! @code
-//!          txGDI <b>((</b> Rectangle (txDC(), x1, y1, x2, y2) <b>))</b>;
-//! @endcode
-//-----------------------------------------------------------------------------
-
-#define txGDI( cmd ) txUnlock ( (txLock(), (cmd)) )
+template <typename T>
+inline
+T txUnlock (T value)
+    {
+$   txUnlock();
+$   return value;
+    }
 
 //-----------------------------------------------------------------------------
 //! @ingroup Technical
@@ -2990,9 +3000,10 @@ template <typename T> inline T txUnlock (T value); // Needed for txGDI() macro, 
 //! @endcode
 //-----------------------------------------------------------------------------
 
+inline
 const char* txVersion() // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
     {
-    return _txVersion();
+$   return _TX_VERSION;
     }
 
 //=============================================================================
@@ -3048,10 +3059,11 @@ bool In // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейш
 //! @endcode
 //-----------------------------------------------------------------------------
 
-inline bool In // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
-               (const COORD& pt,       //!< Проверяемая точка
-                const SMALL_RECT& rect //!< Прямоугольник
-                )
+inline
+bool In // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
+        (const COORD& pt,       //!< Проверяемая точка
+         const SMALL_RECT& rect //!< Прямоугольник
+         )
     {
     return In (pt.X, rect.Left, rect.Right) &&
            In (pt.Y, rect.Top,  rect.Bottom);
@@ -3087,13 +3099,19 @@ inline bool In // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: П
 //! @endcode
 //-----------------------------------------------------------------------------
 
+inline
 bool txSleep // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
              (int time   //!< Задержка в миллисекундах
               )
     {
-    _txCheck (__TX_FUNCTION__); assert (_txOK());
+    _txCheck (__TX_FUNCTION__); assert (txOK());
 
-    return _txSleep (time);
+$   int old = _txCanvas_SetLockRefresh (0);
+
+$   Sleep (time);
+
+$   _txCanvas_SetLockRefresh (old);
+$   return old != 0;
     }
 
 //-----------------------------------------------------------------------------
@@ -3131,30 +3149,22 @@ bool txPlaySound // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример:
                   DWORD mode = SND_ASYNC       //!< Режим воспроизведения
                   )
     {
-    return _txPlaySound (filename, mode);
+$   mode |= SND_FILENAME | SND_NODEFAULT | SND_NOWAIT;
+$   if (mode & SND_LOOP) mode = (mode & ~SND_SYNC) | SND_ASYNC;
+$   if (!filename) mode = SND_PURGE;
+
+$   return PlaySound (filename, NULL, mode) != 0;
     }
-
-//-----------------------------------------------------------------------------
-//! @ingroup Misc
-//! @brief   Число Пи
-//! @return  Число Пи
-//! @examples
-//! @code
-//!          [example]
-//! @endcode
-//-----------------------------------------------------------------------------
-
-const double txPI = asin (1.0) * 2;
 
 //=============================================================================
 //
-// Реализация движка TXLib
+// Внутренние функции TXLib
 //
 //=============================================================================
 
 bool _txCheck (const char msg[])
     {
-$   if (_txOK()) return true;
+$   if (txOK()) return true;
 
 $   MessageBox (NULL, "Ошибка: Окно рисования не создано!    ", (msg && *msg)? msg : "Ошибка программы", MB_ICONSTOP);
 
@@ -3202,28 +3212,12 @@ $   _txCanvas_CreateWindow (*(POINT*) data);
 $   _txCanvas_Wnd || TX_THROW ("Cannot create canvas: _txCanvas_CreateWindow() failed");
 
 $   MSG msg = {0};
-
-$   for (;;)
+$   while (GetMessage  (&msg, NULL, 0, 0))
         {
-$ //    if (PeekMessage (&msg, NULL, 0, 0, PM_NOREMOVE))
-$       if (GetMessage  (&msg, NULL, 0, 0))
-            {
-$           TranslateMessage (&msg);
-$           DispatchMessage  (&msg);
+$       TranslateMessage (&msg);
+$       DispatchMessage  (&msg);
 
-$           Sleep (0);
-$           continue;
-            }
-        else
-            break;
-
-$ //    if (_txCanvas_Wnd)
-  //        {
-$ //        InvalidateRect (_txCanvas_Wnd, NULL, false);
-$ //        UpdateWindow   (_txCanvas_Wnd);
-  //        }
-  //
-$ //    Sleep (_TX_WINDOW_UPDATE_INTERVAL);
+$       Sleep (0);
         }
 
 $   return (DWORD) msg.wParam;
@@ -3400,7 +3394,7 @@ $   PAINTSTRUCT ps = {0};
 $   HDC dc = BeginPaint (wnd, &ps);
 $   if (!dc) return false;
 
-$   if (!_txLock (false))
+$   if (!txLock (false))
       {
 $     EndPaint (wnd, &ps) TX_NEEDED;
 $     return false;
@@ -3422,7 +3416,7 @@ $         _txConsole_Draw (_txCanvas_BackBuf[1]);
 
 $   Win32::BitBlt (dc, 0, 0, size.x, size.y, _txCanvas_BackBuf[1], 0, 0, SRCCOPY);
 
-$   _txUnlock();
+$   txUnlock();
 
 $   EndPaint (wnd, &ps) TX_NEEDED;
 
@@ -3457,9 +3451,9 @@ bool _txCanvas_OnMouse (HWND, WPARAM buttons, LPARAM coords)
     {
 $   if (!_txCanvas_OK()) return false;
 
-$   _txCurMouseX       = LOWORD (coords);
-$   _txCurMouseY       = HIWORD (coords);
-$   _txCurMouseButtons = (int) buttons;
+$   _txMouseX       = LOWORD (coords);
+$   _txMouseY       = HIWORD (coords);
+$   _txMouseButtons = (int) buttons;
 
 $   return true;
     }
@@ -3584,7 +3578,7 @@ bool _txConsole_Draw (HDC dc)
     {
 $   assert (_txConsole_OK()); assert (_txCanvas_OK());
 
-$   if (!_txLock (false)) return false;
+$   if (!txLock (false)) return false;
 
 $   CONSOLE_SCREEN_BUFFER_INFO con = {{0}};
 $   GetConsoleScreenBufferInfo (GetStdHandle (STD_OUTPUT_HANDLE), &con) TX_NEEDED;
@@ -3615,7 +3609,7 @@ $     Win32::TextOut (dc,
                       "_", 1);
       }
 
-$   _txUnlock();
+$   txUnlock();
 
 $   return true;
     }
@@ -3646,6 +3640,8 @@ $   _txWaitFor (con = FindWindow (NULL, unique));
 $   SetConsoleTitle (title) TX_NEEDED;
 
 $   con || TX_THROW ("Cannot find console window");
+
+$   SetLastError (0);
 $   return con;
     }
 
@@ -3657,7 +3653,7 @@ HDC _txBuffer_Create (HWND wnd, const POINT* size, HBITMAP bitmap)
     {
 $   assert (wnd);
 
-$   _txLock (true);
+$   txLock();
 
 $   HDC wndDC = GetDC (wnd); wndDC TX_NEEDED;
 $   (Win32::GetDeviceCaps (wndDC, RASTERCAPS) & RC_BITBLT) || TX_THROW ("GetDeviceCaps(): RASTERCAPS: RC_BITBLT not supported");
@@ -3679,7 +3675,7 @@ $   if (!bitmap) Win32::PatBlt (dc, 0, 0, size->x, size->y, BLACKNESS) TX_NEEDED
 
 $   ReleaseDC (wnd, wndDC) TX_NEEDED;
 
-$   _txUnlock();
+$   txUnlock();
 $   return dc;
     }
 
@@ -3689,7 +3685,7 @@ bool _txBuffer_Delete (HDC dc)
     {
 $   if (!dc) return false;
 
-$   _txLock (true);
+$   txLock ();
 
 $   _txSelect (Win32::GetStockObject (NULL_PEN),    dc) TX_NEEDED;
 $   _txSelect (Win32::GetStockObject (NULL_BRUSH),  dc) TX_NEEDED;
@@ -3700,7 +3696,7 @@ $   Win32::DeleteObject (Win32::GetCurrentObject (dc, OBJ_REGION));
 
 $   Win32::DeleteDC (dc) TX_NEEDED;
 
-$   _txUnlock();
+$   txUnlock();
 $   return true;
     }
 
@@ -3708,12 +3704,12 @@ $   return true;
 
 bool _txSelect (HGDIOBJ obj, HDC dc)
     {
-$   _txLock (true);
+$   txLock ();
 
 $   obj = Win32::SelectObject (dc, obj); obj TX_NEEDED;
 $   if (obj) Win32::DeleteObject (obj);
 
-$   _txUnlock();
+$   txUnlock();
 
 $   return obj != NULL;
     }
@@ -3749,7 +3745,7 @@ void* _tx_DLGTEMPLATE_Create (void* globalMem,     //!< Буфер памяти для заполне
                               const char* caption, //!< Заголовок диалога
                               const char* font,    //!< Шрифт (должен быть выставлен DS_SETFONT в style)
                               WORD fontsize,       //!< Размер шрифта (должен быть выставлен DS_SETFONT в style)
-                              HANDLE menu = NULL   //!< Меню диалогового окна, если есть
+                              HANDLE menu          //!< Меню диалогового окна, если есть
                               )
     {
 $   if (!globalMem) return NULL;
@@ -3886,7 +3882,7 @@ bool _txThrow (const char file[], int line, const char func[], DWORD error,
         s += _snprintf_s (s, sizeof (str) - 1 - (s-str) TR_, " (%d)", line);
 
     if (func)
-        s += _snprintf_s (s, sizeof (str) - 1 - (s-str) TR_, " %s()", func);
+        s += _snprintf_s (s, sizeof (str) - 1 - (s-str) TR_, " %s",   func);
 
     if (error == (DWORD)(-1))
         error = GetLastError();
@@ -3900,13 +3896,11 @@ bool _txThrow (const char file[], int line, const char func[], DWORD error,
         s +=  _snprintf_s (s, sizeof (str) - 1 - (s-str) TR_, ": "),
         s += _vsnprintf_s (s, sizeof (str) - 1 - (s-str) TR_, msg, arg);
 
-        s += _snprintf_s  (s, sizeof (str) - 1 - (s-str) TR_, "    @n");
+        s += _snprintf_s  (s, sizeof (str) - 1 - (s-str) TR_, "    \n");
 
     #undef TR_
 
-    char strOem[MAXSTR] = "";
-    AnsiToOem (str, strOem);
-    printf (strOem);
+    printf (str);
 
     OutputDebugString (str);
     MessageBox (NULL, str, fatal? "Фатальная ошибка" : "Ошибка программы",
@@ -3919,7 +3913,6 @@ bool _txThrow (const char file[], int line, const char func[], DWORD error,
     }
 
 //=============================================================================
-//! @cond Namespaces
 
 } // namespace TX
 } // anonymous namespace
@@ -3927,7 +3920,6 @@ bool _txThrow (const char file[], int line, const char func[], DWORD error,
 using namespace TX;
 using namespace TX::Win32;
 
-//! @endcond Namespaces
 //=============================================================================
 
 //------------------------------------------------------------------------
@@ -3953,264 +3945,7 @@ using namespace TX::Win32;
 
 #endif // __TXLIB_H
 
-//=============================================================================
-//
-//  @name    Примеры использования
-//
-//=============================================================================
-
-//-----------------------------------------------------------------------------
-/*! @page    Tutorial_1st Пример: Простейший
-
-    @section Tutorial_1st_01 Структура простейшей программы
-
-    Простейшая программа на С (или С++) состоит из двух частей: раздела
-    подключения библиотек и главной функции программы. Рассмотрим пример,
-    в котором рисуется на экране простой рисунок.
-
-    @section Tutorial_1st_02 Раздел подключения библиотек
-
-    Директивы (команды) подключения библиотек находятся обычно в начале
-    файла программы и выглядят обычно так:
-
-    @code
-    #include <stdlib.h>
-    #include "TXLib.h"
-    @endcode
-
-    @c Stdlib.h и @c TXLib.h - файлы библиотек, которые подключаются к вашей
-    программе. После этого вы можете использовать команды, функции и переменные,
-    объявленные в этих файлах. Больше, чем нужно, библиотек подключать не стоит,
-    хотя это и не вредно. Когда используется много библиотек, раздел может быть
-    очень большим.
-
-    @section Tutorial_1st_03 Главная функция программы
-
-    Программа на С (С++) состоит из функций. Функция - это описание каких-либо
-    действий с заданным именем (названием).
-
-    Например,
-
-    @code
-    int main()
-        {
-        txCreateWindow (800, 600);
-        txLine (320, 290, 320, 220);
-        return 0;
-        }
-    @endcode
-
-    Главная функция - это функция, с которой начинается исполнение программы.
-    Ее имя - @c main(). Скобки показывают, что речь идет именно о функции, т.е.,
-    об описании каких-то действий. Для того, чтобы функция начала работу, ее
-    нужно @a вызвать. Функцию @c main() вызывает сама операционная система
-    компьютера. Слово @c int означает, что @c main() в конце работы передаст
-    тому, кто ее вызывал (операционной системе), некое целое число. Это число
-    для функции main() означает код завершения нашей программы. Если он равен 0,
-    то работа программы считается успешной.
-
-    Действия, записанные в функции, заключаются в фигурные скобки @c { и @c }.
-    Они обозначают начало и конец функции.
-
-    Внутри функции записаны вызовы команд, которые что-то рисуют на экране.
-    Между командами, там, где это логически необходимо, стоят пустые строки,
-    отделяющие одни части программы от других. Это способствует большей
-    понятности программы. Пустая строка в программировании соответствует
-    началу абзаца текста в русском языке.
-
-    Для понимания программы и того, чтобы в ней не появлялись ошибки, очень
-    важно, чтобы в нужных местах в ней стояли пробелы. Обычно их ставят до
-    открывающих круглых скобок, после запятых, до и после знаков операций.
-    Наличие пробелов делает программу приятной на вид, и предотвращает
-    напряжение глаз при работе с компьютером. Работа с плохо оформленным
-    текстом программы может нанести вред глазам, снизить зрение.
-
-    Пример плохо написанной программы:
-
-    @code
-    #include "TXLib.h"
-    int   main(){
-    txCreateWindow(800,600);  // По-моему, про зрение все ясно. :)
-    txLine(320,290,320,220);
-     txLine (320, 290,280,350);
-      txLine(320, 290,360,350);
-     txLine(320,230,270,275);
-    txLine(320,230, 400,220);
-    txCircle(320,190,30);
-      txSelectFont( "Times",60);
-    txTextOut(240,400,"Hello, world!");
-              return        0;
-    }
-    @endcode
-
-    Для задания положения рисуемых фигур используется координатная система,
-    у которой верхний левый угол расположен слева-вверху, а ось OY смотрит
-    вниз. Это несколько непривычно, но деваться некуда. :) Например, команда
-
-    @code
-    txLine (320, 290, 320, 220);
-    @endcode
-
-    проводит линию из точки x=320 и у=290 в точку с x=320 и y=220.
-
-    Каждая команда заканчивается точкой с запятой. Это - аналог точки в русском
-    языке. Точка с запятой ставится в конце каждого @a законченного действия
-    или объявления. Например, в строке с @c txCreateWindow (800, 600) точка с
-    запятой ставится, т.к. в этой строке "закончена мысль" о том, что надо
-    создать окно для рисования. В строке с <tt>int main()</tt> - не ставится,
-    т.к. описание функции @c main() не закончено (на самом деле, оно там только
-    начато).
-
-    Если в программе используются строки, они заключаются в двойные кавычки,
-    например:
-
-    @code
-    txTextOut (240, 400, "Hello, world!");
-    @endcode
-
-    Если в программе присутствут числа с дробной частью, то эта часть
-    отделяется от целой части точкой, а не запятой, как в русском языке.
-
-    @section Tutorial_1st_04 Распространенные ошибки
-
-    В простых программах ошибки бывают двух видов:
-
-    - Ошибки записи (орфография, пунктуация) - их называют синтаксическими
-      ошибками <i>(syntax error).</i> Они происходят до запуска программы,
-      на стадии перевода программы в машинный код (стадии компиляции). Поэтому
-      их называют ошибками времени компиляции. Исполняемый файл при этом не
-      создается и программа не запускается.
-
-    - Логические ошибки - они происходят после запуска программы, при этом
-      при компиляции ошибок нет (иногда имеются предупреждения, @a warnings).
-      Их называют ошибками времени исполнения.
-
-    Практически все синтаксические ошибки на этой стадии происходят из-за
-    невнимательности. Распространенные синтаксические ошибки:
-
-    - Путают ключевые слова, названия библиотек и команд:
-      @code
-      #iclude "TX lib.h"
-      in maim()
-      tx Line (10, 10, 20, 20)
-      @endcode
-
-    - Путают большие и маленькие буквы:
-      @code
-      txcircle (100, 100, 10)
-      @endcode
-
-    - Не ставят скобки:
-      @code
-      int main
-      @endcode
-
-    - Забывают запятые:
-      @code
-      txСircle (100 100 10)
-      @endcode
-
-    - Забывают точки с запятой:
-      @code
-      txSelectFont ("Times", 60)
-      @endcode
-
-    - Забывают или путают кавычки:
-      @code
-      txSelectFont (Times, 60)
-      txSelectFont ('Times', 60)
-      @endcode
-
-    - Ставят лишние точки с запятой:
-      @code
-      int main();
-      @endcode
-
-    - Указвают дробную часть числа через запятую:
-      @code
-      3,1415
-      @endcode
-
-    - Забывают фигурные скобки:
-      @code
-      int main()
-      txCreateWindow (800, 600);
-      txLine (320, 290, 320, 220);
-      return 0;
-      @endcode
-
-    - Забывают писать открывающие или закрывающие скобки, или пишут лишние,
-      отчего появляются непарные скобки, или путают виды скобок:
-      @code
-      int main()
-          {
-          txCreateWindow (800, 600);
-
-          txLine (320, 290, 320, 220;  // Не закрыта круглая скобка
-          return 0;
-          }
-      @endcode
-      @code
-      int main()
-      {
-      txCreateWindow {800, 600};   // Фигурные скобки вместо круглых
-      return 0;
-      }
-
-      txLine (320, 290, 320, 220;  // Команда за пределами функции main()
-      }                            // Лишняя скобка
-      @endcode
-
-    - Помещают команды за пределы фигурных скобок
-      @code
-      int main()
-      {
-      txCreateWindow (800, 600);
-      return 0;
-      }
-
-      txLine (320, 290, 320, 220); // Команда за пределами функции main()
-      @endcode
-
-    Бывают и логические ошибки. Например, мы не выбрали нужный цвет рисования
-    (по умолчанию он белый), или нарисовали одну фигуру поверх другой, и она
-    закрыла предыдущую, или задали неверные координаты. Эти ошибки появляются
-    после запуска программы. Их легко понять, если выполнить на листе бумаги
-    все команды одну за другой, в том порядке, в котором они заданы в программе.
-
-    @section Tutorial_1st_Code Законченный пример
-    @include "Examples\TXEx01.cpp"
-*/
-//-----------------------------------------------------------------------------
-/*! @page Tutorial_1stEx Пример: Улучшенный :)
-
-    @section Tutorial_1stEx_Code Законченный пример
-    @include "Examples\TXEx02.cpp"
-*/
-//-----------------------------------------------------------------------------
-/*! @page Tutorial_Functions Пример: Функции
-
-    @section Tutorial_Functions_Code Законченный пример
-    @include "Examples\TXEx03.cpp"
-*/
-//-----------------------------------------------------------------------------
-/*! @page Tutorial_Parameters Пример: Функции с параметрами
-
-    @section Tutorial_Parameters_Code Законченный пример
-    @include "Examples\TXEx04.cpp"
-*/
-//-----------------------------------------------------------------------------
-/*! @page Tutorial_While Пример: Циклы
-
-    @section Tutorial_While_Code Законченный пример
-    @include "Examples\TXEx05.cpp"
-*/
-//-----------------------------------------------------------------------------
-/*! @page Tutorial_For Пример: Циклы (2)
-
-    @section Tutorial_For_Code Законченный пример
-    @include "Examples\TXEx06.cpp"
-*/
+//! @include "Examples\Examples.txt"
 
 //=============================================================================
 //
