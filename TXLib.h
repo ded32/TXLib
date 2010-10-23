@@ -5,7 +5,7 @@
 //!
 //! @mainpage
 //!
-//! @brief      Библиотека Тупого Художника (The Dumb Artist Library).
+//! @brief      Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
 //! @version    [Version 0.01 alpha, build 72]
 //! @author     Copyright (C) Ded, 2005-10 (Ilya Dedinsky <ded@concord.ru>, http://ded32.net.ru)
@@ -100,34 +100,46 @@
 #undef  UNICODE
 
 #ifndef _WIN32_WINNT
-#define _WIN32_WINNT 0x0400
-#endif
+    #define _WIN32_WINNT 0x0400
+    #endif
 
 #if defined (__GNUC__)
-#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
-#pragma GCC diagnostic ignored "-Wunreachable-code"
-#endif
+
+    #if __GNUC__ >= 4 && __GNUC_MINOR__ >= 2 && __GNUC_PATCHLEVE__ >= 2
+        #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+        #pragma GCC diagnostic ignored "-Wunreachable-code"
+        #endif
+
+    #define _TX_CHECK_FORMAT( fmtIdx )  __attribute__ (( format (printf, (fmtIdx), (fmtIdx)+1) ))
+    #define _TX_CHECK_USAGE             __attribute__ (( warn_unused_result ))
+
+#else
+
+    #define _TX_CHECK_FORMAT( fmtIdx )  
+    #define _TX_CHECK_USAGE             
+    #endif
 
 #if defined (_MSC_VER)
-#pragma warning (push, 4)
-#pragma warning (disable: 4127)                 // conditional expression is constant
-#pragma warning (disable: 4245)                 // 'argument': conversion from A to B, signed/unsigned mismatch
-#define _CRT_SECURE_CPP_OVERLOAD_SECURE_NAMES 1
-#endif
+    #pragma warning (push, 4)
+    #pragma warning (disable: 4127)             // conditional expression is constant
+    #pragma warning (disable: 4245)             // 'argument': conversion from A to B, signed/unsigned mismatch
+    #define _CRT_SECURE_CPP_OVERLOAD_SECURE_NAMES 1
+    #endif
 
 #if defined (_MSC_VER) && (_MSC_VER == 1200)    // MSVC 6
-#pragma warning (disable: 4100)                 // 'parameter': unreferenced formal parameter
-#pragma warning (disable: 4511)                 // 'class': copy constructor could not be generated
-#pragma warning (disable: 4512)                 // 'class': assignment operator could not be generated
-#endif
+    #pragma warning (disable: 4100)             // 'parameter': unreferenced formal parameter
+    #pragma warning (disable: 4511)             // 'class': copy constructor could not be generated
+    #pragma warning (disable: 4512)             // 'class': assignment operator could not be generated
+    #endif
 
 #if defined (_MSC_VER) && (_MSC_VER >= 1400)    // MSVC 8 (2005)
-#define _TX_USE_SECURE_CRT
+    #define _TX_USE_SECURE_CRT
 #else
-#define  strncpy_s    strncpy                   // Prevous MSVC versions do not
-#define _snprintf_s  _snprintf                  // have secure variants of these
-#define _vsnprintf_s _vsnprintf                 // functions, so use unsecure ones
-#endif
+    #define  strncpy_s    strncpy               // Prevous MSVC versions do not
+    #define  strncat_s    strncat               // have secure variants of these
+    #define _snprintf_s  _snprintf              // functions, so use unsecure ones
+    #define _vsnprintf_s _vsnprintf             // 
+    #endif
 
 //-----------------------------------------------------------------------------
 
@@ -164,8 +176,8 @@ namespace TX {
 //-----------------------------------------------------------------------------
 
 #ifdef FOR_DOXYGEN_ONLY
-#define      _TX_NO_HIDE_CONSOLE
-#endif
+    #define  _TX_NO_HIDE_CONSOLE
+    #endif
 
 //-----------------------------------------------------------------------------
 //! @ingroup Technical
@@ -242,20 +254,20 @@ const int    _txIDM_CONSOLE               = 40001;
 //-----------------------------------------------------------------------------
 
 #if defined (__GNUC__)
-#define __TX_FUNCTION__   __PRETTY_FUNCTION__
+    #define __TX_FUNCTION__   __PRETTY_FUNCTION__
 
 #elif defined (__FUNCSIG__)
-#define __TX_FUNCTION__   __FUNCSIG__
+    #define __TX_FUNCTION__   __FUNCSIG__
 
 #elif defined (__BORLANDC__) && (__BORLANDC__ >= 0x550)
-#define __TX_FUNCTION__   __FUNC__
+    #define __TX_FUNCTION__   __FUNC__
 
 #elif defined (__STDC_VERSION__) && (__STDC_VERSION__ >= 199901)
-#define __TX_FUNCTION__   __func__
+    #define __TX_FUNCTION__   __func__
 
 #else
-#define __TX_FUNCTION__   __TX_FILELINE__
-#endif
+    #define __TX_FUNCTION__   __TX_FILELINE__
+    #endif
 
 //-----------------------------------------------------------------------------
 //! @ingroup Misc
@@ -284,14 +296,11 @@ const int    _txIDM_CONSOLE               = 40001;
 //-----------------------------------------------------------------------------
 
 #ifndef NDEBUG
-
-#define TX_THROW( msg )   _txThrow (__FILE__, __LINE__, __TX_FUNCTION__, (DWORD)(-1), msg)
+    #define TX_THROW( msg )   _txThrow (__FILE__, __LINE__, __TX_FUNCTION__, (DWORD)(-1), msg)
 
 #else
-
-#define TX_THROW(msg)
-
-#endif
+    #define TX_THROW(msg)
+    #endif
 
 //-----------------------------------------------------------------------------
 //! @ingroup Misc
@@ -304,14 +313,11 @@ const int    _txIDM_CONSOLE               = 40001;
 //-----------------------------------------------------------------------------
 
 #ifndef NDEBUG
-
-#define TX_PRINT_HERE()   printf ("%s (%d) %s(): Here... :)\n", __FILE__, __LINE__, __TX_FUNCTION__)
+    #define TX_PRINT_HERE()   printf ("%s (%d) %s(): Here... :)\n", __FILE__, __LINE__, __TX_FUNCTION__)
 
 #else
-
-#define TX_PRINT_HERE()
-
-#endif
+    #define TX_PRINT_HERE()
+    #endif
 
 //-----------------------------------------------------------------------------
 //! @ingroup Misc
@@ -322,17 +328,17 @@ const int    _txIDM_CONSOLE               = 40001;
 //! @hideinitializer
 //-----------------------------------------------------------------------------
 
-#ifndef NDEBUG
-
 #undef  assert
-#define assert(p)         ( !(p)? (TX_THROW ("\aAssertion failed: \"%s\"" _ #p), 0) : 1 )
+
+#ifndef NDEBUG
+    #define assert(p)     ( !(p)? (TX_THROW ("\aAssertion failed: \"%s\"" _ #p), 0) : txReturn1() )
 
 #else
+    #define assert(p)     ( 1 )
+    #endif
 
-#undef  assert
-#define assert(p)         ( 1 )
-
-#endif
+inline
+int txReturn1()           { return 1; }   // To disable warning "right-hand operand of comma has no effect"
 
 //-----------------------------------------------------------------------------
 //! @ingroup Misc
@@ -352,14 +358,11 @@ const int    _txIDM_CONSOLE               = 40001;
 //-----------------------------------------------------------------------------
 
 #ifndef NDEBUG
-
-#define TX_NEEDED         || TX_THROW (NULL)
+    #define TX_NEEDED     || TX_THROW (NULL)
 
 #else
-
-#define TX_NEEDED
-
-#endif
+    #define TX_NEEDED
+    #endif
 
 //-----------------------------------------------------------------------------
 //! @ingroup Misc
@@ -441,22 +444,23 @@ const double txPI = asin (1.0) * 2;
 //-----------------------------------------------------------------------------
 
 #ifndef TX_TRACE
-#define TX_TRACE          OutputDebugString (__TX_FILELINE__ ": ");
-#endif
+    #define TX_TRACE      OutputDebugString (__TX_FILELINE__ ": ");
+    #endif
 
 #ifdef  _TX_TRACE
-#define $                 TX_TRACE
+    #define $             TX_TRACE
+
 #else
-#define $
-#endif
+    #define $
+    #endif
 
 #ifndef NDEBUG
-int  _txInitTrace = (OutputDebugString ("\n"),
-                     OutputDebugString ("The Dumb Artist Library (TXLib) "
-                                        _TX_VERSION " (c) Ded, 2005-10 (Ilya Dedinsky <ded@concord.ru>, http://ded32.net.ru): "
-                                        "\"" __FILE__ "\", compiled "__DATE__ " " __TIME__ "\n"),
-                     OutputDebugString ("\n"), 1);
-#endif
+    int  _txInitTrace = (OutputDebugString ("\n"),
+                         OutputDebugString ("The Dumb Artist Library (TXLib) "
+                                            _TX_VERSION " (c) Ded, 2005-10 (Ilya Dedinsky <ded@concord.ru>, http://ded32.net.ru): "
+                                            "\"" __FILE__ "\", compiled "__DATE__ " " __TIME__ "\n"),
+                         OutputDebugString ("\n"), 1);
+    #endif
 
 //=============================================================================
 //
@@ -464,20 +468,21 @@ int  _txInitTrace = (OutputDebugString ("\n"),
 //
 //=============================================================================
 
-int         txExtractColor (COLORREF color, COLORREF component);
-COLORREF    txRGB2HSL (COLORREF rgbColor);
-COLORREF    txHSL2RGB (COLORREF hslColor);
 bool        txCreateWindow (double sizeX, double sizeY, bool centered = true);
+bool        txSetDefaults();
 bool        txOK();
 POINT       txGetExtent();
-double      txGetExtentX();
-double      txGetExtentY();
+int         txGetExtentX();
+int         txGetExtentY();
 bool        txSetColor (COLORREF color, double thickness = 1);
 bool        txColor (double red, double green, double blue);
 COLORREF    txGetColor();
 bool        txSetFillColor (COLORREF color);
 bool        txFillColor (double red, double green, double blue);
 COLORREF    txGetFillColor();
+int         txExtractColor (COLORREF color, COLORREF component);
+COLORREF    txRGB2HSL (COLORREF rgbColor);
+COLORREF    txHSL2RGB (COLORREF hslColor);
 bool        txSetROP2 (int mode);
 bool        txClear();
 bool        txSetPixel (double x, double y, COLORREF color);
@@ -494,8 +499,8 @@ bool        txChord (double x0, double y0, double x1, double y1, double startAng
 bool        txTextOut (double x, double y, const char text[]);
 bool        txSelectFont (const char name[], double sizeY, double sizeX, int bold, bool italic, bool underline, bool strikeout);
 SIZE        txGetTextExtent (const char text[]);
-double      txGetTextExtentX (const char text[]);
-double      txGetTextExtentY (const char text[]);
+int         txGetTextExtentX (const char text[]);
+int         txGetTextExtentY (const char text[]);
 bool        txSetTextAlign (unsigned align);
 LOGFONT*    txFontExist (const char name[]);
 bool        txFloodFill (double x, double y, COLORREF color, DWORD mode);
@@ -514,8 +519,8 @@ bool        txTransparentBlt (HDC dest, double xDest, double yDest, double width
                               HDC src,  double xSrc,  double ySrc,  COLORREF transColor = RGB (0, 0, 0));
 bool        txAlphaBlend     (HDC dest, double xDest, double yDest, double width, double height,
                               HDC src,  double xSrc,  double ySrc,  double alpha = 1.0);
-double      txMouseX();
-double      txMouseY();
+int         txMouseX();
+int         txMouseY();
 int         txMouseButtons();
 const char* txInputBox (const char* text, const char* caption, const char* input);
 HDC         txDC();
@@ -535,7 +540,7 @@ void* _tx_DLGTEMPLATE_Add    (void* dlgTemplatePtr, size_t bufsize, DWORD style,
 bool       _txCleanup();
 void       _txOnExit();
 
-HWND       _txCanvas_CreateWindow (POINT size);
+HWND       _txCanvas_CreateWindow (SIZE size);
 bool       _txCanvas_OK();
 bool       _txCanvas_DestroyWindow();
 int        _txCanvas_SetLockRefresh (int count);
@@ -561,7 +566,7 @@ bool       _txConsole_Detach();
 bool       _txConsole_Draw (HDC dc);
 HWND       _txConsole_GetWindow();
 
-bool       _txThrow (const char file[], int line, const char func[], DWORD error, const char msg[], ...);
+bool       _txThrow (const char file[], int line, const char func[], DWORD error, const char msg[], ...) _TX_CHECK_FORMAT (5);
 bool       _txCheck (const char msg[]);
 
 #define    _txWaitFor(p) { for (int __i##__LINE__ = 0; __i##__LINE__ < _TX_TIMEOUT/10; __i##__LINE__++) \
@@ -710,7 +715,7 @@ enum txColors {
     txCYAN         = RGB (  0, 128, 128), TX_CYAN          = txCYAN,         //!< Бирюзовый цвет
     txRED          = RGB (128,   0,   0), TX_RED           = txRED,          //!< Красный цвет
     txMAGENTA      = RGB (128,   0, 128), TX_MAGENTA       = txMAGENTA,      //!< Малиновый цвет
-    txBROWN        = RGB (128, 128,   0), TX_BROWN         = txBROWN,        //!< Коричневый цвет. Некрасивый. Сделайте сами через @ref RGB().
+    txBROWN        = RGB (128, 128,   0), TX_BROWN         = txBROWN,        //!< Коричневый цвет. Некрасивый. Do it yourself using @ref RGB().
     txORANGE       = RGB (255, 128,   0), TX_ORANGE        = txORANGE,       //!< Оранжевый цвет
     txGRAY         = RGB (160, 160, 160), TX_GRAY          = txGRAY,         //!< Серый цвет
     txDARKGRAY     = RGB (128, 128, 128), TX_DARKGRAY      = txDARKGRAY,     //!< Темно-серый цвет
@@ -931,11 +936,7 @@ $   return RGB (ir * 255, ig * 255, ib * 255);
 //! @ingroup Drawing
 //! @brief   Создание окна рисования
 //!
-//!          Параметры по умолчанию:\n
-//!          - Линии - цвет белый (TX_WHITE), толщина 1
-//!          - Заливка - цвет белый (TX_WHITE)
-//!          - Шрифт - Системный шрифт, цвет белый (TX_WHITE)
-//!          - Логическая растровая операция - копирование цвета (R2_COPYPEN)
+//!          Параметры по умолчанию - см. функцию @ref txSetDefaults
 //!
 //! @return  Если операция была успешна - true, иначе - false.
 //! @see     txOk()
@@ -969,17 +970,45 @@ $   _wsetlocale (LC_CTYPE, L"Russian_Russia.ACP");
 $   SetConsoleCP       (1251);
 $   SetConsoleOutputCP (1251);
 
-$   POINT size = { sizeX, sizeY };
-$   if (centered) { size.x *= -1; size.y *= -1; }
+$   SIZE size = { (int)sizeX, (int)sizeY };
+$   if (centered) { size.cx *= -1; size.cy *= -1; }
 
 $   DWORD id = 0;
-$   _txCanvas_Thread = CreateThread (NULL, 0, _txCanvas_ThreadProc, &size, 0, &id);
+$   _txCanvas_Thread = CreateThread (NULL, 0, _txCanvas_ThreadProc, &size, 0, &id);  // Where REAL creation is...
 $   _txCanvas_Thread || TX_THROW ("Cannot create _txCanvas_Thread: CreateThread() failed");
 $   _txWaitFor (_txCanvas_OK());
 $   _txCanvas_OK()   || TX_THROW ("Cannot create canvas");
 
-$   txUpdateWindow (false);
+$   txSetDefaults();
 
+$   SetLastError (0);
+$   return true;
+    }
+
+//-----------------------------------------------------------------------------
+//! @ingroup Drawing
+//! @brief   Установка параметров рисования по умолчанию.
+//! 
+//!          Параметры по умолчанию:\n
+//!          - Линии - цвет белый (TX_WHITE), толщина 1
+//!          - Заливка - цвет белый (TX_WHITE)
+//!          - Шрифт - Системный шрифт, цвет белый (TX_WHITE)
+//!          - Логическая растровая операция - копирование цвета (R2_COPYPEN)
+//! 
+//! @return  Если операция была успешна - true, иначе - false.
+//! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), @ref txColors, RGB()
+//!          txSelectFont(), txSelectRegion(), txSetROP2()
+//! @examples 
+//! @code
+//!          txSetDefaults();
+//! @endcode
+//-----------------------------------------------------------------------------
+
+bool txSetDefaults() // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
+    {
+$   txUpdateWindow (false);
+$   txLock();
+    
 //  Set defaults for graphics layer
 
 $   RECT r = {0};
@@ -1028,10 +1057,10 @@ $   _txSelect (txFontExist (_TX_CONSOLE_FONT)? CreateFont (szFont.cy * 8/10, szF
 $   Win32::SetTextColor (dc, _TX_CONSOLE_COLOR);
 $   Win32::SetBkMode    (dc, TRANSPARENT) TX_NEEDED;
 
+$   txUnlock();
 $   txUpdateWindow (true);
 
-$   SetLastError (0);
-$   return true;
+    return true;
     }
 
 //-----------------------------------------------------------------------------
@@ -1044,7 +1073,7 @@ $   return true;
 //!          txCreateWindow (800, 600);
 //!          if (!txOK())
 //!              {
-//!              MessageBox (NULL, "Не могу создать окно", "Ошибка!", MB_ICONSTOP);
+//!              MessageBox (txWindow(), "Не смог создать окно", "Извините", MB_ICONSTOP);
 //!              return;
 //!              }
 //! @endcode
@@ -1093,7 +1122,7 @@ $   return size;
 //-----------------------------------------------------------------------------
 
 inline
-double txGetExtentX() // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
+int txGetExtentX() // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
     {
 $   return txGetExtent().x;
     }
@@ -1112,7 +1141,7 @@ $   return txGetExtent().x;
 //-----------------------------------------------------------------------------
 
 inline
-double txGetExtentY() // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
+int txGetExtentY() // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
     {
 $   return txGetExtent().y;
     }
@@ -1134,7 +1163,7 @@ $   return txGetExtent().y;
 
 #define txGDI( cmd ) txUnlock ( (txLock(), (cmd)) )
 
-template <typename T> inline T txUnlock (T value);
+template <typename T> inline T txUnlock (T value);  // Needed to pass return values in txGDI() macro
 
 //-----------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1155,7 +1184,7 @@ bool txSetColor // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: 
     {
 $   _txCheck (__FUNCTION__); assert (txOK());
 
-$   return _txSelect (Win32::CreatePen ((color == TX_TRANSPARENT? PS_NULL : PS_SOLID), thickness, color)) &&
+$   return _txSelect (Win32::CreatePen ((color == TX_TRANSPARENT? PS_NULL : PS_SOLID), (int)thickness, color)) &&
             txGDI   ((Win32::SetTextColor (txDC(), color) != 0));
     }
 
@@ -1772,9 +1801,9 @@ $   return size;
 //! @endcode
 //-----------------------------------------------------------------------------
 
-double txGetTextExtentX // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
-                        (const char text[]     //!< Текстовая строка
-                        )
+int txGetTextExtentX // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
+                     (const char text[]     //!< Текстовая строка
+                      )
     {
 $   return txGetTextExtent (text) .cx;
     }
@@ -1790,9 +1819,9 @@ $   return txGetTextExtent (text) .cx;
 //! @endcode
 //-----------------------------------------------------------------------------
 
-double txGetTextExtentY // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
-                        (const char text[]     //!< Текстовая строка
-                        )
+int txGetTextExtentY // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
+                     (const char text[]     //!< Текстовая строка
+                      )
     {
 $   return txGetTextExtent (text) .cy;
     }
@@ -2295,9 +2324,9 @@ $   if (!AlphaBlend) return false;
 $   if (alpha < 0) alpha = 0;
 $   if (alpha > 1) alpha = 1;
 
-#ifndef AC_SRC_ALPHA
-#define AC_SRC_ALPHA 0x01   // On some old MinGW versions, this is not defined.
-#endif
+#ifndef     AC_SRC_ALPHA
+    #define AC_SRC_ALPHA 0x01   // On some old MinGW versions, this is not defined.
+    #endif
 
 $   BLENDFUNCTION blend = {AC_SRC_OVER, 0, (BYTE) (alpha * 255), AC_SRC_ALPHA};
 
@@ -2323,7 +2352,7 @@ $   return Win32::AlphaBlend (dest, (int)xDest, (int)yDest, (int)width, (int)hei
 //-----------------------------------------------------------------------------
 
 inline
-double txMouseX() // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
+int txMouseX() // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
     {
 $   return _txMouseX;
     }
@@ -2340,7 +2369,7 @@ $   return _txMouseX;
 //-----------------------------------------------------------------------------
 
 inline
-double txMouseY() // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
+int txMouseY() // ЭТО НЕ ОШИБКА В TXLib.h! См. TXLib Help, "Описания - Пример: Простейший"
     {
 $   return _txMouseY;
     }
@@ -3166,11 +3195,10 @@ bool _txCheck (const char msg[])
     {
 $   if (txOK()) return true;
 
-$   MessageBox (NULL, "Ошибка: Окно рисования не создано!    ", (msg && *msg)? msg : "Ошибка программы", MB_ICONSTOP);
+$   MessageBox (txWindow(), "Ошибка: Окно рисования не создано!    ", (msg && *msg)? msg : "TXLib", MB_ICONSTOP);
 
-//  Во избежание лишних вопросов о якобы ошибках в библиотеке приходится делать так. :(
+$   exit (1); //  Во избежание лишних вопросов о якобы ошибках в библиотеке приходится делать так. :(
 
-$   exit (1);
 //  return false;
     }
 
@@ -3208,7 +3236,7 @@ DWORD WINAPI _txCanvas_ThreadProc (LPVOID data)
     {
 $   assert (data);
 
-$   _txCanvas_CreateWindow (*(POINT*) data);
+$   _txCanvas_CreateWindow (*(SIZE*) data);
 $   _txCanvas_Wnd || TX_THROW ("Cannot create canvas: _txCanvas_CreateWindow() failed");
 
 $   MSG msg = {0};
@@ -3225,7 +3253,7 @@ $   return (DWORD) msg.wParam;
 
 //-----------------------------------------------------------------------------
 
-HWND _txCanvas_CreateWindow (POINT clientSize)
+HWND _txCanvas_CreateWindow (SIZE clientSize)
     {
 $   const char className[] = __FILE__ "\\_txCanvas\\Class";
 
@@ -3240,15 +3268,17 @@ $   wc.lpszClassName = className;
 $   RegisterClassEx (&wc) || TX_THROW ("RegisterClass (\"%s\") failed"_ className);
 
 $   char name[256] = ""; GetModuleFileName (NULL, name, sizeof (name) - 1) TX_NEEDED;
+$   strncat_s (name, " - TXLib", sizeof (name));
+$   const char* title = (title = strrchr (name, '\\'), title? title+1 : name);
 
 $   int centered = false;
-$   if (clientSize.x < 0 && clientSize.y < 0) { clientSize.x *= -1; clientSize.y *= -1; centered = true; }
+$   if (clientSize.cx < 0 && clientSize.cy < 0) { clientSize.cx *= -1; clientSize.cy *= -1; centered = true; }
 
-$   POINT scr     = { GetSystemMetrics (SM_CXSCREEN),     GetSystemMetrics (SM_CYSCREEN) };
-$   POINT frame   = { GetSystemMetrics (SM_CXFIXEDFRAME), GetSystemMetrics (SM_CYFIXEDFRAME) };
-$   POINT caption = { 0, GetSystemMetrics (SM_CYCAPTION) };
-$   POINT size    = { clientSize.x + 2*frame.x, clientSize.y + 2*frame.y + caption.y };
-$   POINT center  = { scr.x / 2, scr.y / 2};
+$   SIZE scr     = { GetSystemMetrics (SM_CXSCREEN),     GetSystemMetrics (SM_CYSCREEN)     };
+$   SIZE frame   = { GetSystemMetrics (SM_CXFIXEDFRAME), GetSystemMetrics (SM_CYFIXEDFRAME) };
+$   SIZE caption = { 0, GetSystemMetrics (SM_CYCAPTION) };
+$   SIZE size    = { clientSize.cx + 2*frame.cx, clientSize.cy + 2*frame.cy + caption.cy };
+$   POINT center = { scr.cx / 2, scr.cy / 2 };
 
 $   if (!centered)
         {
@@ -3257,8 +3287,8 @@ $       center.x = (r.right + r.left) / 2;
 $       center.y = (r.bottom + r.top) / 2;
         }
 
-$   _txCanvas_Wnd = CreateWindowEx (0, className, name, WS_POPUP | WS_BORDER | WS_CAPTION | WS_SYSMENU,
-                                    center.x - size.x/2, center.y - size.y/2, size.x, size.y,
+$   _txCanvas_Wnd = CreateWindowEx (0, className, title, WS_POPUP | WS_BORDER | WS_CAPTION | WS_SYSMENU,
+                                    center.x - size.cx/2, center.y - size.cy/2, size.cx, size.cy,
                                     NULL, NULL, NULL, NULL);
 $   _txCanvas_Wnd || TX_THROW ("Cannot create canvas: CreateWindowEx (\"%s\") failed"_ className);
 
@@ -3273,7 +3303,7 @@ $       int hide = 0;
 $       hide = SWP_HIDEWINDOW;
         #endif
 
-$       SetWindowPos (_txConsole_Wnd, HWND_NOTOPMOST, center.x - size.x*2/5, center.y - size.y*2/5, 0, 0,
+$       SetWindowPos (_txConsole_Wnd, HWND_NOTOPMOST, center.x - size.cx*2/5, center.y - size.cy*2/5, 0, 0,
                       SWP_NOSIZE | SWP_NOACTIVATE | hide) TX_NEEDED;
 
 $       HMENU menu = GetSystemMenu (_txCanvas_Wnd, false); menu TX_NEEDED;
@@ -3377,7 +3407,7 @@ $   char name[256] = __FILE__;
 $   GetModuleFileName (NULL, name, sizeof (name) - 1) TX_NEEDED;
 
 $   if (_txRunning &&
-        MessageBox (_txCanvas_Wnd, "Функция main() не завершена. "
+        MessageBox (txWindow(), "Функция main() не завершена. "
                     "Программа все еще работает. Прервать?    ", name,
                      MB_OKCANCEL | MB_ICONSTOP) != IDOK) return false;
 $   return true;
@@ -3490,11 +3520,22 @@ $   return true;
 
 bool _txCanvas_OnCmdAbout (HWND, WPARAM)
     {
-$   MessageBox (NULL, "\nThe Dumb Artist Library (TXLib)\n\n"
-                _TX_VERSION "  (c) Ded, 2005-08 (Ilya Dedinsky <ded@concord.ru>, http://ded32.net.ru)    @n\n"
-                "Compiled with: " __FILE__ ", at "__DATE__ " " __TIME__"      @n",
-                "About TX Library",
-                MB_ICONINFORMATION);
+$   char name[256] = ""; GetModuleFileName (NULL, name, sizeof (name) - 1) TX_NEEDED;
+
+$   char text[512] = "";
+
+$   _snprintf_s (text, sizeof (text), 
+                 #ifdef  _TX_USE_SECURE_CRT
+                 _TRUNCATE,
+                 #endif             
+                 "\n" "The Dumb Artist Library (TX Library, TXLib)\n\n"
+                 _TX_VERSION "  (c) Ded, 2005-10 (Ilya Dedinsky <ded@concord.ru>, http://ded32.net.ru)    \n\n"
+                 "Executable file name:\t" "%s    \n"
+                 "Compiled with TXLib:\t"   __FILE__ ", at "__DATE__ " " __TIME__"      \n",
+                 name);
+
+$   MessageBox (txWindow(), text, "About TXLib", MB_ICONINFORMATION);
+
 $   return true;
     }
 
@@ -3646,7 +3687,7 @@ $   return con;
     }
 
 //=============================================================================
-// Функции графического буфера (_txBuffer...)
+// Функции "виртуального холста" (графического буфера, _txBuffer...)
 //=============================================================================
 
 HDC _txBuffer_Create (HWND wnd, const POINT* size, HBITMAP bitmap)
@@ -3870,10 +3911,11 @@ bool _txThrow (const char file[], int line, const char func[], DWORD error,
     char str[MAXSTR] = "", *s = str;
 
     #ifdef  _TX_USE_SECURE_CRT
-    #define TR_ ,_TRUNCATE
+        #define TR_ ,_TRUNCATE
+
     #else
-    #define TR_
-    #endif
+        #define TR_
+        #endif
 
     if (file)
         s += _snprintf_s (s, sizeof (str) - 1 - (s-str) TR_, "TX_THROW(): %s", file);
@@ -3903,7 +3945,7 @@ bool _txThrow (const char file[], int line, const char func[], DWORD error,
     printf (str);
 
     OutputDebugString (str);
-    MessageBox (NULL, str, fatal? "Фатальная ошибка" : "Ошибка программы",
+    MessageBox (NULL, str, fatal? "Фатальная ошибка" : "Ошибка в программе",
                 MB_ICONSTOP | MB_TOPMOST | MB_SYSTEMMODAL);
 
     if (fatal) abort();
@@ -3930,13 +3972,13 @@ using namespace TX::Win32;
 //! @cond Internal
 
 #if defined (_MSC_VER)
-#pragma warning (default: 4127)              // conditional expression is constant
-#pragma warning (default: 4245)              // 'argument': conversion from A to B, signed/unsigned mismatch
+    #pragma warning (default: 4127)          // conditional expression is constant
+    #pragma warning (default: 4245)          // 'argument': conversion from A to B, signed/unsigned mismatch
 
-#pragma warning (default: 4100)              // 'parameter': unreferenced formal parameter
-#pragma warning (default: 4511)              // 'class': copy constructor could not be generated
-#pragma warning (default: 4512)              // 'class': assignment operator could not be generated
-#endif
+    #pragma warning (default: 4100)          // 'parameter': unreferenced formal parameter
+    #pragma warning (default: 4511)          // 'class': copy constructor could not be generated
+    #pragma warning (default: 4512)          // 'class': assignment operator could not be generated
+    #endif
 
 #undef $
 
