@@ -3024,7 +3024,7 @@ using namespace Win32;
 //           Не упакованы в структуру или класс, для того, чтобы это сделали Вы сами :)
 //===============================================================================================================================
 
-uintptr_t        _txCanvas_Thread       = NULL;   // The thread that owns the TXLib window
+HANDLE           _txCanvas_Thread       = NULL;   // The thread that owns the TXLib window
 HWND             _txCanvas_Wnd          = NULL;
 
 // To make background screen updating smooth, screen refresh process is:
@@ -3204,7 +3204,13 @@ $   _txRunning = false;
 $   if (_txExit) PostQuitMessage (0);
 
 $   Sleep (10);
-$   (_cwait (NULL, _txCanvas_Thread, NULL) != -1) TX_NEEDED;
+$   WaitForSingleObject (_txCanvas_Thread, INFINITE);
+
+$   if (_txCanvas_Thread)
+        {
+$       CloseHandle (_txCanvas_Thread) TX_NEEDED;
+$       _txCanvas_Thread = NULL;
+        }
 
 $   _txConsole_Detach();
 
@@ -3239,6 +3245,8 @@ $       DispatchMessage  (&msg);
 
 $       Sleep (0);
         }
+
+$   return (DWORD) msg.wParam;
     }
 
 //-------------------------------------------------------------------------------------------------------------------------------
