@@ -56,7 +56,7 @@
         #pragma GCC diagnostic ignored "-Wunreachable-code"
         #pragma GCC diagnostic ignored "-Wunused-value"
         #pragma GCC diagnostic ignored "-Wunused-function"
-        #pragma GCC diagnostic ignored "-Wunused-label"  // just for fun in _txCanvas_OnCmdAbout()
+        #pragma GCC diagnostic ignored "-Wunused-label"  // Just for fun in _txCanvas_OnCmdAbout()
     #endif
 
     #define _TX_CHECK_FORMAT( fmtIdx )  __attribute__ (( format (printf, (fmtIdx), (fmtIdx)+1) ))
@@ -71,11 +71,12 @@
 
 #if defined (_MSC_VER)
 
-    #pragma warning (push, 4)                   // set maximum warning level
+    #pragma warning (push, 4)                   // Set maximum warning level
 
     #pragma warning (disable: 4127)             // conditional expression is constant
     #pragma warning (disable: 4245)             // conversion from... to..., signed/unsigned mismatch
     #pragma warning (disable: 4351)             // new behavior: elements of array ... will be default initialized
+    #pragma warning (disable: 6031)             // return value ignored: '...'
 
     #define _CRT_SECURE_CPP_OVERLOAD_SECURE_NAMES 1
 
@@ -83,7 +84,7 @@
 
 #if defined (_MSC_VER) && (_MSC_VER == 1200)    // MSVC 6 (1998)
 
-    #pragma warning (push, 3)                   // at level 4, std headers emit warnings
+    #pragma warning (push, 3)                   // At level 4, std headers emit warnings
 
     #pragma warning (disable: 4018)             // '<': signed/unsigned mismatch
     #pragma warning (disable: 4100)             // unreferenced formal parameter
@@ -105,8 +106,8 @@
 #else
 
     #define  strncpy_s    strncpy               // MSVC prior to 8(2005) versions
-    #define  strncat_s    strncat               // do NOT have secure variants of these
-    #define  ctime_s      ctime                 // these functions, so use unsecure ones.
+    #define  strncat_s    strncat               //   do NOT have secure variants of these
+    #define  ctime_s      ctime                 //   these functions, so use unsecure ones.
     #define _snprintf_s  _snprintf              //
     #define _vsnprintf_s _vsnprintf             //
 
@@ -145,6 +146,7 @@
 #include <io.h>
 #include <fcntl.h>
 #include <direct.h>
+#include <process.h>
 #include <locale.h>
 #include <string.h>
 #include <time.h>
@@ -158,99 +160,6 @@
 #include <windows.h>
 #include <tlhelp32.h>
 
-//}
-
-//-------------------------------------------------------------------------------------------------------------------------------
-//{          Compiler- and platform-specific
-//! @name    Адаптация к компиляторам и платформам
-//-------------------------------------------------------------------------------------------------------------------------------
-//! @cond INTERNAL
-
-#ifndef __cplusplus
-#error TXLib.h: Must use C++ to compile this
-#endif
-
-#ifdef __STRICT_ANSI__                          // Try to extend strict ANSI C
-#warning TXLib.h: Trying to extend strict ANSI compatibility
-#undef __STRICT_ANSI__
-#endif
-
-#if defined (__GNUC__)
-
-    #if (__GNUC__ >= 4)
-        #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
-        #pragma GCC diagnostic ignored "-Wstrict-aliasing"
-        #pragma GCC diagnostic ignored "-Wunreachable-code"
-        #pragma GCC diagnostic ignored "-Wunused-value"
-        #pragma GCC diagnostic ignored "-Wunused-function"
-        #pragma GCC diagnostic ignored "-Wunused-label"  // just for fun in _txCanvas_OnCmdAbout()
-    #endif
-
-    #define _TX_CHECK_FORMAT( fmtIdx )  __attribute__ (( format (printf, (fmtIdx), (fmtIdx)+1) ))
-    #define _TX_CHECK_USAGE             __attribute__ (( warn_unused_result ))
-
-#else
-
-    #define _TX_CHECK_FORMAT( fmtIdx )
-    #define _TX_CHECK_USAGE
-
-#endif
-
-#if defined (_MSC_VER)
-
-    #pragma warning (push, 4)                   // set maximum warning level
-
-    #pragma warning (disable: 4127)             // conditional expression is constant
-    #pragma warning (disable: 4245)             // conversion from... to..., signed/unsigned mismatch
-    #pragma warning (disable: 4351)             // new behavior: elements of array ... will be default initialized
-
-    #define _CRT_SECURE_CPP_OVERLOAD_SECURE_NAMES 1
-
-#endif
-
-#if defined (_MSC_VER) && (_MSC_VER == 1200)    // MSVC 6 (1998)
-
-    #pragma warning (push, 3)                   // at level 4, std headers emit warnings
-
-    #pragma warning (disable: 4100)             // unreferenced formal parameter
-    #pragma warning (disable: 4511)             // copy constructor could not be generated
-    #pragma warning (disable: 4512)             // assignment operator could not be generated
-    #pragma warning (disable: 4100)             // unreferenced formal parameter
-    #pragma warning (disable: 4511)             // copy constructor could not be generated
-    #pragma warning (disable: 4512)             // assignment operator could not be generated
-    #pragma warning (disable: 4710)             // function '...' not inlined
-
-    #if !defined (WINVER)
-        #define WINVER   0x0400                 // MSVC 6: Defaults to Windows 95
-    #endif
-
-#endif
-
-#if defined (_MSC_VER) && (_MSC_VER >= 1400)    // MSVC 8 (2005) or greater
-
-    #define _TX_USE_SECURE_CRT
-
-#else
-
-    #define  strncpy_s    strncpy               // MSVC prior to 8(2005) versions
-    #define  strncat_s    strncat               // do NOT have secure variants of these
-    #define  ctime_s      ctime                 // these functions, so use unsecure ones.
-    #define _snprintf_s  _snprintf              //
-    #define _vsnprintf_s _vsnprintf             //
-
-#endif
-
-#if !defined (WINVER)
-    #define WINVER       0x0500                 // Defaults to Windows 2000
-#endif
-
-#if !defined (_WIN32_WINNT)
-    #define _WIN32_WINNT WINVER
-#endif
-
-#undef  UNICODE                                 // Drop the Unicode
-
-//! @endcond
 //}
 
 //-------------------------------------------------------------------------------------------------------------------------------
@@ -2302,6 +2211,11 @@ bool txPlaySound (const char filename[] = NULL, DWORD mode = SND_ASYNC);
 //!          библиотеки, около @a определения этой функции. Или можно [скопировать]набрать
 //!          это километровое имя и посмотреть, что получится.
 //!
+//! @note    Вызывать функцию надо непосредственно перед завершением программы (выходом из
+//!          функции main). @b Не надо вызывать ее, если вы не собираетесь завершать
+//!          программу немедленно. <b>Вызов этой функции может заблокировать все операции
+//!          рисования в программе.</b>
+//!
 //! @return  Если операция была успешна - true, иначе - false.
 //!
 //! @see     txCreateWindow(), txSleep()
@@ -2313,6 +2227,11 @@ bool txPlaySound (const char filename[] = NULL, DWORD mode = SND_ASYNC);
 //!
 //!              txSetTextAlign (TA_CENTER);
 //!              txTextOut (txGetExtentX()/2, txGetExtentY()/2, "Press any key to exit!");
+//!
+//!              // Note: Call this function just before return from main().
+//!              // Do NOT call it while the program is not about to exit.
+//!              // The call to this function may block all the drawing.
+//!              // See TXLib Help for Russian text of this note.
 //!
 //!              txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillCloseAndIWillNotBeAskingWhereIsMyPicture();
 //!              return 0;
@@ -2337,7 +2256,7 @@ bool txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillCloseAndIWillNotBeA
 //!
 //! @param   handler  Новый дополнительный обработчик событий окна
 //!
-//!          Обработчик будет вызываться до обработки события средствами TXLib.
+//!          Обработчик будет вызываться @b до обработки события средствами TXLib.
 //!          Он должен быть функцией со следующим прототипом:
 //! @code
 //!          LRESULT CALLBACK NewWndProc (HWND window, UINT message, WPARAM wParam, LPARAM lParam);
@@ -2410,11 +2329,11 @@ WNDPROC txSetWindowHandler (WNDPROC handler);
 //!          блокировать нельзя. Иначе тормозится обработка оконных сообщений
 //!          и окно перестает реагировать на действия пользователя.
 //!
-//!          txLock() /@ref txUnlock() - низкоуровневый механизм, он отличается от
+//!          txLock() /@ref txUnlock() - низкоуровневый механизм. Он отличается от
 //!          высокоуровневого механизма @ref txBegin() / @ref txEnd() /@ref txUpdateWindow(),
 //!          который не приостанавливает поток, а просто отключает операции по
-//!          обновлению окна. В отличие от @ref txBegin() / @ref txEnd(), он не
-//!          поддерживает вложенне вызовы.
+//!          обновлению окна. В отличие от @ref txBegin() / @ref txEnd(), механизм
+//!          txLock() /@ref txUnlock() не поддерживает вложенные вызовы.
 //!
 //! @return  Состояние блокировки
 //!
@@ -2444,7 +2363,7 @@ inline bool txLock (bool wait = true);
 inline bool txUnlock();
 
 template <typename T> inline
-T    txUnlock (T value);
+T txUnlock (T value);
 
 //! @}
 
@@ -2467,7 +2386,7 @@ T    txUnlock (T value);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-#define txGDI( command )  txUnlock ( (txLock(), (command)) )
+#define txGDI( command )  txUnlock ( (txLock(), !_txExit? (command) : false) )
 
 //}
 
@@ -2974,8 +2893,8 @@ bool         _txCanvas_OnTimer      (HWND wnd, WPARAM id);
 bool         _txCanvas_OnMouse      (HWND wnd, WPARAM buttons, LPARAM coords);
 bool         _txCanvas_OnCmdAbout   (HWND wnd, WPARAM cmd);
 bool         _txCanvas_OnCmdConsole (HWND wnd, WPARAM cmd);
+void         _txCanvas_ThreadProc   (void* data);
 LRESULT CALLBACK _txCanvas_WndProc  (HWND wnd, UINT msg, WPARAM wpar, LPARAM lpar);
-DWORD   WINAPI   _txCanvas_ThreadProc (LPVOID data);
 
 HDC          _txBuffer_Create (HWND wnd, const POINT* size = NULL, HBITMAP bmap = NULL);
 bool         _txBuffer_Delete (HDC dc);
@@ -3105,7 +3024,7 @@ using namespace Win32;
 //           Не упакованы в структуру или класс, для того, чтобы это сделали Вы сами :)
 //===============================================================================================================================
 
-HANDLE           _txCanvas_Thread       = NULL;   // The thread that owns the TXLib window
+uintptr_t        _txCanvas_Thread       = NULL;   // The thread that owns the TXLib window
 HWND             _txCanvas_Wnd          = NULL;
 
 // To make background screen updating smooth, screen refresh process is:
@@ -3174,9 +3093,8 @@ $   _txConsole_Attach();
 $   SIZE size = { (int)sizeX, (int)sizeY };
 $   if (centered) { size.cx *= -1; size.cy *= -1; }
 
-$   DWORD id = 0;
-$   _txCanvas_Thread = CreateThread (NULL, 0, _txCanvas_ThreadProc, &size, 0, &id);  // Where REAL creation is...
-$   _txCanvas_Thread || TX_THROW ("Cannot create _txCanvas_Thread: CreateThread() failed");
+$   _txCanvas_Thread = _beginthread (_txCanvas_ThreadProc, 0, &size);  // Where REAL creation is...
+$   _txCanvas_Thread || TX_THROW ("Cannot create _txCanvas_Thread: _beginthread() failed");
 $   _txWaitFor (_txCanvas_OK());
 $   _txCanvas_OK()   || TX_THROW ("Cannot create canvas window");
 
@@ -3283,14 +3201,10 @@ void _txOnExit()
     {
 $   _txRunning = false;
 
-$   Sleep (10);
-$   if (!_txExit) WaitForSingleObject (_txCanvas_Thread, INFINITE);
+$   if (_txExit) PostQuitMessage (0);
 
-$   if (_txCanvas_Thread)
-        {
-$       CloseHandle (_txCanvas_Thread) TX_NEEDED;
-$       _txCanvas_Thread = NULL;
-        }
+$   Sleep (10);
+$   (_cwait (NULL, _txCanvas_Thread, NULL) != -1) TX_NEEDED;
 
 $   _txConsole_Detach();
 
@@ -3310,7 +3224,7 @@ $   DeleteCriticalSection (&_txCanvas_LockBackBuf);
 //! @name    Функции основного окна                (_txCanvas...)
 //===============================================================================================================================
 
-DWORD WINAPI _txCanvas_ThreadProc (LPVOID data)
+void _txCanvas_ThreadProc (void* data)
     {
 $   assert (data);
 
@@ -3325,8 +3239,6 @@ $       DispatchMessage  (&msg);
 
 $       Sleep (0);
         }
-
-$   return (DWORD) msg.wParam;
     }
 
 //-------------------------------------------------------------------------------------------------------------------------------
@@ -3472,7 +3384,7 @@ $   if (_txCanvas_BackBuf[1]) _txBuffer_Delete (_txCanvas_BackBuf[1]); _txCanvas
 $   PostQuitMessage (0);
 
 //  Should terminate user process (main() etc.) even if they are not finished.
-//  So, use exit(). Assume pressing [X] to be normal exit, so exit (0).
+//  So, use exit(). Assume pressing [X] to be normal exit.
 
 $   if (_txRunning) { _txExit = true; exit (EXIT_SUCCESS); }
 
@@ -3928,11 +3840,11 @@ $   if (!dc) return false;
 
 $   txLock ();
 
-$   _txBuffer_Select (Win32::GetStockObject (NULL_PEN),    dc) TX_NEEDED;
-$   _txBuffer_Select (Win32::GetStockObject (NULL_BRUSH),  dc) TX_NEEDED;
-$   _txBuffer_Select (Win32::GetStockObject (SYSTEM_FONT), dc) TX_NEEDED;
+$   _txBuffer_Select (Win32::GetStockObject         (NULL_PEN),    dc) TX_NEEDED;
+$   _txBuffer_Select (Win32::GetStockObject         (NULL_BRUSH),  dc) TX_NEEDED;
+$   _txBuffer_Select (Win32::GetStockObject         (SYSTEM_FONT), dc) TX_NEEDED;
+$   _txBuffer_Select (Win32::CreateCompatibleBitmap (dc, 0, 0),    dc) TX_NEEDED;
 
-$   Win32::DeleteObject (Win32::GetCurrentObject (dc, OBJ_BITMAP));
 $   Win32::DeleteObject (Win32::GetCurrentObject (dc, OBJ_REGION));
 
 $   Win32::DeleteDC (dc) TX_NEEDED;
@@ -4588,8 +4500,8 @@ bool txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillCloseAndIWillNotBeA
     {
 $   MessageBox (txWindow(),
                 "Это запланированная ошибка. Такое бывает. Вы хотели вызвать:" "\n\n"
-                "txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillCloseAndIWillNotBeAskingWhereIsMyPicture(),"
-                "\n\n" "Хоть вы долго [копировали]набирали это имя, на самом деле эта функция не работает." "\n"
+                __TX_FUNCTION__ "," "\n\n"
+                "Хоть вы долго [копировали]набирали это имя, на самом деле эта функция не работает." "\n"
                 "Но для нее есть работающий синоним. См. определение этой функции в исходных текстах библиотеки." "\n\n",
                 "Не получилось", MB_ICONSTOP);
 
@@ -4601,8 +4513,12 @@ $   return false;
 //-------------------------------------------------------------------------------------------------------------------------------
 //! @cond INTERNAL
 
+// Note: Call this function just before return from main().
+//       Do NOT call it while the program is not about to exit.
+//       The call to this function may block all the drawing.
+
 inline
-bool txDisableAutoPause()  // Bingo! Now you are learned to use the [force]sources.
+bool txDisableAutoPause()  // Bingo! Now you are learned to use the [force]sources, Luc.
     {
 $   _txExit = true;
 $   return true;
@@ -5036,20 +4952,21 @@ using std::cout;
 
 #if defined (_MSC_VER)
 
-    #pragma warning (default: 4127)          // conditional expression is constant
-    #pragma warning (default: 4245)          // conversion from... to..., signed/unsigned mismatch
-    #pragma warning (default: 4351)          // new behavior: elements of array ... will be default initialized
+    #pragma warning (default: 4127)             // conditional expression is constant
+    #pragma warning (default: 4245)             // conversion from... to..., signed/unsigned mismatch
+    #pragma warning (default: 4351)             // new behavior: elements of array ... will be default initialized
 
-    #pragma warning (default: 4018)          // '<': signed/unsigned mismatch
-    #pragma warning (default: 4100)          // unreferenced formal parameter
-    #pragma warning (default: 4511)          // copy constructor could not be generated
-    #pragma warning (default: 4512)          // assignment operator could not be generated
-    #pragma warning (default: 4663)          // C++ language change: to explicitly specialize class template '...'
+    #pragma warning (default: 4018)             // '<': signed/unsigned mismatch
+    #pragma warning (default: 4100)             // unreferenced formal parameter
+    #pragma warning (default: 4511)             // copy constructor could not be generated
+    #pragma warning (default: 4512)             // assignment operator could not be generated
+    #pragma warning (default: 4663)             // C++ language change: to explicitly specialize class template '...'
+    #pragma warning (default: 6031)             // return value ignored: '...'
 
     // This warning really occur at end of compilation, so do not restore it.
 
     #if 0
-    #pragma warning (default: 4710)          // function '...' not inlined
+    #pragma warning (default: 4710)             // function '...' not inlined
     #endif
 
 #endif
