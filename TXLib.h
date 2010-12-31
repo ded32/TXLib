@@ -74,9 +74,9 @@
     #pragma warning (push, 4)                   // Set maximum warning level
 
     #pragma warning (disable: 4127)             // conditional expression is constant
-    #pragma warning (disable: 4245)             // conversion from... to..., signed/unsigned mismatch
+//!!!    #pragma warning (disable: 4245)             // conversion from... to..., signed/unsigned mismatch
     #pragma warning (disable: 4351)             // new behavior: elements of array ... will be default initialized
-    #pragma warning (disable: 6031)             // return value ignored: '...'
+//!!!    #pragma warning (disable: 6031)             // return value ignored: '...'
 
     #define _CRT_SECURE_CPP_OVERLOAD_SECURE_NAMES 1
 
@@ -86,12 +86,11 @@
 
     #pragma warning (push, 3)                   // At level 4, std headers emit warnings
 
-    #pragma warning (disable: 4018)             // '<': signed/unsigned mismatch
+//!!!    #pragma warning (disable: 4018)             // '<': signed/unsigned mismatch
     #pragma warning (disable: 4100)             // unreferenced formal parameter
     #pragma warning (disable: 4511)             // copy constructor could not be generated
     #pragma warning (disable: 4512)             // assignment operator could not be generated
     #pragma warning (disable: 4663)             // C++ language change: to explicitly specialize class template '...'
-    #pragma warning (disable: 4710)             // function '...' not inlined
 
     #if !defined (WINVER)
         #define WINVER   0x0400                 // MSVC 6: Defaults to Windows 95
@@ -251,13 +250,13 @@ const COLORREF
 
 //-------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Technical
-//! @brief   Не скрывать автоматически консольное окно
+//! @brief   Режим отображения консольного окна
 //!
-//!          Задается перед включением TXLib.h в программу.
+//!          Может задаваться перед включением TXLib.h в программу.
 //-------------------------------------------------------------------------------------------------------------------------------
 
-#ifdef FOR_DOXYGEN_ONLY
-#define      _TX_NO_HIDE_CONSOLE
+#ifndef      _TX_CONSOLE_MODE
+#define      _TX_CONSOLE_MODE             SWP_HIDEWINDOW
 #endif
 
 //-------------------------------------------------------------------------------------------------------------------------------
@@ -591,7 +590,7 @@ const double txPI = asin (1.0) * 2;
 #endif
 
 #ifdef _TX_ALLOW_TRACE
-    #define $                 TX_TRACE
+    #define $                 TX_TRACE,
 
 #else
     #define $
@@ -630,7 +629,7 @@ const double txPI = asin (1.0) * 2;
 
 #ifndef TX_TRACE
 
-    #define TX_TRACE          OutputDebugString (__TX_FILELINE__ ": ");
+    #define TX_TRACE          OutputDebugString (__TX_FILELINE__ ": ")
 
 #endif
 
@@ -705,7 +704,8 @@ bool txSetDefaults();
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-inline bool txOK();
+inline
+bool txOK();
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Technical
@@ -719,6 +719,7 @@ inline bool txOK();
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
+inline
 const char* txVersion();
 
 //{------------------------------------------------------------------------------------------------------------------------------
@@ -788,7 +789,8 @@ int txGetExtentY();
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-inline HDC txDC();
+inline
+HDC txDC();
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -804,7 +806,8 @@ inline HDC txDC();
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-inline HWND txWindow();
+inline
+HWND txWindow();
 
 //}
 
@@ -2211,11 +2214,6 @@ bool txPlaySound (const char filename[] = NULL, DWORD mode = SND_ASYNC);
 //!          библиотеки, около @a определения этой функции. Или можно [скопировать]набрать
 //!          это километровое имя и посмотреть, что получится.
 //!
-//! @note    Вызывать функцию надо непосредственно перед завершением программы (выходом из
-//!          функции main). @b Не надо вызывать ее, если вы не собираетесь завершать
-//!          программу немедленно. <b>Вызов этой функции может заблокировать все операции
-//!          рисования в программе.</b>
-//!
 //! @return  Если операция была успешна - true, иначе - false.
 //!
 //! @see     txCreateWindow(), txSleep()
@@ -2227,11 +2225,6 @@ bool txPlaySound (const char filename[] = NULL, DWORD mode = SND_ASYNC);
 //!
 //!              txSetTextAlign (TA_CENTER);
 //!              txTextOut (txGetExtentX()/2, txGetExtentY()/2, "Press any key to exit!");
-//!
-//!              // Note: Call this function just before return from main().
-//!              // Do NOT call it while the program is not about to exit.
-//!              // The call to this function may block all the drawing.
-//!              // See TXLib Help for Russian text of this note.
 //!
 //!              txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillCloseAndIWillNotBeAskingWhereIsMyPicture();
 //!              return 0;
@@ -2374,6 +2367,10 @@ T txUnlock (T value);
 //! @param   command  Команда GDI (возможно, возвращающая значение)
 //!
 //! @return  Значение, возвращаемое вызываемой функцией GDI.
+//!          Если система рисования не готова, возвращается значение false.
+//!
+//! @note    Если система рисования не готова (@ref txDC() возвращает NULL),
+//!          то команда GDI не выполняется, а @ref txGDI() возвращает значение false.
 //!
 //! @note    Если в вызове функции GDI используются запятые, то используйте двойные
 //!          скобки, чтобы получился один параметр, так как txGDI() все-таки макрос.
@@ -2386,7 +2383,7 @@ T txUnlock (T value);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-#define txGDI( command )  txUnlock ( (txLock(), !_txExit? (command) : false) )
+#define txGDI( command )  txUnlock ( (txLock(), txDC()? (command) : false) )
 
 //}
 
@@ -2918,8 +2915,8 @@ bool         _txThrow (const char file[], int line, const char func[], DWORD err
                        const char msg[], ...) _TX_CHECK_FORMAT (5);
 bool         _txCheck (const char msg[] = NULL);
 
-#define      _txWaitFor(p)   { for (int __i##__LINE__ = 0; __i##__LINE__ < _TX_TIMEOUT/10; __i##__LINE__++) \
-                                 { if ((p) != 0) break; Sleep (10); } }
+#define      _txWaitFor(p)   { for (int __i##__LINE__ = 0; __i##__LINE__ < _TX_TIMEOUT/_TX_WINDOW_UPDATE_INTERVAL; __i##__LINE__++) \
+                                 { $ if ((p) != 0) break; Sleep (_TX_WINDOW_UPDATE_INTERVAL); } }
 //}
 
 //===============================================================================================================================
@@ -3046,9 +3043,9 @@ int              _txCanvas_RefreshLock  = 0;      // Blocks automatic on-timer r
 HWND             _txConsole_Wnd         = NULL;   // Console window associated to process
 bool             _txConsole_CursorMode  = true;   // To blink or not to blink, that is the question.
 
-bool             _txRunning             = false;
-bool             _txExit                = false;  // Setting this to true just before return from
-                                                  //     main(), automatically closes the window.
+bool             _txAutoPause           = true;   // Pause after main() ends
+bool             _txExit                = false;  // Does nothing - for compatibility only.
+
 POINT            _txMousePos            = {0};
 int              _txMouseButtons        =  0;
 
@@ -3083,9 +3080,6 @@ $   if (txOK()) return false;
 
 $   atexit (_txOnExit);
 
-$   _txExit     = false;
-$   _txRunning  = false;  // _txCanvas_OnCreate will set it to true
-
 $   InitializeCriticalSection (&_txCanvas_LockBackBuf);
 
 $   _txConsole_Attach();
@@ -3093,10 +3087,13 @@ $   _txConsole_Attach();
 $   SIZE size = { (int)sizeX, (int)sizeY };
 $   if (centered) { size.cx *= -1; size.cy *= -1; }
 
-$   _txCanvas_Thread = _beginthread (_txCanvas_ThreadProc, 0, &size);  // Where REAL creation is...
-$   _txCanvas_Thread || TX_THROW ("Cannot create _txCanvas_Thread: _beginthread() failed");
+$   assert (!_txCanvas_Thread);
+
+    // Where REAL creation is...
+$   _beginthread (_txCanvas_ThreadProc, 0, &size) || TX_THROW ("Cannot create _txCanvas_Thread");
+
 $   _txWaitFor (_txCanvas_OK());
-$   _txCanvas_OK()   || TX_THROW ("Cannot create canvas window");
+$   _txCanvas_OK() || TX_THROW ("Cannot create canvas window");
 
 $   txSetDefaults();
 
@@ -3178,12 +3175,12 @@ $   txUpdateWindow (true);
 inline
 bool txOK()
     {
-$   return _txConsole_OK() &&
-           _txCanvas_OK();
+$   return _txConsole_OK(); // !!! && _txCanvas_OK();
     }
 
 //-------------------------------------------------------------------------------------------------------------------------------
 
+inline
 bool _txCheck (const char msg[])
     {
 $   if (txOK()) return true;
@@ -3199,22 +3196,22 @@ $   exit (1); //  Во избежание лишних вопросов о якобы ошибках в библиотеке прих
 
 void _txOnExit()
     {
-$   _txRunning = false;
+$   bool paused = _txAutoPause;
+$   _txAutoPause = false;
 
-$   if (_txExit) PostQuitMessage (0);
-
-$   Sleep (10);
-$   WaitForSingleObject (_txCanvas_Thread, INFINITE);
-
-$   if (_txCanvas_Thread)
-        {
-$       CloseHandle (_txCanvas_Thread) TX_NEEDED;
-$       _txCanvas_Thread = NULL;
-        }
+$   if (paused)
+        while (_txCanvas_Thread) { $ Sleep (_TX_WINDOW_UPDATE_INTERVAL); }
 
 $   _txConsole_Detach();
 
 $   DeleteCriticalSection (&_txCanvas_LockBackBuf);
+
+    // Check for the resources to be freed
+    
+$   assert (!_txCanvas_Thread);
+$   assert (!_txCanvas_Wnd);
+$   assert (!_txCanvas_BackBuf[0]);
+$   assert (!_txCanvas_BackBuf[1]);
 
 #ifndef NDEBUG
     OutputDebugString ("\n");
@@ -3237,6 +3234,9 @@ $   assert (data);
 $   _txCanvas_CreateWindow (*(SIZE*) data);
 $   _txCanvas_Wnd || TX_THROW ("Cannot create canvas: _txCanvas_CreateWindow() failed");
 
+$   assert (!_txCanvas_Thread);
+$   _txCanvas_Thread = GetCurrentThread();
+
 $   MSG msg = {0};
 $   while (GetMessage  (&msg, NULL, 0, 0))
         {
@@ -3246,7 +3246,7 @@ $       DispatchMessage  (&msg);
 $       Sleep (0);
         }
 
-$   return (DWORD) msg.wParam;
+$   _txCanvas_Thread = NULL;
     }
 
 //-------------------------------------------------------------------------------------------------------------------------------
@@ -3285,6 +3285,7 @@ $       center.x = (r.right + r.left) / 2;
 $       center.y = (r.bottom + r.top) / 2;
         }
 
+$   assert (!_txCanvas_Wnd);
 $   _txCanvas_Wnd = CreateWindowEx (0, className, title, WS_POPUP | WS_BORDER | WS_CAPTION | WS_SYSMENU,
                                     center.x - size.cx/2, center.y - size.cy/2, size.cx, size.cy,
                                     NULL, NULL, NULL, NULL);
@@ -3294,29 +3295,24 @@ $   ShowWindow          (_txCanvas_Wnd, SW_SHOW);
 $   SetForegroundWindow (_txCanvas_Wnd) TX_NEEDED;
 $   UpdateWindow        (_txCanvas_Wnd) TX_NEEDED;
 
-$   if (_txConsole_Wnd)
-        {
-$       int hide = 0;
+$   if (_txConsole_OK())
+        $ SetWindowPos (_txConsole_Wnd, HWND_NOTOPMOST, center.x - size.cx*2/5, center.y - size.cy*2/5, 0, 0,
+                        SWP_NOSIZE | SWP_NOACTIVATE | _TX_CONSOLE_MODE) TX_NEEDED;
 
-        #ifndef _TX_NO_HIDE_CONSOLE
-$       hide = SWP_HIDEWINDOW;
-        #endif
+$   HMENU menu = GetSystemMenu (_txCanvas_Wnd, false); menu TX_NEEDED;
+$   AppendMenu (menu, MF_SEPARATOR, 0, NULL) TX_NEEDED;
+$   AppendMenu (menu, MF_STRING, _TX_IDM_CONSOLE, "Show Console") TX_NEEDED;
+$   AppendMenu (menu, MF_STRING, _TX_IDM_ABOUT,   "About...")     TX_NEEDED;
 
-$       SetWindowPos (_txConsole_Wnd, HWND_NOTOPMOST, center.x - size.cx*2/5, center.y - size.cy*2/5, 0, 0,
-                      SWP_NOSIZE | SWP_NOACTIVATE | hide) TX_NEEDED;
-
-$       HMENU menu = GetSystemMenu (_txCanvas_Wnd, false); menu TX_NEEDED;
-$       AppendMenu (menu, MF_SEPARATOR, 0, NULL) TX_NEEDED;
-$       AppendMenu (menu, MF_STRING | MF_UNCHECKED, _TX_IDM_CONSOLE, "Show Console")     TX_NEEDED;
-$       AppendMenu (menu, MF_STRING | MF_UNCHECKED, _TX_IDM_ABOUT,   "About Library...") TX_NEEDED;
-$       CheckMenuItem (menu,  _TX_IDM_CONSOLE, (IsWindowVisible (_txConsole_Wnd))? MF_CHECKED : MF_UNCHECKED);
-        }
+$   CheckMenuItem (menu, _TX_IDM_CONSOLE,
+                   _txConsole_OK()? (IsWindowVisible (_txConsole_Wnd)? MF_CHECKED : 0) : MF_DISABLED);
 
 $   return _txCanvas_Wnd;
     }
 
 //-------------------------------------------------------------------------------------------------------------------------------
 
+inline
 bool _txCanvas_OK()
     {
 $   return _txCanvas_Thread     &&
@@ -3370,8 +3366,6 @@ $   return oldCount;
 
 bool _txCanvas_OnCreate (HWND wnd)
     {
-$   _txRunning = true;
-
 $   _txCanvas_BackBuf[0] = _txBuffer_Create (wnd); _txCanvas_BackBuf[0] TX_NEEDED;
 $   _txCanvas_BackBuf[1] = _txBuffer_Create (wnd); _txCanvas_BackBuf[1] TX_NEEDED;
 
@@ -3384,6 +3378,8 @@ $   return true;
 
 bool _txCanvas_OnDestroy (HWND wnd)
     {
+$   txLock();
+    
 $   if (_txCanvas_RefreshTimer) KillTimer (wnd, _txCanvas_RefreshTimer) TX_NEEDED;
 
 $   if (_txCanvas_BackBuf[0]) _txBuffer_Delete (_txCanvas_BackBuf[0]); _txCanvas_BackBuf[0] = NULL;
@@ -3391,10 +3387,12 @@ $   if (_txCanvas_BackBuf[1]) _txBuffer_Delete (_txCanvas_BackBuf[1]); _txCanvas
 
 $   PostQuitMessage (0);
 
-//  Should terminate user process (main() etc.) even if they are not finished.
-//  So, use exit(). Assume pressing [X] to be normal exit.
+$   txUnlock();
 
-$   if (_txRunning) { _txExit = true; exit (EXIT_SUCCESS); }
+//  Should terminate user process (main() etc.) even if they are not finished. So, use exit().
+//  Assume pressing [X] to be normal exit.
+
+$   if (_txAutoPause) { _txAutoPause = false; exit (EXIT_SUCCESS); }
 
 $   return true;
     }
@@ -3671,7 +3669,9 @@ $       _txCanvas_OnCmdAbout (wnd, wpar);
 
 bool _txConsole_Attach()
     {
-#ifdef _TX_NO_HIDE_CONSOLE
+$   assert (!_txConsole_Wnd);
+    
+#if (_TX_CONSOLE_MODE != SWP_HIDEWINDOW)
 $   if (!_txConsole_GetWindow())
 #endif
         {
@@ -3719,6 +3719,7 @@ $   return !ferror (stdin)  &&
 
 //-------------------------------------------------------------------------------------------------------------------------------
 
+inline
 bool _txConsole_OK()
     {
 $   return _txConsole_Wnd != NULL;
@@ -3904,7 +3905,6 @@ $   return size;
 
 //-------------------------------------------------------------------------------------------------------------------------------
 
-inline
 int txGetExtentX()
     {
 $   return txGetExtent().x;
@@ -3912,7 +3912,6 @@ $   return txGetExtent().x;
 
 //-------------------------------------------------------------------------------------------------------------------------------
 
-inline
 int txGetExtentY()
     {
 $   return txGetExtent().y;
@@ -4521,15 +4520,12 @@ $   return false;
 //-------------------------------------------------------------------------------------------------------------------------------
 //! @cond INTERNAL
 
-// Note: Call this function just before return from main().
-//       Do NOT call it while the program is not about to exit.
-//       The call to this function may block all the drawing.
+// Bingo! Now you are learned to use the Sources, Luke. And may the Source be with you.
 
 inline
-bool txDisableAutoPause()  // Bingo! Now you are learned to use the [force]sources, Luc.
+bool txAutoPause (bool state = _txAutoPause) 
     {
-$   _txExit = true;
-$   return true;
+$   return _txAutoPause = state;
     }
 
 //! @endcond
@@ -4961,20 +4957,20 @@ using std::cout;
 #if defined (_MSC_VER)
 
     #pragma warning (default: 4127)             // conditional expression is constant
-    #pragma warning (default: 4245)             // conversion from... to..., signed/unsigned mismatch
+//!!!    #pragma warning (default: 4245)             // conversion from... to..., signed/unsigned mismatch
     #pragma warning (default: 4351)             // new behavior: elements of array ... will be default initialized
 
-    #pragma warning (default: 4018)             // '<': signed/unsigned mismatch
+//!!!    #pragma warning (default: 4018)             // '<': signed/unsigned mismatch
     #pragma warning (default: 4100)             // unreferenced formal parameter
     #pragma warning (default: 4511)             // copy constructor could not be generated
     #pragma warning (default: 4512)             // assignment operator could not be generated
     #pragma warning (default: 4663)             // C++ language change: to explicitly specialize class template '...'
-    #pragma warning (default: 6031)             // return value ignored: '...'
+//!!!    #pragma warning (default: 6031)             // return value ignored: '...'
 
     // This warning really occur at end of compilation, so do not restore it.
 
     #if 0
-    #pragma warning (default: 4710)             // function '...' not inlined
+//!!!    #pragma warning (default: 4710)             // function '...' not inlined
     #endif
 
 #endif
