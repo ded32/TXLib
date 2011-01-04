@@ -1802,8 +1802,8 @@ bool txBitBlt (HDC dest, int xDest, int yDest, int width, int height,
 //! @param   dest        Контекст назначения (куда копировать)
 //! @param   xDest       Х-координата верхнего левого угла изображения-приемника
 //! @param   yDest       Y-координата верхнего левого угла изображения-приемника
-//! @param   width       Ширина копируемого изображения
-//! @param   height      Высота копируемого изображения
+//! @param   width       Ширина копируемого изображения, неотрицательная
+//! @param   height      Высота копируемого изображения, неотрицательная
 //! @param   src         Контекст источника (откуда копировать)
 //! @param   xSrc        Х-координата верхнего левого угла изображения-источника
 //! @param   ySrc        Y-координата верхнего левого угла изображения-источника
@@ -1843,11 +1843,14 @@ bool txTransparentBlt (HDC dest, int xDest, int yDest, int width, int height,
 //! @param   dest    Контекст назначения (куда копировать)
 //! @param   xDest   Х-координата верхнего левого угла изображения-приемника
 //! @param   yDest   Y-координата верхнего левого угла изображения-приемника
-//! @param   width   Ширина копируемого изображения
-//! @param   height  Высота копируемого изображения
-//! @param   src     Контекст источника (откуда копировать)
-//! @param   xSrc    Х-координата верхнего левого угла изображения-источника
-//! @param   ySrc    Y-координата верхнего левого угла изображения-источника
+//! @param   width   Ширина копируемого изображения, неотрицательная
+//! @param   height  Высота копируемого изображения, неотрицательная
+//! @param   src     Контекст источника (откуда копировать).
+//!                    Должен иметь 32-битовый формат и альфа-канал (см. ниже).
+//! @param   xSrc    Х-координата верхнего левого угла изображения-источника, 
+//!                    должна быть в пределах размера источника.
+//! @param   ySrc    Y-координата верхнего левого угла изображения-источника,
+//!                    должна быть в пределах размера источника.
 //! @param   alpha   Общая прозрачность изображения, в дополнение к альфа-каналу.\n
 //!                    (0 - все прозрачно, 1 - использовать только альфа-канал)
 //!
@@ -1857,6 +1860,8 @@ bool txTransparentBlt (HDC dest, int xDest, int yDest, int width, int height,
 //!          вызовет ошибку. Наиболее частая причина - ошибка при загрузке файла изображения и
 //!          отсутствие проверки на эту ошибку. Пример с проверкой на правильность загрузки см. ниже.
 //!
+//!          Изображение-источник и изображение-приемник не могут налагаться друг на друга.
+//!
 //!          Изображение должно быть загружено с помощью txLoadImage() и иметь
 //!          32-битовый RGBA-формат. Дополнительный канал (альфа-канал) этого
 //!          формата отвечает за прозрачность участков изображения.
@@ -1865,7 +1870,7 @@ bool txTransparentBlt (HDC dest, int xDest, int yDest, int width, int height,
 //!          "Новый канал (New Channel)" в палитре каналов (Channels). Черный
 //!          цвет в альфа-канале соответствует полной прозрачности, белый -
 //!          полной непрозрачности. При этом в прозрачных областях само изображение
-//!          (в канале RGB) должно быть черным.
+//!          (в каналах R, G, B) должно быть черным.
 //!
 //!          Стандартная функция AlphaBlend из Win32 API может масштабировать изображение.
 //!          В txAlphaBlend это убрано для упрощения использования. If you still need image
@@ -1885,7 +1890,7 @@ bool txTransparentBlt (HDC dest, int xDest, int yDest, int width, int height,
 //}------------------------------------------------------------------------------------------------------------------------------
 
 bool txAlphaBlend (HDC dest, int xDest, int yDest, int width, int height,
-                   HDC src,  int xSrc,  int ySrc,  int alpha = 1.0);
+                   HDC src,  int xSrc,  int ySrc,  double alpha = 1.0);
 //}
 
 //===============================================================================================================================
@@ -4149,7 +4154,7 @@ bool _txError (const char file[], int line, const char func[],
                                     doserr, strerror (doserr));
 
                 s +=  _snprintf_s  (s, SZARG_ (1), ".%s    \n",
-                                    std::uncaught_exception()? "Stack unwinding is active." : "");
+                                    std::uncaught_exception()? "std::uncaught_exception(): true." : "");
     #undef SZARG_
 
     OutputDebugString (str);
@@ -4675,7 +4680,7 @@ $   return Win32::TransparentBlt (dest, xDest, yDest, width, height,
 //-------------------------------------------------------------------------------------------------------------------------------
 
 bool txAlphaBlend (HDC dest, int xDest, int yDest, int width, int height,
-                   HDC src,  int xSrc,  int ySrc,  int alpha /*= 1.0*/)
+                   HDC src,  int xSrc,  int ySrc,  double alpha /*= 1.0*/)
     {
 $   _txCheck();
 
@@ -4684,11 +4689,11 @@ $   if (!AlphaBlend) return false;
 $   if (alpha < 0) alpha = 0;
 $   if (alpha > 1) alpha = 1;
 
-#ifndef AC_SRC_ALPHA
-#define AC_SRC_ALPHA 0x01   // On some old MinGW versions, or MSVC6, this is not defined.
-#endif
+    #ifndef AC_SRC_ALPHA
+    #define AC_SRC_ALPHA 0x01   // On some old MinGW/MSVC versions, this is not defined.
+    #endif
 
-$   BLENDFUNCTION blend = {AC_SRC_OVER, 0, (BYTE) (alpha * 255), AC_SRC_ALPHA};
+$   BLENDFUNCTION blend = { AC_SRC_OVER, 0, (BYTE) (alpha * 255 + 0.5), AC_SRC_ALPHA };
 
 $   return Win32::AlphaBlend (dest, xDest, yDest, width, height,
                               src,  xSrc,  ySrc,  width, height, blend) != 0;
