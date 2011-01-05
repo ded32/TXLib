@@ -273,7 +273,11 @@ const COLORREF
 //! @ingroup Technical
 //! @brief   Режим отображения консольного окна
 //!
-//!          Может задаваться перед включением TXLib.h в программу.
+//!          Может задаваться перед включением TXLib.h в программу. Этот параметр передается
+//!          в SetWindowPos() для консольного окна.
+//!
+//!          SWP_HIDEWINDOW - Скрывать консольное окно при запуске
+//!
 //-------------------------------------------------------------------------------------------------------------------------------
 
 #ifndef      _TX_CONSOLE_MODE
@@ -458,7 +462,7 @@ const int    _TX_TIMEOUT                  = 1000;
 //!
 //! @return  Всегда 0
 //!
-//!          Суффиксная форма макроса assert(), не теряющая в режиме Release 
+//!          Суффиксная форма макроса assert(), не теряющая в режиме Release
 //!          исполнения предиката.
 //!
 //! @note    <b>Предполагается, что операция в случае неуспеха возвращает 0 или false.</b>\n\n
@@ -552,44 +556,6 @@ const int    _TX_TIMEOUT                  = 1000;
     #define TX_PRINT_HERE()
 
 #endif
-
-//{------------------------------------------------------------------------------------------------------------------------------
-//! @ingroup Misc
-//! @brief   Возвращает максимальное из двух чисел
-//!
-//! @param   a  Одно из чисел :)
-//! @param   b  Другое из чисел :)
-//!
-//! @return  Максимальное из двух чисел a и b
-//!
-//! @see     MIN()
-//! @usage
-//! @code
-//!          if (MAX (3, 7) != 7) printf ("Your CPU is broken, throw it away.");
-//! @endcode
-//! @hideinitializer
-//}------------------------------------------------------------------------------------------------------------------------------
-
-#define MAX( a, b )           ( (a) > (b) ? (a) : (b) )
-
-//{------------------------------------------------------------------------------------------------------------------------------
-//! @ingroup Misc
-//! @brief   Возвращает минимальное из двух чисел
-//!
-//! @param   a  Одно из чисел :)
-//! @param   b  Другое из чисел :)
-//!
-//! @return  Минимальное из двух чисел a и b
-//! 
-//! @see     MAX()
-//! @usage
-//! @code
-//!          if (MIN (3, 7) != 3) printf ("Your CPU is still broken, throw it away again.");
-//! @endcode
-//! @hideinitializer
-//}------------------------------------------------------------------------------------------------------------------------------
-
-#define MIN( a, b )           ( (a) < (b) ? (a) : (b) )
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
@@ -705,7 +671,10 @@ const double txPI = asin (1.0) * 2;
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-bool txCreateWindow (int sizeX, int sizeY, bool centered = true);
+bool txCreateWindow (int sizeX, int sizeY, bool centered = true)
+    {
+    return txObject()->txCreateWindow (sizeX, sizeY, centered);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -727,7 +696,10 @@ bool txCreateWindow (int sizeX, int sizeY, bool centered = true);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-bool txSetDefaults();
+bool txSetDefaults()
+    {
+    return txObject()->txSetDefaults();
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -752,7 +724,10 @@ bool txSetDefaults();
 //}------------------------------------------------------------------------------------------------------------------------------
 
 inline
-bool txOK();
+bool txOK()
+    {
+    return txObject()->txOK();
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Technical
@@ -767,7 +742,10 @@ bool txOK();
 //}------------------------------------------------------------------------------------------------------------------------------
 
 inline
-const char* txVersion();
+const char* txVersion()
+    {
+    return txObject()->txVersion();
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -784,7 +762,10 @@ const char* txVersion();
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-POINT txGetExtent();
+POINT txGetExtent()
+    {
+    return txObject()->txGetExtent();
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -800,7 +781,10 @@ POINT txGetExtent();
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-int txGetExtentX();
+int txGetExtentX()
+    {
+    return txObject()->txGetExtentX();
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -817,7 +801,10 @@ int txGetExtentX();
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-int txGetExtentY();
+int txGetExtentY()
+    {
+    return txObject()->txGetExtentY();
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -842,7 +829,10 @@ int txGetExtentY();
 //}------------------------------------------------------------------------------------------------------------------------------
 
 inline
-HDC& txDC();
+HDC& txDC()
+    {
+    return txObject()->txDC();
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -859,7 +849,10 @@ HDC& txDC();
 //}------------------------------------------------------------------------------------------------------------------------------
 
 inline
-HWND txWindow();
+HWND txWindow()
+    {
+    return txObject()->txWindow();
+    }
 
 //}
 
@@ -885,7 +878,10 @@ HWND txWindow();
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-bool txSetColor (COLORREF color, int thickness = 1);
+bool txSetColor (COLORREF color, int thickness = 1)
+    {
+    return txObject()->txSetColor (color, thickness);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -904,7 +900,10 @@ bool txSetColor (COLORREF color, int thickness = 1);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-bool txColor (double red, double green, double blue);
+bool txColor (double red, double green, double blue)
+    {
+    return txObject()->txColor (red, green, blue);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -919,7 +918,10 @@ bool txColor (double red, double green, double blue);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-COLORREF txGetColor();
+COLORREF txGetColor()
+    {
+    return txObject()->txGetColor();
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -937,7 +939,10 @@ COLORREF txGetColor();
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-bool txSetFillColor (COLORREF color);
+bool txSetFillColor (COLORREF color)
+    {
+    return txObject()->txSetFillColor (color);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -956,7 +961,10 @@ bool txSetFillColor (COLORREF color);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-bool txFillColor (double red, double green, double blue);
+bool txFillColor (double red, double green, double blue)
+    {
+    return txObject()->txFillColor (red, green, blue);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -971,7 +979,10 @@ bool txFillColor (double red, double green, double blue);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-COLORREF txGetFillColor();
+COLORREF txGetFillColor()
+    {
+    return txObject()->txGetFillColor();
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1026,7 +1037,10 @@ COLORREF txGetFillColor();
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-bool txSetROP2 (int mode = R2_COPYPEN);
+bool txSetROP2 (int mode = R2_COPYPEN)
+    {
+    return txObject()->txSetROP2 (mode);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1074,7 +1088,10 @@ COLORREF RGB (int red, int green, int blue);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-int txExtractColor (COLORREF color, COLORREF component);
+int txExtractColor (COLORREF color, COLORREF component)
+    {
+    return txObject()->txExtractColor (color, component);
+    }
 
 //{--------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1104,7 +1121,10 @@ int txExtractColor (COLORREF color, COLORREF component);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-COLORREF txRGB2HSL (COLORREF rgbColor);
+COLORREF txRGB2HSL (COLORREF rgbColor)
+    {
+    return txObject()->txRGB2HSL (rgbColor);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1136,7 +1156,10 @@ COLORREF txRGB2HSL (COLORREF rgbColor);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-COLORREF txHSL2RGB (COLORREF hslColor);
+COLORREF txHSL2RGB (COLORREF hslColor)
+    {
+    return txObject()->txHSL2RGB (hslColor);
+    }
 
 //}
 
@@ -1158,7 +1181,10 @@ COLORREF txHSL2RGB (COLORREF hslColor);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-bool txClear();
+bool txClear()
+    {
+    return txObject()->txClear();
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1179,7 +1205,10 @@ bool txClear();
 //}------------------------------------------------------------------------------------------------------------------------------
 
 inline
-bool txSetPixel (int x, int y, COLORREF color);
+bool txSetPixel (int x, int y, COLORREF color)
+    {
+    return txObject()->txSetPixel (x, y, color);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1201,7 +1230,10 @@ bool txSetPixel (int x, int y, COLORREF color);
 //}------------------------------------------------------------------------------------------------------------------------------
 
 inline
-bool txPixel (int x, int y, int red, double green, double blue);
+bool txPixel (int x, int y, int red, double green, double blue)
+    {
+    return txObject()->txPixel (x, y, red, green, blue);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1222,7 +1254,10 @@ bool txPixel (int x, int y, int red, double green, double blue);
 //}------------------------------------------------------------------------------------------------------------------------------
 
 inline
-COLORREF txGetPixel (int x, int y);
+COLORREF txGetPixel (int x, int y)
+    {
+    return txObject()->txGetPixel (x, y);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1245,7 +1280,10 @@ COLORREF txGetPixel (int x, int y);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-bool txLine (int x0, int y0, int x1, int y1);
+bool txLine (int x0, int y0, int x1, int y1)
+    {
+    return txObject()->txLine (x0, y0, x1, y1);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1268,7 +1306,10 @@ bool txLine (int x0, int y0, int x1, int y1);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-bool txRectangle (int x0, int y0, int x1, int y1);
+bool txRectangle (int x0, int y0, int x1, int y1)
+    {
+    return txObject()->txRectangle (x0, y0, x1, y1);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1290,7 +1331,10 @@ bool txRectangle (int x0, int y0, int x1, int y1);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-bool txPolygon (const POINT points[], int numPoints);
+bool txPolygon (const POINT points[], int numPoints)
+    {
+    return txObject()->txPolygon (points, numPoints);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1313,7 +1357,10 @@ bool txPolygon (const POINT points[], int numPoints);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-bool txEllipse (int x0, int y0, int x1, int y1);
+bool txEllipse (int x0, int y0, int x1, int y1)
+    {
+    return txObject()->txEllipse (x0, y0, x1, y1);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1335,7 +1382,10 @@ bool txEllipse (int x0, int y0, int x1, int y1);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-bool txCircle (int x, int y, int r);
+bool txCircle (int x, int y, int r)
+    {
+    return txObject()->txCircle (x, y, r);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1361,7 +1411,10 @@ bool txCircle (int x, int y, int r);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-bool txArc (int x0, int y0, int x1, int y1, int startAngle, int totalAngle);
+bool txArc (int x0, int y0, int x1, int y1, int startAngle, int totalAngle)
+    {
+    return txObject()->txArc (x0, y0, x1, y1, startAngle, totalAngle);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1387,7 +1440,10 @@ bool txArc (int x0, int y0, int x1, int y1, int startAngle, int totalAngle);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-bool txPie (int x0, int y0, int x1, int y1, int startAngle, int totalAngle);
+bool txPie (int x0, int y0, int x1, int y1, int startAngle, int totalAngle)
+    {
+    return txObject()->txPie (x0, y0, x1, y1, startAngle, totalAngle);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1413,7 +1469,10 @@ bool txPie (int x0, int y0, int x1, int y1, int startAngle, int totalAngle);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-bool txChord (int x0, int y0, int x1, int y1, int startAngle, int totalAngle);
+bool txChord (int x0, int y0, int x1, int y1, int startAngle, int totalAngle)
+    {
+    return txObject()->txChord (x0, y0, x1, y1, startAngle, totalAngle);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1442,8 +1501,12 @@ bool txChord (int x0, int y0, int x1, int y1, int startAngle, int totalAngle);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-bool txFloodFill (int x, int y,
-                  COLORREF color = TX_TRANSPARENT, DWORD mode = FLOODFILLSURFACE);
+bool txFloodFill (int x, int y, 
+                  COLORREF color = TX_TRANSPARENT, DWORD mode = FLOODFILLSURFACE)
+    {
+    return txObject()->txFloodFill (x, y, color, mode);
+    }
+
 //}
 
 //===============================================================================================================================
@@ -1471,7 +1534,10 @@ bool txFloodFill (int x, int y,
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-bool txTextOut (int x, int y, const char text[]);
+bool txTextOut (int x, int y, const char text[])
+    {
+    return txObject()->txTextOut (x, y, text);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1501,7 +1567,10 @@ bool txTextOut (int x, int y, const char text[]);
 
 bool txDrawText (int x0, int y0, int x1, int y1, const char text[],
                  unsigned format = DT_CENTER | DT_VCENTER | DT_WORDBREAK |
-                                   DT_MODIFYSTRING | DT_PATH_ELLIPSIS);
+                                   DT_MODIFYSTRING | DT_PATH_ELLIPSIS)
+    {
+    return txObject()->txDrawText (x0, y0, x1, y1, text, format);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1532,8 +1601,11 @@ bool txSelectFont (const char name[], int sizeY,
                    int  bold      = FW_DONTCARE,
                    bool italic    = false,
                    bool underline = false,
-                   bool strikeout = false);
-
+                   bool strikeout = false)
+    {
+    return txObject()->txSelectFont (name, sizeY, sizeX, bold, italic, underline, strikeout);
+    }
+    		   
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
 //! @brief   Вычисляет размеры текстовой надписи.
@@ -1550,7 +1622,10 @@ bool txSelectFont (const char name[], int sizeY,
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-SIZE txGetTextExtent (const char text[]);
+SIZE txGetTextExtent (const char text[])
+    {
+    return txObject()->txGetTextExtent (text);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1567,7 +1642,10 @@ SIZE txGetTextExtent (const char text[]);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-int txGetTextExtentX (const char text[]);
+int txGetTextExtentX (const char text[])
+    {
+    return txObject()->txGetTextExtentX (text);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1584,7 +1662,10 @@ int txGetTextExtentX (const char text[]);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-int txGetTextExtentY (const char text[]);
+int txGetTextExtentY (const char text[])
+    {
+    return txObject()->txGetTextExtentY (text);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1617,7 +1698,10 @@ int txGetTextExtentY (const char text[]);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-unsigned txSetTextAlign (unsigned align = TA_CENTER | TA_BASELINE);
+unsigned txSetTextAlign (unsigned align = TA_CENTER | TA_BASELINE)
+    {
+    return txObject()->txSetTextAlign (align);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1631,12 +1715,22 @@ unsigned txSetTextAlign (unsigned align = TA_CENTER | TA_BASELINE);
 //! @see     txTextOut(), txSelectFont()
 //! @usage
 //! @code
-//!          if (txFontExist ("Comic Sans MS")) txSelectFont ("Comic Sans MS", 30);
-//!          else                               txSelectFont ("Times", 30);
+//!          if (txFontExists ("Comic Sans MS")) txSelectFont ("Comic Sans MS", 30);
+//!          else                                txSelectFont ("Times", 30);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-LOGFONT* txFontExist (const char name[]);
+LOGFONT* txFontExists (const char name[])
+    {
+    return txObject()->txFontExists (name);
+    }
+
+// For compatibility with typo in earlier releases
+
+LOGFONT* txFontExist  (const char name[]) 
+    {
+    return txFontExists (name); 
+    }
 
 //}
 
@@ -1672,7 +1766,10 @@ LOGFONT* txFontExist (const char name[]);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-HDC txCreateCompatibleDC (int sizeX, int sizeY, HBITMAP bitmap = NULL);
+HDC txCreateCompatibleDC (int sizeX, int sizeY, HBITMAP bitmap = NULL)
+    {
+    return txObject()->txCreateCompatibleDC (sizeX, sizeY, bitmap);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1709,7 +1806,10 @@ HDC txCreateCompatibleDC (int sizeX, int sizeY, HBITMAP bitmap = NULL);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-HDC txLoadImage (const char filename[]);
+HDC txLoadImage (const char filename[])
+    {
+    return txObject()->txLoadImage (filename);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1734,8 +1834,15 @@ HDC txLoadImage (const char filename[]);
 //}------------------------------------------------------------------------------------------------------------------------------
 //@ {
 
-bool txDeleteDC (HDC  dc);
-bool txDeleteDC (HDC* dcPtr);
+bool txDeleteDC (HDC* dcPtr)
+    {
+    return txObject()->txDeleteDC (dcPtr);
+    }
+
+bool txDeleteDC (HDC  dc) 
+    {
+    return txDeleteDC (&dc); 
+    }
 
 //@ }
 //{------------------------------------------------------------------------------------------------------------------------------
@@ -1791,8 +1898,11 @@ bool txDeleteDC (HDC* dcPtr);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-bool txBitBlt (HDC dest, int xDest, int yDest, int width, int height,
-               HDC src,  int xSrc,  int ySrc,  DWORD rOp = SRCCOPY);
+bool txBitBlt (HDC dest, int xDest, int yDest, int width, int height, 
+               HDC src,  int xSrc,  int ySrc,  DWORD rOp = SRCCOPY)
+    {
+    return txObject()->txBitBlt (dest, xDest, yDest, width, height, src, int, ySrc, rOp);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1833,7 +1943,10 @@ bool txBitBlt (HDC dest, int xDest, int yDest, int width, int height,
 //}------------------------------------------------------------------------------------------------------------------------------
 
 bool txTransparentBlt (HDC dest, int xDest, int yDest, int width, int height,
-                       HDC src,  int xSrc,  int ySrc,  COLORREF transColor = TX_BLACK);
+                       HDC src,  int xSrc,  int ySrc,  COLORREF transColor = TX_BLACK)
+    {
+    return txObject()->txTransparentBlt (dest, xDest, yDest, width, height, src, xSrc, ySrc, transColor);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1847,7 +1960,7 @@ bool txTransparentBlt (HDC dest, int xDest, int yDest, int width, int height,
 //! @param   height  Высота копируемого изображения, неотрицательная
 //! @param   src     Контекст источника (откуда копировать).
 //!                    Должен иметь 32-битовый формат и альфа-канал (см. ниже).
-//! @param   xSrc    Х-координата верхнего левого угла изображения-источника, 
+//! @param   xSrc    Х-координата верхнего левого угла изображения-источника,
 //!                    должна быть в пределах размера источника.
 //! @param   ySrc    Y-координата верхнего левого угла изображения-источника,
 //!                    должна быть в пределах размера источника.
@@ -1890,7 +2003,11 @@ bool txTransparentBlt (HDC dest, int xDest, int yDest, int width, int height,
 //}------------------------------------------------------------------------------------------------------------------------------
 
 bool txAlphaBlend (HDC dest, int xDest, int yDest, int width, int height,
-                   HDC src,  int xSrc,  int ySrc,  double alpha = 1.0);
+                   HDC src,  int xSrc,  int ySrc,  double alpha = 1.0)
+    {
+    return txObject()->txAlphaBlend (dest, xDest, yDest, width, height, src, xSrc, ySrc, alpha);
+    }
+
 //}
 
 //===============================================================================================================================
@@ -1923,7 +2040,10 @@ bool txAlphaBlend (HDC dest, int xDest, int yDest, int width, int height,
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-int txBegin();
+int txBegin()
+    {
+    return txObject()->txBegin();
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1946,7 +2066,10 @@ int txBegin();
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-int txEnd();
+int txEnd()
+    {
+    return txObject()->txEnd();
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
@@ -1965,7 +2088,10 @@ int txEnd();
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-bool txSleep (int time);
+bool txSleep (int time)
+    {
+    return txObject()->txSleep (time);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Service
@@ -1991,7 +2117,10 @@ bool txSleep (int time);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-inline int txUpdateWindow (int update = true);
+inline int txUpdateWindow (int update = true)
+    {
+    return txObject()->int txUpdateWindow (update);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -2010,7 +2139,10 @@ inline int txUpdateWindow (int update = true);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-bool txTextCursor (bool blink = true);
+bool txTextCursor (bool blink = true)
+    {
+    return txObject()->txTextCursor (blink);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -2035,7 +2167,10 @@ bool txTextCursor (bool blink = true);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-HRGN txSelectRegion (int x0, int y0, int x1, int y1);
+HRGN txSelectRegion (int x0, int y0, int x1, int y1)
+    {
+    return txObject()->txSelectRegion (x0, y0, x1, y1);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Service
@@ -2054,7 +2189,10 @@ HRGN txSelectRegion (int x0, int y0, int x1, int y1);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-bool txSelectObject (HGDIOBJ obj);
+bool txSelectObject (HGDIOBJ obj)
+    {
+    return txObject()->txSelectObject (obj);
+    }
 
 //}
 
@@ -2082,7 +2220,10 @@ bool txSelectObject (HGDIOBJ obj);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-POINT txMousePos();
+POINT txMousePos()
+    {
+    return txObject()->txMousePos();
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Mouse
@@ -2101,7 +2242,10 @@ POINT txMousePos();
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-int txMouseX();
+int txMouseX()
+    {
+    return txObject()->txMouseX();
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Mouse
@@ -2120,7 +2264,10 @@ int txMouseX();
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-int txMouseY();
+int txMouseY()
+    {
+    return txObject()->txMouseY();
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Mouse
@@ -2145,7 +2292,10 @@ int txMouseY();
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-int txMouseButtons();
+int txMouseButtons()
+    {
+    return txObject()->txMouseButtons();
+    }
 
 //}
 
@@ -2275,7 +2425,7 @@ bool In (const COORD& pt, const SMALL_RECT& rect)
 //! @ingroup Misc
 //! @brief   Генератор случайных чисел
 //!
-//! @param   range  Правая граница диапазона (не включая саму границу).
+//! @param   range  Правая граница диапазона (@b не включая саму границу).
 //!
 //! @return  Случайное целое число в диапазоне [0; range).\n
 //!
@@ -2283,13 +2433,85 @@ bool In (const COORD& pt, const SMALL_RECT& rect)
 //! @usage
 //! @code
 //!          char message[100] = "Maybe...";
-//!          sprintf ("You SUDDENLY got %d bucks now! Note that tax rate is $%d.", random (100), 100);
+//!          sprintf ("You SUDDENLY got %d bucks now. But note that tax rate is $%d.", random (100), 100);
 //!          MessageBox (txWindow(), message, "Lottery", 0);
 //! @endcode
 //! @hideinitializer
 //}------------------------------------------------------------------------------------------------------------------------------
 
-#define random( range )  ( rand() % (range) )
+inline
+int random (int range)
+    {
+    return rand() % range;
+    }
+
+//{------------------------------------------------------------------------------------------------------------------------------
+//! @ingroup Misc
+//! @brief   Генератор случайных чисел
+//!
+//! @param   left   Правая граница диапазона (@b включая саму границу).
+//! @param   right  Правая граница диапазона (@b включая саму границу).
+//!
+//! @return  Случайное целое число в диапазоне [left; right].\n
+//!
+//!          Вы все еще помните, что означают разные скобочки в обозначении интервалов? :)
+//! @usage
+//! @code
+//!          int money = random (-100, +100);
+//!          if (money < 0)
+//!              {
+//!              char message[100] = "Maybe...";
+//!              sprintf ("Играли в лотерею? Верните %d рублей!", -money);
+//!              MessageBox (txWindow(), message, "Быстро", 0);
+//!              }
+//! @endcode
+//! @hideinitializer
+//}------------------------------------------------------------------------------------------------------------------------------
+
+template <typename T, typename T1, typename T2>
+inline
+T random (T1 left, T2 right)
+    {
+    return left + (right - left) * ((double) rand() / RAND_MAX);
+    }
+
+//{------------------------------------------------------------------------------------------------------------------------------
+//! @ingroup Misc
+//! @brief   Возвращает максимальное из двух чисел
+//!
+//! @param   a  Одно из чисел :)
+//! @param   b  Другое из чисел :)
+//!
+//! @return  Максимальное из двух чисел a и b
+//!
+//! @see     MIN()
+//! @usage
+//! @code
+//!          if (MAX (3, 7) != 7) printf ("Your CPU is broken, throw it away.");
+//! @endcode
+//! @hideinitializer
+//}------------------------------------------------------------------------------------------------------------------------------
+
+#define MAX( a, b )           ( (a) > (b) ? (a) : (b) )
+
+//{------------------------------------------------------------------------------------------------------------------------------
+//! @ingroup Misc
+//! @brief   Возвращает минимальное из двух чисел
+//!
+//! @param   a  Одно из чисел :)
+//! @param   b  Другое из чисел :)
+//!
+//! @return  Минимальное из двух чисел a и b
+//!
+//! @see     MAX()
+//! @usage
+//! @code
+//!          if (MIN (3, 7) != 3) printf ("Your CPU is still broken, throw it away again.");
+//! @endcode
+//! @hideinitializer
+//}------------------------------------------------------------------------------------------------------------------------------
+
+#define MIN( a, b )           ( (a) < (b) ? (a) : (b) )
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
@@ -2325,7 +2547,10 @@ bool In (const COORD& pt, const SMALL_RECT& rect)
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-bool txPlaySound (const char filename[] = NULL, DWORD mode = SND_ASYNC);
+bool txPlaySound (const char filename[] = NULL, DWORD mode = SND_ASYNC)
+    {
+    return txObject()->txPlaySound (const char filename[] = NULL, DWORD mode = SND_ASYNC);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Service
@@ -2353,9 +2578,30 @@ bool txPlaySound (const char filename[] = NULL, DWORD mode = SND_ASYNC);
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-// See definition of this function below in this file.
+bool txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillCloseAndIWillNotBeAskingWhereIsMyPicture()
+    {
+$   MessageBox (txWindow(),
+                "Это запланированная ошибка. Такое бывает. Вы хотели вызвать:" "\n\n"
+                "txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillCloseAndIWillNotBeAskingWhereIsMyPicture()" "\n\n"
+                "Хоть вы долго [копировали]набирали это имя, на самом деле эта функция не работает." "\n"
+                "Но для нее есть работающий синоним. См. определение этой функции в исходных текстах библиотеки." "\n\n",
+                "Не получилось", MB_ICONSTOP);
 
-bool txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillCloseAndIWillNotBeAskingWhereIsMyPicture();
+    // The truth is out there...
+
+$   return false;
+    }
+
+//! @cond INTERNAL
+
+inline                    // Bingo! Now you are learned to use the Sources, Luke.
+bool txDisableAutoPause() // And may the Source be with you.
+    {
+$   _txExit = true;
+$   return true;
+    }
+
+//! @endcond
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Service
@@ -2370,7 +2616,10 @@ bool txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillCloseAndIWillNotBeA
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-double txQueryPerformance();
+double txQueryPerformance()
+    {
+    return txObject()->txQueryPerformance();
+    }
 
 //}
 
@@ -2439,7 +2688,10 @@ double txQueryPerformance();
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
-WNDPROC txSetWindowHandler (WNDPROC handler = NULL);
+WNDPROC txSetWindowHandler (WNDPROC handler = NULL)
+    {
+    return txObject()->txSetWindowHandler (handler);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Service
@@ -2472,7 +2724,11 @@ WNDPROC txSetWindowHandler (WNDPROC handler = NULL);
 //!
 //}------------------------------------------------------------------------------------------------------------------------------
 
-inline bool txLock (bool wait = true);
+inline
+bool txLock (bool wait = true)
+    {
+    return txObject()->txLock (wait);
+    }
 
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Service
@@ -2490,10 +2746,19 @@ inline bool txLock (bool wait = true);
 //}------------------------------------------------------------------------------------------------------------------------------
 //! @{
 
-inline bool txUnlock();
+inline
+bool txUnlock()
+    {
+    return txObject()->txUnlock();
+    }
 
-template <typename T> inline
-T txUnlock (T value);
+template <typename T>
+inline
+T txUnlock (T value)
+    {
+    txObject->txUnlock();
+    return value;
+    }
 
 //! @}
 
@@ -2763,7 +3028,7 @@ struct txDialog
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
 //! @brief   Заголовок карты сообщений (Message Map).
-
+//!
 //! @see     TX_BEGIN_MESSAGE_MAP(), TX_END_MESSAGE_MAP, TX_HANDLE(), TX_COMMAND_MAP,
 //! @see     txDialog::dialogProc(), txDialog
 //! @usage
@@ -2804,7 +3069,7 @@ struct txDialog
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
 //! @brief   Начало карты команд (Command map) в карте сообщений.
-
+//!
 //! @see     TX_BEGIN_MESSAGE_MAP(), TX_END_MESSAGE_MAP, TX_HANDLE(), TX_COMMAND_MAP,
 //! @see     txDialog::dialogProc(), txDialog
 //! @usage
@@ -2825,7 +3090,7 @@ struct txDialog
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
 //! @brief   Завершитель карты сообщений.
-
+//!
 //! @see     TX_BEGIN_MESSAGE_MAP(), TX_END_MESSAGE_MAP, TX_HANDLE(), TX_COMMAND_MAP,
 //! @see     txDialog::dialogProc(), txDialog
 //! @usage
@@ -3006,30 +3271,33 @@ $   return dlg.str;
 //! @cond    INTERNAL
 
 //===============================================================================================================================
-//{          [Internal] Function prototypes
-//! @name    Прототипы внутренних функций
+//{          [Internal] txObject_t class
+//! @name    Класс txObject_t
 //===============================================================================================================================
 
-bool         _txCleanup();
-void         _txOnExit();
+struct txObject_t
+    {
+    bool         _txCleanup();
+    void         _txOnExit();
 
-HWND         _txCanvas_CreateWindow (SIZE size);
-bool         _txCanvas_OK();
-bool         _txConsole_InitSTDIO();
-int          _txCanvas_SetRefreshLock (int count);
+    HWND         _txCanvas_CreateWindow (SIZE size);
+    bool         _txCanvas_OK();
+    bool         _txConsole_InitSTDIO();
+    int          _txCanvas_SetRefreshLock (int count);
 
-bool         _txCanvas_OnCREATE     (HWND wnd);
-bool         _txCanvas_OnDESTROY    (HWND wnd);
-bool         _txCanvas_OnCLOSE      (HWND);
-bool         _txCanvas_OnPAINT      (HWND wnd);
-bool         _txCanvas_OnCHAR       (HWND wnd, WPARAM ch);
-bool         _txCanvas_OnTIMER      (HWND wnd, WPARAM id);
-bool         _txCanvas_OnMOUSEMOVE  (HWND wnd, WPARAM buttons, LPARAM coords);
-bool         _txCanvas_OnCmdABOUT   (HWND wnd, WPARAM cmd);
-bool         _txCanvas_OnCmdSOURCE  (HWND wnd, WPARAM cmd);
+    bool         _txCanvas_OnCREATE     (HWND wnd);
+    bool         _txCanvas_OnDESTROY    (HWND wnd);
+    bool         _txCanvas_OnCLOSE      (HWND);
+    bool         _txCanvas_OnPAINT      (HWND wnd);
+    bool         _txCanvas_OnCHAR       (HWND wnd, WPARAM ch);
+    bool         _txCanvas_OnTIMER      (HWND wnd, WPARAM id);
+    bool         _txCanvas_OnMOUSEMOVE  (HWND wnd, WPARAM buttons, LPARAM coords);
+    bool         _txCanvas_OnCmdABOUT   (HWND wnd, WPARAM cmd);
+    bool         _txCanvas_OnCmdSOURCE  (HWND wnd, WPARAM cmd);
 
-unsigned CALLBACK _txCanvas_ThreadProc (void* data);
-LRESULT  CALLBACK _txCanvas_WndProc    (HWND wnd, UINT msg, WPARAM wpar, LPARAM lpar);
+    static unsigned CALLBACK _txCanvas_ThreadProc (void* data);
+    static LRESULT  CALLBACK _txCanvas_WndProc    (HWND wnd, UINT msg, WPARAM wpar, LPARAM lpar);
+    };
 
 HDC          _txBuffer_Create (HWND wnd, const POINT* size = NULL, HBITMAP bmap = NULL);
 bool         _txBuffer_Delete (HDC* dc);
