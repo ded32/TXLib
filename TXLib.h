@@ -73,9 +73,9 @@
     #if (__GNUC__ >= 4)
         #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 //!!!        #pragma GCC diagnostic ignored "-Wstrict-aliasing"
-        #pragma GCC diagnostic ignored "-Wunreachable-code"
-        #pragma GCC diagnostic ignored "-Wunused-value"
-        #pragma GCC diagnostic ignored "-Wunused-function"
+//!!!        #pragma GCC diagnostic ignored "-Wunreachable-code"
+//!!!        #pragma GCC diagnostic ignored "-Wunused-value"
+//!!!        #pragma GCC diagnostic ignored "-Wunused-function"
         #pragma GCC diagnostic ignored "-Wunused-label"  // Just for fun in _txCanvas_OnCmdAbout()
     #endif
 
@@ -109,9 +109,9 @@
     #pragma warning (push, 3)                   // At level 4, std headers emit warnings
 
 //!!!    #pragma warning (disable: 4018)             // '<': signed/unsigned mismatch
-    #pragma warning (disable: 4100)             // unreferenced formal parameter
-    #pragma warning (disable: 4511)             // copy constructor could not be generated
-    #pragma warning (disable: 4512)             // assignment operator could not be generated
+//!!!    #pragma warning (disable: 4100)             // unreferenced formal parameter
+//!!!    #pragma warning (disable: 4511)             // copy constructor could not be generated
+//!!!    #pragma warning (disable: 4512)             // assignment operator could not be generated
     #pragma warning (disable: 4663)             // C++ language change: to explicitly specialize class template '...'
 
     #if !defined (WINVER)
@@ -168,7 +168,7 @@
 #ifdef  _TX_MULTIPLE_INSTANCE
     #define _TX_ANON_NSPACE  _TX_MULTIPLE_INSTANCE  // Guard TXLib from linker errors when included
                                                     //   in several files of multifile project. See
-#else                                               //   "namespace TX {" below.
+#else                                               //   "namespace TX..." below.
     #define _TX_ANON_NSPACE
 
 #endif
@@ -3254,7 +3254,7 @@ bool         _tx_Error (const char file[], int line, const char func[],
 
 #define      _txCheck()             ( txOK() || TX_ERROR ("\a" "Окно рисования не создано") )
 
-// This is a macro because cond is no a function but an expression. Lack of lambdas in pre-C++0x
+// This is a macro because cond is not a function but an expression. Lack of lambdas in pre-C++0x
 
 #define      _txWaitFor(cond)       { for (DWORD __t##__LINE__ = GetTickCount() + _TX_TIMEOUT; GetTickCount() < __t##__LINE__; )\
                                         { $ if ((cond) != 0) break; Sleep (_TX_WINDOW_UPDATE_INTERVAL); } }
@@ -5431,7 +5431,7 @@ using std::cout;
 
 #if defined (__GNUC__) && (__GNUC__ >= 4)
 
-    #pragma GCC diagnostic warning "-Wstrict-aliasing"
+//!!!    #pragma GCC diagnostic warning "-Wstrict-aliasing"
 
     // Still block this warning to avoid reporting about "= {}" initialization.
 
@@ -5442,9 +5442,9 @@ using std::cout;
     // These warnings really occur at end of compilation, so do not restore them.
 
     #if 0
-    #pragma GCC diagnostic warning "-Wunreachable-code"
-    #pragma GCC diagnostic warning "-Wunused-value"
-    #pragma GCC diagnostic warning "-Wunused-function"
+//!!!    #pragma GCC diagnostic warning "-Wunreachable-code"
+//!!!    #pragma GCC diagnostic warning "-Wunused-value"
+//!!!    #pragma GCC diagnostic warning "-Wunused-function"
     #pragma GCC diagnostic warning "-Wunused-label"
     #endif
 
@@ -5459,9 +5459,9 @@ using std::cout;
     #pragma warning (default: 4351)             // new behavior: elements of array ... will be default initialized
 
 //!!!    #pragma warning (default: 4018)             // '<': signed/unsigned mismatch
-    #pragma warning (default: 4100)             // unreferenced formal parameter
-    #pragma warning (default: 4511)             // copy constructor could not be generated
-    #pragma warning (default: 4512)             // assignment operator could not be generated
+//!!!    #pragma warning (default: 4100)             // unreferenced formal parameter
+//!!!    #pragma warning (default: 4511)             // copy constructor could not be generated
+//!!!    #pragma warning (default: 4512)             // assignment operator could not be generated
     #pragma warning (default: 4663)             // C++ language change: to explicitly specialize class template '...'
 //!!!    #pragma warning (default: 6031)             // return value ignored: '...'
 
@@ -5577,8 +5577,6 @@ struct _txSuffixDump
 //-------------------------------------------------------------------------------------------------------------------------------
 
 //! @endcond
-//}
-
 //}
 
 #endif // __TXLIB_H
