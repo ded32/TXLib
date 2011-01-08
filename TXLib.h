@@ -616,8 +616,8 @@ unsigned txVersionNumber();
 //! @param   fileNameOnly  Возвратить только полное имя исполняемого файла, полученного через
 //!                        Win32 функцию GetFileModuleName (NULL, ...).
 //!
-//! @return  fileNameOnly = true:  \t Имя исполняемого файла
-//!          fileNameOnly = false: \t Изначальный заголовок окна TXLib
+//! @return  fileNameOnly = true:  Имя исполняемого файла \n
+//!          fileNameOnly = false: Изначальный заголовок окна TXLib
 //!
 //! @note    Возвращается @b статическая строка.
 //!
@@ -884,7 +884,8 @@ bool txPixel (int x, int y, int red, double green, double blue);
 //! @code
 //!          COLORREF color = txGetPixel (100, 200);
 //!
-//!          if (txGetPixel (x, y) == TX_RED) CarCrash (x, y);
+//!          if (txGetPixel (x, y) == TX_RED)
+//!              CarCrash (x, y);     // Mess with the red - die like the rest
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
@@ -1161,7 +1162,7 @@ bool txTextOut (int x, int y, const char text[]);
 //!          txTextOut(), txSelectFont(), txGetTextExtent(), txGetTextExtentX(), txGetTextExtentY()
 //! @usage
 //! @code
-//!          txTextOut (100, 100, "Здесь могла бы быть Ваша реклама.");
+//!          txTextOut (100, 100, "Здесь вновь могла бы быть Ваша реклама.");
 //! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
@@ -1729,8 +1730,8 @@ bool txTextCursor (bool blink = true);
 //!
 //! @return  Если операция была успешна - true, иначе - false.
 //!
-//! @warning После успешного вызова этой функции main() будет приостановлена
-//!          и впоследствии завершена через exit().
+//! @warning После успешного вызова этой функции, функция main() будет
+//!          впоследствии завершена через exit().
 //!
 //! @see     txCreateWindow()
 //! @usage
@@ -2298,7 +2299,8 @@ WNDPROC txSetWindowHandler (WNDPROC handler = NULL);
 //!
 //! @see     txDC(), txLock(), txUnlock(), txGDI()
 //! @usage   См. исходный текст функций _txCanvas_OnPaint() и _txConsole_Draw() в TXLib.h.
-//!
+//! @code
+//! @endcode
 //}------------------------------------------------------------------------------------------------------------------------------
 
 inline bool txLock (bool wait = true);
@@ -2404,8 +2406,6 @@ const int    _TX_WINDOW_UPDATE_INTERVAL   = 10;
 
 const int    _TX_TIMEOUT                  = 1000;
 
-//! @endcond
-
 //}
 
 //===============================================================================================================================
@@ -2472,8 +2472,10 @@ const int    _TX_TIMEOUT                  = 1000;
 //{------------------------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
 //! @brief   Имя текущей функции
+//!
 //! @warning Если определение имени функции не поддерживается компилятором, то __TX_FUNCTION__
 //!          раскрывается в имя исходного файла и номер строки.
+//!
 //! @hideinitializer
 //}------------------------------------------------------------------------------------------------------------------------------
 
@@ -2502,7 +2504,7 @@ const int    _TX_TIMEOUT                  = 1000;
 //! @brief   Замена стандартного макроса assert(), с выдачей сообщения через MessageBox(),
 //!          консоль и OutputDebugString().
 //!
-//! @param   condition Условие для проверки
+//! @param   cond  Условие для проверки
 //!
 //! @return  Всегда 0
 //!
@@ -3206,11 +3208,11 @@ $   return dlg.str;
 //! @name    Прототипы внутренних функций, макросы и константы
 //===============================================================================================================================
 
-bool         _txCleanup();
 void         _txOnExit();
 
 HWND         _txCanvas_CreateWindow (SIZE size);
 bool         _txCanvas_OK();
+
 bool         _txConsole_InitSTDIO();
 int          _txCanvas_SetRefreshLock (int count);
 
@@ -3382,8 +3384,7 @@ using namespace Win32;
 //           Не упакованы в структуру или класс, для того, чтобы это сделали Вы сами :)
 //===============================================================================================================================
 
-HANDLE           _txMainThread          = NULL;   // Копия дескриптора потока с main()
-unsigned         _txMainThreadId        = 0;      // ID этого потока
+unsigned         _txMainThreadId        = 0;      // ID потока с main()
 
 HANDLE           _txCanvas_Thread       = NULL;   // Дескриптор потока, владеющего окном холста TXLib
 unsigned         _txCanvas_ThreadId     = 0;      // ID этого потока
@@ -3450,11 +3451,6 @@ $   _txWindowId = TX_COUNTER();
 $   atexit (_txOnExit);
 
 $   InitializeCriticalSection (&_txCanvas_LockBackBuf);
-
-$   assert (!_txMainThread);
-$   DuplicateHandle (GetCurrentProcess(), GetCurrentThread(), GetCurrentProcess(), &_txMainThread,
-                     THREAD_SUSPEND_RESUME, FALSE, DUPLICATE_SAME_ACCESS) asserted;
-$   assert ( _txMainThread);
 
 $   assert (!_txMainThreadId);
 $   _txMainThreadId = GetCurrentThreadId();
@@ -3579,8 +3575,8 @@ $   SetWindowTextA (txWindow(), title);
 $   if (GetCurrentThreadId() != _txCanvas_ThreadId)
         { $ (WaitForSingleObject (_txCanvas_Thread, INFINITE) == WAIT_OBJECT_0) asserted; }
 
-$   if (_txMainThread)    CloseHandle (_txMainThread)    asserted; _txMainThread    = NULL;
-$   if (_txCanvas_Thread) CloseHandle (_txCanvas_Thread) asserted; _txCanvas_Thread = NULL;
+$   if (_txCanvas_Thread)
+        { $ CloseHandle (_txCanvas_Thread) asserted; _txCanvas_Thread = NULL; }
 
 $   if (_txWindowId == 1)
         { $ _txConsole_Detach(); }
@@ -3777,8 +3773,8 @@ $   if (!_txCanvas_Window) return false;
     // Indicate that we are about to terminate
 
 $   _txExit = true;
-$   SetThreadPriority (GetCurrentThread(), THREAD_PRIORITY_NORMAL) /* !!! asserted*/;
-$   SetThreadPriority (_txMainThread,      THREAD_PRIORITY_NORMAL) /* !!! asserted*/;
+$   SetThreadPriority (GetCurrentThread(), THREAD_PRIORITY_NORMAL) asserted; /* !!! ignore? */ 
+$   SetThreadPriority (_txMainThread,      THREAD_PRIORITY_NORMAL) asserted; /* !!! ignore? */ 
 
     // Lock GDI resources forever, will not txUnlock() at return.
 
@@ -4075,7 +4071,7 @@ $   if (!GetConsoleWindow())
 $       FreeConsole();
 $       AllocConsole();
 
-$       HANDLE con = GetStdHandle (STD_OUTPUT_HANDLE); con asserted;
+$       HANDLE con = GetStdHandle (STD_OUTPUT_HANDLE); assert (con);
 $       COORD size = { 80, 25 };
 $       if (con) SetConsoleScreenBufferSize (con, size);
         }
@@ -4188,7 +4184,7 @@ HDC _txBuffer_Create (HWND wnd, const POINT* size, HBITMAP bitmap)
     {
 $   txLock();
 
-$   HDC wndDC = GetDC (wnd); wndDC asserted; if (!wndDC) return NULL;
+$   HDC wndDC = GetDC (wnd); assert (wndDC); if (!wndDC) return NULL;
 
 $   (Win32::GetDeviceCaps (wndDC, RASTERCAPS) & RC_BITBLT) || TX_ERROR ("GetDeviceCaps(): RASTERCAPS: RC_BITBLT not supported");
 
@@ -4326,8 +4322,7 @@ bool _tx_Error (const char file[], int line, const char func[],
 
                 s +=  _snprintf_s  (s, SZARG_ (1), "#%d: Thread: 0x%08X%s", nCalls, threadId,
                                                     threadId == _txMainThreadId?    " (Main thread)"   :
-                                                    threadId == _txCanvas_ThreadId? " (Canvas thread)" :
-                                                                                    "");
+                                                    threadId == _txCanvas_ThreadId? " (Canvas thread)" : "");
 
     if (winerr) s +=  _snprintf_s  (s, SZARG_ (0), ", GetLastError(): %lu (", winerr),
                 s += FormatMessage (FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
@@ -4458,7 +4453,7 @@ COLORREF txGetColor()
     {
 $   _txCheck();
 
-$   HGDIOBJ obj = txGDI ((Win32::GetCurrentObject (txDC(), OBJ_PEN))); obj asserted;
+$   HGDIOBJ obj = txGDI ((Win32::GetCurrentObject (txDC(), OBJ_PEN))); assert (obj);
 
 $   char buf [MAX (sizeof (LOGPEN), sizeof (EXTLOGPEN))] = {0};
 
@@ -4495,7 +4490,7 @@ COLORREF txGetFillColor()
     {
 $   _txCheck();
 
-$   HGDIOBJ obj = txGDI ((Win32::GetCurrentObject (txDC(), OBJ_BRUSH))); obj asserted;
+$   HGDIOBJ obj = txGDI ((Win32::GetCurrentObject (txDC(), OBJ_BRUSH))); assert (obj);
 
 $   LOGBRUSH buf = {0};
 $   txGDI ((Win32::GetObject (obj, sizeof (buf), &buf))) asserted;
@@ -4812,7 +4807,7 @@ HDC txCreateCompatibleDC (int sizeX, int sizeY, HBITMAP bitmap /*= NULL*/)
 $   _txCheck();
 
 $   POINT size = { sizeX, sizeY };
-$   HDC dc = _txBuffer_Create (txWindow(), &size, bitmap); dc asserted;
+$   HDC dc = _txBuffer_Create (txWindow(), &size, bitmap); assert (dc);
 
 $   return dc;
     }
