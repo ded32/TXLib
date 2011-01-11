@@ -2121,9 +2121,8 @@ int random (int range)
 //! @hideinitializer
 //}-------------------------------------------------------------------------------------------
 
-template <typename T, typename T1, typename T2>
 inline
-T random (T1 left, T2 right)
+double random (double left, double right)
     {
     return left + (right - left) * ((double) rand() / RAND_MAX);
     }
@@ -3237,7 +3236,7 @@ FARPROC      _txImport (const char lib[], const char name[], int required = true
 
 #if !defined (NDEBUG)
     #define  _txAssertOK()          ( txOK() || TX_ERROR ("\a" "Окно рисования не создано") )
-    #define  TX_DEBUG_ERROR( msg )  ( TX_ERROR (msg) )
+    #define  TX_DEBUG_ERROR         TX_ERROR
 
 #else
     #define  _txAssertOK()          ( 0 )
@@ -3654,13 +3653,13 @@ $       center.x = (r.right + r.left) / 2;
 $       center.y = (r.bottom + r.top) / 2;
         }
 
-$   _txCanvas_Window = CreateWindowEx (from->dwExStyle, (LPCSTR) wndclass,
+$   _txCanvas_Window = CreateWindowEx (from->dwExStyle, className,
                                        from->lpszName? from->lpszName : txGetModuleFileName (false),
                                        from->style | WS_POPUP | WS_BORDER | WS_CAPTION,
                                        center.x - size.cx/2, center.y - size.cy/2, size.cx, size.cy,
                                        NULL, from->hMenu, NULL, from->lpCreateParams);
 
-$   if (!_txCanvas_Window) return TX_DEBUG_ERROR ("Cannot create canvas: CreateWindowEx (\"%s\") failed"_ 
+$   if (!_txCanvas_Window) return TX_DEBUG_ERROR ("Cannot create canvas: CreateWindowEx (\"%s\") failed"_
                                                    className), (HWND) NULL;
 $   ShowWindow          (_txCanvas_Window, SW_SHOW);
 $   SetForegroundWindow (_txCanvas_Window) asserted;
@@ -4250,16 +4249,17 @@ $   return obj != NULL;
 
 const char* txGetModuleFileName (bool fileNameOnly /*= true*/)
     {
-$   static char name[256] = "";
+$   static char fullName[1024] = "";
 
-$   GetModuleFileName (NULL, name, sizeof (name) - 1) asserted;
-$   if (fileNameOnly) return name;
+$   GetModuleFileName (NULL, fullName, sizeof (fullName) - 1) asserted;
+$   if (fileNameOnly) return fullName;
 
-$   strncat_s (name, _TX_INSTANCE_NAME "- TXLib", sizeof (name));
+$   char* title = strrchr (fullName, '\\'); assert (title);
+$   char* ext   = strrchr (fullName,  '.'); assert (ext);
 
-$   const char* title = strrchr (name, '\\'); title = title? title+1 : name;
+$   strncpy_s (ext, _TX_INSTANCE_NAME "- TXLib", sizeof (fullName) - (ext - fullName) - 1);
 
-$   return title;
+$   return title + 1;
     }
 
 //--------------------------------------------------------------------------------------------
@@ -4432,7 +4432,7 @@ bool txSetColor (COLORREF color, int thickness /*= 1*/)
     {
 $   _txAssertOK();
 
-$   return _txBuffer_Select (Win32::CreatePen ((color == TX_NULL? PS_NULL : PS_SOLID), thickness, color)) &&
+$   return _txBuffer_Select (Win32::CreatePen ((color == TX_TRANSPARENT? PS_NULL : PS_SOLID), thickness, color)) &&
             txGDI          ((Win32::SetTextColor (txDC(), color) != 0));
     }
 
@@ -4776,7 +4776,7 @@ $           return  strncmp  (fnt->lfFaceName, ((LOGFONT*)data)->lfFaceName, LF_
             }
         };
 
-$   return txGDI ((Win32::EnumFontFamiliesEx (txDC(), &font, enumFonts::Proc, 
+$   return txGDI ((Win32::EnumFontFamiliesEx (txDC(), &font, enumFonts::Proc,
                                              (LPARAM)&font, 0) == 0? &font : NULL));
     }
 
@@ -5234,7 +5234,7 @@ INT_PTR txDialog::dialogBox (WORD resourceID)
     {
 $   const char* resName = (char*)(ptrdiff_t)resourceID;
 
-$   if (!FindResource (NULL, resName, RT_DIALOG)) return TX_DEBUG_ERROR ("Не найден ресурс диалога %d" _ 
+$   if (!FindResource (NULL, resName, RT_DIALOG)) return TX_DEBUG_ERROR ("Не найден ресурс диалога %d" _
                                                                           resourceID);
 $   return DialogBoxParam (NULL, resName, NULL, dialogProc__, (LPARAM) this);
     }
