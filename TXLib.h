@@ -2566,11 +2566,9 @@ const int      _TX_TIMEOUT                = 1000;
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Misc
-//! @brief   В отладочном режиме выводит развернутое диагностическое сообщение.
+//! @brief   Выводит развернутое диагностическое сообщение.
 //!
 //! @return  всегда false
-//!
-//! @warning В режиме Release этот макрос не делает ничего.
 //!
 //! @see     _, assert(), asserted, __TX_FILELINE__, __TX_FUNCTION__, TX_ERROR, TX_PRINT_HERE,
 //!          @ref "отладочные $-макросы" $
@@ -2581,14 +2579,9 @@ const int      _TX_TIMEOUT                = 1000;
 //! @hideinitializer
 //}-------------------------------------------------------------------------------------------
 
-#if !defined (NDEBUG)
-    #define TX_ERROR( msg )   ( _txError (__FILE__, __LINE__, 						          \
+#define TX_ERROR( msg )       ( _txError (__FILE__, __LINE__,                                 \
                                          ((*__TX_FUNCTION__ != '(')? __TX_FUNCTION__ : NULL), \
                                          (DWORD)(-1), -1, -1, msg), _txNOP (0) )
-#else
-    #define TX_ERROR(msg)     ( 0 )
-
-#endif
 
 #define TX_THROW              TX_ERROR  // For compatibility with earlier releases
 
@@ -3235,22 +3228,28 @@ bool         _txError (const char file[], int line, const char func[],
                        DWORD getlasterror_value, int errno_value, int doserrno_value,
                        const char msg[], ...) _TX_CHECK_FORMAT (7);
 
+FARPROC      _txImport (const char lib[], const char name[], int required = true);
+
 //--------------------------------------------------------------------------------------------
 
-// This is a macro for __FILE__ and __LINE__ to work properly.
-// Warning: if failed, this macro aborts the program by setting '\a' flag in TX_ERROR().
+// These are macros for __FILE__ and __LINE__ to work properly.
+// Warning: if failed, _txAssert() aborts the program by setting '\a' flag in TX_ERROR().
 
 #if !defined (NDEBUG)
     #define  _txAssertOK()          ( txOK() || TX_ERROR ("\a" "Окно рисования не создано") )
+    #define  TX_DEBUG_ERROR( msg )  ( TX_ERROR (msg) )
 
 #else
     #define  _txAssertOK()          ( 0 )
+    #define  TX_DEBUG_ERROR(msg)    ( 0 )
 #endif
 
-// This is a macro because cond is not a function but an expression. Lack of lambdas in pre-C++0x
+// This is a macro because cond is an expression and not always a function. Lack of lambdas in pre-C++0x.
 
-#define      _txWaitFor(cond)       { for (DWORD __t##__LINE__ = GetTickCount() + _TX_TIMEOUT; GetTickCount() < __t##__LINE__; )\
-                                        { $ if ((cond) != 0) break; Sleep (_TX_WINDOW_UPDATE_INTERVAL); } }
+#define      _txWaitFor(cond)       for (DWORD __t##__LINE__ = GetTickCount() + _TX_TIMEOUT; \
+                                         GetTickCount() < __t##__LINE__;                     \
+                                         Sleep (_TX_WINDOW_UPDATE_INTERVAL))                 \
+                                         if ((cond) != 0) break;                             \
 
 // To suppress warnings in assert() and TX_ERROR() macros ("right-hand of comma operator has no effect")
 
@@ -3270,17 +3269,15 @@ const int    _TX_IDM_CONSOLE        = 40001;
 //! @name    Импорт внешних библиотек
 //============================================================================================
 
-FARPROC _txImport (const char lib[], const char name[], int required = true);
-
-FARPROC _txImport (const char lib[], const char name[], int required)
+FARPROC _txImport (const char lib[], const char name[], int required /*= true*/)
     {
 $   HMODULE dll = LoadLibrary (lib);
-$       if (!dll && required) TX_ERROR ("\a" "Cannot load library \"%s\"" _ lib);
+$       if (!dll && required) TX_DEBUG_ERROR ("\a" "Cannot load library \"%s\"" _ lib);
 
 $   if (!dll) return NULL;
 
 $   FARPROC addr = GetProcAddress (dll, name);
-$       if (!addr && required) TX_ERROR ("\a" "Cannot import \"%s\" from library \"%s\"" _ name _ lib);
+$       if (!addr && required) TX_DEBUG_ERROR ("\a" "Cannot import \"%s\" from library \"%s\"" _ name _ lib);
 
 $   return addr;
     }
@@ -3453,10 +3450,10 @@ $   static CREATESTRUCT from = { NULL, NULL, NULL, NULL,
     // In Thread, where REAL creation lies...
 
 $   HANDLE thread = (HANDLE) _beginthread (_txCanvas_ThreadProc, 0, &from);
-$       if (thread == (HANDLE)(-1)) return TX_ERROR ("\a" "Cannot start canvas thread"), (HWND)NULL;
+$       if (thread == (HANDLE)(-1)) return TX_DEBUG_ERROR ("\a" "Cannot start canvas thread"), (HWND)NULL;
 
 $   _txWaitFor (_txRunning);
-$       if (!_txRunning || !txOK()) return TX_ERROR ("\a" "Cannot create canvas window"),(HWND)NULL;
+$       if (!_txRunning || !txOK()) return TX_DEBUG_ERROR ("\a" "Cannot create canvas window"),(HWND)NULL;
 
 $   errno = _doserrno = 0;
 $   SetLastError (0);
@@ -3557,7 +3554,7 @@ $       while (_txCanvas_ThreadId) Sleep (_TX_WINDOW_UPDATE_INTERVAL);
 $   SendNotifyMessage (txWindow(), WM_DESTROY, 0, 0);
 
 $	_txWaitFor (_txCanvas_Window == NULL);
-$ 	    if (_txCanvas_Window != NULL) { TX_ERROR ("\a" "Cannot delete canvas"); return; }
+$ 	    if (_txCanvas_Window != NULL) { TX_DEBUG_ERROR ("\a" "Cannot delete canvas"); return; }
 
 $   DeleteCriticalSection (&_txCanvas_LockBackBuf);
 
@@ -3586,7 +3583,7 @@ $   _txCanvas_ThreadId = GetCurrentThreadId();
 $   if (!data) return;
 
 $   _txCanvas_Window = _txCanvas_CreateWindow ((CREATESTRUCT*) data);
-$       if (!_txCanvas_Window) { TX_ERROR ("\a" "Cannot create canvas"); return; }
+$       if (!_txCanvas_Window) { TX_DEBUG_ERROR ("\a" "Cannot create canvas"); return; }
 
 $	bool masterWnd = (GetWindowLong (txWindow(), GWL_STYLE) & WS_SYSMENU) != 0;
 
@@ -3637,7 +3634,7 @@ $   wc.hbrBackground = (HBRUSH) GetStockObject (HOLLOW_BRUSH);
 $   wc.lpszClassName = className;
 
 $   ATOM wndclass = RegisterClassEx (&wc);
-$       if (!wndclass) return TX_ERROR ("RegisterClass (\"%s\") failed"_ className), (HWND)NULL;
+$       if (!wndclass) return TX_DEBUG_ERROR ("RegisterClass (\"%s\") failed"_ className), (HWND) NULL;
 
 $   int centered = false;
 $   if (from->cx < 0 && from->cy < 0) { from->cx *= -1; from->cy *= -1; centered = true; }
@@ -3663,8 +3660,8 @@ $   _txCanvas_Window = CreateWindowEx (from->dwExStyle, (LPCSTR) wndclass,
                                        center.x - size.cx/2, center.y - size.cy/2, size.cx, size.cy,
                                        NULL, from->hMenu, NULL, from->lpCreateParams);
 
-$   if (!_txCanvas_Window) return TX_ERROR ("Cannot create canvas: CreateWindowEx (\"%s\") failed"_ className), (HWND)NULL;
-
+$   if (!_txCanvas_Window) return TX_DEBUG_ERROR ("Cannot create canvas: CreateWindowEx (\"%s\") failed"_ 
+                                                   className), (HWND) NULL;
 $   ShowWindow          (_txCanvas_Window, SW_SHOW);
 $   SetForegroundWindow (_txCanvas_Window) asserted;
 $   UpdateWindow        (_txCanvas_Window) asserted;
@@ -3760,7 +3757,7 @@ $   _txExit = true;
 
 $   bool locked = false;
 $   _txWaitFor (locked = txLock (false));
-$       if (!locked) TX_ERROR ("Cannot lock GDI to free resources");
+$       if (!locked) TX_DEBUG_ERROR ("Cannot lock GDI to free resources");
 
     // Освобождаем ресурсы, связанные с окном
 
@@ -4178,7 +4175,7 @@ $   txLock();
 
 $   HDC wndDC = GetDC (wnd); assert (wndDC); if (!wndDC) return NULL;
 
-$   if (!(Win32::GetDeviceCaps (wndDC, RASTERCAPS) & RC_BITBLT)) TX_ERROR ("RC_BITBLT not supported");
+$   if (!(Win32::GetDeviceCaps (wndDC, RASTERCAPS) & RC_BITBLT)) TX_DEBUG_ERROR ("RC_BITBLT not supported");
 
 $   RECT r = {0};
 $   GetClientRect (wnd, &r) asserted;
@@ -4186,10 +4183,10 @@ $   POINT sz = { r.right - r.left, r.bottom - r.top };
 $   if (!size) size = &sz;
 
 $   HDC dc = Win32::CreateCompatibleDC (wndDC);
-$       if (!dc) TX_ERROR ("Cannot create buffer: CreateCompatibleDC() failed");
+$       if (!dc) TX_DEBUG_ERROR ("Cannot create buffer: CreateCompatibleDC() failed");
 
 $   HBITMAP bmap = bitmap? bitmap : Win32::CreateCompatibleBitmap (wndDC, size->x, size->y);
-$       if (!bmap) TX_ERROR ("Cannot create buffer: CreateCompatibleBitmap() failed");
+$       if (!bmap) TX_DEBUG_ERROR ("Cannot create buffer: CreateCompatibleBitmap() failed");
 
 $   Win32::SelectObject (dc, bmap) asserted;
 
@@ -4231,7 +4228,7 @@ bool _txBuffer_Select (HGDIOBJ obj, HDC dc /*= txDC()*/)
     {
 $   assert (obj); assert (dc);
 
-$   if (!obj || !Win32::GetObjectType (obj)) TX_ERROR ("Invalid GDI object type");
+$   if (!obj || !Win32::GetObjectType (obj)) TX_DEBUG_ERROR ("Invalid GDI object type");
 
 $   txLock();
 
@@ -4435,7 +4432,7 @@ bool txSetColor (COLORREF color, int thickness /*= 1*/)
     {
 $   _txAssertOK();
 
-$   return _txBuffer_Select (Win32::CreatePen ((color == TX_TRANSPARENT? PS_NULL : PS_SOLID), thickness, color)) &&
+$   return _txBuffer_Select (Win32::CreatePen ((color == TX_NULL? PS_NULL : PS_SOLID), thickness, color)) &&
             txGDI          ((Win32::SetTextColor (txDC(), color) != 0));
     }
 
@@ -4779,7 +4776,8 @@ $           return  strncmp  (fnt->lfFaceName, ((LOGFONT*)data)->lfFaceName, LF_
             }
         };
 
-$   return txGDI ((Win32::EnumFontFamiliesEx (txDC(), &font, enumFonts::Proc, (LPARAM)&font, 0) == 0? &font : NULL));
+$   return txGDI ((Win32::EnumFontFamiliesEx (txDC(), &font, enumFonts::Proc, 
+                                             (LPARAM)&font, 0) == 0? &font : NULL));
     }
 
 //--------------------------------------------------------------------------------------------
@@ -5191,12 +5189,12 @@ $   return std::swap (layout_, layout), layout;
 INT_PTR txDialog::dialogBox (const txDialog::Layout* layout /*= NULL*/, size_t bufsize /*= 0*/)
     {
 $   if (!layout)  layout = layout_;
-$   if (!layout)  return TX_ERROR ("Не установлен динамический шаблон диалога");
+$   if (!layout)  return TX_DEBUG_ERROR ("Не установлен динамический шаблон диалога");
 
 $   if (!bufsize) bufsize = 1024;
 
 $   DLGTEMPLATE* tmpl = (DLGTEMPLATE*) GlobalAlloc (GPTR, bufsize);
-$   if (!tmpl) return TX_ERROR ("GlobalAlloc(): Нет памяти для шаблона диалога");
+$   if (!tmpl) return TX_DEBUG_ERROR ("GlobalAlloc(): Нет памяти для шаблона диалога");
 
 $   const Layout* dlg = &layout[0];
 
@@ -5236,8 +5234,8 @@ INT_PTR txDialog::dialogBox (WORD resourceID)
     {
 $   const char* resName = (char*)(ptrdiff_t)resourceID;
 
-$   if (!FindResource (NULL, resName, RT_DIALOG)) return TX_ERROR ("Не найден ресурс диалога %d" _ resourceID);
-
+$   if (!FindResource (NULL, resName, RT_DIALOG)) return TX_DEBUG_ERROR ("Не найден ресурс диалога %d" _ 
+                                                                          resourceID);
 $   return DialogBoxParam (NULL, resName, NULL, dialogProc__, (LPARAM) this);
     }
 
