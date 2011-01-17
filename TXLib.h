@@ -2591,7 +2591,7 @@ const int      _TX_TIMEOUT                = 1000;
 #undef  assert
 
 #if !defined (NDEBUG)
-    #define assert( cond )    ( !(cond)? (TX_ERROR ("\a" "Логическая ошибка: Неверно, что \"%s\"" _ #cond), 0) : _txNOP (0) )
+    #define assert( cond )    ( !(cond)? (TX_ERROR ("\a" "ВНЕЗАПНО: Логическая ошибка: Неверно, что \"%s\"" _ #cond), 0) : _txNOP (0) )
 
 #else
     #define assert( cond )    ( 0 )
@@ -3292,7 +3292,7 @@ $   return dlg.str;
 //           Прототипы внутренних функций, макросы и константы
 //============================================================================================
 
-bool         _txInitialize();
+int          _txInitialize();
 void         _txOnExit();
 
 HWND         _txCanvas_CreateWindow (CREATESTRUCT* from);
@@ -3419,6 +3419,7 @@ _TX_IMPORT ("GDI32", DWORD,    GetObjectType,          (HGDIOBJ object));
 _TX_IMPORT ("GDI32", BOOL,     DeleteDC,               (HDC dc));
 _TX_IMPORT ("GDI32", BOOL,     DeleteObject,           (HGDIOBJ object));
 _TX_IMPORT ("GDI32", COLORREF, SetTextColor,           (HDC dc, COLORREF color));
+_TX_IMPORT ("GDI32", COLORREF, SetBkColor,             (HDC dc, COLORREF color));
 _TX_IMPORT ("GDI32", int,      SetBkMode,              (HDC dc, int bkMode));
 _TX_IMPORT ("GDI32", HFONT,    CreateFontA,            (int height, int width, int escapement, int orientation,
                                                         int weight, DWORD italic, DWORD underline, DWORD strikeout,
@@ -3511,7 +3512,7 @@ int              _txMouseButtons        =  0;
 
 WNDPROC          _txAltWndProc          = NULL;   // Альтернативная оконная функция. См. txSetWindowHandler().
 
-const bool       _txStaticInitialize    = _txInitialize();
+const int        _txStaticInitialize    = _txInitialize();
 
 //! @}
 //}
@@ -3527,7 +3528,7 @@ const bool       _txStaticInitialize    = _txInitialize();
 //{          Static initialization
 //--------------------------------------------------------------------------------------------
 
-bool _txInitialize()
+int _txInitialize()
     {
 #ifndef NDEBUG
 
@@ -3550,14 +3551,14 @@ $   _txSignal();
 $   std::set_unexpected (_txUnexpectedFunction);
 $   std::set_terminate  (_txTerminateFunction);
 
-$   HWND wnd = txWindow()? txWindow() : GetConsoleWindow();
-$   SetWindowTextA (wnd, txGetModuleFileName (false));
+$   SetWindowTextA ((txWindow()? txWindow() : GetConsoleWindow()),
+                     txGetModuleFileName (false));
 
 $   InitializeCriticalSection (&_txCanvas_LockBackBuf);
 
 $   atexit (_txOnExit);
 
-$   return true;
+$   return 1;
     }
 
 //}
@@ -3668,37 +3669,35 @@ $   return _txCanvas_OK();
 
 void _txOnExit()
     {
-$   bool isMaster = _txCanvas_Window && (GetWindowLong (_txCanvas_Window, GWL_STYLE) & WS_SYSMENU) != 0;
+$   HWND wnd      = txWindow()? txWindow() : GetConsoleWindow();
+$   bool isMaster = wnd && (GetWindowLong (wnd, GWL_STYLE) & WS_SYSMENU);
 
-$   HWND wnd = _txCanvas_Window? _txCanvas_Window : GetConsoleWindow();
-
-$   char title [1024] = "";
-$   GetWindowTextA (wnd, title, sizeof (title) - 1);
-$   strncat_s (title, " [ЗАВЕРШЕНО]", sizeof (title) - 1);
-$   SetWindowTextA (wnd, title);
+$   if (wnd)
+        {
+$       char title [1024] = "";
+$       GetWindowTextA (wnd, title, sizeof (title) - 1);
+$       strncat_s (title, " [ЗАВЕРШЕНО]", sizeof (title) - 1);
+$       SetWindowTextA (wnd, title);
+        }
 
 $   _txRunning = false;
 
-$   bool wait = !_txExit   && 
-                  isMaster && 
-                  GetCurrentThreadId() == _txMainThreadId;
-
-$   if (wait && !_txCanvas_Window && GetConsoleWindow())
+$   if (isMaster && !_txExit && GetCurrentThreadId() == _txMainThreadId)
         {
-$       printf ("\n\n" "[Нажмите любую клавишу для завершения]");
+$       printf ("\n" "[Нажмите любую клавишу для завершения]" "\n");
 
 $       while (_kbhit()) _getch();
-$       _getch();
 
-$       printf ("\n");
+$       for (;;)
+            {
+            if (!_txCanvas_ThreadId)  break;
+            if (_kbhit()) { _getch(); break; }
+
+            Sleep (_TX_WINDOW_UPDATE_INTERVAL);
+            }
         }
 
-$   if (wait && _txCanvas_Window)
-        {
-$       while (_txCanvas_ThreadId && !_kbhit()) Sleep (_TX_WINDOW_UPDATE_INTERVAL);
-        }
-
-$   SendNotifyMessage (_txCanvas_Window, WM_DESTROY, 0, 0);
+$   if (wnd) SendNotifyMessage (wnd, WM_DESTROY, 0, 0);
 
 $   _txWaitFor (!_txCanvas_Window);
 
@@ -3991,7 +3990,7 @@ $   evt.Event.KeyEvent.uChar.AsciiChar   = (unsigned char) ch;
 $   evt.Event.KeyEvent.dwControlKeyState = 0;
 
 $   DWORD written = 0;
-$   WriteConsoleInput (GetStdHandle (STD_INPUT_HANDLE), &evt, 1, &written) asserted;
+$   WriteConsoleInput (GetStdHandle (STD_INPUT_HANDLE), &evt, 1, &written);
 
 $   return true;
     }
@@ -4277,38 +4276,67 @@ $   assert (_txCanvas_OK());
 
 $   if (!txLock (false)) return false;
 
+$   HANDLE out = GetStdHandle (STD_OUTPUT_HANDLE);
+
 $   CONSOLE_SCREEN_BUFFER_INFO con = {{0}};
-$   BOOL ok = GetConsoleScreenBufferInfo (GetStdHandle (STD_OUTPUT_HANDLE), &con);
+$   BOOL ok = GetConsoleScreenBufferInfo (out, &con);
     if (!ok) { $ txUnlock(); return false; }
 
 $   SIZE fontSz = {0};
 $   txGDI (Win32::GetTextExtentPoint32 (dc, "W", 1, &fontSz)) asserted;
 
-$   Win32::SetTextColor (dc, _TX_CONSOLE_COLOR);
-$   Win32::SetBkMode    (dc, TRANSPARENT) asserted;
-
 $   POINT size = { con.srWindow.Right  - con.srWindow.Left + 1,
                    con.srWindow.Bottom - con.srWindow.Top  + 1 };
 
-$   for (SHORT y = 0; y < size.y; y++)
+$   COLORREF pal [16] = { 0x000000, 0x000080, 0x008000, 0x008080, 0x800000, 0x800080, 0x808000, 0x808080,
+                          0x404040, 0x0000FF, 0x00FF00, 0x00FFFF, 0xFF0000, 0xFF00FF, 0xFFFF00, 0xFFFFFF };
+
+$   COLORREF fgColorCached = -1, fgColor = pal[0],
+             bkColorCached = -1, bkColor = pal[7];
+$   int      bkModeCached  = -1, bkMode  = TRANSPARENT;
+
+$   Win32::SetTextColor (dc, fgColorCached = fgColor);
+$   Win32::SetBkColor   (dc, bkColorCached = bkColor);
+$   Win32::SetBkMode    (dc, bkModeCached  = bkMode);
+
+$   for (int y = 0; y < size.y; y++)
         {
-$       static TCHAR buf [1024 + 1] = ""; // [con.dwSize.X + 1]
+$       static char chr [1024 + 1] = ""; // [con.dwSize.X + 1]
+$       static WORD atr [1024 + 1] = {}; // [con.dwSize.X + 1]
 $       COORD coord = { con.srWindow.Left, y + con.srWindow.Top };
-$       DWORD read  =   0;
+$       DWORD read  = 0;
 
-$       if (!ReadConsoleOutputCharacter (GetStdHandle (STD_OUTPUT_HANDLE),
-                                         buf, sizeof (buf), coord, &read)) continue;
+$       if (!ReadConsoleOutputCharacter (out, chr, sizeof (chr), coord, &read)) continue;
+$       if (!ReadConsoleOutputAttribute (out, atr, sizeof (atr), coord, &read)) continue;
 
-$       Win32::TextOut (dc, 0, y * fontSz.cy, buf, size.x) asserted;
+$       for (int x = 0; x < size.x; x++)
+            {
+            fgColor = pal [ atr[x]       & 0x0F],
+            bkColor = pal [(atr[x] >> 4) & 0x0F];
+            bkMode  =      (atr[x]       & 0xF0)? OPAQUE : TRANSPARENT;
+
+            if (fgColor != fgColorCached) Win32::SetTextColor (dc, fgColorCached = fgColor);
+            if (bkColor != bkColorCached) Win32::SetBkColor   (dc, bkColorCached = bkColor);
+            if (bkMode  != bkModeCached)  Win32::SetBkMode    (dc, bkModeCached  = bkMode);
+
+            Win32::TextOut (dc, x * fontSz.cx, y * fontSz.cy, chr + x, 1) asserted;
+            }
         }
+
+    fgColor = pal [ con.wAttributes       & 0x0F],
+    bkColor = pal [(con.wAttributes >> 4) & 0x0F];
+    bkMode  = TRANSPARENT;
+
+    if (fgColor != fgColorCached) Win32::SetTextColor (dc, fgColorCached = fgColor);
+    if (bkColor != bkColorCached) Win32::SetBkColor   (dc, bkColorCached = bkColor);
+    if (bkMode  != bkModeCached)  Win32::SetBkMode    (dc, bkModeCached  = bkMode);
 
 $   if (_txConsole_IsBlinking &&
         GetTickCount() % _TX_CURSOR_BLINK_INTERVAL*2 > _TX_CURSOR_BLINK_INTERVAL &&
         In (con.dwCursorPosition, con.srWindow))
         {
 $       Win32::TextOut (dc, (con.dwCursorPosition.X - con.srWindow.Left)*fontSz.cx,
-                            (con.dwCursorPosition.Y - con.srWindow.Top) *fontSz.cy + 1, "_", 1)
-                        asserted;
+                            (con.dwCursorPosition.Y - con.srWindow.Top) *fontSz.cy + 1, "_", 1) asserted;
         }
 
 $   txUnlock();
@@ -4437,6 +4465,7 @@ $   switch (sig)
 
 $   if (sig == SIGFPE) switch (fpe)
         {
+        #ifdef _FPE_INVALID
         GET_DESCR_ (sFPE, _FPE_INVALID,        "Результат неверен")
         GET_DESCR_ (sFPE, _FPE_DENORMAL,       "Денормализация")
         GET_DESCR_ (sFPE, _FPE_ZERODIVIDE,     "Деление на ноль")
@@ -4448,6 +4477,7 @@ $   if (sig == SIGFPE) switch (fpe)
         GET_DESCR_ (sFPE, _FPE_STACKOVERFLOW,  "Переполнение стека")
         GET_DESCR_ (sFPE, _FPE_STACKUNDERFLOW, "Антипереполнение стека")
         GET_DESCR_ (sFPE, _FPE_EXPLICITGEN,    "Явный вызов исключения")
+        #endif
         default:   break;
         }
 
