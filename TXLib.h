@@ -150,12 +150,13 @@
 
 #else
 
-    #define  strncpy_s              strncpy     // MSVC prior to 8(2005) versions and GCC
-    #define  strncat_s              strncat     //   do NOT have secure variants of these
+    #define _snprintf_s            _snprintf    // MSVC prior to 8(2005) versions and GCC
+    #define _vsnprintf_s           _vsnprintf   //   do NOT have secure variants of these
     #define  ctime_s                ctime       //   functions, so use insecure ones.
-    #define _snprintf_s            _snprintf    //
-    #define _vsnprintf_s           _vsnprintf   //
+    #define  strncpy_s              strncpy     //
+    #define  strncat_s              strncat     //
     #define  strerror_s(buf,code)   strerror (code)
+    #define  strcpy_s(dest,len,src) strncpy ((dest), (src), (len))
 
 #endif
 
@@ -1598,6 +1599,22 @@ bool txTransparentBlt (HDC dest, int xDest, int yDest, int width, int height,
 //!          полной непрозрачности. При этом в прозрачных областях само изображение
 //!          (в каналах R, G, B) должно быть черным.
 //!
+/*
+!!!
+// premultiply
+BYTE R = (BYTE)(R * ((float)A / 255.0f));
+BYTE G = (BYTE)(G * ((float)A / 255.0f));
+BYTE B = (BYTE)(B * ((float)A / 255.0f));
+
+If the Alpha channel byte for pixel is zero(i.e, transparent), then the RGB
+values will all be set to 0.
+
+If the Alpha channel byte for the pixel is 255(i.e, opaque), then the RGB
+values will be unchanged.
+
+For all other Alpha channel bytes, the resulting muliplication will decrease
+the intensity of the RGB colors.
+*/
 //!          Стандартная функция AlphaBlend из Win32 API может масштабировать изображение.
 //!          В txAlphaBlend это убрано для упрощения использования. If you still need image
 //!          scaling, use original function AlphaBlend and don't mess with stupid TX-based
@@ -2591,7 +2608,7 @@ const int      _TX_TIMEOUT                = 1000;
 #undef  assert
 
 #if !defined (NDEBUG)
-    #define assert( cond )    ( !(cond)? (TX_ERROR ("\a" "ВНЕЗАПНО: Логическая ошибка: Неверно, что \"%s\"" _ #cond), 0) : _txNOP (0) )
+    #define assert( cond )    ( !(cond)? (TX_ERROR ("\a" "Логическая ошибка: Неверно, что \"%s\"" _ #cond), 0) : _txNOP (0) )
 
 #else
     #define assert( cond )    ( 0 )
@@ -3419,7 +3436,6 @@ _TX_IMPORT ("GDI32", DWORD,    GetObjectType,          (HGDIOBJ object));
 _TX_IMPORT ("GDI32", BOOL,     DeleteDC,               (HDC dc));
 _TX_IMPORT ("GDI32", BOOL,     DeleteObject,           (HGDIOBJ object));
 _TX_IMPORT ("GDI32", COLORREF, SetTextColor,           (HDC dc, COLORREF color));
-_TX_IMPORT ("GDI32", COLORREF, SetBkColor,             (HDC dc, COLORREF color));
 _TX_IMPORT ("GDI32", int,      SetBkMode,              (HDC dc, int bkMode));
 _TX_IMPORT ("GDI32", HFONT,    CreateFontA,            (int height, int width, int escapement, int orientation,
                                                         int weight, DWORD italic, DWORD underline, DWORD strikeout,
@@ -3670,7 +3686,7 @@ $   return _txCanvas_OK();
 void _txOnExit()
     {
 $   HWND wnd      = txWindow()? txWindow() : GetConsoleWindow();
-$   bool isMaster = wnd && (GetWindowLong (wnd, GWL_STYLE) & WS_SYSMENU);
+$	bool isMaster = (wnd)? (GetWindowLong (wnd, GWL_STYLE) & WS_SYSMENU) != 0 : false;
 
 $   if (wnd)
         {
@@ -3684,18 +3700,21 @@ $   _txRunning = false;
 
 $   if (isMaster && !_txExit && GetCurrentThreadId() == _txMainThreadId)
         {
-$       printf ("\n" "[Нажмите любую клавишу для завершения]" "\n");
+$       printf ("\n\n" "[Нажмите любую клавишу для завершения]");
 
-$       while (_kbhit()) _getch();
+$       while (_kbhit()) (void) _getch();
 
 $       for (;;)
             {
             if (!_txCanvas_ThreadId)  break;
-            if (_kbhit()) { _getch(); break; }
+            if (_kbhit()) { (void) _getch(); break; }
 
             Sleep (_TX_WINDOW_UPDATE_INTERVAL);
             }
+
+$       printf ("\n");
         }
+
 
 $   if (wnd) SendNotifyMessage (wnd, WM_DESTROY, 0, 0);
 
@@ -4276,67 +4295,38 @@ $   assert (_txCanvas_OK());
 
 $   if (!txLock (false)) return false;
 
-$   HANDLE out = GetStdHandle (STD_OUTPUT_HANDLE);
-
 $   CONSOLE_SCREEN_BUFFER_INFO con = {{0}};
-$   BOOL ok = GetConsoleScreenBufferInfo (out, &con);
+$   BOOL ok = GetConsoleScreenBufferInfo (GetStdHandle (STD_OUTPUT_HANDLE), &con);
     if (!ok) { $ txUnlock(); return false; }
 
 $   SIZE fontSz = {0};
 $   txGDI (Win32::GetTextExtentPoint32 (dc, "W", 1, &fontSz)) asserted;
 
+$   Win32::SetTextColor (dc, _TX_CONSOLE_COLOR);
+$   Win32::SetBkMode    (dc, TRANSPARENT) asserted;
+
 $   POINT size = { con.srWindow.Right  - con.srWindow.Left + 1,
                    con.srWindow.Bottom - con.srWindow.Top  + 1 };
 
-$   COLORREF pal [16] = { 0x000000, 0x000080, 0x008000, 0x008080, 0x800000, 0x800080, 0x808000, 0x808080,
-                          0x404040, 0x0000FF, 0x00FF00, 0x00FFFF, 0xFF0000, 0xFF00FF, 0xFFFF00, 0xFFFFFF };
-
-$   COLORREF fgColorCached = -1, fgColor = pal[0],
-             bkColorCached = -1, bkColor = pal[7];
-$   int      bkModeCached  = -1, bkMode  = TRANSPARENT;
-
-$   Win32::SetTextColor (dc, fgColorCached = fgColor);
-$   Win32::SetBkColor   (dc, bkColorCached = bkColor);
-$   Win32::SetBkMode    (dc, bkModeCached  = bkMode);
-
-$   for (int y = 0; y < size.y; y++)
+$   for (SHORT y = 0; y < size.y; y++)
         {
-$       static char chr [1024 + 1] = ""; // [con.dwSize.X + 1]
-$       static WORD atr [1024 + 1] = {}; // [con.dwSize.X + 1]
+$       static TCHAR buf [1024 + 1] = ""; // [con.dwSize.X + 1]
 $       COORD coord = { con.srWindow.Left, y + con.srWindow.Top };
-$       DWORD read  = 0;
+$       DWORD read  =   0;
 
-$       if (!ReadConsoleOutputCharacter (out, chr, sizeof (chr), coord, &read)) continue;
-$       if (!ReadConsoleOutputAttribute (out, atr, sizeof (atr), coord, &read)) continue;
+$       if (!ReadConsoleOutputCharacter (GetStdHandle (STD_OUTPUT_HANDLE),
+                                         buf, sizeof (buf), coord, &read)) continue;
 
-$       for (int x = 0; x < size.x; x++)
-            {
-            fgColor = pal [ atr[x]       & 0x0F],
-            bkColor = pal [(atr[x] >> 4) & 0x0F];
-            bkMode  =      (atr[x]       & 0xF0)? OPAQUE : TRANSPARENT;
-
-            if (fgColor != fgColorCached) Win32::SetTextColor (dc, fgColorCached = fgColor);
-            if (bkColor != bkColorCached) Win32::SetBkColor   (dc, bkColorCached = bkColor);
-            if (bkMode  != bkModeCached)  Win32::SetBkMode    (dc, bkModeCached  = bkMode);
-
-            Win32::TextOut (dc, x * fontSz.cx, y * fontSz.cy, chr + x, 1) asserted;
-            }
+$       Win32::TextOut (dc, 0, y * fontSz.cy, buf, size.x) asserted;
         }
-
-    fgColor = pal [ con.wAttributes       & 0x0F],
-    bkColor = pal [(con.wAttributes >> 4) & 0x0F];
-    bkMode  = TRANSPARENT;
-
-    if (fgColor != fgColorCached) Win32::SetTextColor (dc, fgColorCached = fgColor);
-    if (bkColor != bkColorCached) Win32::SetBkColor   (dc, bkColorCached = bkColor);
-    if (bkMode  != bkModeCached)  Win32::SetBkMode    (dc, bkModeCached  = bkMode);
 
 $   if (_txConsole_IsBlinking &&
         GetTickCount() % _TX_CURSOR_BLINK_INTERVAL*2 > _TX_CURSOR_BLINK_INTERVAL &&
         In (con.dwCursorPosition, con.srWindow))
         {
 $       Win32::TextOut (dc, (con.dwCursorPosition.X - con.srWindow.Left)*fontSz.cx,
-                            (con.dwCursorPosition.Y - con.srWindow.Top) *fontSz.cy + 1, "_", 1) asserted;
+                            (con.dwCursorPosition.Y - con.srWindow.Top) *fontSz.cy + 1, "_", 1)
+                        asserted;
         }
 
 $   txUnlock();
@@ -4517,7 +4507,7 @@ $   if (fileNameOnly) return fullName;
 $   char* title = strrchr (fullName, '\\'); assert (title);
 $   char* ext   = strrchr (fullName,  '.'); assert (ext);
 
-$   strncpy_s (ext, _TX_NAME "- TXLib", sizeof (fullName) - (ext - fullName) - 1);
+$   strcpy_s (ext, sizeof (fullName) - (ext - fullName) - 1, _TX_NAME "- TXLib");
 
 $   return title + 1;
     }
