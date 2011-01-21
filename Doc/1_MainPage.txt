@@ -1,0 +1,138 @@
+//{============================================================================
+//! @file       Doc/1_MainPage.txt
+//! @brief      Главная страница системы помощи
+//}============================================================================
+
+/*! @mainpage                         
+<!--<div align="right"><small><i>To search and find,<br>To code and compile,<br>
+    To test and debug<br>And have a luck<br>To finish before deadline</i></small></div>
+  -->
+    @section    MainPage              Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib)
+   
+    @version    [Version 0.01 alpha, build 72]
+    @author     Copyright (C) Ded, 2005-11 (Ilya Dedinsky, http://ded32.net.ru)
+
+    @section    Description           Назначение
+
+    		TX Library - компактная графическая библиотека для Win32 на С++. 
+    		Это небольшая "песочница" для начинающих реализована с целью 
+    		помочь им в изучении простейших принципов программирования. 
+    		Документация на русском языке.
+
+    		Философия TX Library - облегчить первые шаги в программировании
+    		и подтолкнуть к творчеству и самостоятельности.
+
+		TX Library is a tiny graphics library for Win32 written in C++. 
+		It is a small sandbox for the very beginners to help them to 
+		learn basic programming principles. The documentation is 
+		currently in Russian.
+
+    @section    Contents              Разделы системы помощи
+
+              - @ref Contents        "Информация о библиотеке"
+              - @ref Drawing         "Рисование"
+              - @ref Mouse           "Поддержка мыши"
+              - @ref Misc            "Разное"
+              - @ref Dialogs         "Диалоговые окна"
+              - @ref Service         "Служебное"
+              - @ref Technical       "Технические детали"
+              
+    @par        Примеры:
+
+              - @ref Tutor_1st       "Структура простейшей программы"
+              - @ref Tutor_1st_2     "Улучшенный пример использования"
+              - @ref Tutor_Funcs     "Пример с функциями"
+              - @ref Tutor_Params    "Пример с функциями с параметрами"
+              - @ref Tutor_Loops     "Пример с циклами"
+              - @ref Tutor_Loops_2   "Расширенный пример с циклами"
+
+    @section    OfficialSite          Представительство в Интернет
+
+                Официальный сайт библиотеки:
+                <a href=http://ded32.net.ru>ded32.net.ru.</a>
+                См. также <a href=http://txlib.sourceforge.net>
+                страницу проекта на SourceForge.</a>
+
+    @warning    <b>Это альфа-версия.
+                Для использования требуется согласование с автором библиотеки.</b> \n\n
+                Правила использования материалов библиотеки и сайта см. на
+                <a href=http://ded32.net.ru/index/0-6> официальном сайте.</a>
+
+    @section    PlatformsSupported    Поддерживаемые платформы
+   
+              - Компиляторы
+                - CodeBlocks 10.05  + MinGW GCC 4.4.1
+                - CodeBlocks 8.02   + MinGW GCC 3.4.5
+                - CodeBlocks 1.0rc2 + MinGW GCC 3.4.4
+                - Dev-CPP 4.9.9.2   + MinGW GCC 3.4.2
+                - Microsoft Visual Studio 10.0 (2010)
+                - Microsoft Visual Studio  9.0 (2008)
+                - Microsoft Visual Studio  8.0 (2005)
+                - Microsoft Visual Studio  7.1 (2003)
+                - Microsoft Visual Studio  6.0 (1998)
+              - Операционные системы
+                - Windows 7 ru/en
+                - Windows Vista ru/en
+                - Windows 2003 SP1 R1/R2 ru/en
+                - Windows XP   SP2/SP3   ru/en
+                - Windows 2000 SP4       ru/en
+   
+    @note       <b>При компиляции в Visual Studio во время выполнения может потребоваться
+                файл вида msvcr*.dll</b> и другие библиотеки из Microsoft Visual Studio
+                runtime redistributable files, для каждой версии Visual Studio этот набор
+                файлов свой. Посмотреть эти зависимости можно утилитой Depends.exe.
+   
+    @section    VersionHistoty        История изменений
+   
+    - Build 72
+             -# Добавлена cовместимость с MS Visual Studio 2010.
+             -# Соответствие стандарту C++0x в MSVS 2010 и GCC 4.5 в режиме
+                компиляции -Wall -Wextra.
+             -# Убраны лишние предупреждения о неинициализированнях полях структур при
+                инициализации вида <tt>= {}</tt> (только для компиляторов MS и GCC версии 4).
+             -# Изменен диалог About, заголовки окна и окон сообщений.
+             -# Изменен и дополнен формат вывода ошибок.
+             -# Добавлены новые функции, в основном служебного характера.
+             -# Макрос TX_THROW переименован в TX_ERROR, макрос TX_NEEDED - в asserted.
+                Обеспечена обратная совместимость.
+             -# Убрана облегченная поддержка регионов отсечения (теперь - только средствами
+                Win32).
+             -# Добавлена многооконность (experimental and not fully documented).
+             -# Упрощен механизм трансляции текста консоли в окно TXLib.
+             -# Дополнен текст примеров использования, добавлены демонстрационные программы
+                и дополнения (в папке TX/Examples/Demo). Подробно документирован исходный
+                текст функции txInputBox() для иллюстрации работы с диалогами Win32.
+    - Build 71
+             -# Соответствие стандартам MS SAL и режиму компиляции /analyze в MSVS 2005, 2008.
+             -# Восстановлен механизм обновления по таймеру.
+             -# Русский язык в консоли в _txThrow().
+    - Build 70
+             -# Исправление ошибок _txCanvas_OnPaint (NULL DC).
+             -# Упрощен механизм генерации сообщений для обновления экрана.
+             -# Добавлена трассировка (TX_TRACE).
+    - Build 69
+             -# Добавлена работа с диалоговыми окнами (still experimental).
+    - Build 66
+             -# Исправлена работа при использовании отладчиков на платформах Win2000, WinXP.
+             -# Документированы отладочные функции и макросы.
+    - Build 65
+             -# Добавлены Мастера проектов для VS6, VS2003-2008, CodeBlocks, DevCPP.
+             -# Добавлена интеграция с системой помощи для VS2003-2008.
+    - Build 64
+             -# Добавлена cовместимость с Visual Studio 2005.\n
+                ВНИМАНИЕ!\n
+                -# Принудительно отключается режим UNICODE (кроме редактора ресурсов
+                   Visual Studio). Для явной работы с UNICODE-функциями используйте суффикс W.\n
+                -# Принудительно включается  режим _CRT_SECURE_CPP_OVERLOAD_SECURE_NAMES.\n
+             -# Изменен размер шрифта консоли и шрифта, выбранного по умолчанию.
+    - Build 50
+             -# Добавлены txTransparentBlt(), txAlphaBlend() - Win98 и старше.
+             -# ВНИМАНИЕ! Функции txSetBkColor(), txBkColor(), txGetBkColor()
+                теперь называются txSetFillColor(), txFillColor(), txGetFillColor()
+                (совместимость со старыми версиями - в Graphics.h).
+    - Build 45
+             -# Добавлена txPlaySound().
+    - Build 44
+             -# Исправлен баг в txMouseButtons().
+*/ 
+ 

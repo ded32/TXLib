@@ -1,0 +1,51 @@
+////////////////////////////////////////////////////////////////////////////////
+//
+// TXLib project wizard
+//
+////////////////////////////////////////////////////////////////////////////////
+
+function BeginWizard()
+    {
+    local intro_msg = _T ("Welcome to the TX Application project wizard!\n\n" +
+                          "This wizard will guide you to create a new project\n" +
+                          "using TX Library.\n\n" +
+                          "When you 're ready to proceed, please click \"Next\"...");
+
+    Wizard.AddInfoPage (_T ("TXLibIntro"), intro_msg);
+    Wizard.AddProjectPathPage();
+    Wizard.AddCompilerPage (_T (""), _T ("*"), true, true);
+    }
+
+function GetFilesDir()
+    {
+    return _T ("TX/files");
+    }
+
+function SetupProject (project)
+    {
+    WarningsOn (project, Wizard.GetCompilerID());
+
+    // Debug
+    local target = project.GetBuildTarget (Wizard.GetDebugName());
+
+    if (!IsNull (target))
+        {
+        target.SetTargetType (ttExecutable);
+        target.SetOutputFilename (Wizard.GetDebugOutputDir() + Wizard.GetProjectName() + DOT_EXT_EXECUTABLE);
+        
+        DebugSymbolsOn (target, Wizard.GetCompilerID());
+        }
+
+    // Release
+    target = project.GetBuildTarget (Wizard.GetReleaseName());
+
+    if (!IsNull (target))
+        {
+        target.SetTargetType (ttExecutable);
+        target.SetOutputFilename (Wizard.GetReleaseOutputDir() + Wizard.GetProjectName() + DOT_EXT_EXECUTABLE);
+
+        OptimizationsOn (target, Wizard.GetCompilerID());
+        }
+
+    return true;
+    }

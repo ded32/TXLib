@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE CodeBlocks_project_file>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="1"/>
+	<Project>
+		<Option title="TX Application"/>
+		<Option makefile="Makefile"/>
+		<Build>
+			<Target title="Default">
+				<Option type="1"/>
+				<Option parameters=""/>
+				<Option includeInTargetAll="1"/>
+				<Option use_console_runner="0"/>
+				<Option projectCompilerOptionsRelation="3"/>
+				<Option projectLinkerOptionsRelation="3"/>
+				<Option projectIncludeDirsRelation="3"/>
+				<Option projectLibDirsRelation="3"/>
+				<Compiler>
+			                <Add option="-W"/>
+			                <Add option="-Weffc++"/>
+			                <Add option="-Wno-extra"/>
+			                <Add option="-g"/>
+					<Add option=""/>
+				</Compiler>
+				<Linker>
+					<Add option=""/>
+				</Linker>
+			</Target>
+		</Build>
+	</Project>
+</CodeBlocks_project_file>
