@@ -1603,19 +1603,27 @@ bool txTransparentBlt (HDC dest, int xDest, int yDest, int width, int height,
 //!          "Новый канал (New Channel)" в палитре каналов (Channels). Черный
 //!          цвет в альфа-канале соответствует полной прозрачности, белый -
 //!          полной непрозрачности. При этом в прозрачных областях само изображение
-//!          (в каналах R, G, B) должно быть черным.
+//!          (в каналах R, G, B) должно быть черным, и чем прозрачнее, тем чернее.
 //!
-//!        - You should premultiply R,G,B channels against A:
-//!          R,G,B *= (A/255)
+//!          Строго говоря, надо умножить каналы R,G,B на альфа-канал: 
+//!          <tt>R,G,B *= A</tt>. Получится вот что:
 //!
-//!        - If the Alpha channel byte for pixel is zero(i.e, transparent), then the RGB
-//!          values will all be set to 0.
-//!        - If the Alpha channel byte for the pixel is 255(i.e, opaque), then the RGB
-//!          values will be unchanged.
-//!        - For all other Alpha channel bytes, the resulting muliplication will decrease
-//!          the intensity of the RGB colors.
+//!        - Если значение альфа-канала для некоторого пикселя равно 0 (полная прозрачность),
+//!          тогда значения каналов R,G,B также станут 0 (это черный цвет).
+//!        - Если значение альфа-канала равно 255 (полная непрозрачность),
+//!          тогда значения каналов R,G,B не изменятся.
+//!        - Для других значений альфа-канала, пиксели изображения станут темнее.
 //!
-//!          Стандартная функция AlphaBlend из Win32 API может масштабировать изображение.
+//!          В Photoshop это можно сделать командой <b>Image @d Apply Image</b> с параметрами:
+//!          @table 
+//!          @tr Source:     @td <i>Имя файла с картинкой</i>
+//!          @tr Layer:      @td Background
+//!          @tr @b Channel: @td <b> Alpha 1</b>
+//!          @tr Blending:   @td Multiply
+//!          @tr Opacity:    @td 100%
+//!          @endtable
+//!
+//! @note    Стандартная функция AlphaBlend из Win32 API может масштабировать изображение.
 //!          В txAlphaBlend это убрано для упрощения использования. If you still need image
 //!          scaling, use original function AlphaBlend and don't mess with stupid TX-based
 //!          tools. (See implementation of txAlphaBlend in TXLib.h).
