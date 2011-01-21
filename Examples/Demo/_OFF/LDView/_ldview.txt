@@ -1,0 +1,71 @@
+//{===========================================================================
+//! @file       Examples\Demo\LDView\_LDView.txt
+//              (C) Ilya Dedinsky, http://ded32.net.ru, 2010
+//!
+//! @brief      Этюд "Визуализатор графов", help file
+//!
+//!             Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
+//!
+//! @version    [Version 0.01 alpha, build 72]
+//! @author     Copyright (C) Ded, 2005-10 (Ilya Dedinsky, http://ded32.net.ru)
+//! @date       2010
+//}===========================================================================
+
+//=============================================================================
+/*! @mainpage
+    @brief   LDView application
+    @version [Version 1.0]
+    @author  Copyright (C) Ded, 2010 (Ilya Dedinsky, http://ded32.net.ru)
+    @date    2010
+
+    @section GeneralInfo LDDraw Application
+
+    @b TODO: Help text
+
+    @image html _ldview.jpg "LDView screen"
+
+    @title   Description: @table
+             @tr @b Numbered @b circles @td - Vertices @endtr
+             @tr @b Lines, @b circles   @td - Edges    @endtr
+             @tr @b Bold elements       @td - Active   @endtr
+             @tr @b Yellow elements     @td - Selected @endtr
+             @endtable
+
+    @section AppControl Application Control
+
+    @title   Mouse control: @table
+             @tr @b Left button         @td - Add and/or activate vertex. @endtr
+             @tr @b Right button,
+                 @b Dragging the mouse  @td - Connect a vertex to the active one. @endtr
+             @endtable
+
+    @title   Keyboard control: @table
+             @tr @b 'd' key             @td - Dump the graph. @endtr
+             @tr @b F1  key             @td - Show HTML documentation. @endtr
+             @tr @b ESC key             @td - Exit the program. @endtr
+             @endtable
+
+    @b TODO: More app control
+
+    @section Limitations
+
+    - Vertex number is limited to 10 (see @ref Graph_t::MaxSize).
+    - The graph is considered to be undirected (see @ref Graph_t::connect()).
+
+    @b TODO: More details
+
+    @section Authors
+
+    - Author1
+    - Author2
+
+    @b TODO: More authors
+
+    @section Dedication
+
+    This software is dedicated to the loving professor for discrete mathematics.
+
+    @image html _ldview_professor.jpg "The Professor"
+
+*/
+

@@ -1,0 +1,64 @@
+//{===========================================================================
+//! @file       Examples\Demo\Tree.cpp
+//              (C) Кирилл Кулешов, 7 класс, 2010
+//!
+//! @brief      Этюд "Дерево"
+//!
+//! @author     Кирилл Кулешов, 7 класс
+//! @date       2010
+//}===========================================================================
+
+#include "TXLib.h"
+
+void DrawTree (double x, double y, double length, double angle)
+    {
+    if (length <= 0) return;
+
+    double wind = 0;
+    int  height = 0;
+
+    if (GetAsyncKeyState (VK_LEFT))  wind   =               +0.2;
+    if (GetAsyncKeyState (VK_RIGHT)) wind   =               -0.2;
+    if (GetAsyncKeyState (VK_SHIFT)) wind   = random (-0.7, +0.7);
+    if (GetAsyncKeyState (VK_UP))    height =               +5;
+    if (GetAsyncKeyState (VK_DOWN))  height =               -5;
+
+    double leafs = 0;
+    if (height ==  0) leafs = 20;
+    if (height ==  5) leafs = 25;
+    if (height == -5) leafs = 15;
+
+    txSetColor ((length > leafs)? RGB (115, 65, 10) : RGB (35, 255, 10),
+                (int) (pow (length/7, 0.9) + 0.5));
+
+    // Here comes the tree
+                
+    double x1 = x + length * cos (angle),
+           y1 = y + length * sin (angle);
+
+    txLine ((int)x, 600 - (int)y, (int)x1, 600 - (int)y1);
+
+    DrawTree (x1, y1, length - 10 + random (-1, +1) + height, angle + 0.35 + random (-0.2, +0.2) + wind);
+    DrawTree (x1, y1, length - 10 + random (-1, +1) + height, angle - 0.35 - random (-0.2, +0.2) + wind);
+    }
+
+int main ()
+    {
+    txCreateWindow (800, 600);
+    txBegin();
+
+    while (!GetAsyncKeyState (VK_ESCAPE))
+        {
+        txSetFillColor (TX_BLACK);
+        txClear();
+
+        DrawTree (400, 0, 100, txPI/2);
+
+        txSleep (100);
+        }
+
+    txEnd();
+    return 0;
+    }
+
+

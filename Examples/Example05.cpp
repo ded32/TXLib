@@ -1,0 +1,281 @@
+//{===========================================================================
+//! @file       Examples\Example05.cpp
+//              Пример с циклами
+//!
+//! @brief      Пример с циклами
+//!
+//!             Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
+//!
+//! @version    [Version 0.01 alpha, build 72]
+//! @author     Copyright (C) Ded, 2005-10 (Ilya Dedinsky, http://ded32.net.ru)
+//! @date       2005
+//}===========================================================================
+
+#include <conio.h>
+#include "TXLib.h"
+
+//----------------------------------------------------------------------------
+
+void JumpMan     (int x, int y, int sizeX, int sizeY, double jump,
+                  COLORREF color, COLORREF bkColor, int jumps, int delay);
+
+void MoveMan     (int fromX, int fromY, int toX, int toY,
+                  int sizeX, int sizeY, COLORREF color, COLORREF bkColor,
+                  int time, int steps);
+
+void DrawMan     (int x, int y, int sizeX, int sizeY, COLORREF color,
+                  double hand = 0, double legs = 0, double head = 0, double twist = 0);
+
+void AppearEarth (int x, int y, int sizeX, int sizeY, COLORREF from, COLORREF to,
+                  int time, int steps);
+
+void DrawEarth   (int x, int y, int sizeX, int sizeY, COLORREF color);
+
+void AppearText  (int x, int y, const char* text, COLORREF from, COLORREF to,
+                  int time, int steps);
+
+void DrawHello   (int x, int y, const char* text, int size, COLORREF color);
+
+void UnwindFlag  (int x, int y, int fromSizeX, int toSizeX, int sizeY,
+                  COLORREF color, COLORREF bkColor, int time, int steps);
+
+void DrawFlag    (int x, int y, int sizeX, int sizeY, COLORREF color, COLORREF bkColor);
+
+void DrawFrame   (int sizeX, int sizeY, int size, COLORREF color);
+
+void DrawLine    (double x0, double y0, double x1, double y1);
+void DrawCircle  (double x, double y, double r);
+
+//----------------------------------------------------------------------------
+
+int main()
+    {
+    txCreateWindow (800, 600);
+    txTextCursor (false);
+
+    DrawFrame (800, 600, 10, TX_WHITE);
+
+    txSelectFont ("Times", 60);
+    txSetTextAlign (TA_CENTER);
+
+    AppearText  (400, 480, "Hello, world!", TX_BLACK, TX_LIGHTGREEN, 5000, 100);
+    AppearEarth (400, 300, 400, 300,        TX_BLACK, TX_LIGHTCYAN,  5000, 100);
+
+    MoveMan    (20, 150, 385, 150, 20, 40,  TX_YELLOW, TX_BLACK,     3000, 100);
+    JumpMan    (385, 150, 20, 40, 0.25,     TX_YELLOW, TX_BLACK,       10, 100);
+    UnwindFlag (400, 150, 0, 40, 60,        TX_YELLOW, TX_BLACK,      500, 100);
+
+    return 0;
+    }
+
+//----------------------------------------------------------------------------
+
+void JumpMan (int x, int y, int sizeX, int sizeY, double jump,
+              COLORREF color, COLORREF bkColor, int jumps, int delay)
+    {
+    DrawMan (x, y, sizeX, sizeY, TX_BLACK, 0, 0, 0, 0);
+
+    txBegin();
+
+    int i = 0;
+    while (i < jumps)
+        {
+        DrawMan (x, y - (int)(i%2 * jump*10), sizeX, sizeY, color,
+                (i%2-0.5) * jump/3, 0, (i%2-0.5) * -jump/3, 0);
+
+        txSleep (delay);
+
+        DrawMan (x, y - (int)(i%2 * jump*10), sizeX, sizeY, bkColor,
+                (i%2-0.5) * jump/3, 0, (i%2-0.5) * -jump/3, 0);
+        i++;
+        }
+
+    DrawMan (x, y - (int)(jumps%2 * jump*10), sizeX, sizeY, color,
+            (jumps%2-0.5) * jump/3, 0, (jumps%2-0.5) * -jump/3, 0);
+
+    txEnd();
+    }
+
+//----------------------------------------------------------------------------
+
+void MoveMan (int fromX, int fromY, int toX, int toY,
+              int sizeX, int sizeY, COLORREF color, COLORREF bkColor,
+              int time, int steps)
+    {
+    txBegin();
+
+    int i = 0;
+    while (i <= steps)
+        {
+        int x = fromX + (toX - fromX) * i/steps,
+            y = fromY + (toY - fromY) * i/steps;
+
+        DrawMan (x, y - i%6, sizeX, sizeY, color,   i%3*0.02, i%3*-0.1, i%3*0.1, 0);
+
+        txSleep (time / steps);
+
+        DrawMan (x, y - i%6, sizeX, sizeY, bkColor, i%3*0.02, i%3*-0.1, i%3*0.1, 0);
+        i++;
+        }
+
+    DrawMan (toX, toY, sizeX, sizeY, color, 0, 0, 0);
+
+    txEnd();
+    }
+
+//----------------------------------------------------------------------------
+
+void UnwindFlag (int x, int y, int fromSizeX, int toSizeX, int sizeY,
+                 COLORREF color, COLORREF bkColor, int time, int steps)
+    {
+    txBegin();
+
+    int i = 0;
+    while (i <= steps)
+        {
+        int sizeX = fromSizeX + (toSizeX - fromSizeX) * i/steps;
+
+        DrawFlag (x, y, sizeX, sizeY, color,   bkColor);
+
+        txSleep  (time / steps);
+
+        DrawFlag (x, y, sizeX, sizeY, bkColor, bkColor);
+        i++;
+        }
+
+    DrawFlag (x, y, toSizeX, sizeY, color, bkColor);
+
+    txEnd();
+    }
+
+//----------------------------------------------------------------------------
+
+void DrawMan (int x, int y, int sizeX, int sizeY, COLORREF color,
+              double hand, double legs, double head, double twist)
+    {
+    txSetColor     (color);
+    txSetFillColor (color);
+
+    DrawLine (x + twist*sizeX, y - 0.35*sizeY, x, y - 0.7*sizeY);
+
+    DrawLine (x + twist*sizeX, y - 0.35*sizeY, x - (0.5 + legs) * sizeX, y);
+    DrawLine (x + twist*sizeX, y - 0.35*sizeY, x + (0.5 + legs) * sizeX, y);
+
+    DrawLine (x, y - 0.65*sizeY, x - sizeX/2,   y - 0.4*sizeY);
+    DrawLine (x, y - 0.65*sizeY, x + sizeX/1.2, y - (0.7 + hand) * sizeY);
+
+    DrawCircle (x, y - sizeY + (0.3 + head) * sizeX, 0.3*sizeX);
+    }
+
+//----------------------------------------------------------------------------
+
+void DrawEarth (int x, int y, int sizeX, int sizeY, COLORREF color)
+    {
+    txSetColor (color);
+
+    int r = sizeX/2;
+    while (r >= 0)
+        {
+        txEllipse (x-r, y-sizeY/2, x+r, y+sizeY/2);
+        r -= sizeX/9;
+        }
+
+    r = sizeY/2;
+    while (r >= 0)
+        {
+        txEllipse (x-sizeX/2, y-r, x+sizeX/2, y+r);
+        r -= sizeY/6;
+        }
+
+    DrawLine (x - sizeX/2, y, x + sizeX/2, y);
+    }
+
+//----------------------------------------------------------------------------
+
+void AppearEarth (int x, int y, int sizeX, int sizeY, COLORREF from, COLORREF to,
+                  int time, int steps)
+    {
+    int r0 = txExtractColor (from, TX_RED),   r1 = txExtractColor (to, TX_RED),
+        g0 = txExtractColor (from, TX_GREEN), g1 = txExtractColor (to, TX_GREEN),
+        b0 = txExtractColor (from, TX_BLUE),  b1 = txExtractColor (to, TX_BLUE);
+
+    int i = 0;
+    while (i <= steps)
+        {
+        int r = r0 + (r1 - r0) * i/steps,
+            g = g0 + (g1 - g0) * i/steps,
+            b = b0 + (b1 - b0) * i/steps;
+
+        DrawEarth (x, y, sizeX, sizeY, RGB (r, g, b));
+
+        Sleep (time / steps);
+        i++;
+        }
+    }
+
+//----------------------------------------------------------------------------
+
+void AppearText (int x, int y, const char* text, COLORREF from, COLORREF to,
+                 int time, int steps)
+    {
+     int r0 = txExtractColor (from, TX_RED),   r1 = txExtractColor (to, TX_RED),
+         g0 = txExtractColor (from, TX_GREEN), g1 = txExtractColor (to, TX_GREEN),
+         b0 = txExtractColor (from, TX_BLUE),  b1 = txExtractColor (to, TX_BLUE);
+
+    for (int i = 0; i <= steps; i++)
+        {
+        int r = r0 + (r1 - r0) * i/steps,
+            g = g0 + (g1 - g0) * i/steps,
+            b = b0 + (b1 - b0) * i/steps;
+
+        txSetColor (RGB (r, g, b));
+        txTextOut (x, y, text);
+
+        Sleep (time / steps);
+        }
+    }
+
+//----------------------------------------------------------------------------
+
+void DrawFlag (int x, int y, int sizeX, int sizeY, COLORREF color, COLORREF bkColor)
+    {
+    txSetColor     (color);
+    txSetFillColor (bkColor);
+    DrawLine    (x, y, x, y - sizeY);
+    txRectangle (x, y - sizeY/2, x + sizeX, y - sizeY);
+    txSelectFont ("Times", sizeX/2 + 1);
+    txTextOut (x + sizeX/2, y - sizeY*7/8, "C++");
+    }
+
+//----------------------------------------------------------------------------
+
+void DrawHello (int x, int y, const char* text, int size, COLORREF color)
+    {
+    txSetColor (color);
+    txSelectFont ("Times", size);
+    txSetTextAlign (TA_CENTER);
+    txTextOut (x, y, text);
+    }
+
+//----------------------------------------------------------------------------
+
+void DrawFrame (int sizeX, int sizeY, int size, COLORREF color)
+    {
+    txSetColor (color);
+    txSetFillColor (TX_TRANSPARENT);
+    txRectangle (size, size, sizeX-size, sizeY-size);
+    }
+
+//----------------------------------------------------------------------------
+
+void DrawLine (double x0, double y0, double x1, double y1)
+    {
+    txLine ((int) (x0 + 0.5), (int) (y0 + 0.5), (int) (x1 + 0.5), (int) (y1 + 0.5));
+    }
+
+//----------------------------------------------------------------------------
+
+void DrawCircle (double x, double y, double r)
+    {
+    txCircle ((int) (x + 0.5), (int) (y + 0.5), (int) (r + 0.5));
+    }

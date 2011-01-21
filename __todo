@@ -1,0 +1,41 @@
+
+ADD  SEH (divide by zero etc)
+
+ADD  doc: GCC 3.x debug: 1) missing initializers -- is normal; release: 1) missing initializers; 2) will never be executed -- are normal
+ADD  doc: warning level & disablings explained in help
+ADD  doc: "Ошибка в библиотеке"
+FIX  doc: do NOT russify message strings and DE-russify russian ones
+FIX  doc: russify help
+ADD  doc: ORFO to doxygen page trailer
+
+FIX  setup: error: undefined
+
+--
+
+FIX  txObject
+ADD  CommonControls, toolbar, status bar
+ADD  small icon from memory (==jumping man)
+
+---
+
+FIX+ doc: txAlphaBlend params (черный цвет + прозрачность)
+FIX+ Regions HREGION leakage
+FIX+ init: = {0}: T:\Downloads\1\TXLib.h|2244|warning: missing initializer for member `_CRITICAL_SECTION::LockCount'|
+FIX+ Win32 functions don't work
+ADD+ Wnd title: a.exe - TX Library
+CHG+ no new/delete in txConsole::draw
+ADD+ [TERMINATED] to window title
+FIX+ clean the mess with txExit/txRunning
+FIX+ TX_THROW to TX_ERROR
+FIX+ IDC_WAIT if no getch() at main() end
+ADD+ doc/code: About: условия использования, сайт
+FIX+ doc: вынести текст уроков в отд. файл
+
+ADD? lower main process priority when second process speed decreases
+
+ADD- edit source (%F12)
+ADD- goto site (+F12)
+ADD  BMP screenshots (^F12)
+
+ADD- txCreateWindow (..., HMENU menu) -- use SetMenu
+
