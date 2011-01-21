@@ -85,6 +85,12 @@
 
 #endif
 
+#if !defined (WIN32) && !defined (__WIN32__) && !defined(_WIN32) && !defined(_WIN32_WINNT)
+
+    #error TXLib.h: Windows is the only supported system, sorry.
+
+#endif
+
 #if defined (__STRICT_ANSI__)                            // Try to extend strict ANSI C
 
     #warning TXLib.h: Trying to extend strict ANSI compatibility
@@ -150,7 +156,7 @@
 
 #else
 
-    #define _snprintf_s            _snprintf    // MSVC prior to 8(2005) versions and GCC
+    #define _snprintf_s            _snprintf    // MSVC prior to 8 (2005) versions and GCC
     #define _vsnprintf_s           _vsnprintf   //   do NOT have secure variants of these
     #define  ctime_s                ctime       //   functions, so use insecure ones.
     #define  strncpy_s              strncpy     //
@@ -784,7 +790,7 @@ bool txSetROP2 (int mode = R2_COPYPEN);
 //!
 //! @return  Цветовая компонента, см. txColors
 //!
-//! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), TX_BLACK "Цвета"
+//! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors
 //! @see     RGB(), txExtractColor(), txRGB2HSL(), txHSL2RGB(), txColors
 //! @usage
 //! @code
@@ -1599,22 +1605,16 @@ bool txTransparentBlt (HDC dest, int xDest, int yDest, int width, int height,
 //!          полной непрозрачности. При этом в прозрачных областях само изображение
 //!          (в каналах R, G, B) должно быть черным.
 //!
-/*
-!!!
-// premultiply
-BYTE R = (BYTE)(R * ((float)A / 255.0f));
-BYTE G = (BYTE)(G * ((float)A / 255.0f));
-BYTE B = (BYTE)(B * ((float)A / 255.0f));
-
-If the Alpha channel byte for pixel is zero(i.e, transparent), then the RGB
-values will all be set to 0.
-
-If the Alpha channel byte for the pixel is 255(i.e, opaque), then the RGB
-values will be unchanged.
-
-For all other Alpha channel bytes, the resulting muliplication will decrease
-the intensity of the RGB colors.
-*/
+//!        - You should premultiply R,G,B channels against A:
+//!          R,G,B *= (A/255)
+//!
+//!        - If the Alpha channel byte for pixel is zero(i.e, transparent), then the RGB
+//!          values will all be set to 0.
+//!        - If the Alpha channel byte for the pixel is 255(i.e, opaque), then the RGB
+//!          values will be unchanged.
+//!        - For all other Alpha channel bytes, the resulting muliplication will decrease
+//!          the intensity of the RGB colors.
+//!
 //!          Стандартная функция AlphaBlend из Win32 API может масштабировать изображение.
 //!          В txAlphaBlend это убрано для упрощения использования. If you still need image
 //!          scaling, use original function AlphaBlend and don't mess with stupid TX-based
@@ -1764,25 +1764,6 @@ bool txSelectObject (HGDIOBJ obj);
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Drawing
-//! @brief   Запрещает или разрешает рисование мигающего курсора в окне.
-//!
-//! @param   blink  false - запретить мигающий курсор
-//!
-//! @return  Предыдущее значение блокировки.
-//!
-//! @see     txCreateWindow(), txUpdateWindow(), txLock(), txUnlock(), txGDI()
-//! @usage
-//! @code
-//!          txTextCursor (false);
-//!          ...
-//!          txTextCursor();
-//! @endcode
-//}-------------------------------------------------------------------------------------------
-
-bool txTextCursor (bool blink = true);
-
-//{-------------------------------------------------------------------------------------------
-//! @ingroup Drawing
 //! @brief   Уничтожает окно TXlib.
 //!
 //! @return  Если операция была успешна - true, иначе - false.
@@ -1926,6 +1907,170 @@ int txMouseY();
 
 inline
 int txMouseButtons();
+
+//! @}
+//}
+//============================================================================================
+
+//============================================================================================
+//{          Console functions
+//! @name    Функции консоли
+//============================================================================================
+//! @{
+//{-------------------------------------------------------------------------------------------
+//! @ingroup Drawing
+//! @brief   Устанавливает цветовые атрибуты консоли.
+//!
+//! @param   colors  Цветовые атрибуты консоли.
+//!
+//! @return  Если операция была успешна - true, иначе - false.
+//!
+//!          @b Атрибуты - это цвет текста (colorText) и цвет фона (colorBackground),
+//!          объединенные вместе:\n\n
+//!          <tt>colors = colorText + colorBackground * 16</tt>\n\n
+//!          либо\n\n
+//!          <tt>colors = colorText | (colorBackground \<\< 4)</tt>\n\n
+//!          Цвета атрибутов @b не имеют никакого отношения к цветам рисования,
+//!          задаваемыми @ref txColors "TX_..." константами, RGB(), txSetColor(), txColor(),
+//!          txSetFillColor(), txFillColor() и т.д. Значения цветов см. ниже.
+//!
+//! @title   Значения цветов атрибутов
+//! @table   @tr  Dec @td @c Hex @td                 @td Dec  @td @c Hex @td                        @endtr
+//!          @tbr
+//!          @tr  0 = @td @c 0x0 @td = Черный,       @td  8 = @td @c 0x8 @td = Темно-серый,         @endtr
+//!          @tr  1 = @td @c 0x1 @td = Синий,        @td  9 = @td @c 0x9 @td = Светло-синий,        @endtr
+//!          @tr  2 = @td @c 0x2 @td = Зеленый,      @td 10 = @td @c 0xA @td = Светло-зеленый,      @endtr
+//!          @tr  3 = @td @c 0x3 @td = Сине-зеленый, @td 11 = @td @c 0xB @td = Светло-сине-зеленый, @endtr
+//!          @tr  4 = @td @c 0x4 @td = Красный,      @td 12 = @td @c 0xC @td = Светло-красный,      @endtr
+//!          @tr  5 = @td @c 0x5 @td = Малиновый,    @td 13 = @td @c 0xD @td = Светло-малиновый,    @endtr
+//!          @tr  6 = @td @c 0x6 @td = Темно-желтый, @td 14 = @td @c 0xE @td = Желтый,              @endtr
+//!          @tr  7 = @td @c 0x7 @td = Серый,        @td 15 = @td @c 0xF @td = Белый.               @endtr
+//! @endtable
+//!
+//!          В шестнадцатиричной системе счисления атрибуты задавать можно проще: если нужен,
+//!          скажем, желтый цвет на синем фоне, то его код будет @c 0x1e (старшая цифра - старшие 4
+//!          бита - это цвет фона, младшая цифра - младшие 4 бита - это цвет текста).
+//!
+//! @see     txTextCursor(), txGetConsoleAttr(), txSetConsoleCursorPos(), txGetConsoleCursorPos(),
+//!          txGetConsoleFontSize(), txClearConsole()
+//! @usage
+//! @code
+//!          txSetConsoleAttr (0x1e);
+//!          printf ("А в небе голубом есть город золотой");
+//! @endcode
+//}-------------------------------------------------------------------------------------------
+
+bool txSetConsoleAttr (WORD colors = 0x07);
+
+//{-------------------------------------------------------------------------------------------
+//! @ingroup Drawing
+//! @brief   Возвращает текущие цветовые атрибуты консоли.
+//!
+//! @return  Текущие цветовые атрибуты консоли. См. txSetConsoleAttr().
+//!
+//! @see     txTextCursor(), txSetConsoleAttr(), txSetConsoleCursorPos(), txGetConsoleCursorPos(),
+//!          txGetConsoleFontSize(), txClearConsole()
+//! @usage
+//! @code
+//!          unsigned attr = txGetConsoleAttr();
+//! @endcode
+//}-------------------------------------------------------------------------------------------
+
+WORD txGetConsoleAttr();
+
+//{-------------------------------------------------------------------------------------------
+//! @ingroup Drawing
+//! @brief   Стирает текст консоли.
+//!
+//! @return  Если операция была успешна - true, иначе - false.
+//!
+//!          При стирании используются текущие атрибуты (цвета текста и фона) консоли.
+//!
+//! @see     txTextCursor(), txSetConsoleAttr(), txGetConsoleAttr(), txGetConsoleCursorPos(),
+//!          txGetConsoleFontSize(), txClearConsole()
+//! @usage
+//! @code
+//!          txClearConsole();  // Ну вот и все, дружок
+//! @endcode
+//}-------------------------------------------------------------------------------------------
+
+bool txClearConsole();
+
+//{-------------------------------------------------------------------------------------------
+//! @ingroup Drawing
+//! @brief   Устанавливает позицию мигающего курсора консоли.
+//!
+//! @param   x  X-координата курсора в пикселях.
+//! @param   y  Y-координата курсора в пикселях.
+//!
+//! @return  Предыдущее положение мигающего курсора в структуре POINT.
+//!
+//! @note    Нельзя установить совсем любую позицию. Текст в консоли расположен по прямоугольной
+//!          сетке, размер которой зависит от размеров шрифта консоли. Устанавливаемая позиция
+//!          округляется, чтобы курсор попал в ячейку сетки. См. пример к функции txGetConsoleFontSize().
+//!
+//! @see     txTextCursor(), txSetConsoleAttr(), txGetConsoleAttr(), txGetConsoleCursorPos(),
+//!          txGetConsoleFontSize(), txClearConsole()
+//! @usage
+//! @code
+//!          txSetConsoleCursorPos (txGetExtentX(), txGetExtentY());  // Центр Вселенной
+//! @endcode
+//}-------------------------------------------------------------------------------------------
+
+POINT txSetConsoleCursorPos (int x, int y);
+
+//{-------------------------------------------------------------------------------------------
+//! @ingroup Drawing
+//! @brief   Возвращает позицию мигающего курсора консоли.
+//!
+//! @return  Положение мигающего курсора в структуре POINT.
+//!
+//! @see     txTextCursor(), txSetConsoleAttr(), txGetConsoleAttr(), txSetConsoleCursorPos(),
+//!          txGetConsoleFontSize(), txClearConsole()
+//! @usage
+//! @code
+//!          POINT pos = txGetConsoleCursorPos();
+//! @endcode
+//}-------------------------------------------------------------------------------------------
+
+POINT txGetConsoleCursorPos();
+
+//{-------------------------------------------------------------------------------------------
+//! @ingroup Drawing
+//! @brief   Возвращает размеры шрифта консоли.
+//!
+//! @return  Размеры шрифта консоли в пикселях, в структуре POINT.
+//!
+//! @see     txTextCursor(), txSetConsoleAttr(), txGetConsoleAttr(), txSetConsoleCursorPos(),
+//!          txGetConsoleFontSize(), txClearConsole()
+//! @usage
+//! @code
+//!          POINT size = txGetConsoleFontSize();
+//!          txSetConsoleCursorPos (5 * size.x, 10 * size.y);  // Теперь мигай там
+//! @endcode
+//}-------------------------------------------------------------------------------------------
+
+POINT txGetConsoleFontSize();
+
+//{-------------------------------------------------------------------------------------------
+//! @ingroup Drawing
+//! @brief   Запрещает или разрешает рисование мигающего курсора в окне.
+//!
+//! @param   blink  false - запретить мигающий курсор
+//!
+//! @return  Предыдущее значение разрешения.
+//!
+//! @see     txSetConsoleAttr(), txGetConsoleAttr(), txSetConsoleCursorPos(), txGetConsoleCursorPos(),
+//!          txGetConsoleFontSize(), txClearConsole(), txCreateWindow(), txUpdateWindow(), txLock(), txUnlock(), txGDI()
+//! @usage
+//! @code
+//!          txTextCursor (false);
+//!          ...
+//!          txTextCursor();
+//! @endcode
+//}-------------------------------------------------------------------------------------------
+
+bool txTextCursor (bool blink = true);
 
 //! @}
 //}
@@ -2608,7 +2753,7 @@ const int      _TX_TIMEOUT                = 1000;
 #undef  assert
 
 #if !defined (NDEBUG)
-    #define assert( cond )    ( !(cond)? (TX_ERROR ("\a" "Логическая ошибка: Неверно, что \"%s\"" _ #cond), 0) : _txNOP (0) )
+    #define assert( cond )    ( !(cond)? (TX_ERROR ("\a" "ВНЕЗАПНО: Логическая ошибка: Неверно, что \"%s\"" _ #cond), 0) : _txNOP (0) )
 
 #else
     #define assert( cond )    ( 0 )
@@ -3352,9 +3497,9 @@ bool         _txError (const char file[], int line, const char func[],
                        DWORD getlasterror_value, int errno_value, int doserrno_value,
                        const char msg[], ...) _TX_CHECK_FORMAT (7);
 
-void         _txSignal (int signal = 0, int fpe = 0);
-void         _txTerminateFunction();
-void         _txUnexpectedFunction();
+void         _txOnSignal (int signal = 0, int fpe = 0);
+void         _txOnTerminate();
+void         _txOnUnexpected();
 
 FARPROC      _txImport (const char lib[], const char name[], int required = true);
 
@@ -3436,6 +3581,7 @@ _TX_IMPORT ("GDI32", DWORD,    GetObjectType,          (HGDIOBJ object));
 _TX_IMPORT ("GDI32", BOOL,     DeleteDC,               (HDC dc));
 _TX_IMPORT ("GDI32", BOOL,     DeleteObject,           (HGDIOBJ object));
 _TX_IMPORT ("GDI32", COLORREF, SetTextColor,           (HDC dc, COLORREF color));
+_TX_IMPORT ("GDI32", COLORREF, SetBkColor,             (HDC dc, COLORREF color));
 _TX_IMPORT ("GDI32", int,      SetBkMode,              (HDC dc, int bkMode));
 _TX_IMPORT ("GDI32", HFONT,    CreateFontA,            (int height, int width, int escapement, int orientation,
                                                         int weight, DWORD italic, DWORD underline, DWORD strikeout,
@@ -3476,12 +3622,15 @@ _TX_IMPORT ("USER32",HANDLE,   LoadImageA,             (HINSTANCE inst, LPCTSTR 
                                                         int sizex, int sizey, UINT mode));
 _TX_IMPORT ("WinMM", BOOL,     PlaySound,              (LPCSTR sound, HMODULE mod, DWORD mode));
 
-_TX_IMPORT ("Kernel32",   HWND,GetConsoleWindow,       ());
+_TX_IMPORT     ("Kernel32", HWND,  GetConsoleWindow,               ());
+_TX_IMPORT_OPT ("Kernel32", BOOL,  GetCurrentConsoleFont,          (HANDLE con, BOOL maxWnd, PCONSOLE_FONT_INFO curFont));
+_TX_IMPORT_OPT ("Kernel32", void*, AddVectoredExceptionHandler,    (ULONG first, PVECTORED_EXCEPTION_HANDLER handler));
+_TX_IMPORT_OPT ("Kernel32", ULONG, RemoveVectoredExceptionHandler, (void* Handler));
 
-_TX_IMPORT_OPT ("MSImg32",BOOL,TransparentBlt,         (HDC dest, int destX, int destY, int destWidth, int destHeight,
+_TX_IMPORT_OPT ("MSImg32",  BOOL,  TransparentBlt,     (HDC dest, int destX, int destY, int destWidth, int destHeight,
                                                         HDC src,  int srcX,  int srcY,  int srcWidth,  int srcHeight,
                                                         UINT transparentColor));
-_TX_IMPORT_OPT ("MSImg32",BOOL,AlphaBlend,             (HDC dest, int destX, int destY, int destWidth, int destHeight,
+_TX_IMPORT_OPT ("MSImg32",  BOOL,  AlphaBlend,         (HDC dest, int destX, int destY, int destWidth, int destHeight,
                                                         HDC src,  int srcX,  int srcY,  int srcWidth,  int srcHeight,
                                                         BLENDFUNCTION blending));
 }  // namespace Win32
@@ -3562,17 +3711,22 @@ $   SetConsoleOutputCP (1251);
 $     setlocale (LC_CTYPE,  "Russian");
 $   _wsetlocale (LC_CTYPE, L"Russian_Russia.ACP");
 
-$   _txSignal();
+$   _txOnSignal();
 
-$   std::set_unexpected (_txUnexpectedFunction);
-$   std::set_terminate  (_txTerminateFunction);
+$   std::set_unexpected (_txOnUnexpected);
+$   std::set_terminate  (_txOnTerminate);
 
-$   SetWindowTextA ((txWindow()? txWindow() : GetConsoleWindow()),
-                     txGetModuleFileName (false));
+$   HWND wnd = txWindow()? txWindow() : GetConsoleWindow();
+$   if (wnd) SetWindowTextA (wnd, txGetModuleFileName (false));
 
 $   InitializeCriticalSection (&_txCanvas_LockBackBuf);
 
 $   atexit (_txOnExit);
+
+$   (void) _txStaticInitialize;        // Just for warning "defined but not used" suppression
+$   (void) Win32::SetDIBitsToDevice;
+$   (void) Win32::CreateRectRgn;
+$   (void) Win32::GetBitmapDimensionEx;
 
 $   return 1;
     }
@@ -3652,8 +3806,8 @@ $   GetConsoleScreenBufferInfo (GetStdHandle (STD_OUTPUT_HANDLE), &con) asserted
 $   SIZE szChr  = { (short) (con.srWindow.Right  - con.srWindow.Left + 1),
                     (short) (con.srWindow.Bottom - con.srWindow.Top  + 1) };
 
-$   SIZE szFont = { (short) ((1.0 * szCon.cx / szChr.cx) / (1.0 * szCon.cx / szCanvas.cx)),
-                    (short) ((1.0 * szCon.cy / szChr.cy) / (1.0 * szCon.cy / szCanvas.cy)) };
+$   SIZE szFont = { (short) ((1.0 * szCon.cx / szChr.cx) / (1.0 * szCon.cx / szCanvas.cx) + 0.5),
+                    (short) ((1.0 * szCon.cy / szChr.cy) / (1.0 * szCon.cy / szCanvas.cy) + 0.5) };
 
 $   _txBuffer_Select (txFontExist (_TX_CONSOLE_FONT)? CreateFont (szFont.cy, szFont.cx, 0, 0,
                                                                   FW_REGULAR, FALSE, FALSE, FALSE,
@@ -3686,7 +3840,7 @@ $   return _txCanvas_OK();
 void _txOnExit()
     {
 $   HWND wnd      = txWindow()? txWindow() : GetConsoleWindow();
-$	bool isMaster = (wnd)? (GetWindowLong (wnd, GWL_STYLE) & WS_SYSMENU) != 0 : false;
+$   bool isMaster = (wnd)? (GetWindowLong (wnd, GWL_STYLE) & WS_SYSMENU) != 0 : false;
 
 $   if (wnd)
         {
@@ -3700,21 +3854,23 @@ $   _txRunning = false;
 
 $   if (isMaster && !_txExit && GetCurrentThreadId() == _txMainThreadId)
         {
-$       printf ("\n\n" "[Нажмите любую клавишу для завершения]");
+$       printf ("\n" "[Нажмите любую клавишу для завершения]");
 
-$       while (_kbhit()) (void) _getch();
+$       while (_kbhit()) (void)_getch();
 
-$       for (;;)
+$       for (int i = 1; ; i++)
             {
-            if (!_txCanvas_ThreadId)  break;
-            if (_kbhit()) { (void) _getch(); break; }
+            if (!_txCanvas_ThreadId) break;
+
+            if (_kbhit()) { (void)_getch(); break; }
 
             Sleep (_TX_WINDOW_UPDATE_INTERVAL);
+
+            if (i % 100500 == 0) printf ("\r" "[Нажмите же какую-нибудь клавишу для моего завершения]");
             }
 
 $       printf ("\n");
         }
-
 
 $   if (wnd) SendNotifyMessage (wnd, WM_DESTROY, 0, 0);
 
@@ -3722,9 +3878,6 @@ $   _txWaitFor (!_txCanvas_Window);
 
 $   if (!_txCanvas_Window)
         { $ DeleteCriticalSection (&_txCanvas_LockBackBuf); }
-
-$   if (isMaster)
-        { $ _txConsole_Detach(); }
 
 #ifndef NDEBUG
     OutputDebugString ("\n");
@@ -4222,11 +4375,6 @@ $   if (!console)
 $       FreeConsole();
 $       AllocConsole();
 $       console = Win32::GetConsoleWindow();
-
-$       COORD size = { 80, 25 };
-
-$       HANDLE con = GetStdHandle (STD_OUTPUT_HANDLE); assert (con);
-$       if (con) { $ SetConsoleScreenBufferSize (con, size); }
         }
 
 $   _txConsole_InitSTDIO() asserted;
@@ -4295,38 +4443,55 @@ $   assert (_txCanvas_OK());
 
 $   if (!txLock (false)) return false;
 
+$   HANDLE out = GetStdHandle (STD_OUTPUT_HANDLE);
+
 $   CONSOLE_SCREEN_BUFFER_INFO con = {{0}};
-$   BOOL ok = GetConsoleScreenBufferInfo (GetStdHandle (STD_OUTPUT_HANDLE), &con);
+$   BOOL ok = GetConsoleScreenBufferInfo (out, &con);
     if (!ok) { $ txUnlock(); return false; }
 
 $   SIZE fontSz = {0};
 $   txGDI (Win32::GetTextExtentPoint32 (dc, "W", 1, &fontSz)) asserted;
 
-$   Win32::SetTextColor (dc, _TX_CONSOLE_COLOR);
-$   Win32::SetBkMode    (dc, TRANSPARENT) asserted;
-
 $   POINT size = { con.srWindow.Right  - con.srWindow.Left + 1,
                    con.srWindow.Bottom - con.srWindow.Top  + 1 };
 
-$   for (SHORT y = 0; y < size.y; y++)
+$   COLORREF pal [16] = { 0x000000, 0x800000, 0x008000, 0x808000, 0x000080, 0x800080, 0x008080, 0xC0C0C0,
+                          0x808080, 0xFF0000, 0x00FF00, 0xFFFF00, 0x0000FF, 0xFF00FF, 0x00FFFF, 0xFFFFFF };
+
+$   for (int y = 0; y < size.y; y++)
         {
-$       static TCHAR buf [1024 + 1] = ""; // [con.dwSize.X + 1]
-$       COORD coord = { con.srWindow.Left, y + con.srWindow.Top };
-$       DWORD read  =   0;
+$       static char chr [1024 + 1] = ""; // [con.dwSize.X + 1]
+$       static WORD atr [1024 + 1] = {}; // [con.dwSize.X + 1]
+$       COORD coord = { con.srWindow.Left, (SHORT)y + con.srWindow.Top };
+$       DWORD read  = 0;
 
-$       if (!ReadConsoleOutputCharacter (GetStdHandle (STD_OUTPUT_HANDLE),
-                                         buf, sizeof (buf), coord, &read)) continue;
+$       if (!ReadConsoleOutputCharacter (out, chr, sizearr (chr), coord, &read)) continue;
+$       if (!ReadConsoleOutputAttribute (out, atr, sizearr (atr), coord, &read)) continue;
 
-$       Win32::TextOut (dc, 0, y * fontSz.cy, buf, size.x) asserted;
+$       for (int x = 0, xEnd = size.x; x < size.x; x = xEnd)
+            {
+            Win32::SetTextColor (dc, pal [ atr[x]       & 0x0F]);
+            Win32::SetBkColor   (dc, pal [(atr[x] >> 4) & 0x0F]);
+            Win32::SetBkMode    (dc,      (atr[x]       & 0xF0)? OPAQUE : TRANSPARENT);
+
+            for (xEnd = x+1; atr[xEnd] == atr[x] && xEnd < size.x; xEnd++) ;
+
+            Win32::TextOut (dc, (x + con.srWindow.Left) * fontSz.cx,
+                                (y + con.srWindow.Top)  * fontSz.cy, chr + x, xEnd - x) asserted;
+            }
         }
 
+$   Win32::SetTextColor (dc, pal [ con.wAttributes       & 0x0F]);
+$   Win32::SetBkColor   (dc, pal [(con.wAttributes >> 4) & 0x0F]);
+$   Win32::SetBkMode    (dc, TRANSPARENT);
+
 $   if (_txConsole_IsBlinking &&
+        In (con.dwCursorPosition, con.srWindow) &&
         GetTickCount() % _TX_CURSOR_BLINK_INTERVAL*2 > _TX_CURSOR_BLINK_INTERVAL &&
-        In (con.dwCursorPosition, con.srWindow))
+        GetForegroundWindow() == txWindow())
         {
 $       Win32::TextOut (dc, (con.dwCursorPosition.X - con.srWindow.Left)*fontSz.cx,
-                            (con.dwCursorPosition.Y - con.srWindow.Top) *fontSz.cy + 1, "_", 1)
-                        asserted;
+                            (con.dwCursorPosition.Y - con.srWindow.Top) *fontSz.cy + 1, "_", 1) asserted;
         }
 
 $   txUnlock();
@@ -4426,22 +4591,22 @@ $   return obj != NULL;
 //============================================================================================
 //! @{
 
-void _txSignal (int sig/* = 0*/, int fpe/* = 0*/)
+void _txOnSignal (int sig/* = 0*/, int fpe/* = 0*/)
     {
 $   if (!sig && !fpe)
         {
-$       signal (SIGSEGV, (void(*)(int))_txSignal) != SIG_ERR asserted;
-$       signal (SIGFPE,  (void(*)(int))_txSignal) != SIG_ERR asserted;
-$       signal (SIGABRT, (void(*)(int))_txSignal) != SIG_ERR asserted;
-$       signal (SIGILL,  (void(*)(int))_txSignal) != SIG_ERR asserted;
-$       signal (SIGTERM, (void(*)(int))_txSignal) != SIG_ERR asserted;
+$       signal (SIGSEGV, (void(*)(int))_txOnSignal) != SIG_ERR asserted;
+$       signal (SIGFPE,  (void(*)(int))_txOnSignal) != SIG_ERR asserted;
+$       signal (SIGABRT, (void(*)(int))_txOnSignal) != SIG_ERR asserted;
+$       signal (SIGILL,  (void(*)(int))_txOnSignal) != SIG_ERR asserted;
+$       signal (SIGTERM, (void(*)(int))_txOnSignal) != SIG_ERR asserted;
 $       return;
         }
 
-$   const char* sSig = "(Неизвестный тип сигнала)";
-$   const char* sFPE = "(Неизвестный тип исключения)";
+$   const char* sSig = ": Неизвестный тип сигнала";
+$   const char* sFPE = ": Неизвестный тип исключения";
 
-    #define GET_DESCR_( str, code, descr )  case (code): { $ (str) = #code " (" descr ")"; break; }
+    #define GET_DESCR_( str, code, descr )  case (code): { $ (str) = #code ": " descr; break; }
 
 $   switch (sig)
         {
@@ -4481,18 +4646,20 @@ $   if (sig == SIGFPE && fpe)
 
 //--------------------------------------------------------------------------------------------
 
-void _txUnexpectedFunction()
+void _txOnUnexpected()
     {
-$   _txError (NULL, 0, NULL, (DWORD)-1,-1,-1, "std::unexpected(): Необработанное исключение.");
+$   _txError (NULL, 0, NULL, (DWORD)-1,-1,-1,
+              "std::unexpected(): Необработанное исключение. Проверьте свои catch-блоки. Перехватите catch (...).    \n"
+              "Проверьте, не нарушена ли спецификация исключений какой-либо функции, если вы ее (зря) используете.");
     }
 
 //--------------------------------------------------------------------------------------------
 
-void _txTerminateFunction()
+void _txOnTerminate()
     {
 $   _txError (NULL, 0, NULL, (DWORD)-1,-1,-1,
-              "std::terminate(): Программа будет завершена из-за неперехваченного исключения.    \n"
-              "Используйте try/catch блоки, перехватывайте catch(...), разбирайтесь, в чем дело.");
+              "std::terminate(): Программа будет завершена из-за неперехваченного исключения в функции main()    \n"
+              "или в деструкторе. Используйте try/catch блоки, перехватывайте catch (...), разбирайтесь, в чем дело.");
     }
 
 //--------------------------------------------------------------------------------------------
@@ -5236,6 +5403,105 @@ $   return _txMouseButtons;
 
 //--------------------------------------------------------------------------------------------
 
+bool txSetConsoleAttr (WORD color /*= 0x07*/)
+    {
+$   return SetConsoleTextAttribute (GetStdHandle (STD_OUTPUT_HANDLE), color) != 0;
+    }
+
+//--------------------------------------------------------------------------------------------
+
+WORD txGetConsoleAttr()
+    {
+$   CONSOLE_SCREEN_BUFFER_INFO con = {{0}};
+$   GetConsoleScreenBufferInfo (GetStdHandle (STD_OUTPUT_HANDLE), &con);
+
+$   return con.wAttributes;
+    }
+
+//--------------------------------------------------------------------------------------------
+
+POINT txSetConsoleCursorPos (int x, int y)
+    {
+$   POINT fontSz = txGetConsoleFontSize();
+
+$   CONSOLE_SCREEN_BUFFER_INFO con = {{0}};
+$   GetConsoleScreenBufferInfo (GetStdHandle (STD_OUTPUT_HANDLE), &con) asserted;
+
+$   COORD pos = { (SHORT) (1.0 * x / fontSz.x + 0.5) + con.srWindow.Left,
+                  (SHORT) (1.0 * y / fontSz.y + 0.5) + con.srWindow.Top };
+
+$   SetConsoleCursorPosition (GetStdHandle (STD_OUTPUT_HANDLE), pos) asserted;
+
+$   POINT prev = { (int) (1.0 * (con.dwCursorPosition.X - con.srWindow.Left) / fontSz.x + 0.5),
+                   (int) (1.0 * (con.dwCursorPosition.Y - con.srWindow.Top ) / fontSz.y + 0.5) };
+$   return prev;
+    }
+
+//--------------------------------------------------------------------------------------------
+
+POINT txGetConsoleCursorPos()
+    {
+$   POINT fontSz = txGetConsoleFontSize();
+
+$   CONSOLE_SCREEN_BUFFER_INFO con = {{0}};
+$   GetConsoleScreenBufferInfo (GetStdHandle (STD_OUTPUT_HANDLE), &con) asserted;
+
+$   POINT pos = { (int) (1.0 * (con.dwCursorPosition.X - con.srWindow.Left) / fontSz.x + 0.5),
+                  (int) (1.0 * (con.dwCursorPosition.Y - con.srWindow.Top ) / fontSz.y + 0.5) };
+$   return pos;
+    }
+
+//--------------------------------------------------------------------------------------------
+
+bool txClearConsole()
+    {
+$   HANDLE out = GetStdHandle (STD_OUTPUT_HANDLE);
+
+$   CONSOLE_SCREEN_BUFFER_INFO con = {{0}};
+$   GetConsoleScreenBufferInfo (out, &con) asserted;
+
+$   COORD start = {con.srWindow.Left, con.srWindow.Top};
+
+$   DWORD len   = (con.srWindow.Right  - con.srWindow.Left + 1) *
+                  (con.srWindow.Bottom - con.srWindow.Top  + 1);
+
+$   DWORD written = 0;
+$   FillConsoleOutputCharacter (out, 0x20 /*' '*/,    len, start, &written) asserted;
+$   FillConsoleOutputAttribute (out, con.wAttributes, len, start, &written) asserted;
+
+$   SetConsoleCursorPosition (GetStdHandle (STD_OUTPUT_HANDLE), start) asserted;
+
+$   return written == len;
+    }
+
+//--------------------------------------------------------------------------------------------
+
+POINT txGetConsoleFontSize()
+    {
+$   CONSOLE_FONT_INFO font = {0, {8, 16}};
+$   if (Win32::GetCurrentConsoleFont)
+        Win32::GetCurrentConsoleFont (GetStdHandle (STD_OUTPUT_HANDLE), false, &font) asserted;
+
+$   SIZE size = { font.dwFontSize.X, font.dwFontSize.Y };
+$   txGDI (Win32::GetTextExtentPoint32 (_txCanvas_BackBuf[1], "W", 1, &size));
+
+$   POINT sizeFont = { size.cx, size.cy };
+$   return sizeFont;
+    }
+
+//--------------------------------------------------------------------------------------------
+
+bool txTextCursor (bool blink /*= true*/)
+    {
+$   bool old = _txConsole_IsBlinking;
+
+$   _txConsole_IsBlinking = blink;
+
+$   return old;
+    }
+
+//--------------------------------------------------------------------------------------------
+
 bool txPlaySound (const char filename[] /*= NULL*/, DWORD mode /*= SND_ASYNC*/)
     {
 $   mode |= SND_FILENAME | SND_NODEFAULT | SND_NOWAIT;
@@ -5252,17 +5518,6 @@ WNDPROC txSetWindowHandler (WNDPROC handler /*= NULL*/)
     {
 $   WNDPROC old = _txAltWndProc; _txAltWndProc = handler;
 $   return  old;
-    }
-
-//--------------------------------------------------------------------------------------------
-
-bool txTextCursor (bool blink /*= true*/)
-    {
-$   bool old = _txConsole_IsBlinking;
-
-$   _txConsole_IsBlinking = blink;
-
-$   return old;
     }
 
 //--------------------------------------------------------------------------------------------
