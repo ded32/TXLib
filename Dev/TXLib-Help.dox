@@ -10,7 +10,7 @@ PROJECT_LOGO           = "Doc/TXLib.png"
 
 IGNORE_PREFIX          = tx TX TX_ TXLib.h
 
-EXCLUDE_PATTERNS       = */_OFF/* */.hg/* */*_/* /Wizard/
+EXCLUDE_PATTERNS       = */_OFF/* */.hg/* */Wizard/* */*_/* 
 
 EXTRACT_ALL            = NO
 INTERNAL_DOCS          = NO
