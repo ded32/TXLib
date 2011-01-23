@@ -1,0 +1,13 @@
+<Code::Blocks_template_file>
+    <Template name="TX Application" title=".TX Application" category="Console" bitmap="TX Application.png">
+
+        <FileSet name="c++" title="C++ source">
+            <File source="TX Application-main-cpp.cpp" destination="Main.cpp"/>
+        </FileSet>
+        
+        <Option name="Console Application">
+            <Project file="TX Application.cbp"/>
+        </Option>
+
+    </Template>
+</Code::Blocks_template_file>

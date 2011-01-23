@@ -1,0 +1,329 @@
+#--------------------------------------------------------------------------- 
+# Doxyfile 1.7.2
+#---------------------------------------------------------------------------
+
+PROJECT_NAME           = "LD View"
+PROJECT_NUMBER         =
+
+IGNORE_PREFIX          =
+
+EXTRACT_ALL            = YES
+INTERNAL_DOCS          = YES
+ENABLED_SECTIONS       = INTERNAL
+
+SHOW_NAMESPACES        = YES
+HIDE_SCOPE_NAMES       = NO
+
+#---------------------------------------------------------------------------
+
+INPUT                  = LDView.txt \
+                         LDView.cpp LDView_graph.h LDView_graphView.h LDView_tools.h
+
+RECURSIVE              = NO
+OUTPUT_DIRECTORY       = $(Temp)/Doxygen
+
+HTML_STYLESHEET        = LDView.css
+
+#---------------------------------------------------------------------------
+
+#INCLUDE_PATH          = "$(ProgramFiles)/CodeBlocks/MinGW/include"
+
+HHC_LOCATION           = "$(ProgramFiles)/HTML Help Workshop/hhc.exe"
+DOT_PATH               = "$(ProgramFiles)/ATT/Graphviz/bin"
+PERL_PATH              = "$(ProgramFiles)/Cygwin/usr/bin/perl.exe"
+LATEX_CMD_NAME         = "$(ProgramFiles)/MiKTeX/Main/miktex/bin/latex.exe"
+MAKEINDEX_CMD_NAME     = "$(ProgramFiles)/MiKTeX/Main/miktex/bin/makeindex.exe"
+MSCGEN_PATH            = 
+
+#---------------------------------------------------------------------------
+
+OUTPUT_LANGUAGE        = English
+INPUT_ENCODING         = CP1251
+CHM_INDEX_ENCODING     = CP1251
+DOXYFILE_ENCODING      = CP1251
+
+#---------------------------------------------------------------------------
+
+GENERATE_HTML          = YES
+GENERATE_HTMLHELP      = YES
+DISABLE_INDEX          = NO
+SEARCHENGINE           = NO
+
+GENERATE_LATEX         = YES
+GENERATE_MAN           = YES
+GENERATE_RTF           = NO
+GENERATE_QHP           = NO
+GENERATE_PERLMOD       = NO
+GENERATE_AUTOGEN_DEF   = NO
+GENERATE_XML           = NO
+
+#---------------------------------------------------------------------------
+
+HTML_HEADER            = 
+HTML_FOOTER            = 
+
+ALIASES                = "title=<dl><dt>" \
+                         "table=</dt><dd><table border=0>" \
+                         "endtable=</table></dd></dl>" \
+                         "tr=<tr valign=top><td>" \
+                         "endtr=</tr>" \
+                         "tbr=@tr @endtr" \
+                         "td=<td>" \
+                         "hr=<hr>" \
+                         "section=@hr @section"
+
+#---------------------------------------------------------------------------
+
+EXCLUDE                = 
+
+IMAGE_PATH             = . img images
+
+FILE_PATTERNS          = *.c *.cpp *.h *.hpp *.txt
+
+INCLUDE_FILE_PATTERNS  = 
+
+EXCLUDE_SYMLINKS       = NO
+EXCLUDE_PATTERNS       = */_OFF/*
+EXCLUDE_SYMBOLS        = 
+
+EXAMPLE_PATH           = Examples
+EXAMPLE_RECURSIVE      = YES
+EXAMPLE_PATTERNS       = *.c *.cpp *.h *.hpp *.txt
+INPUT_FILTER           = 
+FILTER_PATTERNS        = 
+FILTER_SOURCE_FILES    = NO
+
+#---------------------------------------------------------------------------
+
+ENABLE_PREPROCESSING   = YES
+MACRO_EXPANSION        = YES
+EXPAND_ONLY_PREDEF     = YES
+SEARCH_INCLUDES        = YES
+EXPAND_AS_DEFINED      = 
+SKIP_FUNCTION_MACROS   = YES
+
+PREDEFINED             = FOR_DOXYGEN_ONLY
+
+#---------------------------------------------------------------------------
+
+EXTRACT_PRIVATE        = YES
+EXTRACT_STATIC         = YES
+EXTRACT_LOCAL_CLASSES  = YES
+EXTRACT_LOCAL_METHODS  = YES
+EXTRACT_ANON_NSPACES   = YES
+
+HIDE_UNDOC_MEMBERS     = YES
+HIDE_UNDOC_CLASSES     = YES
+HIDE_FRIEND_COMPOUNDS  = NO
+HIDE_IN_BODY_DOCS      = YES
+
+SORT_MEMBER_DOCS       = NO
+SORT_BRIEF_DOCS        = NO
+SORT_MEMBERS_CTORS_1ST = YES
+SORT_GROUP_NAMES       = NO
+SORT_BY_SCOPE_NAME     = NO
+
+INLINE_SOURCES         = YES
+INLINE_INFO            = YES
+MAX_INITIALIZER_LINES  = 30
+
+SHOW_INCLUDE_FILES     = YES
+SHOW_USED_FILES        = YES
+SHOW_FILES             = YES
+SHOW_DIRECTORIES       = YES
+
+GENERATE_TODOLIST      = YES
+GENERATE_TESTLIST      = YES
+GENERATE_BUGLIST       = YES
+GENERATE_DEPRECATEDLIST= YES
+
+CASE_SENSE_NAMES       = NO
+FULL_PATH_NAMES        = NO
+SHORT_NAMES            = YES
+TYPEDEF_HIDES_STRUCT   = NO
+
+FILE_VERSION_FILTER    = 
+LAYOUT_FILE            = 
+
+#---------------------------------------------------------------------------
+
+ABBREVIATE_BRIEF       = "The $name class" "The $name widget" "The $name file" \
+                         is provides specifies contains represents a an the    \
+                         "Класс $name" "Виджет $name" "Файл $name" является    \
+                         обеспечивает определяет contains представляет такой   \
+                         этот данный
+STRIP_FROM_PATH        = 
+STRIP_FROM_INC_PATH    = 
+
+JAVADOC_AUTOBRIEF      = NO
+QT_AUTOBRIEF           = NO
+BRIEF_MEMBER_DESC      = YES
+MULTILINE_CPP_IS_BRIEF = YES
+REPEAT_BRIEF           = YES
+
+INHERIT_DOCS           = YES
+DISTRIBUTE_GROUP_DOC   = NO
+INLINE_INHERITED_MEMB  = YES
+
+SUBGROUPING            = YES
+ALWAYS_DETAILED_SEC    = NO
+
+BUILTIN_STL_SUPPORT    = YES
+CPP_CLI_SUPPORT        = YES
+IDL_PROPERTY_SUPPORT   = YES
+SIP_SUPPORT            = NO
+
+OPTIMIZE_OUTPUT_FOR_C  = NO
+OPTIMIZE_OUTPUT_JAVA   = NO
+OPTIMIZE_FOR_FORTRAN   = NO
+OPTIMIZE_OUTPUT_VHDL   = NO
+
+SEPARATE_MEMBER_PAGES  = NO
+CREATE_SUBDIRS         = NO
+TAB_SIZE               = 4
+SYMBOL_CACHE_SIZE      = 4
+
+EXTENSION_MAPPING      = 
+
+#---------------------------------------------------------------------------
+
+SOURCE_BROWSER         = YES
+STRIP_CODE_COMMENTS    = YES
+
+REFERENCED_BY_RELATION = YES
+REFERENCES_RELATION    = YES
+REFERENCES_LINK_SOURCE = YES
+
+USE_HTAGS              = NO
+VERBATIM_HEADERS       = YES
+
+#---------------------------------------------------------------------------
+
+ALPHABETICAL_INDEX     = YES
+COLS_IN_ALPHA_INDEX    = 5
+
+#---------------------------------------------------------------------------
+
+HTML_OUTPUT            = HTML
+HTML_FILE_EXTENSION    = .htm
+CHM_FILE               =
+
+GENERATE_TREEVIEW      = YES
+TREEVIEW_WIDTH         = 150
+TOC_EXPAND             = NO
+
+HTML_ALIGN_MEMBERS     = YES
+HTML_DYNAMIC_SECTIONS  = NO
+USE_INLINE_TREES       = YES
+ENUM_VALUES_PER_LINE   = 1
+FORMULA_FONTSIZE       = 10
+BINARY_TOC             = NO
+GENERATE_CHI           = NO
+
+QCH_FILE               = 
+QHP_NAMESPACE          = 
+QHP_VIRTUAL_FOLDER     = doc
+QHP_CUST_FILTER_NAME   = 
+QHP_CUST_FILTER_ATTRS  = 
+QHP_SECT_FILTER_ATTRS  = 
+QHG_LOCATION           = 
+
+GENERATE_DOCSET        = NO
+DOCSET_FEEDNAME        = "Doxygen generated docs"
+DOCSET_BUNDLE_ID       = org.doxygen.Project
+
+#---------------------------------------------------------------------------
+
+LATEX_OUTPUT           = LaTeX
+
+EXTRA_PACKAGES         = 
+LATEX_HEADER           = 
+
+COMPACT_LATEX          = YES
+PAPER_TYPE             = a4wide
+PDF_HYPERLINKS         = YES
+USE_PDFLATEX           = YES
+LATEX_BATCHMODE        = NO
+LATEX_HIDE_INDICES     = NO
+LATEX_SOURCE_CODE      = NO
+
+#---------------------------------------------------------------------------
+
+RTF_OUTPUT             = RTF
+
+RTF_STYLESHEET_FILE    = 
+RTF_EXTENSIONS_FILE    = 
+
+COMPACT_RTF            = YES
+RTF_HYPERLINKS         = YES
+
+#---------------------------------------------------------------------------
+
+MAN_OUTPUT             = MAN
+
+MAN_EXTENSION          = .3
+MAN_LINKS              = NO
+
+#---------------------------------------------------------------------------
+
+XML_OUTPUT             = XML
+
+XML_SCHEMA             = 
+XML_DTD                = 
+XML_PROGRAMLISTING     = YES
+
+#---------------------------------------------------------------------------
+
+PERLMOD_LATEX          = NO
+PERLMOD_PRETTY         = YES
+PERLMOD_MAKEVAR_PREFIX = 
+
+#---------------------------------------------------------------------------
+
+TAGFILES               = 
+GENERATE_TAGFILE       = 
+ALLEXTERNALS           = NO
+EXTERNAL_GROUPS        = YES
+
+#---------------------------------------------------------------------------
+
+HAVE_DOT               = YES
+
+DOTFILE_DIRS           = 
+DOT_FONTPATH           = 
+
+DIRECTORY_GRAPH        = YES
+INCLUDE_GRAPH          = YES
+INCLUDED_BY_GRAPH      = YES
+CLASS_DIAGRAMS         = YES
+CLASS_GRAPH            = YES
+GRAPHICAL_HIERARCHY    = YES
+GROUP_GRAPHS           = YES
+CALL_GRAPH             = YES
+CALLER_GRAPH           = YES
+COLLABORATION_GRAPH    = YES
+TEMPLATE_RELATIONS     = YES
+GENERATE_LEGEND        = YES
+UML_LOOK               = YES
+HIDE_UNDOC_RELATIONS   = NO
+
+DOT_FONTNAME           = Lucida Console
+DOT_FONTSIZE           = 9
+DOT_IMAGE_FORMAT       = png
+DOT_TRANSPARENT        = NO
+DOT_MULTI_TARGETS      = NO
+
+DOT_GRAPH_MAX_NODES    = 50
+MAX_DOT_GRAPH_DEPTH    = 1000
+DOT_CLEANUP            = YES
+
+#---------------------------------------------------------------------------
+
+QUIET                  = NO
+WARNINGS               = YES
+WARN_IF_UNDOCUMENTED   = YES
+WARN_IF_DOC_ERROR      = YES
+WARN_NO_PARAMDOC       = YES
+WARN_FORMAT            = "$file:$line: $text"
+WARN_LOGFILE           = 
+
