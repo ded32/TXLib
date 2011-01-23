@@ -1,4 +1,0 @@
-OpenFile | _Main.cpp
-[!if !PROJECT_SIMPLE]
-ReadMe.txt
-[!endif]

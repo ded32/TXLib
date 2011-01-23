@@ -1,14 +1,14 @@
-//{===========================================================================
+//{=========================================================================== 
 //! @file       Examples\Demo\PhongDemo.cpp
-//              (C) Ilya Dedinsky, http://ded32.net.ru, 2009
 //!
 //! @brief      Этюд "Освещение по Фонгу"
 //!
 //!             Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//! @version    [Version 0.01 alpha, build 72]
-//! @author     Copyright (C) Ded, 2005-10 (Ilya Dedinsky, http://ded32.net.ru)
-//! @date       2009
+//!             $Version$
+//!             $Date$
+//!             $Copyright$
+//              $Author$
 //}===========================================================================
 
 #include "TXLib.h"

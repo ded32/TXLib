@@ -1,0 +1,19 @@
+[Template]
+ver=1
+Name=.TX Application
+IconIndex=1
+Description=Проект на основе TX Library
+Catagory=Basic
+
+[Unit0]
+CppName=Main.cpp
+Cpp=TX Application_Main.txt
+
+[Project]
+Name=TX Application
+UnitCount=1
+Type=0
+IsCpp=1
+Compiler=
+Linker=-lgdi32 -luser32
+Libs=

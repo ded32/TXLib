@@ -1,49 +1,48 @@
 //============================================================================================
-//              [These sections are for folding control  in Code::Blocks]
-//{             [Best viewed with "Fold all on file open" option enabled]
+//             [These sections are for folding control  in Code::Blocks]
+//{            [Best viewed with "Fold all on file open" option enabled]
 //============================================================================================
 //!
-//! @file       TXLib.h
-//              (C) Ilya Dedinsky, http://ded32.net.ru, 2005-2011
+//! @file      TXLib.h
+//! @brief     Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//! @brief      Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
+//!            $Version$
+//!            $Copyright$
+//!            $Date$
 //!
-//! @version    [Version 0.01 alpha, build 72]
-//! @author     Copyright (C) Ded, 2005-11 (Ilya Dedinsky, http://ded32.net.ru)
-//! @date       2011
+//! 	       TX Library - компактная графическая библиотека для Win32 на С++.
+//! 	       Это небольшая "песочница" для начинающих реализована с целью
+//! 	       помочь им в изучении простейших принципов программирования.
+//! 	       Документация на русском языке.
 //!
-//! 		TX Library - компактная графическая библиотека для Win32 на С++.
-//! 		Это небольшая "песочница" для начинающих реализована с целью
-//! 		помочь им в изучении простейших принципов программирования.
-//! 		Документация на русском языке.
+//! 	       Философия TX Library - облегчить первые шаги в программировании
+//! 	       и подтолкнуть к творчеству и самостоятельности.
 //!
-//! 		Философия TX Library - облегчить первые шаги в программировании
-//! 		и подтолкнуть к творчеству и самостоятельности.
+//!	       TX Library is a tiny graphics library for Win32 written in C++.
+//!	       It is a small sandbox for the very beginners to help them to
+//!	       learn basic programming principles. The documentation is
+//!	       currently in Russian.
 //!
-//!		TX Library is a tiny graphics library for Win32 written in C++.
-//!		It is a small sandbox for the very beginners to help them to
-//!		learn basic programming principles. The documentation is
-//!		currently in Russian.
+//!            Официальный сайт библиотеки:
+//!            <a href=http://ded32.net.ru>ded32.net.ru.</a>
 //!
-//!             Официальный сайт библиотеки:
-//!             <a href=http://ded32.net.ru>ded32.net.ru.</a>
+//!            См. также <a href=http://txlib.sourceforge.net>
+//!            страницу проекта на SourceForge.</a>
 //!
-//!             См. также <a href=http://txlib.sourceforge.net>
-//!             страницу проекта на SourceForge.</a>
+//! @warning   <b>Это альфа-версия.
+//!            Для использования требуется согласование с автором библиотеки.</b> \n\n
+//!            Правила использования материалов библиотеки и сайта см. на
+//!            <a href=http://ded32.net.ru/index/0-6> официальном сайте.</a>
 //!
-//! @warning    <b>Это альфа-версия.
-//!             Для использования требуется согласование с автором библиотеки.</b> \n\n
-//!             Правила использования материалов библиотеки и сайта см. на
-//!             <a href=http://ded32.net.ru/index/0-6> официальном сайте.</a>
-//!
+//             $Author$
 //--------------------------------------------------------------------------------------------
 //!
-//! @defgroup Drawing   Рисование
-//! @defgroup Mouse     Поддержка мыши
-//! @defgroup Dialogs   Диалоговые окна
-//! @defgroup Misc      Разное
-//! @defgroup Service   Служебное
-//! @defgroup Technical Технические детали
+//! @defgroup  Drawing   Рисование
+//! @defgroup  Mouse     Поддержка мыши
+//! @defgroup  Dialogs   Диалоговые окна
+//! @defgroup  Misc      Разное
+//! @defgroup  Service   Служебное
+//! @defgroup  Technical Технические детали
 //}
 //============================================================================================
 
@@ -51,31 +50,41 @@
 #define       __TXLIB_H
 
 //--------------------------------------------------------------------------------------------
-//{          Version information
+//{            Version information
 //--------------------------------------------------------------------------------------------
 
 //{-------------------------------------------------------------------------------------------
-//! @ingroup Technical
-//! @brief   Текущая версия библиотеки.
+//! @ingroup   Technical
+//! @brief     Текущая версия библиотеки.
 //!
-//!          Эта константа автоматически обновляется при обновлении версии.
+//!            Эта константа автоматически обновляется при обновлении версии.
 //!
-//! @see     txVersion()
+//! @see       txVersion()
+//! @hideinitializer
 //}-------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VERSION           "TXLib [Version 0.01 alpha, build 72]"
-#define _TX_AUTHOR            "Copyright (C) Ded, 2005-2011 (Ilya Dedinsky, http://ded32.net.ru)"
+//! @cond INTERNAL
+#define _TX_VERSION_(_1,file,ver,rev,date,auth,_2)  "TXLib [Version " #ver ", Revision " #rev "]"
+#define _TX_AUTHOR__(_1,file,ver,rev,date,auth,_2)  "Copyright (C) " auth
+#define _TX_VER_____(_1,file,ver,rev,date,auth,_2)  ((0x##ver << 16) | 0x##rev)
+//! @endcond
 
-#define _TX_VER               0x0010072a        //!< Версия библиотеки в целочисленном формате
+#define _TX_VERSION           _TX_VERSION_ ($versioninfo$)
+#define _TX_AUTHOR            _TX_AUTHOR__ ($versioninfo$)
+
+//! Версия библиотеки в целочисленном формате
+//! @hideinitializer
+
+#define _TX_VER               _TX_VER_____ ($versioninfo$)
 
 //! @}
 //}
 //--------------------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------------------
-//{          Compiler- and platform-specific
-//! @name    Адаптация к компиляторам и платформам
+//{            Compiler- and platform-specific
+//! @name      Адаптация к компиляторам и платформам
 //--------------------------------------------------------------------------------------------
 //! @{ @cond INTERNAL
 
@@ -91,7 +100,7 @@
 
 #endif
 
-#if defined (__STRICT_ANSI__)                            // Try to extend strict ANSI C
+#if defined (__STRICT_ANSI__)     // Try to extend strict ANSI C
 
     #warning TXLib.h: Trying to extend strict ANSI compatibility
     #undef __STRICT_ANSI__
@@ -161,8 +170,8 @@
     #define  ctime_s                ctime       //   functions, so use insecure ones.
     #define  strncpy_s              strncpy     //
     #define  strncat_s              strncat     //
+    #define  wcsncpy_s              wcsncpy     //
     #define  strerror_s(buf,code)   strerror (code)
-    #define  strcpy_s(dest,len,src) strncpy ((dest), (src), (len))
 
 #endif
 
@@ -738,27 +747,27 @@ COLORREF txGetFillColor();
 //! @return  Предыдущий режим взаимодействия цветов, см. txColors, RGB()
 //!
 //! @title   Режимы взаимодействия цветов:
-//! @table   @tr R2_COPYPEN     @td Пиксели = цвета кисти (самый нормальный режим :) @endtr
-//!          @tr R2_NOTCOPYPEN  @td Пиксели = ~кисть\n @endtr
-//!          @tr @endtr
-//!          @tr R2_BLACK       @td Пиксели = черный цвет (цвет кисти игнорируется)    @endtr
-//!          @tr R2_WHITE       @td Пиксели = белый  цвет (цвет кисти игнорируется)    @endtr
-//!          @tr R2_NOT         @td Пиксели = ~пиксели    (цвет кисти игнорируется)\n  @endtr
+//! @table   @tr R2_COPYPEN     @td Пиксели = цвета кисти (самый нормальный режим :)
+//!          @tr R2_NOTCOPYPEN  @td Пиксели = ~кисть
 //!          @tbr
-//!          @tr R2_XORPEN      @td Пиксели =    пиксели ^  кисть    @endtr
-//!          @tr R2_NOTXORPEN   @td Пиксели = ~ (пиксели ^  кисть)\n @endtr
+//!          @tr R2_BLACK       @td Пиксели = черный цвет (цвет кисти игнорируется)
+//!          @tr R2_WHITE       @td Пиксели = белый  цвет (цвет кисти игнорируется)
+//!          @tr R2_NOT         @td Пиксели = ~пиксели    (цвет кисти игнорируется)
 //!          @tbr
-//!          @tr R2_MASKPEN     @td Пиксели =    пиксели &  кисть    @endtr
-//!          @tr R2_NOTMASKPEN  @td Пиксели = ~ (пиксели &  кисть)   @endtr
-//!          @tr R2_MASKNOTPEN  @td Пиксели =    пиксели & ~кисть    @endtr
-//!          @tr R2_MASKPENNOT  @td Пиксели =   ~пиксели &  кисть\n  @endtr
+//!          @tr R2_XORPEN      @td Пиксели =    пиксели ^  кисть
+//!          @tr R2_NOTXORPEN   @td Пиксели = ~ (пиксели ^  кисть)
 //!          @tbr
-//!          @tr R2_MERGEPEN    @td Пиксели =    пиксели |  кисть    @endtr
-//!          @tr R2_NOTMERGEPEN @td Пиксели = ~ (пиксели |  кисть)   @endtr
-//!          @tr R2_MERGENOTPEN @td Пиксели =    пиксели | ~кисть    @endtr
-//!          @tr R2_MERGEPENNOT @td Пиксели =   ~пиксели |  кисть\n  @endtr
+//!          @tr R2_MASKPEN     @td Пиксели =    пиксели &  кисть
+//!          @tr R2_NOTMASKPEN  @td Пиксели = ~ (пиксели &  кисть)
+//!          @tr R2_MASKNOTPEN  @td Пиксели =    пиксели & ~кисть
+//!          @tr R2_MASKPENNOT  @td Пиксели =   ~пиксели &  кисть
 //!          @tbr
-//!          @tr R2_NOP         @td Пиксели вообще не изменяются.    @endtr
+//!          @tr R2_MERGEPEN    @td Пиксели =    пиксели |  кисть
+//!          @tr R2_NOTMERGEPEN @td Пиксели = ~ (пиксели |  кисть)
+//!          @tr R2_MERGENOTPEN @td Пиксели =    пиксели | ~кисть
+//!          @tr R2_MERGEPENNOT @td Пиксели =   ~пиксели |  кисть
+//!          @tbr
+//!          @tr R2_NOP         @td Пиксели вообще не изменяются.
 //! @endtable
 //!
 //! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors, RGB()
@@ -807,7 +816,7 @@ int txExtractColor (COLORREF color, COLORREF component);
 //! @ingroup Drawing
 //! @brief   Преобразует цвет из формата RGB в формат HSL.
 //!
-//! @param   rgbColor  Преобразуемый цвет в формате <span class=s>&nbsp;ЕГЭ&nbsp;</span> RGB
+//! @param   rgbColor  Преобразуемый цвет в формате @strike ЕГЭ @endstrike RGB
 //!
 //! @return  Созданный цвет в виде COLORREF.
 //!
@@ -1160,8 +1169,8 @@ bool txChord (int x0, int y0, int x1, int y1, int startAngle, int totalAngle);
 //!          Не рекомендуется для применения - довольно медленно работает.
 //!
 //! @title   Режимы заливки: @table
-//!          @tr FLOODFILLSURFACE @td - Заливать область,    указанную цветом color. @endtr
-//!          @tr FLOODFILLBORDER  @td - Заливать до границы, указанной цветом color. @endtr
+//!          @tr FLOODFILLSURFACE @td - Заливать область,    указанную цветом color.
+//!          @tr FLOODFILLBORDER  @td - Заливать до границы, указанной цветом color.
 //!          @endtable
 //!
 //! @see     txSetFillColor(), txGetFillColor(), txColors, RGB()
@@ -1327,17 +1336,17 @@ int txGetTextExtentY (const char text[]);
 //! @return  Предыдущее состояние выравнивания текста.
 //!
 //! @title   Флаги выравнивания: @table
-//!          @tr TA_BASELINE @td Точка (X,Y) определяет базовую линию текста. @endtr
-//!          @tr TA_BOTTOM   @td Точка (X,Y) определяет нижнюю сторону описанного прямоугольника\n
-//!                              (текст лежит выше этой точки).   @endtr
-//!          @tr TA_TOP      @td Точка (X,Y) определяет верхнюю сторону описанного прямоугольника\n
-//!                              (текст лежит ниже этой точки).\n @endtr
+//!          @tr TA_BASELINE @td Точка (X,Y) определяет базовую линию текста.
+//!          @tr TA_BOTTOM   @td Точка (X,Y) определяет нижнюю сторону описанного прямоугольника \n
+//!                              (текст лежит выше этой точки).
+//!          @tr TA_TOP      @td Точка (X,Y) определяет верхнюю сторону описанного прямоугольника \n
+//!                              (текст лежит ниже этой точки).
 //!          @tbr
-//!          @tr TA_CENTER   @td Текст будет выровнен по горизонтали относительно точки (X,Y). @endtr
-//!          @tr TA_LEFT     @td Точка (X,Y) определяет левую сторону описанного прямоугольника\n
-//!                              (текст лежит правее этой точки). @endtr
-//!          @tr TA_RIGHT    @td Точка (X,Y) определяет правую сторону описанного прямоугольника\n
-//!                              (текст лежит левее этой точки).  @endtr
+//!          @tr TA_CENTER   @td Текст будет выровнен по горизонтали относительно точки (X,Y).
+//!          @tr TA_LEFT     @td Точка (X,Y) определяет левую сторону описанного прямоугольника \n
+//!                              (текст лежит правее этой точки).
+//!          @tr TA_RIGHT    @td Точка (X,Y) определяет правую сторону описанного прямоугольника \n
+//!                              (текст лежит левее этой точки).
 //!          @endtable
 //!
 //! @see     txTextOut(), txSelectFont(), txGetTextExtent(), txGetTextExtentX(), txGetTextExtentY()
@@ -1492,23 +1501,23 @@ bool txDeleteDC (HDC* dc);
 //!          отсутствие проверки на эту ошибку. Пример с проверкой на правильность загрузки см. ниже.
 //!
 //! @title   Режимы копирования:
-//! @table   @tr SRCCOPY     @td Просто копирует :) - самый распространенный режим\n @endtr
+//! @table   @tr SRCCOPY     @td Просто копирует :) - самый распространенный режим
 //!          @tbr
-//!          @tr BLACKNESS   @td Заполняет холст-приемник черным цветом (холст-источник игнорируется). @endtr
-//!          @tr WHITENESS   @td Заполняет холст-приемник белым цветом  (холст-источник игнорируется). @endtr
-//!          @tr DSTINVERT   @td Инвертирует цвета на холсте-приемнике  (холст-источник игнорируется). @endtr
-//!          @tr PATCOPY     @td Копирует цвет текущей кисти холста-приемника.\n @endtr
+//!          @tr BLACKNESS   @td Заполняет холст-приемник черным цветом (холст-источник игнорируется).
+//!          @tr WHITENESS   @td Заполняет холст-приемник белым цветом  (холст-источник игнорируется).
+//!          @tr DSTINVERT   @td Инвертирует цвета на холсте-приемнике  (холст-источник игнорируется).
+//!          @tr PATCOPY     @td Копирует цвет текущей кисти холста-приемника.
 //!          @tbr
-//!          @tr MERGECOPY   @td Приемник =   приемник & цвет текущей кисти источника. @endtr
-//!          @tr MERGEPAINT  @td Приемник = ~ приемник | источник @endtr
-//!          @tr NOTSRCCOPY  @td Приемник = ~ источник @endtr
-//!          @tr NOTSRCERASE @td Приемник = ~ (приемник | источник) @endtr
-//!          @tr PATINVERT   @td Приемник =  кисть приемника ^  приемник @endtr
-//!          @tr PATPAINT    @td Приемник = (кисть приемника | ~источник) | приемник @endtr
-//!          @tr SRCAND      @td Приемник =  приемник & источник @endtr
-//!          @tr SRCERASE    @td Приемник = ~приемник & источник @endtr
-//!          @tr SRCINVERT   @td Приемник =  приемник ^ источник @endtr
-//!          @tr SRCPAINT    @td Приемник =  приемник | источник @endtr
+//!          @tr MERGECOPY   @td Приемник =   приемник & цвет текущей кисти источника.
+//!          @tr MERGEPAINT  @td Приемник = ~ приемник | источник
+//!          @tr NOTSRCCOPY  @td Приемник = ~ источник
+//!          @tr NOTSRCERASE @td Приемник = ~ (приемник | источник)
+//!          @tr PATINVERT   @td Приемник =  кисть приемника ^  приемник
+//!          @tr PATPAINT    @td Приемник = (кисть приемника | ~источник) | приемник
+//!          @tr SRCAND      @td Приемник =  приемник & источник
+//!          @tr SRCERASE    @td Приемник = ~приемник & источник
+//!          @tr SRCINVERT   @td Приемник =  приемник ^ источник
+//!          @tr SRCPAINT    @td Приемник =  приемник | источник
 //!          @endtable
 //!
 //! @see     txAlphaBlend(), txTransparentBlt(), txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(),
@@ -1584,7 +1593,7 @@ bool txTransparentBlt (HDC dest, int xDest, int yDest, int width, int height,
 //!                    должна быть в пределах размера источника.
 //! @param   ySrc    Y-координата верхнего левого угла изображения-источника,
 //!                    должна быть в пределах размера источника.
-//! @param   alpha   Общая прозрачность изображения, в дополнение к альфа-каналу.\n
+//! @param   alpha   Общая прозрачность изображения, в дополнение к альфа-каналу. \n
 //!                    (0 - все прозрачно, 1 - использовать только альфа-канал)
 //!
 //! @return  Если операция была успешна - true, иначе - false.
@@ -1605,7 +1614,7 @@ bool txTransparentBlt (HDC dest, int xDest, int yDest, int width, int height,
 //!          полной непрозрачности. При этом в прозрачных областях само изображение
 //!          (в каналах R, G, B) должно быть черным, и чем прозрачнее, тем чернее.
 //!
-//!          Строго говоря, надо умножить каналы R,G,B на альфа-канал: 
+//!          Строго говоря, надо умножить каналы R,G,B на альфа-канал:
 //!          <tt>R,G,B *= A</tt>. Получится вот что:
 //!
 //!        - Если значение альфа-канала для некоторого пикселя равно 0 (полная прозрачность),
@@ -1615,13 +1624,12 @@ bool txTransparentBlt (HDC dest, int xDest, int yDest, int width, int height,
 //!        - Для других значений альфа-канала, пиксели изображения станут темнее.
 //!
 //!          В Photoshop это можно сделать командой <b>Image @d Apply Image</b> с параметрами:
-//!          @table 
-//!          @tr Source:     @td <i>Имя файла с картинкой</i>
+//! @table   @tr Source:     @td <i>Имя файла с картинкой</i>
 //!          @tr Layer:      @td Background
 //!          @tr @b Channel: @td <b> Alpha 1</b>
 //!          @tr Blending:   @td Multiply
 //!          @tr Opacity:    @td 100%
-//!          @endtable
+//! @endtable
 //!
 //! @note    Стандартная функция AlphaBlend из Win32 API может масштабировать изображение.
 //!          В txAlphaBlend это убрано для упрощения использования. If you still need image
@@ -1897,9 +1905,9 @@ int txMouseY();
 //! @return  Состояние Кнопок Мыши!
 //!
 //!          В возвращаемом значении выставленный в единицу 1-й (младший)
-//!          бит означает нажатую левую Кнопку Мыши, 2-й - правую, 3-й -
-//!          среднюю.\n Например, возвращенное число 5 (двоичное 101) означает
-//!          одновременное нажатие средней и левой Кнопок, но не правой Кнопки.
+//!          бит означает нажатую левую Кнопку Мыши, 2-й - правую, 3-й - среднюю. \n
+//!          Например, возвращенное число 5 (двоичное 101) означает одновременное
+//!          нажатие средней и левой Кнопок, но не правой Кнопки.
 //!
 //! @see     txMouseX(), txMouseY(), txMousePos(), txMouseButtons()
 //! @usage
@@ -1934,25 +1942,25 @@ int txMouseButtons();
 //! @return  Если операция была успешна - true, иначе - false.
 //!
 //!          @b Атрибуты - это цвет текста (colorText) и цвет фона (colorBackground),
-//!          объединенные вместе:\n\n
-//!          <tt>colors = colorText + colorBackground * 16</tt>\n\n
-//!          либо\n\n
-//!          <tt>colors = colorText | (colorBackground \<\< 4)</tt>\n\n
+//!          объединенные вместе: \n\n
+//!          <tt>colors = colorText + colorBackground * 16</tt> \n\n
+//!          либо \n\n
+//!          <tt>colors = colorText | (colorBackground \<\< 4)</tt> \n\n
 //!          Цвета атрибутов @b не имеют никакого отношения к цветам рисования,
 //!          задаваемыми @ref txColors "TX_..." константами, RGB(), txSetColor(), txColor(),
 //!          txSetFillColor(), txFillColor() и т.д. Значения цветов см. ниже.
 //!
 //! @title   Значения цветов атрибутов
-//! @table   @tr  Dec @td @c Hex @td                 @td Dec  @td @c Hex @td                        @endtr
+//! @table   @tr  Dec @td @c Hex @td                 @td Dec  @td @c Hex @td
 //!          @tbr
-//!          @tr  0 = @td @c 0x0 @td = Черный,       @td  8 = @td @c 0x8 @td = Темно-серый,         @endtr
-//!          @tr  1 = @td @c 0x1 @td = Синий,        @td  9 = @td @c 0x9 @td = Светло-синий,        @endtr
-//!          @tr  2 = @td @c 0x2 @td = Зеленый,      @td 10 = @td @c 0xA @td = Светло-зеленый,      @endtr
-//!          @tr  3 = @td @c 0x3 @td = Сине-зеленый, @td 11 = @td @c 0xB @td = Светло-сине-зеленый, @endtr
-//!          @tr  4 = @td @c 0x4 @td = Красный,      @td 12 = @td @c 0xC @td = Светло-красный,      @endtr
-//!          @tr  5 = @td @c 0x5 @td = Малиновый,    @td 13 = @td @c 0xD @td = Светло-малиновый,    @endtr
-//!          @tr  6 = @td @c 0x6 @td = Темно-желтый, @td 14 = @td @c 0xE @td = Желтый,              @endtr
-//!          @tr  7 = @td @c 0x7 @td = Серый,        @td 15 = @td @c 0xF @td = Белый.               @endtr
+//!          @tr  0 = @td @c 0x0 @td = Черный,       @td  8 = @td @c 0x8 @td = Темно-серый,
+//!          @tr  1 = @td @c 0x1 @td = Синий,        @td  9 = @td @c 0x9 @td = Светло-синий,
+//!          @tr  2 = @td @c 0x2 @td = Зеленый,      @td 10 = @td @c 0xA @td = Светло-зеленый,
+//!          @tr  3 = @td @c 0x3 @td = Сине-зеленый, @td 11 = @td @c 0xB @td = Светло-сине-зеленый,
+//!          @tr  4 = @td @c 0x4 @td = Красный,      @td 12 = @td @c 0xC @td = Светло-красный,
+//!          @tr  5 = @td @c 0x5 @td = Малиновый,    @td 13 = @td @c 0xD @td = Светло-малиновый,
+//!          @tr  6 = @td @c 0x6 @td = Темно-желтый, @td 14 = @td @c 0xE @td = Желтый,
+//!          @tr  7 = @td @c 0x7 @td = Серый,        @td 15 = @td @c 0xF @td = Белый.
 //! @endtable
 //!
 //!          В шестнадцатиричной системе счисления атрибуты задавать можно проще: если нужен,
@@ -2099,19 +2107,19 @@ bool txTextCursor (bool blink = true);
 //! @return  Если операция была успешна - true, иначе - false.
 //!
 //! @title   Режимы воспроизведения: @table
-//!          @tr SND_ASYNC       @td Звук проигрывается одновременно с работой программы.\n
-//!                                  Чтобы отменить звучание, вызовите txPlaySound (NULL). @endtr
+//!          @tr SND_ASYNC       @td Звук проигрывается одновременно с работой программы. \n
+//!                                  Чтобы отменить звучание, вызовите txPlaySound (NULL).
 //!          @tr SND_SYNC        @td Выполнение программы приостанавливается до окончания
-//!                                  воспроизведения звука. @endtr
-//!          @tr SND_LOOP        @td Зацикливать звук при воспроизведении.\n
-//!                                  Чтобы отменить звучание, вызовите txPlaySound (NULL).\n @endtr
+//!                                  воспроизведения звука.
+//!          @tr SND_LOOP        @td Зацикливать звук при воспроизведении. \n
+//!                                  Чтобы отменить звучание, вызовите txPlaySound (NULL).
 //!          @tbr
 //!          @tr SND_NODEFAULT   @td Не использовать звук по умолчанию, если нельзя проиграть
-//!                                  указанный звуковой файл. @endtr
+//!                                  указанный звуковой файл.
 //!          @tr SND_NOSTOP      @td Если какой-либо звук уже проигрывается, не останавливать
-//!                                  его для воспроизведения указанного звука. @endtr
+//!                                  его для воспроизведения указанного звука.
 //!          @tr SND_APPLICATION @td Проигрывать звук, используя программу, зарегистрированную
-//!                                  для данного типа звуковых файлов. @endtr
+//!                                  для данного типа звуковых файлов.
 //!          @endtable
 //!
 //! @note    Поддерживаются только файлы в формате WAV. Остальные форматы (MP3 и др.) надо
@@ -2323,7 +2331,7 @@ bool In (const COORD& pt, const SMALL_RECT& rect)
 //!
 //! @param   range  Правая граница диапазона (@b не включая саму границу).
 //!
-//! @return  Случайное целое число в диапазоне [0; range).\n
+//! @return  Случайное целое число в диапазоне [0; range).
 //!
 //!          Вы еще помните, что означают разные скобочки в обозначении интервалов? :)
 //! @usage
@@ -2348,7 +2356,7 @@ int random (int range)
 //! @param   left   Правая граница диапазона (@b включая саму границу).
 //! @param   right  Правая граница диапазона (@b включая саму границу).
 //!
-//! @return  Случайное целое число в диапазоне [left; right].\n
+//! @return  Случайное целое число в диапазоне [left; right].
 //!
 //!          Вы все еще помните, что означают разные скобочки в обозначении интервалов? :)
 //! @usage
@@ -2436,7 +2444,7 @@ const double txPI = asin (1.0) * 2;
 //! @ingroup Service
 //! @brief   Устанавливает дополнительный обработчик оконных сообщений Windows.
 //!
-//! @param   handler  Новый дополнительный обработчик событий окна.\n
+//! @param   handler  Новый дополнительный обработчик событий окна. \n
 //!                   Если NULL, то дополнительный обработчик удаляется.
 //!
 //! @return  Адрес предыдущего дополнительного обработчика сообщений окна.
@@ -2732,13 +2740,13 @@ const int      _TX_TIMEOUT                = 1000;
 //!
 //! @return  Всегда 0
 //!
-//!          Если условие, проверяемое assert(), истинно, то макрос ничего не делает.\n
+//!          Если условие, проверяемое assert(), истинно, то макрос ничего не делает. \n
 //!          Если условие оказывается ложно, то выводится диагностическое сообщение и
 //!          программа аварийно завершается.
 //!
 //! @note    <b>При компиляции в режиме Release (или если определен NDEBUG) assert
-//!          превращается в пустой оператор.</b>\n Не надо помещать в assert() действия,
-//!          которые важны для работы алгорима.
+//!          превращается в пустой оператор.</b> \n
+//!          Не надо помещать в assert() действия, которые важны для работы алгорима.
 //!
 //! @see     asserted, __TX_FILELINE__, __TX_FUNCTION__, TX_ERROR, TX_DEBUG_ERROR, TX_PRINT_HERE
 //! @usage
@@ -2777,7 +2785,7 @@ const int      _TX_TIMEOUT                = 1000;
 //!          Суффиксная форма макроса assert(), не теряющая в режиме Release
 //!          исполнения предиката.
 //!
-//! @note    <b>Предполагается, что операция в случае неуспеха возвращает 0 или false.</b>\n\n
+//! @note    <b>Предполагается, что операция в случае неуспеха возвращает 0 или false.</b> \n\n
 //!          <b>При компиляции в режиме Release (или если определен NDEBUG) asserted
 //!          превращается в пустое место.</b>
 //!
@@ -3142,13 +3150,13 @@ struct txDialog
 //{-------------------------------------------------------------------------------------------
 //! @brief   Запускает диалоговое окно.
 //!
-//! @param   layout   Макет диалогового окна.\n
+//! @param   layout   Макет диалогового окна. \n
 //!                     Если не указан - используется значение, заданное txDialog::setLayout()
 //!                     или конструктором txDialog::txDialog (const txDialog::Layout*).
 //! @param   bufsize  Размер буфера для создания шаблона диалога (если не указан - размер по
 //!                     умолчанию)
 //!
-//! @return  Значение, указанное в функции EndDialog().\n
+//! @return  Значение, указанное в функции EndDialog(). \n
 //!          По умолчанию - адрес объекта <i>(this),</i> для которого была
 //!          запущена txDialog::dialogBox().
 //!
@@ -3166,7 +3174,7 @@ struct txDialog
 //!
 //! @param   resource  Идентификатор диалогового ресурса
 //!
-//! @return  Значение, указанное в функции EndDialog().\n
+//! @return  Значение, указанное в функции EndDialog(). \n
 //!          По умолчанию - адрес объекта <i>(this),</i> для которого была
 //!          запущена txDialog::dialogBox().
 //!
@@ -3468,7 +3476,6 @@ void         _txOnExit();
 HWND         _txCanvas_CreateWindow (CREATESTRUCT* from);
 bool         _txCanvas_OK();
 
-bool         _txConsole_InitSTDIO();
 int          _txCanvas_SetRefreshLock (int count);
 
 bool         _txCanvas_OnCREATE     (HWND wnd);
@@ -3488,7 +3495,7 @@ HDC          _txBuffer_Create (HWND wnd, const POINT* size = NULL, HBITMAP bmap 
 bool         _txBuffer_Delete (HDC* dc);
 bool         _txBuffer_Select (HGDIOBJ obj, HDC dc = txDC());
 
-bool         _txConsole_Attach();
+HWND         _txConsole_Attach (bool force);
 bool         _txConsole_OK();
 bool         _txConsole_Detach();
 bool         _txConsole_Draw (HDC dc);
@@ -3578,69 +3585,81 @@ $   return addr;
 
 namespace Win32 {
 
-_TX_IMPORT ("GDI32", int,      GetDeviceCaps,          (HDC dc, int index));
-_TX_IMPORT ("GDI32", HDC,      CreateCompatibleDC,     (HDC dc));
-_TX_IMPORT ("GDI32", HBITMAP,  CreateCompatibleBitmap, (HDC dc, int width, int height));
-_TX_IMPORT ("GDI32", HGDIOBJ,  GetStockObject,         (int object));
-_TX_IMPORT ("GDI32", HGDIOBJ,  SelectObject,           (HDC dc, HGDIOBJ object));
-_TX_IMPORT ("GDI32", HGDIOBJ,  GetCurrentObject,       (HDC dc, UINT objectType));
-_TX_IMPORT ("GDI32", int,      GetObjectA,             (HGDIOBJ obj, int bufsize, LPVOID buffer));
-_TX_IMPORT ("GDI32", DWORD,    GetObjectType,          (HGDIOBJ object));
-_TX_IMPORT ("GDI32", BOOL,     DeleteDC,               (HDC dc));
-_TX_IMPORT ("GDI32", BOOL,     DeleteObject,           (HGDIOBJ object));
-_TX_IMPORT ("GDI32", COLORREF, SetTextColor,           (HDC dc, COLORREF color));
-_TX_IMPORT ("GDI32", COLORREF, SetBkColor,             (HDC dc, COLORREF color));
-_TX_IMPORT ("GDI32", int,      SetBkMode,              (HDC dc, int bkMode));
-_TX_IMPORT ("GDI32", HFONT,    CreateFontA,            (int height, int width, int escapement, int orientation,
-                                                        int weight, DWORD italic, DWORD underline, DWORD strikeout,
-                                                        DWORD charSet, DWORD outputPrec, DWORD clipPrec,
-                                                        DWORD quality, DWORD pitchAndFamily, LPCTSTR face));
-_TX_IMPORT ("GDI32", int,      EnumFontFamiliesExA,    (HDC dc, LPLOGFONT logFont, FONTENUMPROC enumProc,
-                                                        LPARAM lParam, DWORD reserved));
-_TX_IMPORT ("GDI32", COLORREF, SetPixel,               (HDC dc, int x, int y, COLORREF color));
-_TX_IMPORT ("GDI32", COLORREF, GetPixel,               (HDC dc, int x, int y));
-_TX_IMPORT ("GDI32", HPEN,     CreatePen,              (int penStyle, int width, COLORREF color));
-_TX_IMPORT ("GDI32", HBRUSH,   CreateSolidBrush,       (COLORREF color));
-_TX_IMPORT ("GDI32", BOOL,     MoveToEx,               (HDC dc, int x, int y, LPPOINT point));
-_TX_IMPORT ("GDI32", BOOL,     LineTo,                 (HDC dc, int x, int y));
-_TX_IMPORT ("GDI32", BOOL,     Polygon,                (HDC dc, CONST POINT points[], int count));
-_TX_IMPORT ("GDI32", BOOL,     Rectangle,              (HDC dc, int x0, int y0, int x1, int y1));
-_TX_IMPORT ("GDI32", BOOL,     Ellipse,                (HDC dc, int x0, int y0, int x1, int y1));
-_TX_IMPORT ("GDI32", BOOL,     Arc,                    (HDC dc, int x0, int y0, int x1, int y1,
-                                                        int xStart, int yStart, int xEnd, int yEnd));
-_TX_IMPORT ("GDI32", BOOL,     Pie,                    (HDC dc, int x0, int y0, int x1, int y1,
-                                                        int xStart, int yStart, int xEnd, int yEnd));
-_TX_IMPORT ("GDI32", BOOL,     Chord,                  (HDC dc, int x0, int y0, int x1, int y1,
-                                                        int xStart, int yStart, int xEnd, int yEnd));
-_TX_IMPORT ("GDI32", BOOL,     TextOutA,               (HDC dc, int x, int y, LPCTSTR string, int length));
-_TX_IMPORT ("GDI32", UINT,     SetTextAlign,           (HDC dc, UINT mode));
-_TX_IMPORT ("GDI32", BOOL,     GetTextExtentPoint32A,  (HDC dc, LPCTSTR string, int length, LPSIZE size));
-_TX_IMPORT ("GDI32", BOOL,     ExtFloodFill,           (HDC dc, int x, int y, COLORREF color, UINT type));
-_TX_IMPORT ("GDI32", BOOL,     BitBlt,                 (HDC dest, int xDest, int yDest, int width, int height,
-                                                        HDC src,  int xSrc,  int ySrc,  DWORD rOp));
-_TX_IMPORT ("GDI32", int,      SetDIBitsToDevice,      (HDC dc, int xDest, int yDest, DWORD width, DWORD height,
-                                                        int xSrc, int ySrc, UINT startLine, UINT numLines,
-                                                        const VOID* data, const BITMAPINFO* info, UINT colorUse));
-_TX_IMPORT ("GDI32", BOOL,     PatBlt,                 (HDC dc, int x0, int y0, int width, int height, DWORD rOp));
-_TX_IMPORT ("GDI32", int,      SetROP2,                (HDC dc, int mode));
-_TX_IMPORT ("GDI32", HRGN,     CreateRectRgn,          (int x0, int y0, int x1, int y1));
-_TX_IMPORT ("GDI32", BOOL,     GetBitmapDimensionEx,   (HBITMAP bitmap, LPSIZE dimensions));
-_TX_IMPORT ("USER32",int,      DrawTextA,              (HDC dc, LPCTSTR text, int length, LPRECT rect, UINT format));
-_TX_IMPORT ("USER32",HANDLE,   LoadImageA,             (HINSTANCE inst, LPCTSTR name, UINT type,
-                                                        int sizex, int sizey, UINT mode));
-_TX_IMPORT ("WinMM", BOOL,     PlaySound,              (LPCSTR sound, HMODULE mod, DWORD mode));
+typedef struct _CONSOLE_FONT_INFOEX  // From Windows SDK 7.0a, WinCon.h
+    {
+    ULONG cbSize;
+    DWORD nFont;
+    COORD dwFontSize;
+    UINT  FontFamily;
+    UINT  FontWeight;
+    WCHAR FaceName[LF_FACESIZE];
+    }
+    CONSOLE_FONT_INFOEX, *PCONSOLE_FONT_INFOEX;
 
-_TX_IMPORT     ("Kernel32", HWND,  GetConsoleWindow,               ());
-_TX_IMPORT_OPT ("Kernel32", BOOL,  GetCurrentConsoleFont,          (HANDLE con, BOOL maxWnd, PCONSOLE_FONT_INFO curFont));
-_TX_IMPORT_OPT ("Kernel32", void*, AddVectoredExceptionHandler,    (ULONG first, PVECTORED_EXCEPTION_HANDLER handler));
-_TX_IMPORT_OPT ("Kernel32", ULONG, RemoveVectoredExceptionHandler, (void* Handler));
+_TX_IMPORT     ("GDI32",    int,      GetDeviceCaps,                  (HDC dc, int index));
+_TX_IMPORT     ("GDI32",    HDC,      CreateCompatibleDC,             (HDC dc));
+_TX_IMPORT     ("GDI32",    HBITMAP,  CreateCompatibleBitmap,         (HDC dc, int width, int height));
+_TX_IMPORT     ("GDI32",    HGDIOBJ,  GetStockObject,                 (int object));
+_TX_IMPORT     ("GDI32",    HGDIOBJ,  SelectObject,                   (HDC dc, HGDIOBJ object));
+_TX_IMPORT     ("GDI32",    HGDIOBJ,  GetCurrentObject,               (HDC dc, UINT objectType));
+_TX_IMPORT     ("GDI32",    int,      GetObjectA,                     (HGDIOBJ obj, int bufsize, LPVOID buffer));
+_TX_IMPORT     ("GDI32",    DWORD,    GetObjectType,                  (HGDIOBJ object));
+_TX_IMPORT     ("GDI32",    BOOL,     DeleteDC,                       (HDC dc));
+_TX_IMPORT     ("GDI32",    BOOL,     DeleteObject,                   (HGDIOBJ object));
+_TX_IMPORT     ("GDI32",    COLORREF, SetTextColor,                   (HDC dc, COLORREF color));
+_TX_IMPORT     ("GDI32",    COLORREF, SetBkColor,                     (HDC dc, COLORREF color));
+_TX_IMPORT     ("GDI32",    int,      SetBkMode,                      (HDC dc, int bkMode));
+_TX_IMPORT     ("GDI32",    HFONT,    CreateFontA,                    (int height, int width, int escapement, int orientation,
+                                                                       int weight, DWORD italic, DWORD underline, DWORD strikeout,
+                                                                       DWORD charSet, DWORD outputPrec, DWORD clipPrec,
+                                                                       DWORD quality, DWORD pitchAndFamily, LPCTSTR face));
+_TX_IMPORT     ("GDI32",    int,      EnumFontFamiliesExA,            (HDC dc, LPLOGFONT logFont, FONTENUMPROC enumProc,
+                                                                       LPARAM lParam, DWORD reserved));
+_TX_IMPORT     ("GDI32",    COLORREF, SetPixel,                       (HDC dc, int x, int y, COLORREF color));
+_TX_IMPORT     ("GDI32",    COLORREF, GetPixel,                       (HDC dc, int x, int y));
+_TX_IMPORT     ("GDI32",    HPEN,     CreatePen,                      (int penStyle, int width, COLORREF color));
+_TX_IMPORT     ("GDI32",    HBRUSH,   CreateSolidBrush,               (COLORREF color));
+_TX_IMPORT     ("GDI32",    BOOL,     MoveToEx,                       (HDC dc, int x, int y, LPPOINT point));
+_TX_IMPORT     ("GDI32",    BOOL,     LineTo,                         (HDC dc, int x, int y));
+_TX_IMPORT     ("GDI32",    BOOL,     Polygon,                        (HDC dc, CONST POINT points[], int count));
+_TX_IMPORT     ("GDI32",    BOOL,     Rectangle,                      (HDC dc, int x0, int y0, int x1, int y1));
+_TX_IMPORT     ("GDI32",    BOOL,     Ellipse,                        (HDC dc, int x0, int y0, int x1, int y1));
+_TX_IMPORT     ("GDI32",    BOOL,     Arc,                            (HDC dc, int x0, int y0, int x1, int y1,
+                                                                       int xStart, int yStart, int xEnd, int yEnd));
+_TX_IMPORT     ("GDI32",    BOOL,     Pie,                            (HDC dc, int x0, int y0, int x1, int y1,
+                                                                       int xStart, int yStart, int xEnd, int yEnd));
+_TX_IMPORT     ("GDI32",    BOOL,     Chord,                          (HDC dc, int x0, int y0, int x1, int y1,
+                                                                       int xStart, int yStart, int xEnd, int yEnd));
+_TX_IMPORT     ("GDI32",    BOOL,     TextOutA,                       (HDC dc, int x, int y, LPCTSTR string, int length));
+_TX_IMPORT     ("GDI32",    UINT,     SetTextAlign,                   (HDC dc, UINT mode));
+_TX_IMPORT     ("GDI32",    BOOL,     GetTextExtentPoint32A,          (HDC dc, LPCTSTR string, int length, LPSIZE size));
+_TX_IMPORT     ("GDI32",    BOOL,     ExtFloodFill,                   (HDC dc, int x, int y, COLORREF color, UINT type));
+_TX_IMPORT     ("GDI32",    BOOL,     BitBlt,                         (HDC dest, int xDest, int yDest, int width, int height,
+                                                                       HDC src,  int xSrc,  int ySrc,  DWORD rOp));
+_TX_IMPORT     ("GDI32",    int,      SetDIBitsToDevice,              (HDC dc, int xDest, int yDest, DWORD width, DWORD height,
+                                                                       int xSrc, int ySrc, UINT startLine, UINT numLines,
+                                                                       const VOID* data, const BITMAPINFO* info, UINT colorUse));
+_TX_IMPORT     ("GDI32",    BOOL,     PatBlt,                         (HDC dc, int x0, int y0, int width, int height, DWORD rOp));
+_TX_IMPORT     ("GDI32",    int,      SetROP2,                        (HDC dc, int mode));
+_TX_IMPORT     ("GDI32",    HRGN,     CreateRectRgn,                  (int x0, int y0, int x1, int y1));
+_TX_IMPORT     ("GDI32",    BOOL,     GetBitmapDimensionEx,           (HBITMAP bitmap, LPSIZE dimensions));
+_TX_IMPORT     ("User32",   int,      DrawTextA,                      (HDC dc, LPCTSTR text, int length, LPRECT rect, UINT format));
+_TX_IMPORT     ("User32",   HANDLE,   LoadImageA,                     (HINSTANCE inst, LPCTSTR name, UINT type,
+                                                                       int sizex, int sizey, UINT mode));
+_TX_IMPORT     ("WinMM",    BOOL,     PlaySound,                      (LPCSTR sound, HMODULE mod, DWORD mode));
 
-_TX_IMPORT_OPT ("MSImg32",  BOOL,  TransparentBlt,     (HDC dest, int destX, int destY, int destWidth, int destHeight,
-                                                        HDC src,  int srcX,  int srcY,  int srcWidth,  int srcHeight,
-                                                        UINT transparentColor));
-_TX_IMPORT_OPT ("MSImg32",  BOOL,  AlphaBlend,         (HDC dest, int destX, int destY, int destWidth, int destHeight,
-                                                        HDC src,  int srcX,  int srcY,  int srcWidth,  int srcHeight,
-                                                        BLENDFUNCTION blending));
+_TX_IMPORT_OPT ("Kernel32", BOOL,     GetCurrentConsoleFont,          (HANDLE con, BOOL maxWnd, PCONSOLE_FONT_INFO   curFont));
+_TX_IMPORT_OPT ("Kernel32", BOOL,     GetCurrentConsoleFontEx,        (HANDLE con, BOOL maxWnd, PCONSOLE_FONT_INFOEX curFont));
+_TX_IMPORT_OPT ("Kernel32", BOOL,     SetCurrentConsoleFontEx,        (HANDLE con, BOOL maxWnd, PCONSOLE_FONT_INFOEX curFont));
+_TX_IMPORT_OPT ("Kernel32", void*,    AddVectoredExceptionHandler,    (ULONG first, PVECTORED_EXCEPTION_HANDLER handler));
+_TX_IMPORT_OPT ("Kernel32", ULONG,    RemoveVectoredExceptionHandler, (void* Handler));
+
+_TX_IMPORT_OPT ("MSImg32",  BOOL,     TransparentBlt,                 (HDC dest, int destX, int destY, int destWidth, int destHeight,
+                                                                       HDC src,  int srcX,  int srcY,  int srcWidth,  int srcHeight,
+                                                                       UINT transparentColor));
+_TX_IMPORT_OPT ("MSImg32",  BOOL,     AlphaBlend,                     (HDC dest, int destX, int destY, int destWidth, int destHeight,
+                                                                       HDC src,  int srcX,  int srcY,  int srcWidth,  int srcHeight,
+                                                                       BLENDFUNCTION blending));
 }  // namespace Win32
 using namespace Win32;
 
@@ -3657,8 +3676,8 @@ using namespace Win32;
 //============================================================================================
 //! @{
 
-const unsigned   _txMainThreadId        = GetCurrentThreadId(); // ID потока, где выполняется main()
-unsigned         _txCanvas_ThreadId     = 0;                    // ID потока, владеющего окном холста TXLib
+unsigned         _txMainThreadId        = 0;      // ID потока, где выполняется main()
+unsigned         _txCanvas_ThreadId     = 0;      // ID потока, владеющего окном холста TXLib
 
 HWND             _txCanvas_Window       = NULL;   // Дескриптор окна холста TXLib
 
@@ -3713,19 +3732,14 @@ int _txInitialize()
 
 #endif
 
-$   SetConsoleCP       (1251);
-$   SetConsoleOutputCP (1251);
-
-$     setlocale (LC_CTYPE,  "Russian");
-$   _wsetlocale (LC_CTYPE, L"Russian_Russia.ACP");
+$   _txMainThreadId = GetCurrentThreadId();
 
 $   _txOnSignal();
-
 $   std::set_unexpected (_txOnUnexpected);
 $   std::set_terminate  (_txOnTerminate);
 
-$   HWND wnd = txWindow()? txWindow() : GetConsoleWindow();
-$   if (wnd) SetWindowTextA (wnd, txGetModuleFileName (false));
+$   HWND con = _txConsole_Attach (true);
+$   if (con) SetWindowTextA (con, txGetModuleFileName (false));
 
 $   InitializeCriticalSection (&_txCanvas_LockBackBuf);
 
@@ -3748,9 +3762,6 @@ HWND txCreateWindow (int sizeX, int sizeY, unsigned style /*= WS_SYSMENU | 1*/)
 $   if (txOK()) return 0;
 
 $   _txRunning = false;
-
-$   if (style & WS_SYSMENU)
-        { $ _txConsole_Attach() asserted; }
 
 $   if (style & 1) { sizeX *= -1; sizeY *= -1; }
 
@@ -3788,7 +3799,7 @@ $   RECT r = {0};
 $   GetClientRect (_txCanvas_Window,  &r) asserted;
 $   SIZE szCanvas = { r.right - r.left, r.bottom - r.top };
 
-$   GetClientRect (Win32::GetConsoleWindow(), &r) asserted;
+$   GetClientRect (GetConsoleWindow(), &r) asserted;
 $   SIZE szCon    = { r.right - r.left, r.bottom - r.top };
 
 $   _txBuffer_Select (GetStockObject (WHITE_PEN),   txDC()) asserted;
@@ -3807,6 +3818,8 @@ $    Win32::SetROP2      (txDC(), R2_COPYPEN)               asserted;
 //}
 
 //{  Set defaults for console  layer
+
+$   _txConsole_Attach (false);
 
 $   CONSOLE_SCREEN_BUFFER_INFO con = {{0}};
 $   GetConsoleScreenBufferInfo (GetStdHandle (STD_OUTPUT_HANDLE), &con) asserted;
@@ -3847,20 +3860,19 @@ $   return _txCanvas_OK();
 
 void _txOnExit()
     {
-$   HWND wnd      = txWindow()? txWindow() : GetConsoleWindow();
-$   bool isMaster = (wnd)? (GetWindowLong (wnd, GWL_STYLE) & WS_SYSMENU) != 0 : false;
+$   HWND wnd = (txWindow())? txWindow() : GetConsoleWindow();
+$   char title [1024] = "";
+$   if (wnd) GetWindowTextA (wnd, title, sizeof (title) - 1);
+$   strncat_s (title, " [ЗАВЕРШЕНО]", sizeof (title) - 1);
+$   if (wnd) SetWindowTextA (wnd, title);
 
-$   if (wnd)
-        {
-$       char title [1024] = "";
-$       GetWindowTextA (wnd, title, sizeof (title) - 1);
-$       strncat_s (title, " [ЗАВЕРШЕНО]", sizeof (title) - 1);
-$       SetWindowTextA (wnd, title);
-        }
+$   HWND txWnd    = txWindow();
+$   int  isMaster = (txWnd)? (GetWindowLong (txWnd, GWL_STYLE) & WS_SYSMENU) : 0;
 
 $   _txRunning = false;
 
-$   if (isMaster && !_txExit && GetCurrentThreadId() == _txMainThreadId)
+$   if ((isMaster || !txWnd) && !_txExit &&
+        GetCurrentThreadId() == _txMainThreadId)
         {
 $       printf ("\n" "[Нажмите любую клавишу для завершения]");
 
@@ -3868,7 +3880,7 @@ $       while (_kbhit()) (void)_getch();
 
 $       for (int i = 1; ; i++)
             {
-            if (!_txCanvas_ThreadId) break;
+            if (txWnd && !_txCanvas_ThreadId) break;
 
             if (_kbhit()) { (void)_getch(); break; }
 
@@ -3880,7 +3892,7 @@ $       for (int i = 1; ; i++)
 $       printf ("\n");
         }
 
-$   if (wnd) SendNotifyMessage (wnd, WM_DESTROY, 0, 0);
+$   if (_txCanvas_Window) SendNotifyMessage (_txCanvas_Window, WM_DESTROY, 0, 0);
 
 $   _txWaitFor (!_txCanvas_Window);
 
@@ -3971,7 +3983,7 @@ $   SIZE frame   = { GetSystemMetrics (SM_CXFIXEDFRAME), GetSystemMetrics (SM_CY
 $   SIZE caption = { 0, GetSystemMetrics (SM_CYCAPTION) };
 $   SIZE size    = { from->cx + 2*frame.cx, from->cy + 2*frame.cy + caption.cy };
 $   POINT center = { scr.cx / 2, scr.cy / 2 };
-$   HWND console = Win32::GetConsoleWindow();
+$   HWND console = GetConsoleWindow();
 
 $   if (!centered)
         {
@@ -4207,7 +4219,7 @@ bool _txCanvas_OnCmdCONSOLE (HWND wnd, WPARAM cmd)
     {
 $   if (!wnd) return false;
 
-$   HWND console = Win32::GetConsoleWindow();
+$   HWND console = GetConsoleWindow();
 $   if (!console) return false;
 
 $   bool visible = IsWindowVisible (console) != 0;
@@ -4372,36 +4384,42 @@ $       if (res) return res;
 //============================================================================================
 //! @{
 
-bool _txConsole_Attach()
+HWND _txConsole_Attach (bool forceRealloc)
     {
-$   HWND console = Win32::GetConsoleWindow();
-
-#if (_TX_CONSOLE_MODE != SWP_HIDEWINDOW)
-$   if (!console)
-#endif
+$   if (forceRealloc && !GetConsoleWindow())
         {
 $       FreeConsole();
 $       AllocConsole();
-$       console = Win32::GetConsoleWindow();
         }
 
-$   _txConsole_InitSTDIO() asserted;
-
-$   return console != NULL;
-    }
-
-//--------------------------------------------------------------------------------------------
-
-bool _txConsole_InitSTDIO()
-    {
-$   static bool done = false;
-$   if (done) return false;
+$   HWND con = GetConsoleWindow();
+$   if (!con) return NULL;
 
 $   SetConsoleCP       (1251);
 $   SetConsoleOutputCP (1251);
 
 $     setlocale (LC_CTYPE,  "Russian");
 $   _wsetlocale (LC_CTYPE, L"Russian_Russia.ACP");
+
+$   static bool done = false;
+$   if (done) return con;
+
+    #if (_WIN32_WINNT >= 0x0500)
+
+    if (Win32::GetCurrentConsoleFontEx &&
+        Win32::SetCurrentConsoleFontEx)
+        {
+$       HANDLE out = GetStdHandle (STD_OUTPUT_HANDLE);
+
+$       CONSOLE_FONT_INFOEX info = {0};
+$       GetCurrentConsoleFontEx (out, false, &info) asserted;
+
+$       wcsncpy_s (info.FaceName, L"Lucida Console", sizeof (info.FaceName));  // Unicode fixed-pitch
+
+$       SetCurrentConsoleFontEx (out, false, &info) asserted;
+        }
+
+    #endif
 
 $   int crtIn  = _open_osfhandle ((ptrdiff_t) GetStdHandle (STD_INPUT_HANDLE),  _O_TEXT);
 $   int crtOut = _open_osfhandle ((ptrdiff_t) GetStdHandle (STD_OUTPUT_HANDLE), _O_TEXT);
@@ -4418,14 +4436,7 @@ $   setvbuf (stderr, NULL, _IONBF, 0);
 $   std::ios::sync_with_stdio();
 
 $   done = true;
-
-$   return !ferror (stdin)   &&
-           !ferror (stdout)  &&
-           !ferror (stderr)  &&
-            std::cin .good() &&
-            std::cout.good() &&
-            std::cerr.good() &&
-            std::clog.good();
+$   return con;
     }
 
 //--------------------------------------------------------------------------------------------
@@ -4433,7 +4444,7 @@ $   return !ferror (stdin)   &&
 inline
 bool _txConsole_OK()
     {
-$   return Win32::GetConsoleWindow() != NULL;
+$   return GetConsoleWindow() != NULL;
     }
 
 //--------------------------------------------------------------------------------------------
@@ -4682,7 +4693,8 @@ $   if (fileNameOnly) return fullName;
 $   char* title = strrchr (fullName, '\\'); assert (title);
 $   char* ext   = strrchr (fullName,  '.'); assert (ext);
 
-$   strcpy_s (ext, sizeof (fullName) - (ext - fullName) - 1, _TX_NAME "- TXLib");
+$   strncpy_s ((char(&)[sizeof (fullName)]) (*ext), _TX_NAME "- TXLib", 
+               sizeof (fullName) - (ext - fullName) - 1);
 
 $   return title + 1;
     }
@@ -5486,9 +5498,13 @@ $   return written == len;
 
 POINT txGetConsoleFontSize()
     {
+    #if (_WIN32_WINNT >= 0x0500)
+
 $   CONSOLE_FONT_INFO font = {0, {8, 16}};
 $   if (Win32::GetCurrentConsoleFont)
         Win32::GetCurrentConsoleFont (GetStdHandle (STD_OUTPUT_HANDLE), false, &font) asserted;
+
+    #endif
 
 $   SIZE size = { font.dwFontSize.X, font.dwFontSize.Y };
 $   txGDI (Win32::GetTextExtentPoint32 (_txCanvas_BackBuf[1], "W", 1, &size));
@@ -5536,7 +5552,7 @@ $   MessageBox (txWindow(),
                 "Это запланированная ошибка. Такое бывает. Вы хотели вызвать:" "\n\n"
                 "txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillCloseAndIWillNotBeAskingWhereIsMyPicture()" "\n\n"
                 "Хоть вы долго [копировали]набирали это имя, на самом деле эта функция не работает." "\n"
-                "Но для нее есть работающий синоним. См. определение этой функции в исходных текстах библиотеки." "\n\n",
+                "Но для нее есть работающий синоним. См. определение этой функции в исходных текстах библиотеки."    "\n\n",
                 "Не получилось", MB_ICONSTOP);
 
     // The truth is out there...

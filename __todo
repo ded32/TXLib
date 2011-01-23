@@ -10,6 +10,9 @@ ADD  doc: ORFO to doxygen page trailer
 
 FIX  setup: error: undefined
 
+FIX  However, if the current font is a raster font, SetConsoleOutputCP does not affect how extended characters are displayed.
+
+
 --
 
 FIX  txObject
