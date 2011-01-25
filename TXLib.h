@@ -3516,7 +3516,8 @@ void         _txOnSignal (int signal = 0, int fpe = 0);
 void         _txOnTerminate();
 void         _txOnUnexpected();
 
-FARPROC      _txImport (const char lib[], const char name[], int required = true);
+template <typename func_T>
+func_T       _txImport (const char lib[], const char name[], func_T* func = NULL, bool required = true);
 
 //--------------------------------------------------------------------------------------------
 
@@ -3555,9 +3556,12 @@ const int    _TX_IDM_CONSOLE        = 40001;
 //============================================================================================
 //! @{
 
-FARPROC _txImport (const char lib[], const char name[], int required /*= true*/)
+template <typename func_T>
+func_T _txImport (const char lib[], const char name[],
+       		  func_T* func /*= NULL*/, bool required /*= true*/)
     {
-$   HMODULE dll = LoadLibrary (lib);
+$   HMODULE   dll = GetModuleHandle (lib);
+$   if (!dll) dll = LoadLibrary     (lib);
 $       if (!dll && required) TX_DEBUG_ERROR ("\a" "Cannot load library \"%s\"" _ lib);
 
 $   if (!dll) return NULL;
@@ -3565,7 +3569,9 @@ $   if (!dll) return NULL;
 $   FARPROC addr = GetProcAddress (dll, name);
 $       if (!addr && required) TX_DEBUG_ERROR ("\a" "Cannot import \"%s\" from library \"%s\"" _ name _ lib);
 
-$   return addr;
+$   if (func) *func = (func_T) addr;
+
+$   return (func_T) addr;
     }
 
 //--------------------------------------------------------------------------------------------
@@ -3573,11 +3579,11 @@ $   return addr;
 //           Малая механизация
 //--------------------------------------------------------------------------------------------
 
-#define _TX_IMPORT( lib, retval, name, params ) \
-     retval (WINAPI* name) params = (retval (WINAPI*) params) _txImport (lib ".dll", #name, true)
+#define _TX_IMPORT(     lib, retval, name, params ) \
+     retval (WINAPI* name) params = _txImport <retval (WINAPI*) params> (lib ".dll", #name, NULL, true)
 
 #define _TX_IMPORT_OPT( lib, retval, name, params ) \
-     retval (WINAPI* name) params = (retval (WINAPI*) params) _txImport (lib ".dll", #name, false)
+     retval (WINAPI* name) params = _txImport <retval (WINAPI*) params> (lib ".dll", #name, NULL, false)
 
 //--------------------------------------------------------------------------------------------
 // Some IDEs don't link with these libs by default in console projects, so do sunrise by hand. :(
@@ -3649,8 +3655,6 @@ _TX_IMPORT     ("User32",   HANDLE,   LoadImageA,                     (HINSTANCE
 _TX_IMPORT     ("WinMM",    BOOL,     PlaySound,                      (LPCSTR sound, HMODULE mod, DWORD mode));
 
 _TX_IMPORT_OPT ("Kernel32", BOOL,     GetCurrentConsoleFont,          (HANDLE con, BOOL maxWnd, PCONSOLE_FONT_INFO   curFont));
-_TX_IMPORT_OPT ("Kernel32", BOOL,     GetCurrentConsoleFontEx,        (HANDLE con, BOOL maxWnd, PCONSOLE_FONT_INFOEX curFont));
-_TX_IMPORT_OPT ("Kernel32", BOOL,     SetCurrentConsoleFontEx,        (HANDLE con, BOOL maxWnd, PCONSOLE_FONT_INFOEX curFont));
 _TX_IMPORT_OPT ("Kernel32", void*,    AddVectoredExceptionHandler,    (ULONG first, PVECTORED_EXCEPTION_HANDLER handler));
 _TX_IMPORT_OPT ("Kernel32", ULONG,    RemoveVectoredExceptionHandler, (void* Handler));
 
@@ -4404,23 +4408,6 @@ $   _wsetlocale (LC_CTYPE, L"Russian_Russia.ACP");
 $   static bool done = false;
 $   if (done) return con;
 
-    #if (_WIN32_WINNT >= 0x0500)
-
-    if (Win32::GetCurrentConsoleFontEx &&
-        Win32::SetCurrentConsoleFontEx)
-        {
-$       HANDLE out = GetStdHandle (STD_OUTPUT_HANDLE);
-
-$       CONSOLE_FONT_INFOEX info = {0};
-$       GetCurrentConsoleFontEx (out, false, &info) asserted;
-
-$       wcsncpy_s (info.FaceName, L"Lucida Console", sizeof (info.FaceName));  // Unicode fixed-pitch
-
-$       SetCurrentConsoleFontEx (out, false, &info) asserted;
-        }
-
-    #endif
-
 $   int crtIn  = _open_osfhandle ((ptrdiff_t) GetStdHandle (STD_INPUT_HANDLE),  _O_TEXT);
 $   int crtOut = _open_osfhandle ((ptrdiff_t) GetStdHandle (STD_OUTPUT_HANDLE), _O_TEXT);
 $   int crtErr = _open_osfhandle ((ptrdiff_t) GetStdHandle (STD_ERROR_HANDLE),  _O_TEXT);
@@ -4693,8 +4680,9 @@ $   if (fileNameOnly) return fullName;
 $   char* title = strrchr (fullName, '\\'); assert (title);
 $   char* ext   = strrchr (fullName,  '.'); assert (ext);
 
-$   strncpy_s ((char(&)[sizeof (fullName)]) (*ext), _TX_NAME "- TXLib", 
-               sizeof (fullName) - (ext - fullName) - 1);
+$   strncpy_s ((char(&)[sizeof (fullName)]) (*ext),       // In size we trust
+               _TX_NAME "- TXLib", 
+               sizeof (fullName) - (ext - fullName) - 1); // ...don't worry
 
 $   return title + 1;
     }
