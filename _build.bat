@@ -4,9 +4,19 @@ if not "%1" == "" goto %1
 echo Making docs...
 
 set doxygen_=-nointeractive
-copy Dev\TXLib-Reference.dox >nul & call doxygen_ TXLib-Reference.dox & del TXLib-Reference.dox
-copy Dev\TXLib-Help.dox      >nul & call doxygen_ TXLib-Help.dox      & del TXLib-Help.dox
+
+copy Dev\TXLib-Reference.dox >nul
+call doxygen_ TXLib-Reference.dox
 move TXLib-Reference.chm Dev\ >nul
+del TXLib-Reference.dox
+
+copy Dev\TXLib-Help.dox >nul
+call doxygen_ TXLib-Help.dox
+
+echo GENERATE_TREEVIEW = YES >> TXLib-Help.dox
+echo GENERATE_HTMLHELP = NO  >> TXLib-Help.dox
+call doxygen_ TXLib-Help.dox
+del TXLib-Help.dox
 
 :ci
 echo Committing...
@@ -55,9 +65,9 @@ del _* 2>nul
 attrib +h  .hg_*.*
 ren     "TXLib-*.*" "TXLib *.*"
 ren "Dev\TXLib-*.*" "TXLib *.*"
-xcopy/s %Temp%\Doxygen\HTML Doc\HTML.ru > nul
+xcopy/s %Temp%\Doxygen\HTML Doc\HTML.ru /i > nul
 del              ..\%.file% 2>nul
-rar a -r -s -sfx ..\%.file% -z%Temp%\~log 
+rar a -r -s -sfx ..\%.file% -z%Temp%\~log > nul
 cd ..
 
 rd/s/q __archive

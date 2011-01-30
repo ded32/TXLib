@@ -1,48 +1,44 @@
 //============================================================================================
-//             [These sections are for folding control  in Code::Blocks]
-//{            [Best viewed with "Fold all on file open" option enabled]
+//           [These sections are for folding control  in Code::Blocks]
+//{          [Best viewed with "Fold all on file open" option enabled]
 //============================================================================================
 //!
-//! @file      TXLib.h
-//! @brief     Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
+//! @file    TXLib.h
+//! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!            $Version$
-//!            $Copyright$
-//!            $Date$
+//!          $Version$
+//!          $Copyright$
+//!          $Date$
 //!
-//! 	       TX Library - компактная графическая библиотека для Win32 на С++.
-//! 	       Это небольшая "песочница" для начинающих реализована с целью
-//! 	       помочь им в изучении простейших принципов программирования.
-//! 	       Документация на русском языке.
+//! 	     TX Library - компактная библиотека двумерной графики для Win32 на С++.
+//!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
+//!          простейших принципов программирования. Документация на русском языке.
 //!
-//! 	       Философия TX Library - облегчить первые шаги в программировании
-//! 	       и подтолкнуть к творчеству и самостоятельности.
+//! 	     Философия TX Library - облегчить первые шаги в программировании
+//! 	     и подтолкнуть к творчеству и самостоятельности.
 //!
-//!	       TX Library is a tiny graphics library for Win32 written in C++.
-//!	       It is a small sandbox for the very beginners to help them to
-//!	       learn basic programming principles. The documentation is
-//!	       currently in Russian.
+//!          TX Library is a tiny 2D graphics library for Win32 written in C++. This is a small
+//!          sandbox for the very beginners to help them to learn basic programming principles.
+//!          The documentation is currently in Russian.
 //!
-//!            Официальный сайт библиотеки:
-//!            <a href=http://ded32.net.ru>ded32.net.ru.</a>
+//!          Официальный сайт библиотеки: <a href=http://ded32.net.ru>ded32.net.ru.</a>
 //!
-//!            См. также <a href=http://txlib.sourceforge.net>
-//!            страницу проекта на SourceForge.</a>
+//!          См. также <a href=http://txlib.sourceforge.net>страницу проекта на SourceForge.</a>
 //!
-//! @warning   <b>Это альфа-версия.
-//!            Для использования требуется согласование с автором библиотеки.</b> \n\n
-//!            Правила использования материалов библиотеки и сайта см. на
-//!            <a href=http://ded32.net.ru/index/0-6> официальном сайте.</a>
+//! @warning <b>Это альфа-версия.
+//!          Для использования требуется согласование с автором библиотеки.</b> \n\n
+//!          Правила использования материалов библиотеки и сайта см. на
+//!          <a href=http://ded32.net.ru/index/0-6> официальном сайте.</a>
 //!
-//             $Author$
+//           $Author$
 //--------------------------------------------------------------------------------------------
 //!
-//! @defgroup  Drawing   Рисование
-//! @defgroup  Mouse     Поддержка мыши
-//! @defgroup  Dialogs   Диалоговые окна
-//! @defgroup  Misc      Разное
-//! @defgroup  Service   Служебное
-//! @defgroup  Technical Технические детали
+//! @defgroup Drawing   Рисование
+//! @defgroup Mouse     Поддержка мыши
+//! @defgroup Dialogs   Диалоговые окна
+//! @defgroup Misc      Разное
+//! @defgroup Service   Служебное
+//! @defgroup Technical Технические детали
 //}
 //============================================================================================
 
@@ -50,19 +46,8 @@
 #define       __TXLIB_H
 
 //--------------------------------------------------------------------------------------------
-//{            Version information
+//{          Version information
 //--------------------------------------------------------------------------------------------
-
-//{-------------------------------------------------------------------------------------------
-//! @ingroup   Technical
-//! @brief     Текущая версия библиотеки.
-//!
-//!            Эта константа автоматически обновляется при обновлении версии.
-//!
-//! @see       txVersion()
-//! @hideinitializer
-//}-------------------------------------------------------------------------------------------
-//! @{
 
 //! @cond INTERNAL
 #define _TX_VERSION_(_1,file,ver,rev,date,auth,_2)  "TXLib [Version " #ver ", Revision " #rev "]"
@@ -70,21 +55,47 @@
 #define _TX_VER_____(_1,file,ver,rev,date,auth,_2)  ((0x##ver << 16) | 0x##rev)
 //! @endcond
 
+//{-------------------------------------------------------------------------------------------
+//! @ingroup Technical
+//! @brief   Текущая версия библиотеки.
+//!
+//! @code
+//!          #define _TX_VERSION "TXLib [Version: 1.72a, Revision 50]" (пример)
+//!          #define _TX_AUTHOR  "Copyright (C) Ded (Ilya Dedinsky, http://ded32.net.ru)"
+//! @endcode
+//!          Эти константы автоматически обновляется при обновлении версии.
+//!
+//! @see     txVersion()
+//! @hideinitializer
+//}-------------------------------------------------------------------------------------------
+//! @{
+
 #define _TX_VERSION           _TX_VERSION_ ($versioninfo$)
 #define _TX_AUTHOR            _TX_AUTHOR__ ($versioninfo$)
 
-//! Версия библиотеки в целочисленном формате
+//! @}
+//{----------------------------------------------------------------------------
+//! @ingroup Technical
+//! @brief   Версия библиотеки в целочисленном формате.
+//!
+//!          Формат: старшее слово - номер версии, младшее - номер ревизии,
+//!          в двоично-десятичном формате.
+//!          Например, @c 0x172a0050 - версия @c 0.172a, ревизия @c 50.
+//!
+//!          Эта константа автоматически обновляется при обновлении версии.
+//!
+//! @see     txVersion()
 //! @hideinitializer
+//}----------------------------------------------------------------------------
 
 #define _TX_VER               _TX_VER_____ ($versioninfo$)
 
-//! @}
 //}
 //--------------------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------------------
-//{            Compiler- and platform-specific
-//! @name      Адаптация к компиляторам и платформам
+//{          Compiler- and platform-specific
+//! @name    Адаптация к компиляторам и платформам
 //--------------------------------------------------------------------------------------------
 //! @{ @cond INTERNAL
 
@@ -96,7 +107,7 @@
 
 #if !defined (WIN32) && !defined (__WIN32__) && !defined(_WIN32) && !defined(_WIN32_WINNT)
 
-    #error TXLib.h: Windows is the only supported system, sorry.
+    #error TXLib.h: Windows (MSVC/Win32 or GCC/MinGW) is the only supported system, sorry.
 
 #endif
 
@@ -111,10 +122,15 @@
 
 #if defined (__GNUC__)
 
-    #if (__GNUC__ >= 4)
+    #if (__GNUC__ >= 4) && (__GNUC_MINOR__ >= 3)
+
+        #pragma GCC optimize         ("no-strict-aliasing")
+        #pragma GCC diagnostic ignored "-Wstrict-aliasing"
+
         #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
         #pragma GCC diagnostic ignored "-Wunreachable-code"
         #pragma GCC diagnostic ignored "-Wunused-label"  // Just for fun in _txCanvas_OnCmdAbout()
+
     #endif
 
     #define _TX_CHECK_FORMAT( fmtIdx )  __attribute__ (( format (printf, (fmtIdx), (fmtIdx)+1) ))
@@ -146,11 +162,12 @@
 
     #pragma warning (disable: 4511)             // copy constructor could not be generated
     #pragma warning (disable: 4512)             // assignment operator could not be generated
+    #pragma warning (disable: 4514)             // unreferenced inline function has been removed
     #pragma warning (disable: 4663)             // C++ language change: to explicitly specialize class template '...'
     #pragma warning (disable: 4710)             // function '...' not inlined
 
     #if !defined (_MT)
-        #error Must use multithreaded run-time library to use TXLib
+        #error Must use multithreaded run-time library to use TXLib. Set Project/Settings/C++/Code Generation/Use run-time library == Multithreaded
     #endif
 
     #if !defined (WINVER)
@@ -169,9 +186,10 @@
     #define _vsnprintf_s           _vsnprintf   //   do NOT have secure variants of these
     #define  ctime_s                ctime       //   functions, so use insecure ones.
     #define  strncpy_s              strncpy     //
-    #define  strncat_s              strncat     //
-    #define  wcsncpy_s              wcsncpy     //
-    #define  strerror_s(buf,code)   strerror (code)
+    #define  strncat_s              strncat     //   ...
+    #define  wcsncpy_s              wcsncpy
+    #define  strerror_s(buf,code)               ( (void)buf, strerror (code) )
+    #define  getenv_s(sz,buf,sizeof_buf,name)   ( (void)sz,  strncpy (buf, getenv (name), sizeof_buf) )
 
 #endif
 
@@ -255,6 +273,8 @@
 
 #include <windows.h>
 #include <tlhelp32.h>
+#include <shlobj.h>
+#include <shellapi.h>
 
 //--------------------------------------------------------------------------------------------
 
@@ -1823,7 +1843,6 @@ bool txDestroyWindow();
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-
 // See definition of this function below in this file.
 
 bool txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillCloseAndIWillNotBeAskingWhereIsMyPicture();
@@ -2395,7 +2414,7 @@ double random (double left, double right)
 //! @hideinitializer
 //}-------------------------------------------------------------------------------------------
 
-#define MAX( a, b )           ( (a) > (b) ? (a) : (b) )
+#define MAX( a, b )    ( (a) > (b) ? (a) : (b) )
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Misc
@@ -2414,7 +2433,7 @@ double random (double left, double right)
 //! @hideinitializer
 //}-------------------------------------------------------------------------------------------
 
-#define MIN( a, b )           ( (a) < (b) ? (a) : (b) )
+#define MIN( a, b )    ( (a) < (b) ? (a) : (b) )
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Misc
@@ -2430,6 +2449,39 @@ double random (double left, double right)
 //}-------------------------------------------------------------------------------------------
 
 const double txPI = asin (1.0) * 2;
+
+//{-------------------------------------------------------------------------------------------
+//! @ingroup Misc
+//! @brief   Обнулятель типов, не имеющих конструкторов
+//!
+//! @param   type  Имя типа
+//!
+//! @return  Значение типа @c type, покомпонентно инициализированное по умолчанию
+//!          (для встроенных типов C++ - нулем).
+//!
+//! @usage
+//! @code
+//!          void f (POINT p);
+//!          ...
+//!
+//!          POINT z = {}; f (z);  // Так без ZERO
+//!
+//!          f (ZERO (POINT));     // Так с ZERO
+//! @endcode
+//! @hideinitializer
+//}-------------------------------------------------------------------------------------------
+
+#define ZERO( type )    zero <type> ()
+
+//! @cond INTERNAL
+
+#ifdef _MSC_VER_6
+template <typename T> inline T zero() { T z = {0}; return z; }
+#else
+template <typename T> inline T zero() { T z = { }; return z; }
+#endif
+
+//! @endcond
 
 //! @}
 //}
@@ -2592,6 +2644,48 @@ T txUnlock (T value);
 //! @name    Настроечные константы
 //============================================================================================
 //! @{
+//--------------------------------------------------------------------------------------------
+//! @ingroup Technical
+//! @brief   Запрет статической инициализации TXLib
+//!
+//!          Если константа определена с помощью #define до включения TXLib.h в программу,
+//!          статическая инициализация не проводится. По умолчанию она проводится.
+//!
+//! @note    Статическая инициализация включает:
+//!        - Открытие окна консоли,
+//!        - Установку кодовой страницы 1251 консоли для поддержки русского языка,
+//!        - Установку русской локали стандартной библиотеки,
+//!        - Переинициализация библиотек stdio и iostream на случай, если приложение
+//!          не скомпоновано как консольное и библиотеки остались неинициализированы,
+//!        - Перехват системных сигналов (деление на 0, обращение по неверному адресу и т.д.),
+//!        - Перехват необработанных исключений,
+//!        - Смена заголовка консольного окна,
+//!        - Установка режима паузы по завершении программы.
+//!          <br><br>
+//! @note    Если статическая инициализация запрещена, но создается окно TXLib с помощью
+//!          txCreateWindow(), то библиотека все равно будет инициализирована.
+//!
+//!          Может задаваться перед включением TXLib.h в программу.
+//! @see     txCreateWindow()
+//! @usage
+//! @code
+//!          #define _TX_NOINIT
+//!          #include "TXLib.h"
+//! @endcode
+//! @hideinitializer
+//--------------------------------------------------------------------------------------------
+
+#if  defined  (_TX_NOINIT)
+
+    #undef     _TX_NOINIT
+    #define    _TX_NOINIT                 1
+
+#else
+
+    #define    _TX_NOINIT                 0
+
+#endif
+
 //--------------------------------------------------------------------------------------------
 //! @ingroup Technical
 //! @brief   Режим отображения консольного окна
@@ -3495,10 +3589,11 @@ HDC          _txBuffer_Create (HWND wnd, const POINT* size = NULL, HBITMAP bmap 
 bool         _txBuffer_Delete (HDC* dc);
 bool         _txBuffer_Select (HGDIOBJ obj, HDC dc = txDC());
 
-HWND         _txConsole_Attach (bool force);
+HWND         _txConsole_Attach (bool forceRealloc);
 bool         _txConsole_OK();
 bool         _txConsole_Detach();
 bool         _txConsole_Draw (HDC dc);
+bool         _txConsole_SetUnicodeFont();
 
 void*        _tx_DLGTEMPLATE_Create (void* globalMem, size_t bufsize, DWORD style, DWORD exStyle,
                                      WORD controls, short x, short y, short cx, short cy,
@@ -3508,6 +3603,12 @@ void*        _tx_DLGTEMPLATE_Add    (void* dlgTemplatePtr, size_t bufsize, DWORD
                                      short x, short y, short cx, short cy,
                                      WORD id, const char wclass[], const char caption[]);
 
+bool         _txCreateShortcut (const char shortcutName[],
+                                const char fileToLink[], const char args[] = NULL, const char workDir[] = NULL,
+                                const char description[] = NULL, int cmdShow = SW_SHOWNORMAL,
+                                const char iconFile[] = NULL, int iconIndex = 0, int fontSize = 0,
+                                COORD bufSize = ZERO (COORD), COORD wndSize = ZERO (COORD), COORD wndOrg = ZERO (COORD));
+
 bool         _txError (const char file[], int line, const char func[],
                        DWORD getlasterror_value, int errno_value, int doserrno_value,
                        const char msg[], ...) _TX_CHECK_FORMAT (7);
@@ -3516,8 +3617,11 @@ void         _txOnSignal (int signal = 0, int fpe = 0);
 void         _txOnTerminate();
 void         _txOnUnexpected();
 
-template <typename func_T>
-func_T       _txImport (const char lib[], const char name[], func_T* func = NULL, bool required = true);
+//--------------------------------------------------------------------------------------------
+
+FARPROC      _txDllImport (const char dllFileName[], const char funcName[], bool required = true);
+
+#define      _TX_SAFECALL(func)     (func) && func
 
 //--------------------------------------------------------------------------------------------
 
@@ -3535,12 +3639,24 @@ func_T       _txImport (const char lib[], const char name[], func_T* func = NULL
 #define      _txWaitFor(cond)       for (DWORD __t##__LINE__ = GetTickCount() + _TX_TIMEOUT; \
                                          GetTickCount() < __t##__LINE__;                     \
                                          Sleep (_TX_WINDOW_UPDATE_INTERVAL))                 \
-                                         if ((cond) != 0) break;                             \
+                                         if (!!(cond)) break;
 
 // To suppress warnings in assert() and TX_ERROR() macros ("right-hand of comma operator has no effect")
 
 template <typename T>
 inline T     _txNOP (T value)       { return value; }
+
+//--------------------------------------------------------------------------------------------
+
+#define      _TX_TRY                { goto __tx_try; } __tx_try: { int __tx_error = S_OK; (void)__tx_error;
+#define      _TX_CHECKED( cmd )     { if (FAILED (__tx_error = (cmd))) goto __tx_catch; }
+#define      _TX_FAIL               { __tx_error = E_FAIL; goto __tx_catch; }
+#define      _TX_RETRY              { __tx_error = S_OK;   goto __tx_try;   }
+#define      _TX_OK                 ( SUCCEEDED (__tx_error) )
+#define      _TX_CATCH              goto __tx_finally; __tx_catch:
+#define      _TX_RETURN             goto __tx_finally;
+#define      _TX_FINALLY            __tx_finally:
+#define      _TX_ENDTRY             }
 
 //--------------------------------------------------------------------------------------------
 
@@ -3556,22 +3672,18 @@ const int    _TX_IDM_CONSOLE        = 40001;
 //============================================================================================
 //! @{
 
-template <typename func_T>
-func_T _txImport (const char lib[], const char name[],
-       		  func_T* func /*= NULL*/, bool required /*= true*/)
+FARPROC _txDllImport (const char dllFileName[], const char funcName[], bool required /*= true*/)
     {
-$   HMODULE   dll = GetModuleHandle (lib);
-$   if (!dll) dll = LoadLibrary     (lib);
-$       if (!dll && required) TX_DEBUG_ERROR ("\a" "Cannot load library \"%s\"" _ lib);
+    HMODULE   dll = GetModuleHandle (dllFileName);
+    if (!dll) dll = LoadLibrary     (dllFileName);
+    if (!dll && required)  TX_ERROR ("\a" "Cannot load library \"%s\"" _ dllFileName);
 
-$   if (!dll) return NULL;
+    if (!dll) return NULL;
 
-$   FARPROC addr = GetProcAddress (dll, name);
-$       if (!addr && required) TX_DEBUG_ERROR ("\a" "Cannot import \"%s\" from library \"%s\"" _ name _ lib);
+    FARPROC addr = GetProcAddress (dll, funcName);
+    if (!addr && required) TX_ERROR ("\a" "Cannot import \"%s\" from library \"%s\""_ funcName _ dllFileName);
 
-$   if (func) *func = (func_T) addr;
-
-$   return (func_T) addr;
+    return addr;
     }
 
 //--------------------------------------------------------------------------------------------
@@ -3579,11 +3691,11 @@ $   return (func_T) addr;
 //           Малая механизация
 //--------------------------------------------------------------------------------------------
 
-#define _TX_IMPORT(     lib, retval, name, params ) \
-     retval (WINAPI* name) params = _txImport <retval (WINAPI*) params> (lib ".dll", #name, NULL, true)
+#define _TX_DLLIMPORT(     lib, retval, name, params ) \
+     retval (WINAPI* name) params = (retval (WINAPI*) params) _txDllImport (lib ".dll", #name, true)
 
-#define _TX_IMPORT_OPT( lib, retval, name, params ) \
-     retval (WINAPI* name) params = _txImport <retval (WINAPI*) params> (lib ".dll", #name, NULL, false)
+#define _TX_DLLIMPORT_OPT( lib, retval, name, params ) \
+     retval (WINAPI* name) params = (retval (WINAPI*) params) _txDllImport (lib ".dll", #name, false)
 
 //--------------------------------------------------------------------------------------------
 // Some IDEs don't link with these libs by default in console projects, so do sunrise by hand. :(
@@ -3591,79 +3703,169 @@ $   return (func_T) addr;
 
 namespace Win32 {
 
-typedef struct _CONSOLE_FONT_INFOEX  // From Windows SDK 7.0a, WinCon.h
+#ifdef _MSC_VER_6
+struct CONSOLE_FONT_INFO;
+#endif
+
+struct NT_CONSOLE_PROPS;
+
+_TX_DLLIMPORT     ("GDI32",    int,      GetDeviceCaps,          (HDC dc, int index));
+_TX_DLLIMPORT     ("GDI32",    HDC,      CreateCompatibleDC,     (HDC dc));
+_TX_DLLIMPORT     ("GDI32",    HBITMAP,  CreateCompatibleBitmap, (HDC dc, int width, int height));
+_TX_DLLIMPORT     ("GDI32",    HGDIOBJ,  GetStockObject,         (int object));
+_TX_DLLIMPORT     ("GDI32",    HGDIOBJ,  SelectObject,           (HDC dc, HGDIOBJ object));
+_TX_DLLIMPORT     ("GDI32",    HGDIOBJ,  GetCurrentObject,       (HDC dc, UINT objectType));
+_TX_DLLIMPORT     ("GDI32",    int,      GetObjectA,             (HGDIOBJ obj, int bufsize, LPVOID buffer));
+_TX_DLLIMPORT     ("GDI32",    DWORD,    GetObjectType,          (HGDIOBJ object));
+_TX_DLLIMPORT     ("GDI32",    BOOL,     DeleteDC,               (HDC dc));
+_TX_DLLIMPORT     ("GDI32",    BOOL,     DeleteObject,           (HGDIOBJ object));
+_TX_DLLIMPORT     ("GDI32",    COLORREF, SetTextColor,           (HDC dc, COLORREF color));
+_TX_DLLIMPORT     ("GDI32",    COLORREF, SetBkColor,             (HDC dc, COLORREF color));
+_TX_DLLIMPORT     ("GDI32",    int,      SetBkMode,              (HDC dc, int bkMode));
+_TX_DLLIMPORT     ("GDI32",    HFONT,    CreateFontA,            (int height, int width, int escapement, int orientation,
+                                                                  int weight, DWORD italic, DWORD underline, DWORD strikeout,
+                                                                  DWORD charSet, DWORD outputPrec, DWORD clipPrec,
+                                                                  DWORD quality, DWORD pitchAndFamily, LPCTSTR face));
+_TX_DLLIMPORT     ("GDI32",    int,      EnumFontFamiliesExA,    (HDC dc, LPLOGFONT logFont, FONTENUMPROC enumProc,
+                                                                  LPARAM lParam, DWORD reserved));
+_TX_DLLIMPORT     ("GDI32",    COLORREF, SetPixel,               (HDC dc, int x, int y, COLORREF color));
+_TX_DLLIMPORT     ("GDI32",    COLORREF, GetPixel,               (HDC dc, int x, int y));
+_TX_DLLIMPORT     ("GDI32",    HPEN,     CreatePen,              (int penStyle, int width, COLORREF color));
+_TX_DLLIMPORT     ("GDI32",    HBRUSH,   CreateSolidBrush,       (COLORREF color));
+_TX_DLLIMPORT     ("GDI32",    BOOL,     MoveToEx,               (HDC dc, int x, int y, LPPOINT point));
+_TX_DLLIMPORT     ("GDI32",    BOOL,     LineTo,                 (HDC dc, int x, int y));
+_TX_DLLIMPORT     ("GDI32",    BOOL,     Polygon,                (HDC dc, CONST POINT points[], int count));
+_TX_DLLIMPORT     ("GDI32",    BOOL,     Rectangle,              (HDC dc, int x0, int y0, int x1, int y1));
+_TX_DLLIMPORT     ("GDI32",    BOOL,     Ellipse,                (HDC dc, int x0, int y0, int x1, int y1));
+_TX_DLLIMPORT     ("GDI32",    BOOL,     Arc,                    (HDC dc, int x0, int y0, int x1, int y1,
+                                                                  int xStart, int yStart, int xEnd, int yEnd));
+_TX_DLLIMPORT     ("GDI32",    BOOL,     Pie,                    (HDC dc, int x0, int y0, int x1, int y1,
+                                                                  int xStart, int yStart, int xEnd, int yEnd));
+_TX_DLLIMPORT     ("GDI32",    BOOL,     Chord,                  (HDC dc, int x0, int y0, int x1, int y1,
+                                                                  int xStart, int yStart, int xEnd, int yEnd));
+_TX_DLLIMPORT     ("GDI32",    BOOL,     TextOutA,               (HDC dc, int x, int y, LPCTSTR string, int length));
+_TX_DLLIMPORT     ("GDI32",    UINT,     SetTextAlign,           (HDC dc, UINT mode));
+_TX_DLLIMPORT     ("GDI32",    BOOL,     GetTextExtentPoint32A,  (HDC dc, LPCTSTR string, int length, LPSIZE size));
+_TX_DLLIMPORT     ("GDI32",    BOOL,     ExtFloodFill,           (HDC dc, int x, int y, COLORREF color, UINT type));
+_TX_DLLIMPORT     ("GDI32",    BOOL,     BitBlt,                 (HDC dest, int xDest, int yDest, int width, int height,
+                                                                  HDC src,  int xSrc,  int ySrc,  DWORD rOp));
+_TX_DLLIMPORT     ("GDI32",    int,      SetDIBitsToDevice,      (HDC dc, int xDest, int yDest, DWORD width, DWORD height,
+                                                                  int xSrc, int ySrc, UINT startLine, UINT numLines,
+                                                                  const VOID* data, const BITMAPINFO* info, UINT colorUse));
+_TX_DLLIMPORT     ("GDI32",    BOOL,     PatBlt,                 (HDC dc, int x0, int y0, int width, int height, DWORD rOp));
+_TX_DLLIMPORT     ("GDI32",    int,      SetROP2,                (HDC dc, int mode));
+_TX_DLLIMPORT     ("GDI32",    HRGN,     CreateRectRgn,          (int x0, int y0, int x1, int y1));
+_TX_DLLIMPORT     ("GDI32",    BOOL,     GetBitmapDimensionEx,   (HBITMAP bitmap, LPSIZE dimensions));
+_TX_DLLIMPORT     ("User32",   int,      DrawTextA,              (HDC dc, LPCTSTR text, int length, LPRECT rect, UINT format));
+_TX_DLLIMPORT     ("User32",   HANDLE,   LoadImageA,             (HINSTANCE inst, LPCTSTR name, UINT type,
+                                                                  int sizex, int sizey, UINT mode));
+_TX_DLLIMPORT     ("WinMM",    BOOL,     PlaySound,              (LPCSTR sound, HMODULE mod, DWORD mode));
+
+_TX_DLLIMPORT_OPT ("MSImg32",  BOOL,     TransparentBlt,         (HDC dest, int destX, int destY, int destWidth, int destHeight,
+                                                                  HDC src,  int srcX,  int srcY,  int srcWidth,  int srcHeight,
+                                                                  UINT transparentColor));
+_TX_DLLIMPORT_OPT ("MSImg32",  BOOL,     AlphaBlend,             (HDC dest, int destX, int destY, int destWidth, int destHeight,
+                                                                  HDC src,  int srcX,  int srcY,  int srcWidth,  int srcHeight,
+                                                                  BLENDFUNCTION blending));
+
+_TX_DLLIMPORT     ("Kernel32", HWND,     GetConsoleWindow,       (void));
+_TX_DLLIMPORT     ("Kernel32", BOOL,     SetConsoleFont,         (HANDLE console, DWORD fontIndex));
+_TX_DLLIMPORT     ("Kernel32", BOOL,     GetConsoleFontInfo,     (HANDLE console, BOOL fullScreen, DWORD numFonts, CONSOLE_FONT_INFO* fontsInfo));
+_TX_DLLIMPORT     ("Kernel32", DWORD,    GetNumberOfConsoleFonts,(void));
+_TX_DLLIMPORT     ("Kernel32", COORD,    GetConsoleFontSize,     (HANDLE hConsoleOutput, DWORD nFont));
+_TX_DLLIMPORT_OPT ("Kernel32", BOOL,     GetCurrentConsoleFont,  (HANDLE con, BOOL maxWnd, CONSOLE_FONT_INFO* curFont));
+
+_TX_DLLIMPORT     ("OLE32",    HRESULT,  CoInitialize,           (void*));
+_TX_DLLIMPORT     ("OLE32",    HRESULT,  CoCreateInstance,       (REFCLSID clsid, LPUNKNOWN, DWORD, REFIID iid, PVOID* value));
+_TX_DLLIMPORT     ("OLE32",    void,     CoUninitialize,         (void));
+
+_TX_DLLIMPORT     ("Shell32",  HINSTANCE,ShellExecuteA,          (HWND wnd, LPCTSTR operation, LPCTSTR file,
+                                                                  LPCTSTR parameters, LPCTSTR directory, INT showCmd));
+
+//--------------------------------------------------------------------------------------------
+// Another issue, some of structs, consts and interfaces aren't defined in MinGW some ealry headers.
+
+#ifndef AC_SRC_ALPHA
+#define AC_SRC_ALPHA          0x01
+#endif
+
+#ifndef NT_CONSOLE_PROPS_SIG
+#define NT_CONSOLE_PROPS_SIG  0xA0000002
+#endif
+
+#pragma pack (push, 1)
+
+#ifdef _MSC_VER_6
+
+struct CONSOLE_FONT_INFO
     {
-    ULONG cbSize;
+    DWORD  nFont;
+    COORD  dwFontSize;
+    };
+
+#endif
+
+struct DATABLOCK_HEADER
+    {
+    DWORD cbSize;
+    DWORD dwSignature;
+    };
+
+struct NT_CONSOLE_PROPS
+    {
+    DATABLOCK_HEADER dbh;
+
+    WORD  wFillAttribute;
+    WORD  wPopupFillAttribute;
+    COORD dwScreenBufferSize;
+    COORD dwWindowSize;
+    COORD dwWindowOrigin;
     DWORD nFont;
+    DWORD nInputBufferSize;
     COORD dwFontSize;
-    UINT  FontFamily;
-    UINT  FontWeight;
+    UINT  uFontFamily;
+    UINT  uFontWeight;
     WCHAR FaceName[LF_FACESIZE];
-    }
-    CONSOLE_FONT_INFOEX, *PCONSOLE_FONT_INFOEX;
+    UINT  uCursorSize;
+    BOOL  bFullScreen;
+    BOOL  bQuickEdit;
+    BOOL  bInsertMode;
+    BOOL  bAutoPosition;
+    UINT  uHistoryBufferSize;
+    UINT  uNumberOfHistoryBuffers;
+    BOOL  bHistoryNoDup;
 
-_TX_IMPORT     ("GDI32",    int,      GetDeviceCaps,                  (HDC dc, int index));
-_TX_IMPORT     ("GDI32",    HDC,      CreateCompatibleDC,             (HDC dc));
-_TX_IMPORT     ("GDI32",    HBITMAP,  CreateCompatibleBitmap,         (HDC dc, int width, int height));
-_TX_IMPORT     ("GDI32",    HGDIOBJ,  GetStockObject,                 (int object));
-_TX_IMPORT     ("GDI32",    HGDIOBJ,  SelectObject,                   (HDC dc, HGDIOBJ object));
-_TX_IMPORT     ("GDI32",    HGDIOBJ,  GetCurrentObject,               (HDC dc, UINT objectType));
-_TX_IMPORT     ("GDI32",    int,      GetObjectA,                     (HGDIOBJ obj, int bufsize, LPVOID buffer));
-_TX_IMPORT     ("GDI32",    DWORD,    GetObjectType,                  (HGDIOBJ object));
-_TX_IMPORT     ("GDI32",    BOOL,     DeleteDC,                       (HDC dc));
-_TX_IMPORT     ("GDI32",    BOOL,     DeleteObject,                   (HGDIOBJ object));
-_TX_IMPORT     ("GDI32",    COLORREF, SetTextColor,                   (HDC dc, COLORREF color));
-_TX_IMPORT     ("GDI32",    COLORREF, SetBkColor,                     (HDC dc, COLORREF color));
-_TX_IMPORT     ("GDI32",    int,      SetBkMode,                      (HDC dc, int bkMode));
-_TX_IMPORT     ("GDI32",    HFONT,    CreateFontA,                    (int height, int width, int escapement, int orientation,
-                                                                       int weight, DWORD italic, DWORD underline, DWORD strikeout,
-                                                                       DWORD charSet, DWORD outputPrec, DWORD clipPrec,
-                                                                       DWORD quality, DWORD pitchAndFamily, LPCTSTR face));
-_TX_IMPORT     ("GDI32",    int,      EnumFontFamiliesExA,            (HDC dc, LPLOGFONT logFont, FONTENUMPROC enumProc,
-                                                                       LPARAM lParam, DWORD reserved));
-_TX_IMPORT     ("GDI32",    COLORREF, SetPixel,                       (HDC dc, int x, int y, COLORREF color));
-_TX_IMPORT     ("GDI32",    COLORREF, GetPixel,                       (HDC dc, int x, int y));
-_TX_IMPORT     ("GDI32",    HPEN,     CreatePen,                      (int penStyle, int width, COLORREF color));
-_TX_IMPORT     ("GDI32",    HBRUSH,   CreateSolidBrush,               (COLORREF color));
-_TX_IMPORT     ("GDI32",    BOOL,     MoveToEx,                       (HDC dc, int x, int y, LPPOINT point));
-_TX_IMPORT     ("GDI32",    BOOL,     LineTo,                         (HDC dc, int x, int y));
-_TX_IMPORT     ("GDI32",    BOOL,     Polygon,                        (HDC dc, CONST POINT points[], int count));
-_TX_IMPORT     ("GDI32",    BOOL,     Rectangle,                      (HDC dc, int x0, int y0, int x1, int y1));
-_TX_IMPORT     ("GDI32",    BOOL,     Ellipse,                        (HDC dc, int x0, int y0, int x1, int y1));
-_TX_IMPORT     ("GDI32",    BOOL,     Arc,                            (HDC dc, int x0, int y0, int x1, int y1,
-                                                                       int xStart, int yStart, int xEnd, int yEnd));
-_TX_IMPORT     ("GDI32",    BOOL,     Pie,                            (HDC dc, int x0, int y0, int x1, int y1,
-                                                                       int xStart, int yStart, int xEnd, int yEnd));
-_TX_IMPORT     ("GDI32",    BOOL,     Chord,                          (HDC dc, int x0, int y0, int x1, int y1,
-                                                                       int xStart, int yStart, int xEnd, int yEnd));
-_TX_IMPORT     ("GDI32",    BOOL,     TextOutA,                       (HDC dc, int x, int y, LPCTSTR string, int length));
-_TX_IMPORT     ("GDI32",    UINT,     SetTextAlign,                   (HDC dc, UINT mode));
-_TX_IMPORT     ("GDI32",    BOOL,     GetTextExtentPoint32A,          (HDC dc, LPCTSTR string, int length, LPSIZE size));
-_TX_IMPORT     ("GDI32",    BOOL,     ExtFloodFill,                   (HDC dc, int x, int y, COLORREF color, UINT type));
-_TX_IMPORT     ("GDI32",    BOOL,     BitBlt,                         (HDC dest, int xDest, int yDest, int width, int height,
-                                                                       HDC src,  int xSrc,  int ySrc,  DWORD rOp));
-_TX_IMPORT     ("GDI32",    int,      SetDIBitsToDevice,              (HDC dc, int xDest, int yDest, DWORD width, DWORD height,
-                                                                       int xSrc, int ySrc, UINT startLine, UINT numLines,
-                                                                       const VOID* data, const BITMAPINFO* info, UINT colorUse));
-_TX_IMPORT     ("GDI32",    BOOL,     PatBlt,                         (HDC dc, int x0, int y0, int width, int height, DWORD rOp));
-_TX_IMPORT     ("GDI32",    int,      SetROP2,                        (HDC dc, int mode));
-_TX_IMPORT     ("GDI32",    HRGN,     CreateRectRgn,                  (int x0, int y0, int x1, int y1));
-_TX_IMPORT     ("GDI32",    BOOL,     GetBitmapDimensionEx,           (HBITMAP bitmap, LPSIZE dimensions));
-_TX_IMPORT     ("User32",   int,      DrawTextA,                      (HDC dc, LPCTSTR text, int length, LPRECT rect, UINT format));
-_TX_IMPORT     ("User32",   HANDLE,   LoadImageA,                     (HINSTANCE inst, LPCTSTR name, UINT type,
-                                                                       int sizex, int sizey, UINT mode));
-_TX_IMPORT     ("WinMM",    BOOL,     PlaySound,                      (LPCSTR sound, HMODULE mod, DWORD mode));
+    COLORREF ColorTable[16];
+    };
 
-_TX_IMPORT_OPT ("Kernel32", BOOL,     GetCurrentConsoleFont,          (HANDLE con, BOOL maxWnd, PCONSOLE_FONT_INFO   curFont));
-_TX_IMPORT_OPT ("Kernel32", void*,    AddVectoredExceptionHandler,    (ULONG first, PVECTORED_EXCEPTION_HANDLER handler));
-_TX_IMPORT_OPT ("Kernel32", ULONG,    RemoveVectoredExceptionHandler, (void* Handler));
+#pragma pack (pop)
 
-_TX_IMPORT_OPT ("MSImg32",  BOOL,     TransparentBlt,                 (HDC dest, int destX, int destY, int destWidth, int destHeight,
-                                                                       HDC src,  int srcX,  int srcY,  int srcWidth,  int srcHeight,
-                                                                       UINT transparentColor));
-_TX_IMPORT_OPT ("MSImg32",  BOOL,     AlphaBlend,                     (HDC dest, int destX, int destY, int destWidth, int destHeight,
-                                                                       HDC src,  int srcX,  int srcY,  int srcWidth,  int srcHeight,
-                                                                       BLENDFUNCTION blending));
+#undef  INTERFACE
+#define INTERFACE IShellLinkDataList
+
+DECLARE_INTERFACE_ (IShellLinkDataList, IUnknown)
+    {
+    // *** IUnknown methods ***
+    STDMETHOD (QueryInterface)  (THIS_ REFIID iid, void** value)    PURE;
+    STDMETHOD_(ULONG, AddRef)   (THIS)                              PURE;
+    STDMETHOD_(ULONG, Release)  (THIS)                              PURE;
+
+    // *** IShellLinkDataList methods ***
+    STDMETHOD (AddDataBlock)    (THIS_ void* dataBlock)             PURE;
+    STDMETHOD (CopyDataBlock)   (THIS_ DWORD sig, void** dataBlock) PURE;
+    STDMETHOD (RemoveDataBlock) (THIS_ DWORD sig)                   PURE;
+    STDMETHOD (GetFlags)        (THIS_ DWORD* flags)                PURE;
+    STDMETHOD (SetFlags)        (THIS_ DWORD  flags)                PURE;
+
+    private:
+    virtual ~IShellLinkDataList();
+    };
+
+const GUID IID_IShellLinkDataList = {0x45e2b4ae, 0xb1c3, 0x11d0, {0xb9,0x2f,0x00,0xa0,0xc9,0x03,0x12,0xe1}};
+const GUID IID_IPersistFile       = {0x0000010b, 0x0000, 0x0000, {0xc0,0x00,0x00,0x00,0x00,0x00,0x00,0x46}};
+
+#undef  INTERFACE
+
 }  // namespace Win32
 using namespace Win32;
 
@@ -3699,6 +3901,8 @@ int              _txCanvas_RefreshLock  = 0;      // Blocks automatic on-timer c
                                                   //   see txBegin()/txEnd()
 
 bool             _txConsole_IsBlinking  = true;   // To blink or not to blink, that is the question.
+bool             _txConsole_Active      = true;
+RECT             _txConsole_Pos         = {0};
 
 bool             _txRunning             = false;  // Indicate that main() is still running
 bool             _txExit                = false;  // Indicate that exit() is active
@@ -3708,7 +3912,7 @@ int              _txMouseButtons        =  0;
 
 WNDPROC          _txAltWndProc          = NULL;   // Альтернативная оконная функция. См. txSetWindowHandler().
 
-const int        _txStaticInitialize    = _txInitialize();
+int              _txStaticInitialize    = _TX_NOINIT || _txInitialize();
 
 //! @}
 //}
@@ -3739,8 +3943,11 @@ int _txInitialize()
 $   _txMainThreadId = GetCurrentThreadId();
 
 $   _txOnSignal();
+
+#ifndef _MSC_VER_6
 $   std::set_unexpected (_txOnUnexpected);
 $   std::set_terminate  (_txOnTerminate);
+#endif
 
 $   HWND con = _txConsole_Attach (true);
 $   if (con) SetWindowTextA (con, txGetModuleFileName (false));
@@ -3764,6 +3971,8 @@ $   return 1;
 HWND txCreateWindow (int sizeX, int sizeY, unsigned style /*= WS_SYSMENU | 1*/)
     {
 $   if (txOK()) return 0;
+
+$   if (!_txStaticInitialize) _txStaticInitialize = _txInitialize();
 
 $   _txRunning = false;
 
@@ -3803,7 +4012,7 @@ $   RECT r = {0};
 $   GetClientRect (_txCanvas_Window,  &r) asserted;
 $   SIZE szCanvas = { r.right - r.left, r.bottom - r.top };
 
-$   GetClientRect (GetConsoleWindow(), &r) asserted;
+$   GetClientRect (Win32::GetConsoleWindow(), &r) asserted;
 $   SIZE szCon    = { r.right - r.left, r.bottom - r.top };
 
 $   _txBuffer_Select (GetStockObject (WHITE_PEN),   txDC()) asserted;
@@ -3825,8 +4034,8 @@ $    Win32::SetROP2      (txDC(), R2_COPYPEN)               asserted;
 
 $   _txConsole_Attach (false);
 
-$   CONSOLE_SCREEN_BUFFER_INFO con = {{0}};
-$   GetConsoleScreenBufferInfo (GetStdHandle (STD_OUTPUT_HANDLE), &con) asserted;
+$   CONSOLE_SCREEN_BUFFER_INFO con = {{0}, {0}, 0, {0, 0, 80, 25}, {80, 25}};
+$   GetConsoleScreenBufferInfo (GetStdHandle (STD_OUTPUT_HANDLE), &con);
 
 $   SIZE szChr  = { (short) (con.srWindow.Right  - con.srWindow.Left + 1),
                     (short) (con.srWindow.Bottom - con.srWindow.Top  + 1) };
@@ -3864,27 +4073,29 @@ $   return _txCanvas_OK();
 
 void _txOnExit()
     {
-$   HWND wnd = (txWindow())? txWindow() : GetConsoleWindow();
+$   HWND console = GetConsoleWindow();
+
+$   HWND wnd     = (_txCanvas_Window)? _txCanvas_Window : console;
+$   int isMaster = (_txCanvas_Window)? (GetWindowLong (_txCanvas_Window, GWL_STYLE) & WS_SYSMENU) : 0;
+
 $   char title [1024] = "";
 $   if (wnd) GetWindowTextA (wnd, title, sizeof (title) - 1);
 $   strncat_s (title, " [ЗАВЕРШЕНО]", sizeof (title) - 1);
 $   if (wnd) SetWindowTextA (wnd, title);
 
-$   HWND txWnd    = txWindow();
-$   int  isMaster = (txWnd)? (GetWindowLong (txWnd, GWL_STYLE) & WS_SYSMENU) : 0;
-
 $   _txRunning = false;
+$   _txConsole_IsBlinking = false;
 
-$   if ((isMaster || !txWnd) && !_txExit &&
+$   if ((isMaster || !_txCanvas_Window) && !_txExit &&
         GetCurrentThreadId() == _txMainThreadId)
         {
-$       printf ("\n" "[Нажмите любую клавишу для завершения]");
+$       if (!_txCanvas_Window) printf ("\n" "[Нажмите любую клавишу для завершения]");
 
 $       while (_kbhit()) (void)_getch();
 
 $       for (int i = 1; ; i++)
             {
-            if (txWnd && !_txCanvas_ThreadId) break;
+            if (_txCanvas_Window && !_txCanvas_ThreadId) break;
 
             if (_kbhit()) { (void)_getch(); break; }
 
@@ -3902,6 +4113,18 @@ $   _txWaitFor (!_txCanvas_Window);
 
 $   if (!_txCanvas_Window)
         { $ DeleteCriticalSection (&_txCanvas_LockBackBuf); }
+
+$   if (console)
+        {
+$       MoveWindow (console, _txConsole_Pos.left, _txConsole_Pos.top,
+                             _txConsole_Pos.right  - _txConsole_Pos.left,
+                             _txConsole_Pos.bottom - _txConsole_Pos.top, true);
+
+$       if (_TX_CONSOLE_MODE & SWP_HIDEWINDOW) ShowWindow (console, SW_SHOW);
+$       if (_txConsole_Active)                 SetForegroundWindow (console);
+        }
+
+$   FreeConsole();
 
 #ifndef NDEBUG
     OutputDebugString ("\n");
@@ -3928,7 +4151,7 @@ $   if (!data) return;
 $   _txCanvas_Window = _txCanvas_CreateWindow ((CREATESTRUCT*) data);
 $       if (!_txCanvas_Window) { TX_DEBUG_ERROR ("\a" "Cannot create canvas"); return; }
 
-$	bool masterWnd = (GetWindowLong (txWindow(), GWL_STYLE) & WS_SYSMENU) != 0;
+$	bool masterWnd = !!(GetWindowLong (txWindow(), GWL_STYLE) & WS_SYSMENU);
 
 #ifndef NDEBUG
     OutputDebugString (_TX_VERSION _TX_NAME "-- STARTED\n");
@@ -3987,15 +4210,14 @@ $   SIZE frame   = { GetSystemMetrics (SM_CXFIXEDFRAME), GetSystemMetrics (SM_CY
 $   SIZE caption = { 0, GetSystemMetrics (SM_CYCAPTION) };
 $   SIZE size    = { from->cx + 2*frame.cx, from->cy + 2*frame.cy + caption.cy };
 $   POINT center = { scr.cx / 2, scr.cy / 2 };
+
 $   HWND console = GetConsoleWindow();
+$   GetWindowRect (console, &_txConsole_Pos);
 
 $   if (!centered)
         {
-$       RECT r = { scr.cx, scr.cy };
-$       GetWindowRect (console, &r);
-
-$       center.x = (r.right + r.left) / 2;
-$       center.y = (r.bottom + r.top) / 2;
+$       center.x = (_txConsole_Pos.right  + _txConsole_Pos.left) / 2;
+$       center.y = (_txConsole_Pos.bottom + _txConsole_Pos.top)  / 2;
         }
 
 $   _txCanvas_Window = CreateWindowEx (from->dwExStyle, className,
@@ -4101,8 +4323,8 @@ $   _txExit = true;
     // Lock GDI resources
 
 $   bool locked = false;
-$   _txWaitFor (locked = txLock (false));
-$       if (!locked) TX_DEBUG_ERROR ("Cannot lock GDI to free resources");
+$   _txWaitFor ((locked = txLock (false), locked));
+$   if (!locked) TX_DEBUG_ERROR ("Cannot lock GDI to free resources");
 
     // Освобождаем ресурсы, связанные с окном
 
@@ -4226,11 +4448,11 @@ $   if (!wnd) return false;
 $   HWND console = GetConsoleWindow();
 $   if (!console) return false;
 
-$   bool visible = IsWindowVisible (console) != 0;
+$   bool visible = !!IsWindowVisible (console);
 
 $   ShowWindow (console, visible? SW_HIDE : SW_SHOW);
 
-$   visible = IsWindowVisible (console) != 0;
+$   visible = !!IsWindowVisible (console);
 $   CheckMenuItem (GetSystemMenu (wnd, false), (int)cmd, visible? MF_CHECKED : MF_UNCHECKED);
 
 $   return true;
@@ -4390,14 +4612,19 @@ $       if (res) return res;
 
 HWND _txConsole_Attach (bool forceRealloc)
     {
-$   if (forceRealloc && !GetConsoleWindow())
+$   HWND console = GetConsoleWindow();
+
+$   GetWindowRect (console, &_txConsole_Pos);
+$   _txConsole_Active = (console && GetForegroundWindow() == console);
+
+$   if (forceRealloc && !console)
         {
 $       FreeConsole();
 $       AllocConsole();
         }
 
-$   HWND con = GetConsoleWindow();
-$   if (!con) return NULL;
+$   console = GetConsoleWindow();
+$   if (!console) return NULL;
 
 $   SetConsoleCP       (1251);
 $   SetConsoleOutputCP (1251);
@@ -4406,7 +4633,9 @@ $     setlocale (LC_CTYPE,  "Russian");
 $   _wsetlocale (LC_CTYPE, L"Russian_Russia.ACP");
 
 $   static bool done = false;
-$   if (done) return con;
+$   if (done) return console;
+
+$   _txConsole_SetUnicodeFont();
 
 $   int crtIn  = _open_osfhandle ((ptrdiff_t) GetStdHandle (STD_INPUT_HANDLE),  _O_TEXT);
 $   int crtOut = _open_osfhandle ((ptrdiff_t) GetStdHandle (STD_OUTPUT_HANDLE), _O_TEXT);
@@ -4423,7 +4652,53 @@ $   setvbuf (stderr, NULL, _IONBF, 0);
 $   std::ios::sync_with_stdio();
 
 $   done = true;
-$   return con;
+$   return console;
+    }
+
+//--------------------------------------------------------------------------------------------
+
+bool _txConsole_SetUnicodeFont()
+    {
+$   const unsigned uniFont = 10;
+
+$   HANDLE out = GetStdHandle (STD_OUTPUT_HANDLE);
+
+$   if (Win32::GetNumberOfConsoleFonts() <= uniFont)
+        {
+$       HRESULT init = Win32::CoInitialize (NULL);
+$       size_t sz = 0;
+
+$       char link [MAX_PATH] = "";
+$       getenv_s (&sz, link, sizeof (link), "TEMP");
+$       strncat_s (link, "\\_txLink.lnk", sizeof (link));
+
+$       char comspec [MAX_PATH] = "";
+$       getenv_s (&sz, comspec, sizeof (comspec), "COMSPEC");
+
+$       CONSOLE_FONT_INFO font = { Win32::GetNumberOfConsoleFonts() - 1 };
+$       font.dwFontSize = Win32::GetConsoleFontSize (out, font.nFont);
+
+$       _txCreateShortcut (link, comspec, "/c exit", NULL, NULL,
+                           SW_SHOWMINNOACTIVE, NULL, 0, font.dwFontSize.Y + 2) asserted;
+
+$       (int) ShellExecute (NULL, NULL, link, NULL, NULL, SW_SHOWMINNOACTIVE) > 32 asserted;
+$       _txWaitFor (FindWindow (NULL, "_txLink"));
+
+$       _unlink (link) == 0 asserted;
+
+$       if (init == S_OK) Win32::CoUninitialize();
+        }
+
+$   CONSOLE_FONT_INFO cur = {0, {-1, -1}};
+$   Win32::GetCurrentConsoleFont (out, false, &cur);
+
+$   bool ok = (cur.nFont >= uniFont) || !!Win32::SetConsoleFont (out, uniFont);
+
+$   HWND wnd = Win32::GetConsoleWindow();
+$   InvalidateRect (wnd, NULL, false);
+$   UpdateWindow   (wnd);
+
+$   return ok;
     }
 
 //--------------------------------------------------------------------------------------------
@@ -4438,7 +4713,7 @@ $   return GetConsoleWindow() != NULL;
 
 bool _txConsole_Detach()
     {
-    return FreeConsole() != 0;
+    return !!FreeConsole();
     }
 
 //--------------------------------------------------------------------------------------------
@@ -4466,9 +4741,9 @@ $   COLORREF pal [16] = { 0x000000, 0x800000, 0x008000, 0x808000, 0x000080, 0x80
 
 $   for (int y = 0; y < size.y; y++)
         {
-$       static char chr [1024 + 1] = ""; // [con.dwSize.X + 1]
-$       static WORD atr [1024 + 1] = {}; // [con.dwSize.X + 1]
-$       COORD coord = { con.srWindow.Left, (SHORT)y + con.srWindow.Top };
+$       static char chr [1024 + 1] = "";  // [con.dwSize.X + 1]
+$       static WORD atr [1024 + 1] = {0}; // [con.dwSize.X + 1]
+$       COORD coord = { (short) (con.srWindow.Left), (short) (y + con.srWindow.Top) };
 $       DWORD read  = 0;
 
 $       if (!ReadConsoleOutputCharacter (out, chr, sizearr (chr), coord, &read)) continue;
@@ -4599,7 +4874,7 @@ $   return obj != NULL;
 
 void _txOnSignal (int sig/* = 0*/, int fpe/* = 0*/)
     {
-$   if (!sig && !fpe)
+    if (!sig && !fpe)
         {
 $       signal (SIGSEGV, (void(*)(int))_txOnSignal) != SIG_ERR asserted;
 $       signal (SIGFPE,  (void(*)(int))_txOnSignal) != SIG_ERR asserted;
@@ -4609,12 +4884,12 @@ $       signal (SIGTERM, (void(*)(int))_txOnSignal) != SIG_ERR asserted;
 $       return;
         }
 
-$   const char* sSig = ": Неизвестный тип сигнала";
-$   const char* sFPE = ": Неизвестный тип исключения";
+    const char* sSig = ": Неизвестный тип сигнала";
+    const char* sFPE = ": Неизвестный тип исключения";
 
-    #define GET_DESCR_( str, code, descr )  case (code): { $ (str) = #code ": " descr; break; }
+    #define GET_DESCR_( str, code, descr )  case (code): { (str) = #code ": " descr; break; }
 
-$   switch (sig)
+    switch (sig)
         {
         GET_DESCR_ (sSig, SIGSEGV, "Доступ по неверному указателю. Ставьте ассерты!")
         GET_DESCR_ (sSig, SIGILL,  "Попытка выполнить недопустимую операцию. Проверьте указатели на функции.")
@@ -4624,7 +4899,7 @@ $   switch (sig)
         default:   break;
         }
 
-$   if (sig == SIGFPE) switch (fpe)
+    if (sig == SIGFPE) switch (fpe)
         {
         #ifdef _FPE_INVALID
         GET_DESCR_ (sFPE, _FPE_INVALID,        "Результат неверен")
@@ -4644,17 +4919,17 @@ $   if (sig == SIGFPE) switch (fpe)
 
     #undef GET_DESCR_
 
-$   if (sig == SIGFPE && fpe)
-        { $ _txError (NULL, 0, NULL, 0,0,0, "signal (%d, 0x%02X): %s, %s"_ sig _ fpe _ sSig _ sFPE); }
+    if (sig == SIGFPE && fpe)
+        _txError (NULL, 0, NULL, 0,0,0, "signal (%d, 0x%02X): %s, %s"_ sig _ fpe _ sSig _ sFPE);
     else
-        { $ _txError (NULL, 0, NULL, 0,0,0, "signal (%d): %s"            _ sig _ sSig); }
+        _txError (NULL, 0, NULL, 0,0,0, "signal (%d): %s"            _ sig _ sSig);
     }
 
 //--------------------------------------------------------------------------------------------
 
 void _txOnUnexpected()
     {
-$   _txError (NULL, 0, NULL, (DWORD)-1,-1,-1,
+    _txError (NULL, 0, NULL, (DWORD)-1,-1,-1,
               "std::unexpected(): Необработанное исключение. Проверьте свои catch-блоки. Перехватите catch (...).    \n"
               "Проверьте, не нарушена ли спецификация исключений какой-либо функции, если вы ее (зря) используете.");
     }
@@ -4663,7 +4938,7 @@ $   _txError (NULL, 0, NULL, (DWORD)-1,-1,-1,
 
 void _txOnTerminate()
     {
-$   _txError (NULL, 0, NULL, (DWORD)-1,-1,-1,
+    _txError (NULL, 0, NULL, (DWORD)-1,-1,-1,
               "std::terminate(): Программа будет завершена из-за неперехваченного исключения в функции main()    \n"
               "или в деструкторе. Используйте try/catch блоки, перехватывайте catch (...), разбирайтесь, в чем дело.");
     }
@@ -4672,7 +4947,7 @@ $   _txError (NULL, 0, NULL, (DWORD)-1,-1,-1,
 
 const char* txGetModuleFileName (bool fileNameOnly /*= true*/)
     {
-$   static char fullName[1024] = "";
+$   static char fullName[1024] = "fullName";
 
 $   GetModuleFileName (NULL, fullName, sizeof (fullName) - 1) asserted;
 $   if (fileNameOnly) return fullName;
@@ -4680,9 +4955,11 @@ $   if (fileNameOnly) return fullName;
 $   char* title = strrchr (fullName, '\\'); assert (title);
 $   char* ext   = strrchr (fullName,  '.'); assert (ext);
 
+    #ifndef _MSC_VER_6
 $   strncpy_s ((char(&)[sizeof (fullName)]) (*ext),       // In size we trust
-               _TX_NAME "- TXLib", 
-               sizeof (fullName) - (ext - fullName) - 1); // ...don't worry
+               _TX_NAME "- TXLib",
+               sizeof (fullName) - (ext - fullName) - 1); // ...don't worry about it
+    #endif
 
 $   return title + 1;
     }
@@ -4843,7 +5120,7 @@ $   if (!txWindow()) return false;
 
 $   if (SendNotifyMessage (txWindow(), WM_DESTROY, 0, 0) == 0) return false;
 
-$	_txWaitFor (!_txCanvas_Window);
+$   _txWaitFor (!_txCanvas_Window);
 
 $   return _txCanvas_Window == NULL;
     }
@@ -4855,7 +5132,7 @@ bool txSetColor (COLORREF color, int thickness /*= 1*/)
 $   _txAssertOK();
 
 $   return _txBuffer_Select (Win32::CreatePen ((color == TX_TRANSPARENT? PS_NULL : PS_SOLID), thickness, color)) &&
-            txGDI          ((Win32::SetTextColor (txDC(), color) != 0));
+            txGDI        ((Win32::SetTextColor (txDC(), color)));
     }
 
 //--------------------------------------------------------------------------------------------
@@ -4877,12 +5154,12 @@ $   _txAssertOK();
 
 $   HGDIOBJ obj = txGDI ((Win32::GetCurrentObject (txDC(), OBJ_PEN))); assert (obj);
 
-$   char buf [MAX (sizeof (LOGPEN), sizeof (EXTLOGPEN))] = {0};
+$   union { EXTLOGPEN extLogPen; LOGPEN LogPen; } buf = {{0}};
 
 $   int size = GetObject (obj, 0, NULL);
-$   GetObject (obj, sizeof (buf), buf) asserted;
+$   GetObject (obj, sizeof (buf), &buf) asserted;
 
-$   return (size == sizeof (LOGPEN))? ((LOGPEN*)buf)->lopnColor : ((EXTLOGPEN*)buf)->elpColor;
+$   return (size == sizeof (LOGPEN))? buf.LogPen.lopnColor : buf.extLogPen.elpColor;
     }
 
 //--------------------------------------------------------------------------------------------
@@ -4926,7 +5203,7 @@ bool txSetROP2 (int mode /*= R2_COPYPEN*/)
     {
 $   _txAssertOK();
 
-$   return txGDI ((Win32::SetROP2 (txDC(), mode) != 0));
+$   return txGDI (!!(Win32::SetROP2 (txDC(), mode)));
     }
 
 //--------------------------------------------------------------------------------------------
@@ -4936,7 +5213,7 @@ bool txClear()
 $   _txAssertOK();
 
 $   POINT size = txGetExtent();
-$   return txGDI ((Win32::PatBlt (txDC(), 0, 0, size.x, size.y, PATCOPY) != 0));
+$   return txGDI (!!(Win32::PatBlt (txDC(), 0, 0, size.x, size.y, PATCOPY)));
     }
 
 //--------------------------------------------------------------------------------------------
@@ -5002,7 +5279,7 @@ bool txPolygon (const POINT points[], int numPoints)
     {
 $   _txAssertOK();
 
-$   return txGDI ((Win32::Polygon (txDC(), points, numPoints) != 0));
+$   return txGDI (!!(Win32::Polygon (txDC(), points, numPoints)));
     }
 
 //--------------------------------------------------------------------------------------------
@@ -5034,11 +5311,11 @@ $   POINT center = { (x0 + x1) /2, (y0 + y1) /2 };
 $   double start =  startAngle               * txPI/180,
            end   = (startAngle + totalAngle) * txPI/180;
 
-$   return txGDI ((Win32::Arc (txDC(), x0, y0, x1, y1,
-                              (int) (center.x + 100 * cos (start) + 0.5),
-                              (int) (center.y - 100 * sin (start) + 0.5),
-                              (int) (center.x + 100 * cos (end)   + 0.5),
-                              (int) (center.y - 100 * sin (end)   + 0.5)) != 0));
+$   return txGDI (!!(Win32::Arc (txDC(), x0, y0, x1, y1,
+                                (int) (center.x + 100 * cos (start) + 0.5),
+                                (int) (center.y - 100 * sin (start) + 0.5),
+                                (int) (center.x + 100 * cos (end)   + 0.5),
+                                (int) (center.y - 100 * sin (end)   + 0.5))));
     }
 
 //--------------------------------------------------------------------------------------------
@@ -5052,11 +5329,11 @@ $   POINT center = { (x0 + x1) /2, (y0 + y1) /2 };
 $   double start =  startAngle               * txPI/180,
            end   = (startAngle + totalAngle) * txPI/180;
 
-$   return txGDI ((Win32::Pie (txDC(), x0, y0, x1, y1,
-                              (int) (center.x + 100 * cos (start) + 0.5),
-                              (int) (center.y - 100 * sin (start) + 0.5),
-                              (int) (center.x + 100 * cos (end)   + 0.5),
-                              (int) (center.y - 100 * sin (end)   + 0.5)) != 0));
+$   return txGDI (!!(Win32::Pie (txDC(), x0, y0, x1, y1,
+                                (int) (center.x + 100 * cos (start) + 0.5),
+                                (int) (center.y - 100 * sin (start) + 0.5),
+                                (int) (center.x + 100 * cos (end)   + 0.5),
+                                (int) (center.y - 100 * sin (end)   + 0.5))));
     }
 
 //--------------------------------------------------------------------------------------------
@@ -5070,11 +5347,11 @@ $   POINT center = { (x0 + x1) /2, (y0 + y1) /2 };
 $   double start =  startAngle               * txPI/180,
            end   = (startAngle + totalAngle) * txPI/180;
 
-$   return txGDI ((Win32::Chord (txDC(), x0, y0, x1, y1,
-                                (int) (center.x + 100 * cos (start) + 0.5),
-                                (int) (center.y - 100 * sin (start) + 0.5),
-                                (int) (center.x + 100 * cos (end)   + 0.5),
-                                (int) (center.y - 100 * sin (end)   + 0.5)) != 0));
+$   return txGDI (!!(Win32::Chord (txDC(), x0, y0, x1, y1,
+                                  (int) (center.x + 100 * cos (start) + 0.5),
+                                  (int) (center.y - 100 * sin (start) + 0.5),
+                                  (int) (center.x + 100 * cos (end)   + 0.5),
+                                  (int) (center.y - 100 * sin (end)   + 0.5))));
     }
 
 //--------------------------------------------------------------------------------------------
@@ -5086,7 +5363,7 @@ $   _txAssertOK();
 
 $   if (color == TX_TRANSPARENT) color = txGetPixel (x, y);
 
-$   return txGDI ((Win32::ExtFloodFill (txDC(), x, y, color, mode) != 0));
+$   return txGDI (!!(Win32::ExtFloodFill (txDC(), x, y, color, mode)));
     }
 
 //--------------------------------------------------------------------------------------------
@@ -5095,7 +5372,7 @@ bool txTextOut (int x, int y, const char text[])
     {
 $   _txAssertOK();
 
-$   txGDI ((Win32::TextOut (txDC(), x, y, text, (int) strlen (text)))) asserted;
+$   txGDI (!!(Win32::TextOut (txDC(), x, y, text, (int) strlen (text)))) asserted;
 
 $   return true;
     }
@@ -5191,9 +5468,9 @@ $   strncpy_s (font.lfFaceName, name, sizeof (font.lfFaceName) - 1);
             {
 $           assert (fnt); assert (data); if (! (data && fnt)) return 0;
 #ifndef __STRICT_ANSI__
-$           return _strnicmp (fnt->lfFaceName, ((LOGFONT*)data)->lfFaceName, LF_FACESIZE) != 0;
+$           return _strnicmp (fnt->lfFaceName, ((LOGFONT*)data)->lfFaceName, LF_FACESIZE);
 #else
-$           return  strncmp  (fnt->lfFaceName, ((LOGFONT*)data)->lfFaceName, LF_FACESIZE) != 0;
+$           return  strncmp  (fnt->lfFaceName, ((LOGFONT*)data)->lfFaceName, LF_FACESIZE);
 #endif
             }
         };
@@ -5262,8 +5539,7 @@ bool txBitBlt (HDC dest, int xDest, int yDest, int width, int height,
     {
 $   _txAssertOK();
 
-$   return txGDI ((Win32::BitBlt (dest, xDest, yDest, width, height,
-                                  src,  xSrc,  ySrc, rOp) != 0));
+$   return txGDI (!!(Win32::BitBlt (dest, xDest, yDest, width, height, src, xSrc, ySrc, rOp)));
     }
 
 //--------------------------------------------------------------------------------------------
@@ -5273,10 +5549,9 @@ bool txTransparentBlt (HDC dest, int xDest, int yDest, int width, int height,
     {
 $   _txAssertOK();
 
-$   if (!TransparentBlt) return false;
+$   if (!Win32::TransparentBlt) return false;
 
-$   return Win32::TransparentBlt (dest, xDest, yDest, width, height,
-                                  src,  xSrc,  ySrc,  width, height, transColor) != 0;
+$   return txGDI (!!(Win32::TransparentBlt (dest, xDest, yDest, width, height, src, xSrc, ySrc, width, height, transColor)));
     }
 
 //--------------------------------------------------------------------------------------------
@@ -5286,19 +5561,14 @@ bool txAlphaBlend (HDC dest, int xDest, int yDest, int width, int height,
     {
 $   _txAssertOK();
 
-$   if (!AlphaBlend) return false;
+$   if (!Win32::AlphaBlend) return false;
 
 $   if (alpha < 0) alpha = 0;
 $   if (alpha > 1) alpha = 1;
 
-    #ifndef AC_SRC_ALPHA
-    #define AC_SRC_ALPHA 0x01   // On some old MinGW/MSVC versions, this is not defined.
-    #endif
-
 $   BLENDFUNCTION blend = { AC_SRC_OVER, 0, (BYTE) (alpha * 255 + 0.5), AC_SRC_ALPHA };
 
-$   return Win32::AlphaBlend (dest, xDest, yDest, width, height,
-                              src,  xSrc,  ySrc,  width, height, blend) != 0;
+$   return txGDI (!!(Win32::AlphaBlend (dest, xDest, yDest, width, height, src, xSrc, ySrc, width, height, blend)));
     }
 
 //--------------------------------------------------------------------------------------------
@@ -5352,8 +5622,8 @@ bool txLock (bool wait /*= true*/)
     {
 $   if (_txExit) Sleep (0);
 
-$   if (wait) { $ return    EnterCriticalSection (&_txCanvas_LockBackBuf), true; }
-    else      { $ return TryEnterCriticalSection (&_txCanvas_LockBackBuf) != 0;  }
+$   if (wait) { $ return      EnterCriticalSection (&_txCanvas_LockBackBuf), true; }
+    else      { $ return !!TryEnterCriticalSection (&_txCanvas_LockBackBuf);       }
     }
 
 //--------------------------------------------------------------------------------------------
@@ -5413,7 +5683,7 @@ $   return _txMouseButtons;
 
 bool txSetConsoleAttr (WORD color /*= 0x07*/)
     {
-$   return SetConsoleTextAttribute (GetStdHandle (STD_OUTPUT_HANDLE), color) != 0;
+$   return !!SetConsoleTextAttribute (GetStdHandle (STD_OUTPUT_HANDLE), color);
     }
 
 //--------------------------------------------------------------------------------------------
@@ -5435,8 +5705,8 @@ $   POINT fontSz = txGetConsoleFontSize();
 $   CONSOLE_SCREEN_BUFFER_INFO con = {{0}};
 $   GetConsoleScreenBufferInfo (GetStdHandle (STD_OUTPUT_HANDLE), &con) asserted;
 
-$   COORD pos = { (SHORT) (1.0 * x / fontSz.x + 0.5) + con.srWindow.Left,
-                  (SHORT) (1.0 * y / fontSz.y + 0.5) + con.srWindow.Top };
+$   COORD pos = { (short) (1.0 * x / fontSz.x + 0.5 + con.srWindow.Left),
+                  (short) (1.0 * y / fontSz.y + 0.5 + con.srWindow.Top) };
 
 $   SetConsoleCursorPosition (GetStdHandle (STD_OUTPUT_HANDLE), pos) asserted;
 
@@ -5486,13 +5756,10 @@ $   return written == len;
 
 POINT txGetConsoleFontSize()
     {
-    #if (_WIN32_WINNT >= 0x0500)
-
 $   CONSOLE_FONT_INFO font = {0, {8, 16}};
+
 $   if (Win32::GetCurrentConsoleFont)
         Win32::GetCurrentConsoleFont (GetStdHandle (STD_OUTPUT_HANDLE), false, &font) asserted;
-
-    #endif
 
 $   SIZE size = { font.dwFontSize.X, font.dwFontSize.Y };
 $   txGDI (Win32::GetTextExtentPoint32 (_txCanvas_BackBuf[1], "W", 1, &size));
@@ -5521,7 +5788,7 @@ $   if (mode & SND_LOOP) mode = (mode & ~SND_SYNC) | SND_ASYNC;
 
 $   if (!filename) mode = SND_PURGE;
 
-$   return PlaySound (filename, NULL, mode) != 0;
+$   return !!PlaySound (filename, NULL, mode);
     }
 
 //--------------------------------------------------------------------------------------------
@@ -5572,7 +5839,7 @@ $   int size       = 500;
 $   HDC dc = txCreateCompatibleDC (size, size);
 $   assert (dc);
 
-$   DWORD_PTR mask = SetThreadAffinityMask (GetCurrentThread(), 1);
+$   DWORD mask = SetThreadAffinityMask (GetCurrentThread(), 1);
 $   assert (mask);
 
 $   LARGE_INTEGER freq = {{0}};
@@ -5825,8 +6092,8 @@ $   return this__-> dialogProc (wnd, msg, wParam, lParam);
 //============================================================================================
 
 //============================================================================================
-//{          Low-level txDialog functions
-//! @name    Функции низкоуровневой работы с диалоговыми окнами
+//{          Low-level utility functions
+//! @name    Низкоуровневые служебные функции
 //============================================================================================
 //! @{
 
@@ -5921,6 +6188,78 @@ $   *pw++ = 0;
 $   return pw;
     }
 
+//--------------------------------------------------------------------------------------------
+
+bool _txCreateShortcut (const char shortcutName[],
+                        const char fileToLink[], const char args[] /*= NULL*/, const char workDir[] /*= NULL*/,
+                        const char description[] /*= NULL*/, int cmdShow /*= SW_SHOWNORMAL*/, const char iconFile[] /*= NULL*/, int iconIndex /*= 0*/,
+                        int fontSize /*= 0*/, COORD bufSize /*= ZERO (COORD)*/, COORD wndSize /*= ZERO (COORD)*/, COORD wndOrg /*=ZERO (COORD)*/)
+    {
+$   IShellLink* shellLink = NULL;
+$   Win32::IShellLinkDataList* dataList = NULL;
+$   IPersistFile* file = NULL;
+
+$   HRESULT init = Win32::CoInitialize (NULL);
+
+    _TX_TRY
+        {
+$       _TX_CHECKED (CoCreateInstance (CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, (void**) &shellLink));
+$       _TX_CHECKED (shellLink != NULL);
+$       if (!shellLink) return false;                   // OMG, this is for MSVC /W4 /analyze paranoid behaviour
+
+$       shellLink->SetPath (fileToLink);
+$       shellLink->SetArguments (args);
+$       shellLink->SetWorkingDirectory (workDir);
+$       shellLink->SetDescription (description);
+$       shellLink->SetShowCmd (cmdShow);
+$       shellLink->SetIconLocation (iconFile, iconIndex);
+
+$       _TX_CHECKED (shellLink->QueryInterface (Win32::IID_IShellLinkDataList, (void**) &dataList));
+$       _TX_CHECKED (dataList != NULL);
+
+$       NT_CONSOLE_PROPS props =
+          {{sizeof (NT_CONSOLE_PROPS), NT_CONSOLE_PROPS_SIG},
+
+            0x07, 0xF5,                                 // wFillAttribute, wPopupFillAttribute
+           {bufSize.X, bufSize.Y},                      // dwScreenBufferSize
+           {wndSize.X, wndSize.Y},                      // dwWindowSize
+           {wndOrg.X,  wndOrg.Y},                       // dwWindowOrigin
+            0,                                          // nFont
+            0,                                          // nInputBufferSize
+           {0, (short) fontSize},                       // dwFontSize, uFontFamily
+            0x36, 400, L"Lucida Console",               // uFontWeight, FaceName
+            15,                                         // UINT  uCursorSize;
+            0,  1, 1, 0,                                // bFullScreen, bQuickEdit, bInsertMode, bAutoPosition
+            50, 4, 0,                                   // uHistoryBufferSize, uNumberOfHistoryBuffers, bHistoryNoDup
+
+           {0x000000, 0x800000, 0x008000, 0x808000, 0x000080, 0x800080, 0x008080, 0xC0C0C0,
+            0x808080, 0xFF0000, 0x00FF00, 0xFFFF00, 0x0000FF, 0xFF00FF, 0x00FFFF, 0xFFFFFF}
+            };
+
+$       _TX_CHECKED (dataList->AddDataBlock (&props));
+
+$       _TX_CHECKED (shellLink->QueryInterface (IID_IPersistFile, (void**) &file));
+$       _TX_CHECKED (file != NULL);
+
+$       wchar_t wName[MAX_PATH] = L"";
+$       MultiByteToWideChar (CP_ACP, MB_PRECOMPOSED, shortcutName, -1, wName, MAX_PATH);
+
+$       _TX_CHECKED (file->Save (wName, true));
+        }
+
+$   _TX_CATCH
+$   _TX_FINALLY
+
+$   if (file)      file     ->Release();
+$   if (dataList)  dataList ->Release();
+$   if (shellLink) shellLink->Release();
+
+$   if (init == S_OK) Win32::CoUninitialize();
+
+$   return _TX_OK;
+    _TX_ENDTRY
+    }
+
 //! @}
 //}
 //============================================================================================
@@ -5954,12 +6293,14 @@ $   return pw;
 //--------------------------------------------------------------------------------------------
 
 #ifndef _TX_NAMED
-using namespace _TX::TX;          // Allow easy usage of TXLib functions
-using namespace _TX::TX::Win32;   // Simulate linkage with Win32 libs
+using namespace TX;          // Allow easy usage of TXLib functions
+using namespace TX::Win32;   // Simulate linkage with Win32 libs
 #endif
 
-using ::std::cin;                 // Predefined usings to avoid "using namespace std"
+using ::std::cin;            // Predefined usings to avoid "using namespace std"
 using ::std::cout;
+using ::std::cerr;
+using ::std::string;
 
 //}
 //--------------------------------------------------------------------------------------------
@@ -5970,7 +6311,10 @@ using ::std::cout;
 //--------------------------------------------------------------------------------------------
 //! @cond INTERNAL
 
-#if defined (__GNUC__) && (__GNUC__ >= 4)
+#if defined (__GNUC__) && (__GNUC__ >= 4) && (__GNUC_MINOR__ >= 3)
+
+    #pragma GCC optimize            ("strict-aliasing")
+    #pragma GCC diagnostic warning "-Wstrict-aliasing"
 
     // Still block this warning to avoid reporting about "= {0}" or "= {}" initialization.
 
@@ -5996,6 +6340,7 @@ using ::std::cout;
 
     #pragma warning (default: 4511)             // copy constructor could not be generated
     #pragma warning (default: 4512)             // assignment operator could not be generated
+    #pragma warning (disable: 4514)             // unreferenced inline function has been removed
     #pragma warning (default: 4663)             // C++ language change: to explicitly specialize class template '...'
 
     // This warning really occur at end of compilation, so do not restore it.
