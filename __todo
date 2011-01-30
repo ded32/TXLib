@@ -1,5 +1,13 @@
 
+ADD  register HDCs and delete them
+ADD  +it's too bad, you'll not free resources & will die Windows... in ExitBox
+ADD  версия и ревизия в сообщ. об ошибке
+ADD  txException (txExceptionInformation), VERIFY, verified macros
+ADD  valuePipe
+ADD  $-printing
+ADD  $r, $R, $rY - red on yellow, $n = \n, $r = \r
 ADD  SEH (divide by zero etc)
+ADD  tr(msg) { return translation (msg) /*tr from map*/ }
 
 ADD  doc: GCC 3.x debug: 1) missing initializers -- is normal; release: 1) missing initializers; 2) will never be executed -- are normal
 ADD  doc: warning level & disablings explained in help
@@ -10,9 +18,6 @@ ADD  doc: ORFO to doxygen page trailer
 
 FIX  setup: error: undefined
 
-FIX  However, if the current font is a raster font, SetConsoleOutputCP does not affect how extended characters are displayed.
-
-
 --
 
 FIX  txObject
@@ -21,6 +26,8 @@ ADD  small icon from memory (==jumping man)
 
 ---
 
+FIX+ However, if the current font is a raster font, SetConsoleOutputCP does not affect how extended characters are displayed.
+CHG+ _TX_DLLIMPORT
 FIX+ doc: txAlphaBlend params (черный цвет + прозрачность)
 FIX+ Regions HREGION leakage
 FIX+ init: = {0}: T:\Downloads\1\TXLib.h|2244|warning: missing initializer for member `_CRITICAL_SECTION::LockCount'|
@@ -36,6 +43,7 @@ FIX+ doc: вынести текст уроков в отд. файл
 
 ADD? lower main process priority when second process speed decreases
 
+CHG  _txErr-r->txError and do docs -- should use TX_ERROR
 ADD- edit source (%F12)
 ADD- goto site (+F12)
 ADD  BMP screenshots (^F12)
