@@ -1,7 +1,5 @@
 
 ADD  register HDCs and delete them
-ADD  +it's too bad, you'll not free resources & will die Windows... in ExitBox
-ADD  версия и ревизия в сообщ. об ошибке
 ADD  txException (txExceptionInformation), VERIFY, verified macros
 ADD  valuePipe
 ADD  $-printing
@@ -15,17 +13,25 @@ ADD  doc: "Ошибка в библиотеке"
 FIX  doc: do NOT russify message strings and DE-russify russian ones
 FIX  doc: russify help
 ADD  doc: ORFO to doxygen page trailer
+ADD  doc: многофайловый проект
+ADD  doc: многооконность
+ADD  doc: anon namespace
 
 FIX  setup: error: undefined
 
 --
 
 FIX  txObject
+FIX  txLine --> #define txLine
 ADD  CommonControls, toolbar, status bar
 ADD  small icon from memory (==jumping man)
+ADD  tinyTX
 
 ---
 
+ADD+  +it's too bad, you'll not free resources & will die Windows... in ExitBox
+ADD+ get parent process -- cb_console_runner? -- disable pause
+ADD+ версия и ревизия в сообщ. об ошибке
 FIX+ However, if the current font is a raster font, SetConsoleOutputCP does not affect how extended characters are displayed.
 CHG+ _TX_DLLIMPORT
 FIX+ doc: txAlphaBlend params (черный цвет + прозрачность)
