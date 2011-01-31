@@ -2700,6 +2700,7 @@ T txUnlock (T value);
 //!          Может задаваться перед включением TXLib.h в программу.
 //}-------------------------------------------------------------------------------------------
 
+             // TX_VEGETABLE_PRINTERS
 #if !defined  (_TX_WAITABLE_PARENTS)
     #define    _TX_WAITABLE_PARENTS       "cb_console_runner.exe, starter.exe"
 #endif
@@ -3586,61 +3587,62 @@ $   return dlg.str;
 //           Прототипы внутренних функций, макросы и константы
 //============================================================================================
 
-int          _txInitialize();
-void         _txOnExit();
-bool         _txIsParentWaitable();
+int              _txInitialize();
+void             _txOnExit();
 
-HWND         _txCanvas_CreateWindow (CREATESTRUCT* from);
-inline bool  _txCanvas_OK();
+HWND             _txCanvas_CreateWindow (CREATESTRUCT* from);
+inline bool      _txCanvas_OK();
 
-int          _txCanvas_SetRefreshLock (int count);
+int              _txCanvas_SetRefreshLock (int count);
 
-bool         _txCanvas_OnCREATE     (HWND wnd);
-bool         _txCanvas_OnDESTROY    (HWND wnd);
-bool         _txCanvas_OnCLOSE      (HWND);
-bool         _txCanvas_OnPAINT      (HWND wnd);
-bool         _txCanvas_OnCHAR       (HWND wnd, WPARAM ch);
-bool         _txCanvas_OnTIMER      (HWND wnd, WPARAM id);
-bool         _txCanvas_OnMOUSEMOVE  (HWND wnd, WPARAM buttons, LPARAM coords);
-bool         _txCanvas_OnCmdCONSOLE (HWND wnd, WPARAM cmd);
-bool         _txCanvas_OnCmdABOUT   (HWND wnd, WPARAM cmd);
+bool             _txCanvas_OnCREATE     (HWND wnd);
+bool             _txCanvas_OnDESTROY    (HWND wnd);
+bool             _txCanvas_OnCLOSE      (HWND);
+bool             _txCanvas_OnPAINT      (HWND wnd);
+bool             _txCanvas_OnCHAR       (HWND wnd, WPARAM ch);
+bool             _txCanvas_OnTIMER      (HWND wnd, WPARAM id);
+bool             _txCanvas_OnMOUSEMOVE  (HWND wnd, WPARAM buttons, LPARAM coords);
+bool             _txCanvas_OnCmdCONSOLE (HWND wnd, WPARAM cmd);
+bool             _txCanvas_OnCmdABOUT   (HWND wnd, WPARAM cmd);
 
-void         _txCanvas_ThreadProc   (void* data);
-LRESULT CALLBACK _txCanvas_WndProc  (HWND wnd, UINT msg, WPARAM wpar, LPARAM lpar);
+void             _txCanvas_ThreadProc   (void* data);
+LRESULT CALLBACK _txCanvas_WndProc      (HWND wnd, UINT msg, WPARAM wpar, LPARAM lpar);
 
-HDC          _txBuffer_Create (HWND wnd, const POINT* size = NULL, HBITMAP bmap = NULL);
-bool         _txBuffer_Delete (HDC* dc);
-bool         _txBuffer_Select (HGDIOBJ obj, HDC dc = txDC());
+HDC              _txBuffer_Create (HWND wnd, const POINT* size = NULL, HBITMAP bmap = NULL);
+bool             _txBuffer_Delete (HDC* dc);
+bool             _txBuffer_Select (HGDIOBJ obj, HDC dc = txDC());
 
-HWND         _txConsole_Attach (bool forceRealloc);
-bool         _txConsole_OK();
-bool         _txConsole_Detach (bool restorePos);
-bool         _txConsole_Draw (HDC dc);
-bool         _txConsole_SetUnicodeFont();
+HWND             _txConsole_Attach (bool forceRealloc);
+bool             _txConsole_OK();
+bool             _txConsole_Detach (bool restorePos);
+bool             _txConsole_Draw (HDC dc);
+bool             _txConsole_SetUnicodeFont();
 
-void*        _tx_DLGTEMPLATE_Create (void* globalMem, size_t bufsize, DWORD style, DWORD exStyle,
-                                     WORD controls, short x, short y, short cx, short cy,
-                                     const char caption[], const char font[], WORD fontsize,
-                                     HANDLE menu = NULL);
-void*        _tx_DLGTEMPLATE_Add    (void* dlgTemplatePtr, size_t bufsize, DWORD style, DWORD exStyle,
-                                     short x, short y, short cx, short cy,
-                                     WORD id, const char wclass[], const char caption[]);
+bool            _txIsParentWaitable (DWORD* parentPID);
+PROCESSENTRY32* _txFindProcess (unsigned pid = GetCurrentProcessId());
+bool            _txKillProcess (DWORD pid);
 
-bool         _txCreateShortcut (const char shortcutName[],
-                                const char fileToLink[], const char args[] = NULL, const char workDir[] = NULL,
-                                const char description[] = NULL, int cmdShow = SW_SHOWNORMAL,
-                                const char iconFile[] = NULL, int iconIndex = 0, int fontSize = 0,
-                                COORD bufSize = ZERO (COORD), COORD wndSize = ZERO (COORD), COORD wndOrg = ZERO (COORD));
+bool            _txCreateShortcut (const char shortcutName[],
+                                   const char fileToLink[], const char args[] = NULL, const char workDir[] = NULL,
+                                   const char description[] = NULL, int cmdShow = SW_SHOWNORMAL,
+                                   const char iconFile[] = NULL, int iconIndex = 0, int fontSize = 0,
+                                   COORD bufSize = ZERO (COORD), COORD wndSize = ZERO (COORD), COORD wndOrg = ZERO (COORD));
 
-const PROCESSENTRY32* _txFindProcess (unsigned pid = GetCurrentProcessId());
+void*           _tx_DLGTEMPLATE_Create (void* globalMem, size_t bufsize, DWORD style, DWORD exStyle,
+                                        WORD controls, short x, short y, short cx, short cy,
+                                        const char caption[], const char font[], WORD fontsize,
+                                        HANDLE menu = NULL);
+void*           _tx_DLGTEMPLATE_Add    (void* dlgTemplatePtr, size_t bufsize, DWORD style, DWORD exStyle,
+                                        short x, short y, short cx, short cy,
+                                        WORD id, const char wclass[], const char caption[]);
 
-bool         _txError (const char file[], int line, const char func[],
-                       DWORD getlasterror_value, int errno_value, int doserrno_value,
-                       const char msg[], ...) _TX_CHECK_FORMAT (7);
+bool            _txError (const char file[], int line, const char func[],
+                          DWORD getlasterror_value, int errno_value, int doserrno_value,
+                          const char msg[], ...) _TX_CHECK_FORMAT (7);
 
-void         _txOnSignal (int signal = 0, int fpe = 0);
-void         _txOnTerminate();
-void         _txOnUnexpected();
+void            _txOnSignal (int signal = 0, int fpe = 0);
+void            _txOnTerminate();
+void            _txOnUnexpected();
 
 //--------------------------------------------------------------------------------------------
 
@@ -3816,6 +3818,10 @@ _TX_DLLIMPORT     ("Shell32",  HINSTANCE,ShellExecuteA,          (HWND wnd, LPCT
 
 #ifndef AC_SRC_ALPHA
 #define AC_SRC_ALPHA          0x01
+#endif
+
+#ifndef SMTO_ERRORONEXIT
+#define SMTO_ERRORONEXIT      0x0020
 #endif
 
 #ifndef NT_CONSOLE_PROPS_SIG
@@ -4118,14 +4124,17 @@ $   HWND wnd     = (_txCanvas_Window)? _txCanvas_Window : console;
 $   int isMaster = (_txCanvas_Window)? (GetWindowLong (_txCanvas_Window, GWL_STYLE) & WS_SYSMENU) : 0;
 
 $   char title [1024] = "";
-$   if (wnd) GetWindowTextA (wnd, title, sizeof (title));
+$   strncpy_s (title, txGetModuleFileName (false), sizeof (title));
+$   if (wnd) SendMessageTimeout (wnd, WM_GETTEXT, sizeof (title), (LPARAM) title,
+                                 SMTO_ABORTIFHUNG | SMTO_ERRORONEXIT, _TX_TIMEOUT, NULL);
 $   strncat_s (title, " [ЗАВЕРШЕНО]", sizeof (title) - 1);
 $   if (wnd) SetWindowTextA (wnd, title);
 
 $   _txRunning = false;
 $   _txConsole_IsBlinking = false;
 
-$   bool kbdPause = !_txIsParentWaitable();
+$   DWORD parent = 0;
+$   bool kbdPause = !_txIsParentWaitable (&parent);
 
 $   if ((isMaster || !_txCanvas_Window) && !_txExit &&
         GetCurrentThreadId() == _txMainThreadId)
@@ -4133,23 +4142,23 @@ $   if ((isMaster || !_txCanvas_Window) && !_txExit &&
 $       if (kbdPause && !_txCanvas_Window)
             { $ printf ("\n" "[Нажмите любую клавишу для завершения]"); }
 
-$       while (kbdPause && _kbhit()) (void)_getch();
+$       while (_kbhit()) (void)_getch();
 
 $       for (int i = 1; ; i++)
             {
-$           if (kbdPause && _kbhit()) break;
+            if (_kbhit()) break;
 
-$           if (_txCanvas_Window  && !_txCanvas_ThreadId) break;
+            if (_txCanvas_Window  && !_txCanvas_ThreadId) break;
 
-$           if (!_txCanvas_Window && !kbdPause) break;
+            if (!_txCanvas_Window && !kbdPause) break;
 
-$           Sleep (_TX_WINDOW_UPDATE_INTERVAL);
+            Sleep (_TX_WINDOW_UPDATE_INTERVAL);
 
-$           if (i % 100500 == 0)
+            if (i % 100500 == 0)
                 printf ("\r" "[Нажмите же какую-нибудь клавишу для моего завершения]");
             }
 
-$       while (kbdPause && _kbhit()) (void)_getch();
+$       while (_kbhit()) (void)_getch();
 
 $       printf ("\n");
         }
@@ -4163,6 +4172,8 @@ $   if (!_txCanvas_Window)
 
 $   _txConsole_Detach (kbdPause);
 
+$   if (kbdPause && parent) _txKillProcess (parent);
+
 #ifndef NDEBUG
     OutputDebugString ("\n");
     OutputDebugString (_TX_VERSION ": \"" __FILE__ "\"" _TX_NAME "-- FINISHED\n");
@@ -4172,37 +4183,63 @@ $   _txConsole_Detach (kbdPause);
 
 //-----------------------------------------------------------------------------
 
-bool _txIsParentWaitable()
+bool _txIsParentWaitable (DWORD* parentPID)
     {
-$   const PROCESSENTRY32* proc = _txFindProcess (_txFindProcess() -> th32ParentProcessID);
-$   if (!proc) return false;
+$   PROCESSENTRY32* info = _txFindProcess (_txFindProcess() -> th32ParentProcessID);
+$   if (!info) return false;
+
+$   if (parentPID) *parentPID = info->th32ProcessID;
 
 $   static char list[1024] = _TX_WAITABLE_PARENTS;
 $   char* ctx = NULL;
 
 $   for (const char* p = strtok_s (list, ", ", &ctx); p; p = strtok_s (NULL, ", ", &ctx))
-        if (_stricmp (p, proc->szExeFile) == 0) return true;
+        if (_stricmp (p, info->szExeFile) == 0) return true;
 
 $   return false;
     }
 
 //-----------------------------------------------------------------------------
 
-// You are here, little hacker?
-
-const PROCESSENTRY32* _txFindProcess (unsigned pid /*= GetCurrentProcessId()*/)
+PROCESSENTRY32* _txFindProcess (unsigned pid /*= GetCurrentProcessId()*/)
     {
-$   static PROCESSENTRY32 entry = { sizeof (entry) };
+$   static PROCESSENTRY32 info = { sizeof (info) };
+$   if (!pid) return &info;
 
 $   HANDLE sshot = CreateToolhelp32Snapshot (TH32CS_SNAPPROCESS, 0); assert (sshot);
 $   if (!sshot) return NULL;
 
-$   for (Process32First (sshot, &entry); Process32Next (sshot, &entry); )
-        if (entry.th32ProcessID == pid) break;
+$   for (Process32First (sshot, &info); Process32Next (sshot, &info); )
+        if (info.th32ProcessID == pid) break;
 
 $   CloseHandle (sshot);
 
-$   return &entry;
+$   return &info;
+    }
+
+//-----------------------------------------------------------------------------
+
+// You are here, little hacker?
+
+bool _txKillProcess (DWORD pid)
+    {
+$   HANDLE token = INVALID_HANDLE_VALUE;
+$   OpenProcessToken (GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &token) asserted;
+
+$   LUID luid = {0};
+$   LookupPrivilegeValue (NULL, SE_DEBUG_NAME, &luid) asserted;
+
+$   TOKEN_PRIVILEGES priv = { 1, { luid, SE_PRIVILEGE_ENABLED }};
+$   TOKEN_PRIVILEGES old  = {0};
+
+$   DWORD oldSz = 0;
+$   AdjustTokenPrivileges (token, false, &priv, sizeof (priv), &old, &oldSz) asserted;
+
+$   HANDLE proc = OpenProcess (PROCESS_ALL_ACCESS, 0, pid);
+$   bool ok = (proc && TerminateProcess (proc, 0));
+$   CloseHandle (proc);
+
+$   return ok;
     }
 
 //! @}
@@ -4741,13 +4778,11 @@ $       HANDLE out = GetStdHandle (STD_OUTPUT_HANDLE);
 $       Win32::CONSOLE_FONT_INFOEX info = { sizeof (info) };
 $       Win32::GetCurrentConsoleFontEx (out, false, &info) asserted;
 
-$       info.FontFamily = 0x36;
-$       info.FontWeight = 400;
-$       wcsncpy_s (info.FaceName, L"Lucida Console", sizeof (info.FaceName));  // Unicode fixed-pitch
+$       info.FontFamily = 0x36;  // Unicode fixed-pitch
 
 $       Win32::SetCurrentConsoleFontEx (out, false, &info) asserted;
 
-$	    return true;
+$       return true;
         }
 
 $   const unsigned uniFont = 10;
@@ -4925,7 +4960,8 @@ $       Win32::NT_CONSOLE_PROPS props =
             0,                                          // nFont
             0,                                          // nInputBufferSize
            {0, (short) fontSize},                       // dwFontSize
-            0x36, 400, L"Lucida Console",               // uFontFamily, uFontWeight, FaceName
+// !!!      0x36, 400, L"Lucida Console",               // uFontFamily, uFontWeight, FaceName
+            0x36, 0, L"",                               // uFontFamily, uFontWeight, FaceName
             15,                                         // UINT  uCursorSize;
             0,  1, 1, 0,                                // bFullScreen, bQuickEdit, bInsertMode, bAutoPosition
             50, 4, 0,                                   // uHistoryBufferSize, uNumberOfHistoryBuffers, bHistoryNoDup

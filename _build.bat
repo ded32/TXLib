@@ -22,6 +22,8 @@ del TXLib-Help.dox
 echo Committing...
 
 call hg ci -m "%*" 
+call hg kwexpand
+call hg ci -m "~" 
 
 attrib +h %0
 

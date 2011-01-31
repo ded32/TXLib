@@ -10,6 +10,8 @@
 
 #include "TXLib.h"
 
+//----------------------------------------------------------------------------
+
 void DrawTree (double x, double y, double length, double angle)
     {
     if (length <= 0) return;
@@ -41,6 +43,8 @@ void DrawTree (double x, double y, double length, double angle)
     DrawTree (x1, y1, length - 10 + random (-1, +1) + height, angle + 0.35 + random (-0.2, +0.2) + wind);
     DrawTree (x1, y1, length - 10 + random (-1, +1) + height, angle - 0.35 - random (-0.2, +0.2) + wind);
     }
+
+//----------------------------------------------------------------------------
 
 int main ()
     {
