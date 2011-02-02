@@ -1,6 +1,14 @@
 @echo off
 if not "%1" == "" goto %1
 
+:ci
+echo Committing...
+
+call hg ci -m "%*" 
+call hg kwexpand
+attrib +h %0
+
+:chm
 echo Making docs...
 
 set doxygen_=-nointeractive
@@ -18,14 +26,7 @@ echo GENERATE_HTMLHELP = NO  >> TXLib-Help.dox
 call doxygen_ TXLib-Help.dox
 del TXLib-Help.dox
 
-:ci
-echo Committing...
-
-call hg ci -m "%*" 
-call hg kwexpand
 call hg ci -m "~" 
-
-attrib +h %0
 
 :rar
 echo Preparing RAR info...
