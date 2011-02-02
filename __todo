@@ -1,4 +1,6 @@
 
+FIX  pseudo-graphics chars in console-to-TX translation is wrong
+
 ADD  register HDCs and delete them
 ADD  txException (txExceptionInformation), VERIFY, verified macros
 ADD  valuePipe
@@ -17,7 +19,7 @@ ADD  doc: многофайловый проект
 ADD  doc: многооконность
 ADD  doc: anon namespace
 
-FIX  setup: error: undefined
+FIX  setup: error: undefined, don't worry... --> remove
 
 --
 
