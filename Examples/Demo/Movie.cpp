@@ -1,4 +1,4 @@
-//{=========================================================================== 
+//{===========================================================================
 //! @file       Examples\Demo\Movie.cpp
 //!
 //! @brief      Мультфильм "Путь программиста"
@@ -1463,7 +1463,7 @@ void matrixFireball (int x, int y, const char* text, int len, int textHeight, CO
         txSetTextAlign (TA_CENTER);
         txSetColor (color);
 
-        const char str[2] = { text[a] };
+        const char str[2] = { text[a], 0 };
         txTextOut (x, y + yBonus, str);
 
         yBonus += (textHeight + a) * 4/5;
@@ -1483,7 +1483,7 @@ void matrixEngineInit (int count)
 
         const char* command = getRandomCommand();
         strcpy (matrixElementsNames[x], command);
-        delete command;
+        delete[] (char*) command;
         }
     }
 
@@ -1506,7 +1506,7 @@ void matrixEngineLoop (int spd, COLORREF col)
 
             const char* randomCommand = getRandomCommand();
             strcpy (matrixElementsNames[a], randomCommand);
-            delete randomCommand;
+            delete[] (char*) randomCommand;
             }
 
         matrixFireball (a * 40, matrixElementsYPositions[a],       matrixElementsNames[a],                                      10, 20, col);
@@ -1535,7 +1535,7 @@ void generateBinaryStairs (int difference, int flats)
 
         const char* stairsGround = getStairsGround ((i + 1 ) * difference);
         strcpy (binaryStairsGrounds[i], stairsGround);
-        delete stairsGround;
+        delete[] (char*) stairsGround;
         }
     }
 
@@ -1592,21 +1592,21 @@ void readCodePro()
     initIO();
 
     fseek (sourceFile, 0, SEEK_END);
-    int fileSize = MIN (ftell (sourceFile), 10000);
+    unsigned fileSize = MIN (ftell (sourceFile), 10000);
     fseek (sourceFile, 0, SEEK_SET);
 
     char* allData = new char [fileSize + 100];
     int numberOfStrings = 0;
 
     try {
-        int i = 0;
+        unsigned i = 0;
         for (i = 0; i < fileSize; i++)
             {
             allData[i] = (char) fgetc (sourceFile);
             if (allData[i] == '\n') numberOfStrings++;
             }
 
-        fileSize += strlen (strcpy (&allData[i-1], "\n    ...\n"));
+        fileSize += (unsigned) strlen (strcpy (&allData[i-1], "\n    ...\n"));
         numberOfStrings += 2;
 
         partsAmount = numberOfStrings / 30 + 1;
@@ -1769,7 +1769,7 @@ void drawPrintingEffect (int x, int y, const char* whatToPrint, int howMany, COL
 
     for (int i = 0; i < howMany; i++)
         {
-        const char toPrintNow[2] = { whatToPrint[i] };
+        const char toPrintNow[2] = { whatToPrint[i], 0 };
         txTextOut (x + charWidthTotal, y, toPrintNow);
 
         charWidthTotal += txGetTextExtentX (toPrintNow);
