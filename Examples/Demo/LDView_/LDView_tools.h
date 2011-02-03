@@ -1,5 +1,5 @@
 //{=========================================================================== 
-//! @file       Examples\Demo\LDView\LDView_Tools.h
+//! @file       Examples\Demo\LDView_\LDView_Tools.h
 //!
 //! @brief      Этюд "Визуализатор графов", Misc tools
 //!

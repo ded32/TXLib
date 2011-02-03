@@ -24,7 +24,7 @@
  * \author   Copyright (C) Nikita Uvarov, 7 класс
  * \date     2009
  *
- * \defgroup DirectTX Движок
+ * \defgroup DirectTX DirectTX: Движок (Н. Уваров)
  */
 
 #include "TXLib.h"

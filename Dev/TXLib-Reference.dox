@@ -9,6 +9,7 @@ PROJECT_BRIEF          = "<s>&nbsp;ALL&nbsp;</s> Windows graphics in a sandbox"
 PROJECT_LOGO           = "Doc/TXLib.png"
 
 IGNORE_PREFIX          =
+PREDEFINED             =
 
 EXCLUDE_PATTERNS       = */_OFF/* */.hg/* */Wizard/*
 
@@ -147,7 +148,7 @@ HIDE_IN_BODY_DOCS      = YES
 
 SORT_MEMBER_DOCS       = NO
 SORT_BRIEF_DOCS        = NO
-SORT_MEMBERS_CTORS_1ST = YES
+SORT_MEMBERS_CTORS_1ST = NO
 SORT_GROUP_NAMES       = NO
 SORT_BY_SCOPE_NAME     = NO
 MAX_INITIALIZER_LINES  = 30
