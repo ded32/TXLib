@@ -1502,7 +1502,10 @@ HDC txLoadImage (const char filename[]) _TX_CHECK_RESULT;
 //@ {
 
 bool txDeleteDC (HDC  dc);
+
+//! @cond INTERNAL
 bool txDeleteDC (HDC* dc);
+//! @endcond
 
 //@ }
 //{-------------------------------------------------------------------------------------------
@@ -2256,6 +2259,8 @@ double txQueryPerformance() _TX_CHECK_RESULT;
 
 #endif
 
+//! Замена макросу SIZEARR() для работы в Microsoft Visual Studio 6
+
 #define sizearr( arr )        ( sizeof (arr) / sizeof (arr)[0] )
 
 //! @}
@@ -2436,7 +2441,7 @@ const double txPI = asin (1.0) * 2;
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Misc
-//! @brief   Обнулятель типов, не имеющих конструкторов
+//! @brief   Обнулитель типов, не имеющих конструкторов
 //!
 //! @param   type  Имя типа
 //!
@@ -2558,9 +2563,8 @@ WNDPROC txSetWindowHandler (WNDPROC handler = NULL);
 //!          который не приостанавливает поток, а просто отключает операции по обновлению окна.
 //!
 //! @see     txDC(), txLock(), txUnlock(), txGDI()
-//! @usage   См. исходный текст функций _txCanvas_OnPaint() и _txConsole_Draw() в TXLib.h.
-//! @code
-//! @endcode
+//! @usage
+//!          См. исходный текст функций _txCanvas_OnPaint() и _txConsole_Draw() в TXLib.h.
 //}-------------------------------------------------------------------------------------------
 
 bool txLock (bool wait = true);
@@ -2571,20 +2575,19 @@ bool txLock (bool wait = true);
 //!
 //! @return  Состояние блокировки (всегда false).
 //!
-//!          Более подробно см. в txLock().
+//!          Более подробно см. в описании txLock().
 //!
 //! @see     txDC(), txLock(), txGDI()
 //! @usage
-//! @code
-//! @usage   См. исходный текст функций _txCanvas_OnPaint() и _txConsole_Draw() в TXLib.h.
-//! @endcode
+//!          См. исходный текст функций _txCanvas_OnPaint() и _txConsole_Draw() в TXLib.h.
 //}-------------------------------------------------------------------------------------------
 //! @{
 
 bool txUnlock();
 
-template <typename T> inline
-T txUnlock (T value);
+//! @cond INTERNAL
+template <typename T> inline T txUnlock (T value);
+//! @endcond
 
 //! @}
 
@@ -2666,13 +2669,14 @@ T txUnlock (T value);
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Technical
-//! @brief   Список запускающих процессов, которые будут делать паузу после завершения процесса
+//! @brief   Список запускающих программ, которые ждут нажатия клавиши после завершения процесса
 //!          TXLib.
 //!
-//!          Если процесс перечислен в списке, то при запуске из них паузы в конце программы TXLib
-//!          не будет (если не открыто окно TXLib, а есть только окно консоли).
+//!          Если программа перечислена в списке и TXLib запущена из нее, то при завершении TXLib
+//!          указанная программа будет закрыта. (Это произойдет, если не открыто графическое окно
+//!          TXLib, а есть только окно консоли.)
 //!
-//!          Процессы разделяются пробелом или запятой.
+//!          Программы разделяются пробелом или запятой.
 //!
 //!          Может задаваться перед включением TXLib.h в программу.
 //}-------------------------------------------------------------------------------------------
@@ -2730,13 +2734,17 @@ const int      _TX_TIMEOUT                = 1000;
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Technical
-//! @brief   Размеры внутренних строковых буферов TXLib
+//! @brief   Размеры внутренних статических строковых буферов TXLib
 //}-------------------------------------------------------------------------------------------
-//! @{
 
-const int      _TX_BUFSIZE                = 1024,
-               _TX_BIGBUFSIZE             = 2048;
-//! @}
+const int      _TX_BUFSIZE                = 1024;
+
+//{-------------------------------------------------------------------------------------------
+//! @ingroup Technical
+//! @brief   Размеры внутренних статических строковых буферов TXLib
+//}-------------------------------------------------------------------------------------------
+
+const int      _TX_BIGBUFSIZE             = 2048;
 
 //! @}
 //}
@@ -2913,7 +2921,9 @@ const int      _TX_BUFSIZE                = 1024,
 
 #endif
 
-#define TX_NEEDED             asserted  // For compatibility with earlier releases
+//! @cond INTERNAL
+#define TX_NEEDED             asserted  //!< For compatibility with earlier releases
+//! @endcond
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Misc
@@ -2936,7 +2946,9 @@ const int      _TX_BUFSIZE                = 1024,
 #define TX_ERROR( msg )       ( _txError (__FILE__, __LINE__, __TX_FUNCTION__,                \
                                          (DWORD)(-1), -1, -1, msg), _txNOP (0) )
 
-#define TX_THROW              TX_ERROR  // For compatibility with earlier releases
+//! @cond INTERNAL
+#define TX_THROW              TX_ERROR  //!< For compatibility with earlier releases
+//! @endcond
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Misc
@@ -2998,13 +3010,14 @@ const int      _TX_BUFSIZE                = 1024,
 //! @ingroup Misc
 //! @brief   Выводит сообщение в отладчике.
 //!
+//! @param   format  Строка для печати, как в printf().
+//!
 //! @return  Количество напечатанных символов.
 //!
 //!          Функция формирует сообщение по правилам printf() и передает его OutputDebugString().
 //!          Ее вывод можно перехватить утилитами-логгерами, например,
-//!          <a href=http://technet.microsoft.com/ru-ru/sysinternals/bb896647%28en-us%29.aspx>
-//!          DebugView</a>. Если этого не сделать, и не задать первый символ @c '\a' (см. ниже),
-//!          то о сообщении никто не узнает.
+//!          <a href=http://technet.microsoft.com/ru-ru/sysinternals/bb896647%28en-us%29.aspx>DebugView</a>.
+//!          Если этого не сделать, и не задать первый символ @c '\a' (см. ниже), то о сообщении никто не узнает.
 //!
 //! @note    Если первый символ в строке @c '\a', то сообщение также дублирется MessageBox().
 //!
@@ -3101,7 +3114,7 @@ int txOutputDebugPrintf (const char format[], ...) _TX_CHECK_FORMAT (1);
 
 #endif
 
-//! @cond INTERNAL
+//! @cond _OFF
 
 extern const char* _txSrcLocFile;
 extern int         _txSrcLocLine;

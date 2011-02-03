@@ -1,5 +1,5 @@
 //{=========================================================================== 
-//! @file       Examples\Demo\LDView\LDView_GraphView.h
+//! @file       Examples\Demo\LDView_\LDView_GraphView.h
 //!
 //! @brief      Этюд "Визуализатор графов", Graph view representation
 //!

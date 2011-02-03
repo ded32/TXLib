@@ -1,5 +1,5 @@
 //{=========================================================================== 
-//! @file       Examples\Demo\LDView\LDView.txt
+//! @file       Examples\Demo\LDView_\LDView.txt
 //!
 //! @brief      Этюд "Визуализатор графов", help file
 //!

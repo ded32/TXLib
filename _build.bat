@@ -41,7 +41,8 @@ echo Text=     Установка TX Library>>                                           
 echo Text=>>                                                                                %Temp%\~log
 echo Text=     TX Library Setup>>                                                           %Temp%\~log
 echo Text=>>                                                                                %Temp%\~log
-echo Text=     [$Version$]| sed32 s/\$//g >>                         %Temp%\~log
+call hg parents --template "Text=     [Version: {branches|nonempty}, Revision: {rev}]" >>   %Temp%\~log
+echo.>>                                                                                     %Temp%\~log
 echo Text=>>                                                                                %Temp%\~log
 echo Text=     $Copyright$| sed32 s/\$//g >> %Temp%\~log
 echo Text=>>                                                                                %Temp%\~log

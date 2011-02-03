@@ -1,5 +1,5 @@
 //{=========================================================================== 
-//! @file       Examples\Demo\LDView\LDView.cpp
+//! @file       Examples\Demo\LDView_\LDView.cpp
 //!
 //! @brief      Этюд "Визуализатор графов", Main application file
 //!
