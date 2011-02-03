@@ -166,12 +166,16 @@
     #pragma warning (disable: 4663)             // C++ language change: to explicitly specialize class template '...'
     #pragma warning (disable: 4710)             // function '...' not inlined
 
-    #if !defined (_MT)
-        #error Must use multithreaded run-time library to use TXLib. Set Project/Settings/C++/Code Generation/Use run-time library == Multithreaded
-    #endif
-
     #if !defined (WINVER)
         #define WINVER   0x0400                 // MSVC 6: Defaults to Windows 95
+    #endif
+
+#endif
+
+#if defined (_MSC_VER) && (_MSC_VER <  1400)    // MSVC Pre-8 (Pre-2005)
+
+    #if !defined (_MT)
+        #error Must use multithreaded run-time library to use TXLib. Set Project/Settings/C++/Code Generation/Run-time library == Multi-threaded
     #endif
 
 #endif
@@ -198,11 +202,11 @@
 
 #if defined (__INTEL_COMPILER)
 
-//  remark #174                                 // expression has no effect
-//  remark #304                                 // access control not specified ("public" by default)
-//  remark #522                                 // function "..." redeclared "inline" after being called
-//  remark #981                                 // operands are evaluated in unspecified order
-//  warning #1684                               // conversion from pointer to same-sized integral type (portability problem)
+    #pragma warning (disable:  174)             // remark: expression has no effect
+    #pragma warning (disable:  304)             // remark: access control not specified ("public" by default)
+    #pragma warning (disable:  522)             // remark: function "..." redeclared "inline" after being called
+    #pragma warning (disable:  981)             // remark: operands are evaluated in unspecified order
+    #pragma warning (disable: 1684)             // conversion from pointer to same-sized integral type (potential portability problem)
 
 #endif
 
@@ -428,7 +432,7 @@ bool txOK();
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-POINT txGetExtent() _TX_CHECK_RESULT;
+POINT txGetExtent();
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1258,13 +1262,12 @@ bool txTextOut (int x, int y, const char text[]);
 //!          txTextOut(), txSelectFont(), txGetTextExtent(), txGetTextExtentX(), txGetTextExtentY()
 //! @usage
 //! @code
-//!          txTextOut (100, 100, "Здесь вновь могла бы быть Ваша реклама.");
+//!          txTextOut (100, 100, "И здесь могла бы быть Ваша реклама.");
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
 bool txDrawText (int x0, int y0, int x1, int y1, const char text[],
-                 unsigned format = DT_CENTER | DT_VCENTER | DT_WORDBREAK |
-                                   DT_MODIFYSTRING | DT_PATH_ELLIPSIS);
+                 unsigned format = DT_CENTER | DT_VCENTER | DT_WORDBREAK | DT_WORD_ELLIPSIS);
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1313,7 +1316,7 @@ bool txSelectFont (const char name[], int sizeY,
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-SIZE txGetTextExtent (const char text[]) _TX_CHECK_RESULT;
+SIZE txGetTextExtent (const char text[]);
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1877,7 +1880,7 @@ bool txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillCloseAndIWillNotBeA
 //}-------------------------------------------------------------------------------------------
 
 inline
-POINT txMousePos() _TX_CHECK_RESULT;
+POINT txMousePos();
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Mouse
@@ -2070,7 +2073,7 @@ POINT txSetConsoleCursorPos (int x, int y);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-POINT txGetConsoleCursorPos() _TX_CHECK_RESULT;
+POINT txGetConsoleCursorPos();
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -2087,7 +2090,7 @@ POINT txGetConsoleCursorPos() _TX_CHECK_RESULT;
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-POINT txGetConsoleFontSize() _TX_CHECK_RESULT;
+POINT txGetConsoleFontSize();
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -2455,10 +2458,7 @@ const double txPI = asin (1.0) * 2;
 #define ZERO( type )    zero <type> ()
 
 //! @cond INTERNAL
-
-template <typename T> inline
-T zero() _TX_CHECK_RESULT;
-
+template <typename T> inline T zero();
 //! @endcond
 
 //! @}
@@ -2563,7 +2563,7 @@ WNDPROC txSetWindowHandler (WNDPROC handler = NULL);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-inline bool txLock (bool wait = true);
+bool txLock (bool wait = true);
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Service
@@ -2581,7 +2581,7 @@ inline bool txLock (bool wait = true);
 //}-------------------------------------------------------------------------------------------
 //! @{
 
-inline bool txUnlock();
+bool txUnlock();
 
 template <typename T> inline
 T txUnlock (T value);
@@ -3716,10 +3716,9 @@ FARPROC      _txDllImport (const char dllFileName[], const char funcName[], bool
 
 // This is a macro because cond is an expression and not always a function. Lack of lambdas in pre-C++0x.
 
-#define      _txWaitFor(cond)       for (DWORD __t##__LINE__ = GetTickCount() + _TX_TIMEOUT; \
-                                         GetTickCount() < __t##__LINE__;                     \
-                                         Sleep (_TX_WINDOW_UPDATE_INTERVAL))                 \
-                                         if (!!(cond)) break;
+#define      _txWaitFor(cond)       { for (DWORD _t = GetTickCount() + _TX_TIMEOUT; \
+                                           !(cond) && GetTickCount() < _t;          \
+                                           Sleep (_TX_WINDOW_UPDATE_INTERVAL)) ; }
 
 // To suppress warnings in assert() and TX_ERROR() macros ("right-hand of comma operator has no effect")
 
@@ -4107,8 +4106,8 @@ $   SIZE szCon    = { r.right - r.left, r.bottom - r.top };
 $   _txBuffer_Select (GetStockObject (WHITE_PEN),   txDC()) asserted;
 $   _txBuffer_Select (GetStockObject (WHITE_BRUSH), txDC()) asserted;
 $   _txBuffer_Select (CreateFont (szCon.cy/25, szCon.cx/80, 0, 0,
-                                  FW_REGULAR, FALSE, FALSE, FALSE,
-                                  DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
+                                  FW_REGULAR, FALSE, FALSE, FALSE, RUSSIAN_CHARSET,
+                                  OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
                                   DEFAULT_QUALITY, DEFAULT_PITCH, _TX_CONSOLE_FONT),
                                   txDC()) asserted;
 
@@ -4133,14 +4132,12 @@ $   SIZE szFont = { (short) ((1.0 * szCon.cx / szChr.cx) / (1.0 * szCon.cx / szC
                     (short) ((1.0 * szCon.cy / szChr.cy) / (1.0 * szCon.cy / szCanvas.cy) + 0.5) };
 
 $   _txBuffer_Select (txFontExist (_TX_CONSOLE_FONT)? CreateFont (szFont.cy, szFont.cx, 0, 0,
-                                                                  FW_REGULAR, FALSE, FALSE, FALSE,
-                                                                  DEFAULT_CHARSET,
-                                                                  OUT_DEFAULT_PRECIS,
-                                                                  CLIP_DEFAULT_PRECIS,
+                                                                  FW_REGULAR, FALSE, FALSE, FALSE, RUSSIAN_CHARSET,
+                                                                  OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
                                                                   DEFAULT_QUALITY, FIXED_PITCH,
                                                                   _TX_CONSOLE_FONT)
-
-                                                    : GetStockObject (SYSTEM_FIXED_FONT),
+                                                    :
+                                                      GetStockObject (SYSTEM_FIXED_FONT),
                       _txCanvas_BackBuf[1]) asserted;
 //}
 
@@ -4167,28 +4164,31 @@ $   if (!_txStaticInitialized) return;
 $   _txRunning = false;
 $   _txConsole_IsBlinking = false;
 
+$   HWND canvas  = _txCanvas_Window;
 $   HWND console = GetConsoleWindow();
 
-$   HWND wnd     = (_txCanvas_Window)? _txCanvas_Window : console;
-$   int isMaster = (_txCanvas_Window)? (GetWindowLong (_txCanvas_Window, GWL_STYLE) & WS_SYSMENU) : true;
+$   HWND wnd     = (canvas)? canvas : console;
+$   int isMaster = (canvas)? (GetWindowLong (canvas, GWL_STYLE) & WS_SYSMENU) : true;
 
-$   char title [_TX_BUFSIZE] = "";
+$   static char title [_TX_BUFSIZE] = "";
 $   if (wnd) GetWindowText (wnd, title, sizeof (title));
 $   strncat_s (title, " [ЗАВЕРШЕНО]", sizeof (title) - 1);
 $   if (wnd) SetWindowText (wnd, title);
 
 $   if (isMaster && !_txExit && GetCurrentThreadId() == _txMainThreadId)
         {
-$       if (!_txCanvas_Window) printf ("\n" "[Нажмите любую клавишу для завершения]");
+$       if (!canvas) printf ("\n" "[Нажмите любую клавишу для завершения]");
 
 $       while (_kbhit()) (void)_getch();
 
 $       for (int i = 1; ; i++)
             {
-$           if (_kbhit() || !_txCanvas_ThreadId) break;
+$           if (_kbhit()) break;
+
+            if (canvas && !_txCanvas_ThreadId) break;
 
             Sleep (_TX_WINDOW_UPDATE_INTERVAL);
-            
+
             if (!(i % 100500)) printf ("\r" "[Нажмите же какую-нибудь клавишу для моего завершения]");
             }
 
@@ -4348,7 +4348,7 @@ $       Sleep (0);
 
 $   if (_txRunning && masterWnd)  // Master window is destroyed but main() is still running.
         {                         // No chances for good termination, so use exit().
-$       exit (msg.wParam);
+$       exit ((int)(ptrdiff_t) msg.wParam);
         }
 
     #ifndef NDEBUG
@@ -4364,9 +4364,9 @@ HWND _txCanvas_CreateWindow (CREATESTRUCT* from)
     {
 $   if (!from) return false;
 
-$   char className[_TX_BUFSIZE] = "";
+$   static char className[_TX_BUFSIZE] = "";
 $   _snprintf_s (className, sizeof (className) - 1,
-                 ">>>>> " _TX_VERSION " " __FILE__ _TX_NAME " WndClass%08X <<<<<",
+                 ">>>>>>>>>> " _TX_VERSION "  " __FILE__ _TX_NAME " WndClass %08X <<<<<<<<<<",
                  GetTickCount());
 
 $   WNDCLASSEX wc    = {0};
@@ -4552,11 +4552,11 @@ $   GetClientRect (wnd, &r) asserted;
 $   POINT size = { r.right - r.left, r.bottom - r.top };
 
 $   if (_txCanvas_RefreshLock <= 0)
-      {
-$     Win32::BitBlt   (_txCanvas_BackBuf[1], 0, 0, size.x, size.y, txDC(), 0, 0, SRCCOPY);
+        {
+$       Win32::BitBlt   (_txCanvas_BackBuf[1], 0, 0, size.x, size.y, txDC(), 0, 0, SRCCOPY);
 
-$     _txConsole_Draw (_txCanvas_BackBuf[1]);
-      }
+$       _txConsole_Draw (_txCanvas_BackBuf[1]);
+        }
 
     // Magic 100500 value is used to completely block screen refresh.
     // Since no value can be 100500 or above, this condition is always true and
@@ -4681,8 +4681,8 @@ $   ctime_s  (timeS, sizeof (timeS), &timeT);
 $   strncpy (timeS, ctime (&timeT), sizeof (timeS) - 1);
     #endif
 
-$   char text[_TX_BUFSIZE] = "";
-$   char cwd [MAX_PATH]    = "";
+$   static char text[_TX_BUFSIZE] = "";
+$   char cwd [MAX_PATH] = "";
 
     #define EOL_ "    \n"
 
@@ -4818,13 +4818,9 @@ $   if (done) return console;
 
 $   _txConsole_SetUnicodeFont();
 
-$   int crtIn  = _open_osfhandle ((ptrdiff_t) GetStdHandle (STD_INPUT_HANDLE),  _O_TEXT);
-$   int crtOut = _open_osfhandle ((ptrdiff_t) GetStdHandle (STD_OUTPUT_HANDLE), _O_TEXT);
-$   int crtErr = _open_osfhandle ((ptrdiff_t) GetStdHandle (STD_ERROR_HANDLE),  _O_TEXT);
-
-$   *stdin  = * _fdopen (crtIn,  "r");
-$   *stdout = * _fdopen (crtOut, "w");
-$   *stderr = * _fdopen (crtErr, "w");
+$   fflush (stdin);  *stdin  = *_fdopen (_open_osfhandle ((unsigned) GetStdHandle (STD_INPUT_HANDLE),  _O_TEXT), "r");
+$   fflush (stdout); *stdout = *_fdopen (_open_osfhandle ((unsigned) GetStdHandle (STD_OUTPUT_HANDLE), _O_TEXT), "w");
+$   fflush (stderr); *stderr = *_fdopen (_open_osfhandle ((unsigned) GetStdHandle (STD_ERROR_HANDLE),  _O_TEXT), "w");
 
 $   setvbuf (stdin,  NULL, _IONBF, 0);
 $   setvbuf (stdout, NULL, _IONBF, 0);
@@ -4840,7 +4836,7 @@ $   return console;
 
 bool _txConsole_SetUnicodeFont()
     {
-    if (Win32::GetCurrentConsoleFontEx &&
+$   if (Win32::GetCurrentConsoleFontEx &&
         Win32::SetCurrentConsoleFontEx)
         {
 $       HANDLE out = GetStdHandle (STD_OUTPUT_HANDLE);
@@ -4877,7 +4873,7 @@ $       font.dwFontSize = Win32::GetConsoleFontSize (out, font.nFont);
 $       _txCreateShortcut (link, comspec, "/c exit", NULL, NULL,
                            SW_SHOWMINNOACTIVE, NULL, 0, font.dwFontSize.Y + 2) asserted;
 
-$       (int) ShellExecute (NULL, NULL, link, NULL, NULL, SW_SHOWMINNOACTIVE) > 32 asserted;
+$       (ptrdiff_t) ShellExecute (NULL, NULL, link, NULL, NULL, SW_SHOWMINNOACTIVE) > 32 asserted;
 $       _txWaitFor (FindWindow (NULL, "_txLink"));
 
 $       _unlink (link) == 0 asserted;
@@ -4933,15 +4929,13 @@ bool _txConsole_Draw (HDC dc)
     {
 $   assert (_txCanvas_OK());
 
-$   if (!txLock (false)) return false;
-
 $   HANDLE out = GetStdHandle (STD_OUTPUT_HANDLE);
 
 $   CONSOLE_SCREEN_BUFFER_INFO con = {{0}};
 $   BOOL ok = GetConsoleScreenBufferInfo (out, &con);
-    if (!ok) { $ txUnlock(); return false; }
+    if (!ok) return false;
 
-$   SIZE fontSz = {0};
+$   SIZE fontSz = { 12, 16 };
 $   Win32::GetTextExtentPoint32 (dc, "W", 1, &fontSz) asserted;
 
 $   POINT size = { con.srWindow.Right  - con.srWindow.Left + 1,
@@ -4968,8 +4962,8 @@ $       for (int x = 0, xEnd = size.x; x < size.x; x = xEnd)
 
             for (xEnd = x+1; atr[xEnd] == atr[x] && xEnd < size.x; xEnd++) ;
 
-            Win32::TextOut (dc, (x + con.srWindow.Left) * fontSz.cx,
-                                (y + con.srWindow.Top)  * fontSz.cy, chr + x, xEnd - x) asserted;
+            Win32::TextOut (dc, (x + con.srWindow.Left) * fontSz.cx, y * fontSz.cy,
+                            chr + x, xEnd - x) asserted;
             }
         }
 
@@ -4982,11 +4976,10 @@ $   if (_txConsole_IsBlinking &&
         GetTickCount() % _TX_CURSOR_BLINK_INTERVAL*2 > _TX_CURSOR_BLINK_INTERVAL &&
         GetForegroundWindow() == txWindow())
         {
-$       Win32::TextOut (dc, (con.dwCursorPosition.X - con.srWindow.Left)*fontSz.cx,
-                            (con.dwCursorPosition.Y - con.srWindow.Top) *fontSz.cy + 1, "_", 1) asserted;
+$       Win32::TextOut (dc, (con.dwCursorPosition.X - con.srWindow.Left) * fontSz.cx,
+                            (con.dwCursorPosition.Y - con.srWindow.Top)  * fontSz.cy + 1,
+                            "_", 1) asserted;
         }
-
-$   txUnlock();
 
 $   return true;
     }
@@ -5019,8 +5012,7 @@ $   HRESULT init = Win32::CoInitialize (NULL);
     _TX_TRY
         {
 $       _TX_CHECKED (Win32::CoCreateInstance (CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, (void**) &shellLink));
-$       _TX_CHECKED (shellLink != NULL);
-$       if (!shellLink) return false;                   // OMG, this is for MSVC /W4 /analyze paranoid behaviour
+$       if (!shellLink) _TX_FAIL;
 
 $       shellLink->SetPath (fileToLink);
 $       shellLink->SetArguments (args);
@@ -5030,7 +5022,7 @@ $       shellLink->SetShowCmd (cmdShow);
 $       shellLink->SetIconLocation (iconFile, iconIndex);
 
 $       _TX_CHECKED (shellLink->QueryInterface (Win32::IID_IShellLinkDataList, (void**) &dataList));
-$       _TX_CHECKED (dataList != NULL);
+$       if (!dataList) _TX_FAIL;
 
 $       Win32::NT_CONSOLE_PROPS props =
           {{sizeof (props), NT_CONSOLE_PROPS_SIG},
@@ -5054,7 +5046,7 @@ $       Win32::NT_CONSOLE_PROPS props =
 $       _TX_CHECKED (dataList->AddDataBlock (&props));
 
 $       _TX_CHECKED (shellLink->QueryInterface (Win32::IID_IPersistFile, (void**) &file));
-$       _TX_CHECKED (file != NULL);
+$       if (!file) _TX_FAIL;
 
 $       wchar_t wName[MAX_PATH] = L"";
 $       MultiByteToWideChar (CP_ACP, MB_PRECOMPOSED, shortcutName, -1, wName, MAX_PATH);
@@ -5298,7 +5290,7 @@ bool _txError (const char file[], int line, const char func[],
 
     #endif
 
-    char str[2][_TX_BIGBUFSIZE] = {""}, *s = str[0];
+    static char str[2][_TX_BIGBUFSIZE] = {""}, *s = str[0];
 
                 s +=  _snprintf_s  (s, SZARG_ (1), "TX_ERROR() сообщает:" "\v\v");
 
@@ -5316,7 +5308,7 @@ bool _txError (const char file[], int line, const char func[],
                                                    (threadId == _txCanvas_ThreadId)? " (Canvas)" : "");
     if (_txSrcLocFile && _txSrcLocLine &&
         _txSrcLocLine != line && _stricmp (_txSrcLocFile, file) != 0)
-                s +=  _snprintf_s  (s, SZARG_ (1), ", Last TXLib loc: %s (%d) %s", 
+                s +=  _snprintf_s  (s, SZARG_ (1), ", Last TXLib loc: %s (%d) %s",
                                                    _txSrcLocFile, _txSrcLocLine, _txSrcLocFunc);
 
     if (winerr) s +=  _snprintf_s  (s, SZARG_ (0), ", GetLastError(): %lu (", winerr),
@@ -5389,6 +5381,7 @@ $   _txAssertOK();
 
 $   RECT r = {0};
 $   GetClientRect (txWindow(), &r);
+
 $   POINT size = { r.right - r.left, r.bottom - r.top };
 $   return size;
     }
@@ -5683,7 +5676,14 @@ bool txTextOut (int x, int y, const char text[])
     {
 $   _txAssertOK();
 
-$   txGDI (!!(Win32::TextOut (txDC(), x, y, text, (int) strlen (text)))) asserted;
+$   int len = (int) strlen (text);
+$   txGDI (!!(Win32::TextOut (txDC(), x, y, text, len))) asserted;
+
+$   SIZE size = {0};
+$   txGDI ((Win32::GetTextExtentPoint32 (txDC(), text, len, &size))) asserted;
+
+$   RECT r = { x, y, x + size.cx, y + size.cy };
+$   InvalidateRect (txWindow(), &r, false) asserted;
 
 $   return true;
     }
@@ -5691,8 +5691,7 @@ $   return true;
 //--------------------------------------------------------------------------------------------
 
 bool txDrawText (int x0, int y0, int x1, int y1, const char text[],
-                 unsigned format /*= DT_CENTER | DT_VCENTER | DT_WORDBREAK |
-                                   DT_MODIFYSTRING | DT_PATH_ELLIPSIS*/)
+                 unsigned format /*= DT_CENTER | DT_VCENTER | DT_WORDBREAK | DT_WORD_ELLIPSIS*/)
 {
 $   _txAssertOK();
 
@@ -5701,7 +5700,7 @@ $   RECT r = { x0, y0, x1, y1 };
 $   if (!strchr (text, '\n')) format |= DT_SINGLELINE;
 
 $   unsigned prev = txSetTextAlign (TA_LEFT | TA_TOP | TA_NOUPDATECP);
-$   txGDI ((Win32::DrawText (txDC(), text, -1, &r, format))) asserted;
+$   if (Win32::DrawText) txGDI ((Win32::DrawText (txDC(), text, -1, &r, format))) asserted;
 $   txSetTextAlign (prev);
 
 $   return true;
@@ -5719,12 +5718,11 @@ bool txSelectFont (const char name[], int sizeY,
 $   _txAssertOK();
 
 $   _txBuffer_Select (txFontExist (name)? CreateFont (sizeY, (int) ((sizeX != -1)? sizeX : sizeY/3), 0, 0,
-                                               bold, italic, underline, strikeout,
-                                               DEFAULT_CHARSET,
-                                               OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
-                                               DEFAULT_QUALITY, FIXED_PITCH, name)
-                                   :
-                                   GetStockObject (SYSTEM_FIXED_FONT));
+                                                      bold, italic, underline, strikeout, RUSSIAN_CHARSET,
+                                                      OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
+                                                      DEFAULT_QUALITY, FIXED_PITCH, name)
+                                        :
+                                          GetStockObject (SYSTEM_FIXED_FONT));
 $   return true;
     }
 
@@ -5777,12 +5775,13 @@ $   strncpy_s (font.lfFaceName, name, sizeof (font.lfFaceName) - 1);
         {
         static int CALLBACK Proc (const LOGFONT* fnt, const TEXTMETRIC*, DWORD, LPARAM data)
             {
-$           assert (fnt); assert (data); if (! (data && fnt)) return 0;
-#ifndef __STRICT_ANSI__
+$           if (!data || !fnt) return 0;
+
+            #ifndef __STRICT_ANSI__
 $           return _strnicmp (fnt->lfFaceName, ((LOGFONT*)data)->lfFaceName, LF_FACESIZE);
-#else
+            #else
 $           return  strncmp  (fnt->lfFaceName, ((LOGFONT*)data)->lfFaceName, LF_FACESIZE);
-#endif
+            #endif
             }
         };
 
@@ -5928,7 +5927,6 @@ $   return old != 0;
 
 //--------------------------------------------------------------------------------------------
 
-inline
 bool txLock (bool wait /*= true*/)
     {
 $   if (_txExit) Sleep (0);
@@ -5939,7 +5937,6 @@ $   if (wait) { $ return      EnterCriticalSection (&_txCanvas_LockBackBuf), tru
 
 //--------------------------------------------------------------------------------------------
 
-inline
 bool txUnlock()
     {
 $   LeaveCriticalSection (&_txCanvas_LockBackBuf);
@@ -5950,8 +5947,7 @@ $   return false;
 
 //--------------------------------------------------------------------------------------------
 
-template <typename T>
-inline
+template <typename T> inline
 T txUnlock (T value)
     {
 $   txUnlock();
@@ -6150,7 +6146,7 @@ $   int size       = 500;
 $   HDC dc = txCreateCompatibleDC (size, size);
 $   assert (dc);
 
-$   DWORD mask = SetThreadAffinityMask (GetCurrentThread(), 1);
+$   DWORD_PTR mask = SetThreadAffinityMask (GetCurrentThread(), 1);
 $   assert (mask);
 
 $   LARGE_INTEGER freq = {{0}};
@@ -6635,6 +6631,16 @@ using ::std::string;
 
 #endif
 
+#if defined (__INTEL_COMPILER)
+
+    #pragma warning (default:  174)             // remark: expression has no effect
+    #pragma warning (default:  304)             // remark: access control not specified ("public" by default)
+    #pragma warning (default:  522)             // remark: function "..." redeclared "inline" after being called
+    #pragma warning (default:  981)             // remark: operands are evaluated in unspecified order
+    #pragma warning (default: 1684)             // conversion from pointer to same-sized integral type (potential portability problem)
+
+#endif
+
 //! @endcond
 //}
 //--------------------------------------------------------------------------------------------
@@ -6644,4 +6650,3 @@ using ::std::string;
 //============================================================================================
 // EOF
 //============================================================================================
-

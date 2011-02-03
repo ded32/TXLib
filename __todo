@@ -1,4 +1,9 @@
 
+_MSC_VER 1400 // Visual C++ 2005
+_MSC_VER 1310 // Visual c++ .NET 2003
+_MSC_VER 1300 // Visual C++ .NET 2002
+_MSC_VER 1200 // Visual C++ 6 (1998)
+
 FIX  pseudo-graphics chars in console-to-TX translation is wrong
 
 ADD  register HDCs and delete them

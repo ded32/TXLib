@@ -1,12 +1,13 @@
 @echo off
-if not "%1" == "" goto %1
+if not "%1" == "#" (xcopy/ah/y %0 %temp%\ > nul) & (%temp%\%~nx0 #)
 
 :ci
 echo Committing...
 
 call hg ci -m "%*" 
+call hg kwshrink
 call hg kwexpand
-attrib +h %0
+attrib +h %~nx0
 
 :chm
 echo Making docs...

@@ -1,4 +1,4 @@
-//{=========================================================================== 
+//{===========================================================================
 //! @file       Examples\Demo\Shaker.cpp
 //!
 //! @brief      Этюд "Встряхиватель шариков"
@@ -9,6 +9,10 @@
 //}===========================================================================
 
 #include "TXLib.h"
+
+#if !defined (_TX_VER) || (_TX_VER < 0x172a0000)
+#error Must use TXLib.h version >= 1.72 to compile this. -- Ded
+#endif
 
 //============================================================================
 
@@ -113,6 +117,7 @@ int main()
     txCreateWindow (700, 500);
 
     POINT org1 = TxGetWindowOrg();
+    POINT size = { txGetExtentX(), txGetExtentY() };
 
     Ball_t balls[20];
 
@@ -123,10 +128,10 @@ int main()
         Time = GetTickCount() + SLEEP_TIME;
 
         txSetFillColor (TX_BLACK);
-        txClear();
+        if (!GetAsyncKeyState (VK_CONTROL)) txClear();
 
-        txSetTextAlign();
-        txTextOut (txGetExtentX()/2, txGetExtentY()/2, "Move window, shake the balls. [Esc] exits");
+        txDrawText (0, size.y * 4/10, size.x, size.y * 6/10, 
+                    "Move window, shake the balls.\n" "[Ctrl] paints, [Esc] exits");
 
         POINT org0 = org1; org1 = TxGetWindowOrg();
         POINT d = { org1.x - org0.x, org1.y - org0.y };

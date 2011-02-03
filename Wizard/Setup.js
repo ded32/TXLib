@@ -3,17 +3,21 @@
 // Currently supporting: MSVS 2003-2008, MSVS 6.0, CodeBlocks, Dev-CPP
 //=============================================================================
 
-var WizardName = "TX Application";
-var FilesPath  = "TX Application";
-var Action     = "install";
+var IgnoreErrors = true;
+var DebugMode    = false;
+
+var WizardName   = "TX Application";
+var FilesPath    = "TX Application";
+var Action       = "install";
 
 //-----------------------------------------------------------------------------
 
-var Shell      = WScript.CreateObject ("WScript.Shell");
-var FS         = WScript.CreateObject ("Scripting.FileSystemObject");
-var DebugMode  = false;
+var Shell        = WScript.CreateObject ("WScript.Shell");
+var FS           = WScript.CreateObject ("Scripting.FileSystemObject");
 
 main (WScript.Arguments.length, WScript.Arguments);
+
+//-----------------------------------------------------------------------------
 
 function main (argc, argv)
     {
@@ -521,9 +525,10 @@ function Error (e, msg)
     if (msg != "" && descr != "") msg += ": ";
     msg += descr;
 
-    Echo ("ERROR: " + msg + "\n\n" + 
-          "Don't be disappointed at this message!" + "\n\n" +
-          "Anyway, you may use TXLib.h file without proceeding this setup.");
+    if (!IgnoreErrors)
+       Echo ("ERROR: " + msg + "\n\n" + 
+             "Don't be disappointed at this message!" + "\n\n" +
+             "Anyway, you may use TXLib.h file without proceeding this setup.");
 
     return e;
     }
