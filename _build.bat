@@ -1,5 +1,5 @@
 @echo off
-if not "%1" == "#" (xcopy/ah/y %0 %temp%\ > nul) & (%temp%\%~nx0 #)
+if not "%~dp0" == "%temp%\" (xcopy/ah/y %0 %temp%\ > nul) & (%temp%\%~nx0)
 
 :ci
 echo Committing...
