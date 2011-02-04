@@ -2641,13 +2641,14 @@ template <typename T> inline T txUnlock (T value);
 //!        - Перехват системных сигналов (деление на 0, обращение по неверному адресу и т.д.),
 //!        - Перехват необработанных исключений,
 //!        - Смена заголовка консольного окна,
-//!        - Установка режима паузы по завершении программы.
+//!        - Установка режима паузы по завершении программы, чтобы окно закрывалось не сразу,
+//!        - Подавление паузы от сред программирования, заставляющей нажимать на клавишу два раза.
 //!          <br><br>
 //! @note    Если статическая инициализация запрещена, но создается окно TXLib с помощью
 //!          txCreateWindow(), то библиотека все равно будет инициализирована.
 //!
 //!          Может задаваться перед включением TXLib.h в программу.
-//! @see     txCreateWindow()
+//! @see     txCreateWindow(), _TX_ALLOW_KILL_PARENTS, _TX_WAITABLE_PARENTS, _TX_CONSOLE_MODE
 //! @usage
 //! @code
 //!          #define _TX_NOINIT
@@ -2676,21 +2677,57 @@ template <typename T> inline T txUnlock (T value);
 //!          указанная программа будет закрыта. (Это произойдет, если не открыто графическое окно
 //!          TXLib, а есть только окно консоли.)
 //!
-//!          Программы разделяются пробелом или запятой.
+//!          Программы разделяются пробелом или запятой. Допускается указание родителя запускающей
+//!          программы, после двоеточия.
 //!
 //!          Может задаваться перед включением TXLib.h в программу.
+//!
+//! @see     _TX_ALLOW_KILL_PARENTS, _TX_NOINIT
 //}-------------------------------------------------------------------------------------------
 
-             // TX_VEGETABLE_PRINTERS
+            // TX_VEGETABLE_PRINTERS
 #if !defined  (_TX_WAITABLE_PARENTS)
-    #define    _TX_WAITABLE_PARENTS       "cb_console_runner.exe, starter.exe"
+    #define    _TX_WAITABLE_PARENTS       "cmd.exe:devenv.exe, cb_console_runner.exe:codeblocks.exe, starter.exe:eclipse.exe"
 #endif
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Technical
-//! @brief   Режим отображения консольного окна
+//! @brief   Разрешать принудительное завершение вызывающих программ, ждущих нажатия клавиш после
+//!          завершения TXLib.
+//!
+//!          Иначе отменяется собственная пауза до нажатия клавиши, встроенная в TXLib, и пусть
+//!          тогда паузу делает вызывающий процесс.
+//!
+//!          Список вызывающих программ, которые могут делать такую паузу, задается в _TX_WAITABLE_PARENTS.
 //!
 //!          Может задаваться перед включением TXLib.h в программу.
+//!
+//! @see     _TX_WAITABLE_PARENTS, _TX_NOINIT
+//! @usage
+//! @code
+//!          #define _TX_ALLOW_KILL_PARENT false
+//!          #include "TXLib.h"
+//! @endcode
+//}-------------------------------------------------------------------------------------------
+
+#if !defined (_TX_ALLOW_KILL_PARENT)
+#define       _TX_ALLOW_KILL_PARENT       true  // Все, это последняя настроечная константа! Хватит уже.
+#endif                                          // И да, я не призываю к убийству родителей. Это технический термин.
+
+//{-------------------------------------------------------------------------------------------
+//! @ingroup Technical
+//! @brief   Режим отображения консольного окна. Допустимы любые флаги функции SetWindowPos.
+//!
+//!          По умролчанию: @c SWP_HIDEWINDOW @d Скрывать консольное окно.
+//!
+//!          Может задаваться перед включением TXLib.h в программу.
+//!
+//! @see     _TX_NOINIT
+//! @usage
+//! @code
+//!          #define _TX_CONSOLE_MODE SWP_SHOWWINDOW // Наоборот, показать окно
+//!          #include "TXLib.h"
+//! @endcode
 //}-------------------------------------------------------------------------------------------
 
 #if !defined  (_TX_CONSOLE_MODE)
@@ -4188,9 +4225,14 @@ $   if (wnd) GetWindowText (wnd, title, sizeof (title));
 $   strncat_s (title, " [ЗАВЕРШЕНО]", sizeof (title) - 1);
 $   if (wnd) SetWindowText (wnd, title);
 
+$   DWORD parent = 0;
+$   bool waitable = _txIsParentWaitable (&parent);
+$   bool waitKey  = !waitable || _TX_ALLOW_KILL_PARENT;
+
 $   if (isMaster && !_txExit && GetCurrentThreadId() == _txMainThreadId)
         {
-$       if (!canvas) printf ("\n" "[Нажмите любую клавишу для завершения]");
+$       if (!canvas && waitKey)
+            printf ("\n" "[Нажмите любую клавишу для завершения]");
 
 $       while (_kbhit()) (void)_getch();
 
@@ -4198,11 +4240,13 @@ $       for (int i = 1; ; i++)
             {
 $           if (_kbhit()) break;
 
-            if (canvas && !_txCanvas_ThreadId) break;
+            if ( canvas && !_txCanvas_ThreadId) break;
+            if (!canvas && !waitKey)            break;
 
             Sleep (_TX_WINDOW_UPDATE_INTERVAL);
 
-            if (!(i % 100500)) printf ("\r" "[Нажмите же какую-нибудь клавишу для моего завершения]");
+            if (!(i % 100500))
+                printf ("\r" "[Нажмите же какую-нибудь клавишу для моего завершения]");
             }
 
 $       while (_kbhit()) (void)_getch();
@@ -4217,12 +4261,9 @@ $   _txWaitFor (!_txCanvas_Window);
 $   if (!_txCanvas_Window)
         { $ DeleteCriticalSection (&_txCanvas_LockBackBuf); }
 
-$   DWORD parent = 0;
-$   bool waitable = _txIsParentWaitable (&parent);
-
 $   _txConsole_Detach (!waitable);
 
-$   if (waitable) _txKillProcess (parent);
+$   if (waitable && _TX_ALLOW_KILL_PARENT) _txKillProcess (parent);
 
 $   _txStaticInitialized = false;
 
@@ -4237,16 +4278,40 @@ $   _txStaticInitialized = false;
 
 bool _txIsParentWaitable (DWORD* parentPID)
     {
-$   PROCESSENTRY32* info = _txFindProcess (_txFindProcess() -> th32ParentProcessID);
+$   PROCESSENTRY32* info = _txFindProcess();
 $   if (!info) return false;
 
+$   info = _txFindProcess (info->th32ParentProcessID);
+$   if (!info) return false;
+
+$   char parent [MAX_PATH] = "";
+$   strncpy_s (parent, info->szExeFile, sizeof (parent) - 1);
 $   if (parentPID) *parentPID = info->th32ProcessID;
+
+$   info = _txFindProcess (info->th32ParentProcessID);  // info: grandparent
 
 $   static char list[_TX_BUFSIZE] = _TX_WAITABLE_PARENTS;
 $   char* ctx = NULL;
 
-$   for (const char* p = strtok_s (list, ", ", &ctx); p; p = strtok_s (NULL, ", ", &ctx))
-        if (_stricmp (p, info->szExeFile) == 0) { $ return true; }
+$   for (char* p = strtok_s (list, ", ", &ctx); p; p = strtok_s (NULL, ", ", &ctx))
+        {
+$       char* gp = strchr (p, ':');
+
+$       if (gp)
+            {
+$           *gp++ = 0;
+
+$           if (_stricmp (p, parent) != 0) continue;
+
+$           if (info) if (_stricmp (gp, info->szExeFile) == 0)  // Was &&, but OMG MSVC /analyze..
+                { $ return true; }
+            }
+        else
+            {
+$           if (_stricmp (p, parent) == 0)
+                { $ return true; }
+            }
+        }
 
 $   return false;
     }

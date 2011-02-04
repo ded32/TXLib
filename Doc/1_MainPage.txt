@@ -60,7 +60,8 @@
 
     @section    PlatformsSupported    Поддерживаемые платформы
    
-              - Компиляторы
+              - Среды программирования и компиляторы
+                - CodeBlocks 10.05  + MinGW GCC 4.5.1 (TDM-GCC)
                 - CodeBlocks 10.05  + MinGW GCC 4.4.1
                 - CodeBlocks 8.02   + MinGW GCC 3.4.5
                 - CodeBlocks 1.0rc2 + MinGW GCC 3.4.4
