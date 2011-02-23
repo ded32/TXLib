@@ -98,8 +98,9 @@ ALIASES                = "title=<dl><dt>" \
                          "usage=</dl><dl class=\"usage\"><dt><b>Примеры использования:</b></dt><dd>" \
                          "endusage=</dd></dl>" \
                          "section=<hr> @section" \
-                         "strike=<span class=s> &nbsp;" \
-                         "endstrike=&nbsp; </span>" \
+                         "strike=<span class=s>&nbsp;" \
+                         "endstrike=&nbsp;</span>" \
+                         "n=<br><br>" \
                          "d=&ndash;" \
                          "s=&nbsp;"
 
