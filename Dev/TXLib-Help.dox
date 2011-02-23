@@ -94,12 +94,13 @@ ALIASES                = "title=<dl><dt>" \
                          "tr=<tr valign=top><td>" \
                          "endtr=</td></tr>" \
                          "tbr=\n @tr @endtr" \
-                         "td=</td><td>" \
+                         "td=&nbsp;</td><td>&nbsp;" \
                          "usage=</dl><dl class=\"usage\"><dt><b>Примеры использования:</b></dt><dd>" \
                          "endusage=</dd></dl>" \
                          "section=<hr> @section" \
-                         "strike=<span class=s> &nbsp;" \
-                         "endstrike=&nbsp; </span>" \
+                         "strike=<span class=s>&nbsp;" \
+                         "endstrike=&nbsp;</span>" \
+                         "n=<br><br>" \
                          "d=&ndash;" \
                          "s=&nbsp;"
 

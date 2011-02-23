@@ -1,19 +1,15 @@
 
-_MSC_VER 1400 // Visual C++ 2005
-_MSC_VER 1310 // Visual c++ .NET 2003
-_MSC_VER 1300 // Visual C++ .NET 2002
-_MSC_VER 1200 // Visual C++ 6 (1998)
-
-FIX  pseudo-graphics chars in console-to-TX translation is wrong
-
-ADD  register HDCs and delete them
-ADD  txException (txExceptionInformation), VERIFY, verified macros
-ADD  valuePipe
+FIX  "    \n" in console output of OnTerminate... etc.
 ADD  $-printing
 ADD  $r, $R, $rY - red on yellow, $n = \n, $r = \r
-ADD  SEH (divide by zero etc)
 ADD  tr(msg) { return translation (msg) /*tr from map*/ }
+ADD  VEC/SEH/signal (divide by zero etc)
+ADD  valuePipe
 
+FIX  pseudo-graphics chars in console-to-TX translation is wrong?
+
+ADD  doc: Fun examples (nightmare.cpp etc) to Demo\Fun
+ADD  doc: Fun texts from Fun\Ded to help
 ADD  doc: GCC 3.x debug: 1) missing initializers -- is normal; release: 1) missing initializers; 2) will never be executed -- are normal
 ADD  doc: warning level & disablings explained in help
 ADD  doc: "Ошибка в библиотеке"
@@ -24,18 +20,19 @@ ADD  doc: многофайловый проект
 ADD  doc: многооконность
 ADD  doc: anon namespace
 
-FIX  setup: error: undefined, don't worry... --> remove
-
 --
 
 FIX  txObject
-FIX  txLine --> #define txLine
 ADD  CommonControls, toolbar, status bar
-ADD  small icon from memory (==jumping man)
 ADD  tinyTX
 
 ---
 
+ADD+ icon from memory (==jumping man)
+FIX+ setup: error: undefined, don't worry... --> remove
+ADD  VERIFY, verified macros
+CHK+ preconditions: assert(p); if (!p) return...
+ADD+ register HDCs and delete them
 ADD+  +it's too bad, you'll not free resources & will die Windows... in ExitBox
 ADD+ get parent process -- cb_console_runner? -- disable pause
 ADD+ версия и ревизия в сообщ. об ошибке
@@ -56,10 +53,21 @@ FIX+ doc: вынести текст уроков в отд. файл
 
 ADD? lower main process priority when second process speed decreases
 
-CHG  _txErr-r->txError and do docs -- should use TX_ERROR
+FIX- txLine -> #define txLine -- problem with default args
+ADD- txException (txExceptionInformation)
+CHG- _txErr-r->txError and do docs -- should use TX_ERROR
 ADD- edit source (%F12)
 ADD- goto site (+F12)
 ADD  BMP screenshots (^F12)
 
 ADD- txCreateWindow (..., HMENU menu) -- use SetMenu
+
+---
+
+_MSC_VER 1600 // Visual C++ 10.0 (2010)
+_MSC_VER 1500 // Visual C++ 9.0 (2008)
+_MSC_VER 1400 // Visual C++ 8.0 (2005)
+_MSC_VER 1310 // Visual c++ .NET 7.1 (2003)
+_MSC_VER 1300 // Visual C++ .NET 7.0 (2002)
+_MSC_VER 1200 // Visual C++ 6.0 (1998)
 
