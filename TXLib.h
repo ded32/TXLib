@@ -5263,12 +5263,12 @@ $       char comspec [MAX_PATH] = "";
 $       getenv_s (&sz, comspec, sizeof (comspec), "COMSPEC");
 
 $       CONSOLE_FONT_INFO font = { Win32::GetNumberOfConsoleFonts() - 1 };
-$       font.dwFontSize = Win32::GetConsoleFontSize (out, font.nFont);
+$ //!!! font.dwFontSize = Win32::GetConsoleFontSize (out, font.nFont);
 
 $       _txCreateShortcut (link, comspec, "/c exit", NULL, NULL,
                            SW_SHOWMINNOACTIVE, NULL, 0, font.dwFontSize.Y + 2) asserted;
 
-$       (ptrdiff_t) ShellExecute (NULL, NULL, link, NULL, NULL, SW_SHOWMINNOACTIVE) > 32 asserted;
+$       ShellExecute (NULL, NULL, link, NULL, NULL, SW_SHOWMINNOACTIVE) > (void*)32 asserted;
 $       _txWaitFor (FindWindow (NULL, "_txLink"));
 
 $       _unlink (link) == 0 asserted;
