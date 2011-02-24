@@ -143,7 +143,6 @@
     #endif
 
     #define _TX_CHECK_FORMAT( fmtIdx )  __attribute__ (( format (printf, (fmtIdx), (fmtIdx)+1) ))
-    #define _TX_CHECK_RESULT            __attribute__ (( warn_unused_result ))
 
     template <typename T>
     inline T _txNOP (T value)           { return value; }  // To suppress performance warnings in assert etc
@@ -151,9 +150,8 @@
 #else
 
     #define _TX_CHECK_FORMAT( fmtIdx )
-    #define _TX_CHECK_RESULT
 
-    #define  _txNOP( value )            ( value )
+    #define _txNOP( value )             ( value )
 
 #endif
 
@@ -196,10 +194,10 @@
     #define  wcsncpy_s              wcsncpy     //   functions, so use insecure ones.
     #define _snprintf_s            _snprintf    //   ...
     #define _vsnprintf_s           _vsnprintf
-    #define  strerror_s(buf,code)               ( (void)(buf), strerror (code) )
-    #define  getenv_s(sz,buf,sizeof_buf,name)   ( (void)(sz),  strncpy  ((buf), getenv (name),(sizeof_buf)-1) )
+    #define  strerror_s(buf,code)               (              strncpy  ((buf), strerror (code),  sizeof(buf)-1) )
+    #define  getenv_s(sz,buf,sizeof_buf,name)   ( (void)(sz),  strncpy  ((buf), getenv (name),   (sizeof_buf)-1) )
     #define  strtok_s(str,delim,ctx)            ( (void)(ctx), strtok   ((str), (delim)) )
-    #define  ctime_s(str,sizeof_str,time)       (              strncpy  ((str), ctime (time), (sizeof_str)-1) )
+    #define  ctime_s(str,sizeof_str,time)       (              strncpy  ((str), ctime (time),    (sizeof_str)-1) )
 
     #define _TX_TRUNCATE
 
@@ -439,6 +437,7 @@ inline bool txOK();
 //! @usage
 //! @code
 //!          POINT size = txGetExtent();
+//!
 //!          txLine (0, 0,      size.x, size.y);
 //!          txLine (0, size.y, size.x, 0);
 //! @endcode
@@ -460,7 +459,7 @@ POINT txGetExtent();
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-int txGetExtentX() _TX_CHECK_RESULT;
+int txGetExtentX();
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -477,7 +476,7 @@ int txGetExtentX() _TX_CHECK_RESULT;
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-int txGetExtentY() _TX_CHECK_RESULT;
+int txGetExtentY();
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -501,7 +500,7 @@ int txGetExtentY() _TX_CHECK_RESULT;
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-inline HDC& txDC() _TX_CHECK_RESULT;
+inline HDC& txDC();
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -517,7 +516,7 @@ inline HDC& txDC() _TX_CHECK_RESULT;
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-inline HWND txWindow() _TX_CHECK_RESULT;
+inline HWND txWindow();
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Technical
@@ -531,7 +530,7 @@ inline HWND txWindow() _TX_CHECK_RESULT;
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-inline const char* txVersion() _TX_CHECK_RESULT;
+inline const char* txVersion();
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Technical
@@ -545,7 +544,7 @@ inline const char* txVersion() _TX_CHECK_RESULT;
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-inline unsigned txVersionNumber() _TX_CHECK_RESULT;
+inline unsigned txVersionNumber();
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Technical
@@ -574,7 +573,7 @@ inline unsigned txVersionNumber() _TX_CHECK_RESULT;
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-const char* txGetModuleFileName (bool fileNameOnly = true) _TX_CHECK_RESULT;
+const char* txGetModuleFileName (bool fileNameOnly = true);
 
 //! @}
 //}
@@ -715,7 +714,7 @@ bool txColor (double red, double green, double blue);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-COLORREF txGetColor() _TX_CHECK_RESULT;
+COLORREF txGetColor();
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -767,7 +766,7 @@ bool txFillColor (double red, double green, double blue);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-COLORREF txGetFillColor() _TX_CHECK_RESULT;
+COLORREF txGetFillColor();
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -844,7 +843,7 @@ bool txSetROP2 (int mode = R2_COPYPEN);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-int txExtractColor (COLORREF color, COLORREF component) _TX_CHECK_RESULT;
+int txExtractColor (COLORREF color, COLORREF component);
 
 //{---------------------------------------
 //! @ingroup Drawing
@@ -874,7 +873,7 @@ int txExtractColor (COLORREF color, COLORREF component) _TX_CHECK_RESULT;
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-COLORREF txRGB2HSL (COLORREF rgbColor) _TX_CHECK_RESULT;
+COLORREF txRGB2HSL (COLORREF rgbColor);
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -906,7 +905,7 @@ COLORREF txRGB2HSL (COLORREF rgbColor) _TX_CHECK_RESULT;
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-COLORREF txHSL2RGB (COLORREF hslColor) _TX_CHECK_RESULT;
+COLORREF txHSL2RGB (COLORREF hslColor);
 
 //! @}
 //}
@@ -992,7 +991,7 @@ inline bool txPixel (int x, int y, double red, double green, double blue);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-inline COLORREF txGetPixel (int x, int y) _TX_CHECK_RESULT;
+inline COLORREF txGetPixel (int x, int y);
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1338,7 +1337,7 @@ SIZE txGetTextExtent (const char text[]);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-int txGetTextExtentX (const char text[]) _TX_CHECK_RESULT;
+int txGetTextExtentX (const char text[]);
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1355,7 +1354,7 @@ int txGetTextExtentX (const char text[]) _TX_CHECK_RESULT;
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-int txGetTextExtentY (const char text[]) _TX_CHECK_RESULT;
+int txGetTextExtentY (const char text[]);
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1407,7 +1406,7 @@ unsigned txSetTextAlign (unsigned align = TA_CENTER | TA_BASELINE);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-LOGFONT* txFontExist (const char name[]) _TX_CHECK_RESULT;
+LOGFONT* txFontExist (const char name[]);
 
 //! @}
 //}
@@ -1447,7 +1446,7 @@ LOGFONT* txFontExist (const char name[]) _TX_CHECK_RESULT;
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-HDC txCreateCompatibleDC (int sizeX, int sizeY, HBITMAP bitmap = NULL) _TX_CHECK_RESULT;
+HDC txCreateCompatibleDC (int sizeX, int sizeY, HBITMAP bitmap = NULL);
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1486,7 +1485,7 @@ HDC txCreateCompatibleDC (int sizeX, int sizeY, HBITMAP bitmap = NULL) _TX_CHECK
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-HDC txLoadImage (const char filename[]) _TX_CHECK_RESULT;
+HDC txLoadImage (const char filename[]);
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1907,7 +1906,7 @@ inline POINT txMousePos();
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-inline int txMouseX() _TX_CHECK_RESULT;
+inline int txMouseX();
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Mouse
@@ -1926,7 +1925,7 @@ inline int txMouseX() _TX_CHECK_RESULT;
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-inline int txMouseY() _TX_CHECK_RESULT;
+inline int txMouseY();
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Mouse
@@ -1951,7 +1950,7 @@ inline int txMouseY() _TX_CHECK_RESULT;
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-inline int txMouseButtons() _TX_CHECK_RESULT;
+inline int txMouseButtons();
 
 //! @}
 //}
@@ -2021,7 +2020,7 @@ bool txSetConsoleAttr (WORD colors = 0x07);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-WORD txGetConsoleAttr() _TX_CHECK_RESULT;
+WORD txGetConsoleAttr();
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -2175,7 +2174,7 @@ bool txPlaySound (const char filename[] = NULL, DWORD mode = SND_ASYNC);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-double txQueryPerformance() _TX_CHECK_RESULT;
+double txQueryPerformance();
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Misc
@@ -2287,7 +2286,7 @@ double txQueryPerformance() _TX_CHECK_RESULT;
 //}-------------------------------------------------------------------------------------------
 
 template <typename T>
-inline bool In (T x, T a, T b) _TX_CHECK_RESULT;
+inline bool In (T x, T a, T b);
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Misc
@@ -2336,9 +2335,9 @@ inline bool In (T x, T a, T b) _TX_CHECK_RESULT;
 //}-------------------------------------------------------------------------------------------
 //! @{
 
-inline bool In (const POINT& pt, const RECT& rect)       _TX_CHECK_RESULT;
+inline bool In (const POINT& pt, const RECT& rect);
 
-inline bool In (const COORD& pt, const SMALL_RECT& rect) _TX_CHECK_RESULT;
+inline bool In (const COORD& pt, const SMALL_RECT& rect);
 
 //! @}
 //{-------------------------------------------------------------------------------------------
@@ -2358,7 +2357,7 @@ inline bool In (const COORD& pt, const SMALL_RECT& rect) _TX_CHECK_RESULT;
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-inline int random (int range) _TX_CHECK_RESULT;
+inline int random (int range);
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Misc
@@ -2382,7 +2381,7 @@ inline int random (int range) _TX_CHECK_RESULT;
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-inline double random (double left, double right) _TX_CHECK_RESULT;
+inline double random (double left, double right);
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Misc
@@ -3897,7 +3896,7 @@ bool             _txCanvas_OnCmdABOUT   (HWND wnd, WPARAM cmd);
 unsigned WINAPI  _txCanvas_ThreadProc   (void* data);
 LRESULT CALLBACK _txCanvas_WndProc      (HWND wnd, UINT msg, WPARAM wpar, LPARAM lpar);
 
-HDC              _txBuffer_Create (HWND wnd, const POINT* size = NULL, HBITMAP bmap = NULL) _TX_CHECK_RESULT;
+HDC              _txBuffer_Create (HWND wnd, const POINT* size = NULL, HBITMAP bmap = NULL);
 bool             _txBuffer_Delete (HDC* dc);
 bool             _txBuffer_Select (HGDIOBJ obj, HDC dc = txDC());
 
@@ -3908,7 +3907,7 @@ bool             _txConsole_Draw (HDC dc);
 bool             _txConsole_SetUnicodeFont();
 
 bool             _txIsParentWaitable (DWORD* parentPID);
-PROCESSENTRY32*  _txFindProcess (unsigned pid = GetCurrentProcessId()) _TX_CHECK_RESULT;
+PROCESSENTRY32*  _txFindProcess (unsigned pid = GetCurrentProcessId());
 bool             _txKillProcess (DWORD pid);
 int              _txPeekInput();
 
@@ -3921,10 +3920,10 @@ bool             _txCreateShortcut (const char shortcutName[],
 void*            _tx_DLGTEMPLATE_Create (void* globalMem, size_t bufsize, DWORD style, DWORD exStyle,
                                          WORD controls, short x, short y, short cx, short cy,
                                          const char caption[], const char font[], WORD fontsize,
-                                         HANDLE menu) _TX_CHECK_RESULT;
+                                         HANDLE menu);
 void*            _tx_DLGTEMPLATE_Add    (void* dlgTemplatePtr, size_t bufsize, DWORD style, DWORD exStyle,
                                          short x, short y, short cx, short cy,
-                                         WORD id, const char wclass[], const char caption[]) _TX_CHECK_RESULT;
+                                         WORD id, const char wclass[], const char caption[]);
 
 const char*      _txError        (const char file[] = NULL, int line = 0, const char func[] = NULL,
                                   const char msg[] = NULL, ...) _TX_CHECK_FORMAT (4);
@@ -3938,7 +3937,7 @@ void             _txOnUnexpected();
 
 //--------------------------------------------------------------------------------------------
 
-FARPROC      _txDllImport (const char dllFileName[], const char funcName[], bool required = true) _TX_CHECK_RESULT;
+FARPROC      _txDllImport (const char dllFileName[], const char funcName[], bool required = true);
 
 #define      _TX_SAFECALL(func)     (func) && func
 
