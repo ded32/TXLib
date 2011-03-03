@@ -1,26 +1,22 @@
 [!if !PROJECT_SIMPLE]
 //========================================================================
-//! \file       [!output PROJECT_NAME].cpp
-//========================================================================
+//! @file       [!output PROJECT_NAME].cpp
+//{=======================================================================
 //! 
-//! \brief      [!output PROJECT_TITLE]\n
-//! \brief      [!output PROJECT_SUBTITLE]
+//! @brief      [!output PROJECT_TITLE]\n
+//! @brief      [!output PROJECT_DESCRIPTION]
 //! 
-//! \version    [Version 0.01 alpha, build 1]
-//! \author     Copyright (C) [!output PROJECT_PROGRAMMER], [!output PROJECT_YEAR] ([!output PROJECT_PROGRAMMER_NAME] <[!output PROJECT_PROGRAMMER_MAIL]>)
-//! \date       [!output PROJECT_DATE]
+//! @version    [0.01 alpha, build 1]
+//! @author     Copyright (C) [!output PROJECT_AUTHOR], [!output PROJECT_YEAR] ([!output PROJECT_AUTHOR_NAME], [!output PROJECT_AUTHOR_MAIL])
+//! @date       [!output PROJECT_DATE]
 //! 
-//! \par        Протестировано
-//!           - (TODO: список платформ)
-//! 
-//! \todo     - (TODO: список ближайших планов по этому файлу)
-//! 
-//! \bug      - (TODO: список найденных ошибок в этом файле)
-//! 
-//! \par        История изменений файла
-//!           - Версия 0.01 Alpha
-//!             - Только что созданный файл
-//! 
+//}=======================================================================
+
+#define __MODULE       "[!output PROJECT_NAME]"
+#define __DESCRIPTION  "[!output PROJECT_TITLE]. [!output PROJECT_DESCRIPTION]"
+#define __AUTHOR       "[!output PROJECT_AUTHOR]"
+#define __VERSION      "0.01 alpha, [!output PROJECT_DATE]"
+
 //========================================================================
 [!endif]
 
@@ -28,6 +24,8 @@
 
 int main()
     {
+    // TODO: Add your code here.
+
     txCreateWindow (800, 600);
 
     txSetColor (TX_WHITE);

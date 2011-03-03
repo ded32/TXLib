@@ -2,19 +2,29 @@
 // Setup program for the TX Library Visual Studio .NET Help - (c) Ded, 2006
 //=============================================================================
 
-var Action     = "install";
+var IgnoreErrors = true;
+var DebugMode    = false;
+
+var Action       = "install";
 
 //-----------------------------------------------------------------------------
 
-var Shell      = WScript.CreateObject ("WScript.Shell");
-var FS         = WScript.CreateObject ("Scripting.FileSystemObject");
-var DebugMode  = false;
+var Shell        = WScript.CreateObject ("WScript.Shell");
+var FS           = WScript.CreateObject ("Scripting.FileSystemObject");
 
 main (WScript.Arguments.length, WScript.Arguments);
 
 //-----------------------------------------------------------------------------
 
 function main (argc, argv)
+    {
+    try { main_IgnoreErrors (argc, argv); }
+    catch (e) {}
+    }
+
+//-----------------------------------------------------------------------------
+
+function main_IgnoreErrors (argc, argv)
     {
     if (argc > 0 && argv (0) == "/debug")     DebugMode  = true;
     if (argc > 0 && argv (0) == "/uninstall") Action = "uninstall";
@@ -43,7 +53,8 @@ function Error (e, msg)
     if (msg != "" && descr != "") msg += ": ";
     msg += descr;
 
-    Echo ("ERROR: " + msg);
+    if (!IgnoreErrors)
+        Echo ("ERROR: " + msg);
 
     return e;
     }

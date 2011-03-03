@@ -1,7 +1,11 @@
 REGEDIT4
 
+; Ћатинска€ кодова€ страница принудительно замен€етс€ русской
+
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Nls\CodePage]
 "1252" = "c_1251.nls"
+
+; –азрешение открывать CHM файлы с сетевых дисков
 
 [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\HTMLHelp\1.x\ItssRestrictions]
 "MaxAllowedZone"=dword:00000001

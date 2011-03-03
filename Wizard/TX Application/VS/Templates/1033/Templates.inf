@@ -1,4 +1,8 @@
 OpenFile | _Main.cpp
 [!if !PROJECT_SIMPLE]
+[!if !DTE_10]
 ReadMe.txt
+[!else]
+ReadMe.u.txt
+[!endif]
 [!endif]

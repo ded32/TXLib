@@ -10,24 +10,28 @@
 <!-- Export symbols to Wizard and Default.js                                -->
 <!-- ---------------------------------------------------------------------- -->
 
-<symbol name="PROJECT_TITLE"           type=text     value="<Название проекта>"></symbol>
-<symbol name="PROJECT_SUBTITLE"        type=text     value="<Подзаголовок проекта>"></symbol>
-<symbol name="PROJECT_WWW"             type=text     value="<Интернет-страница проекта>"></symbol>
+<symbol name="PROJECT_TITLE"       type=text     value="<Название проекта>"></symbol>
+<symbol name="PROJECT_DESCRIPTION" type=text     value="<Краткое описание проекта>"></symbol>
+<symbol name="PROJECT_WWW"         type=text     value="<Интернет-сайт проекта>"></symbol>
 
-<symbol name="PROJECT_PROGRAMMER"      type=text     value="<Автор>"></symbol>
-<symbol name="PROJECT_PROGRAMMER_NAME" type=text     value="<Полное имя автора>"></symbol>
-<symbol name="PROJECT_PROGRAMMER_MAIL" type=text     value="<Электронная почта автора>"></symbol>
-<symbol name="PROJECT_PROGRAMMER_WWW"  type=text     value="<Интернет-страница автора>"></symbol>
+<symbol name="PROJECT_AUTHOR"      type=text     value="<Автор>"></symbol>
+<symbol name="PROJECT_AUTHOR_NAME" type=text     value="<Полное имя автора>"></symbol>
+<symbol name="PROJECT_AUTHOR_MAIL" type=text     value="<Эл. почта автора>"></symbol>
+<symbol name="PROJECT_AUTHOR_WWW"  type=text     value="<Интернет-сайт автора>"></symbol>
 
-<symbol name="PROJECT_EMPTY"           type=checkbox value="false"></symbol>
-<symbol name="PROJECT_SIMPLE"          type=checkbox value="false"></symbol>
+<symbol name="PROJECT_MENTOR"      type=text     value="научным руководителем"></symbol>
+<symbol name="PROJECT_MENTOR_MAIL" type=text     value="<Эл. почта научного руководителя>"></symbol>
 
-<symbol name="SOURCE_FILTER"           type=text     value="cpp;c;cxx;h;hpp;hxx;rc;def;odl;idl;hpj;bat;asm;"></symbol>
-<symbol name="PCH_FILE"                type=checkbox value="false"></symbol>
+<symbol name="PROJECT_EMPTY"       type=checkbox value="false"></symbol>
+<symbol name="PROJECT_SIMPLE"      type=checkbox value="false"></symbol>
+
+<symbol name="SOURCE_FILTER"       type=text     value="cpp;c;cxx;h;hpp;hxx;rc;def;odl;idl;hpj;bat;asm;"></symbol>
+<symbol name="PCH_FILE"            type=checkbox value="false"></symbol>
 <!--
-<symbol name="PROJECT_DATE"            type=text     value="<date>"></symbol>
-<symbol name="PROJECT_YEAR"            type=text     value="<year>"></symbol>
+<symbol name="PROJECT_DATE"        type=text     value="<date>"></symbol>
+<symbol name="PROJECT_YEAR"        type=text     value="<year>"></symbol>
 -->
+<symbol name="DTE_10"              type=checkbox value="false"></symbol>
 
 <script language="JScript">
 
@@ -46,10 +50,10 @@ var Wizard = window.external;
       OnLoad ="OnLoad()" OnKeyDown="OnKey()" OnKeyPress="OnPress()">
 
 <style type='text/css'>
-H1    { font-size: 75%; font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: bold;   color: #993300; }
-P     { font-size: 60%; font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: normal; color: #000000; }
+H1    { font-size: 100%; font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: bold;   color: #993300; }
+P     { font-size:  75%; font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: normal; color: #000000; }
 table { width: 100%; }
-input { size: 50;    }
+input { size:  100;  }
 </style>
 
 <table>
@@ -58,27 +62,29 @@ input { size: 50;    }
 </table>
 
 <table>
-<tr><td height=10px width=33%></td></tr>
-<tr><td><P>Название проекта:</P></td>         <td><input  id="PROJECT_TITLE"           type=text></td></tr>
-<tr><td><P>Подзаголовок проекта:</P></td>     <td><input  id="PROJECT_SUBTITLE"        type=text></td></tr>
-<!--
-<tr><td><P>Интернет-страница проекта:</P></td><td><input  id="PROJECT_WWW"             type=text></td></tr>
--->
-<tr><td height=10px></td></tr>
-<tr><td><P>Автор:</P></td>                    <td><input  id="PROJECT_PROGRAMMER"      type=text></td></tr>
-<tr><td><P>Полное имя:</P></td>               <td><input  id="PROJECT_PROGRAMMER_NAME" type=text></td></tr>
-<tr><td><P>Электронная почта:</P></td>        <td><input  id="PROJECT_PROGRAMMER_MAIL" type=text></td></tr>
-<!--
-<tr><td><P>Интернет-страница автора:</P></td> <td><input  id="PROJECT_PROGRAMMER_WWW"  type=text></td></tr>
--->
-<tr><td height=20px></td></tr>
-<tr><td></td><td>                              <P><input  id="PROJECT_SIMPLE"          type=checkbox> Простой проект &nbsp;&nbsp;&nbsp;
-                                                  <input  id="PROJECT_EMPTY"           type=checkbox> Пустой проект </P></td></tr>
-<tr><td height=20px></td></tr>
+<tr><td height=15px width=33%></td></tr>
+<tr><td><P>Название проекта:</P></td><td><input  id="PROJECT_TITLE"       type=text size=60%></td></tr>
+<tr><td><P>Описание проекта:</P></td><td><input  id="PROJECT_DESCRIPTION" type=text size=60%></td></tr>
+<tr><td><P>Сайт проекта:</P></td>    <td><input  id="PROJECT_WWW"         type=text size=60%></td></tr>
 
-<tr><td></td>                                 <td><button id="HelpBtn"                 onClick="OnBtnHelp()">                  &nbsp;Помощь     </button>&nbsp;&nbsp;	
-                                                  <button id="FinishBtn"               onClick="OnWizFinish (document)">          <b>Создать</b></button>&nbsp;&nbsp;
-                                                  <button id="CancelBtn"               onClick="Wizard.Finish (document, 'cancel')"> Отменить   </button></td></tr>
+<tr><td height=10px></td></tr>
+<tr><td><P>Автор:</P></td>           <td><input  id="PROJECT_AUTHOR"      type=text size=60%></td></tr>
+<tr><td><P>Полное имя:</P></td>      <td><input  id="PROJECT_AUTHOR_NAME" type=text size=60%></td></tr>
+<tr><td><P>Эл. почта:</P></td>       <td><input  id="PROJECT_AUTHOR_MAIL" type=text size=60%></td></tr>
+<tr><td><P>Интернет-сайт:</P></td>   <td><input  id="PROJECT_AUTHOR_WWW"  type=text size=60%></td></tr>
+<!--
+<tr><td height=10px></td></tr>
+<tr><td><P>Руководитель:</P></td>    <td><input  id="PROJECT_MENTOR"      type=text size=60%></td></tr>
+<tr><td><P>Эл. почта:</P></td>       <td><input  id="PROJECT_MENTOR_MAIL" type=text size=60%></td></tr>
+-->
+<tr><td height=20px></td></tr>
+<tr><td></td><td>                     <P><input  id="PROJECT_SIMPLE"      type=checkbox> Простой проект (только файл с примером кода)</P><td>
+<tr><td></td><td>                     <P><input  id="PROJECT_EMPTY"       type=checkbox> Пустой  проект (я создам и добавлю файлы сам)</P><td>
+<tr><td height=20px></td></tr>
+<tr><td></td>                        <td align=right>
+                                         <button id="HelpBtn"             onClick="OnBtnHelp()">                  &nbsp;Помощь     </button>&nbsp;&nbsp;	
+                                         <button id="FinishBtn"           onClick="OnWizFinish   (document)">        <b>Создать</b></button>&nbsp;&nbsp;
+                                         <button id="CancelBtn"           onClick="Wizard.Finish (document, 'cancel')"> Отменить   </button></td></tr>
 </table>
 
 </body>
@@ -100,6 +106,8 @@ document.scripts ("INCLUDE_DEFAULT") .src = "Default.js";
 
 function OnLoad()
     {
+    Wizard.AddSymbol ("DTE_10",             (Wizard.dte.Version == "10.0"));
+
     Wizard.AddSymbol ("PROJECT_DATE",        new Date().toString());
     Wizard.AddSymbol ("PROJECT_YEAR",        new Date().getYear());
     Wizard.AddSymbol ("WIZARD_DIALOG_TITLE", "Мастер проектов TX");
