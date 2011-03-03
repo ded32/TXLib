@@ -1,6 +1,4 @@
 
-ADD  doc: beginners beginners beginners, code with TXLib
-FIX  "    \n" in console output of OnTerminate... etc.
 ADD  $-printing
 ADD  $r, $R, $rY - red on yellow, $n = \n, $r = \r
 ADD  tr(msg) { return translation (msg) /*tr from map*/ }
@@ -14,12 +12,38 @@ ADD  doc: Fun texts from Fun\Ded to help
 ADD  doc: GCC 3.x debug: 1) missing initializers -- is normal; release: 1) missing initializers; 2) will never be executed -- are normal
 ADD  doc: warning level & disablings explained in help
 ADD  doc: "Ошибка в библиотеке"
-FIX  doc: do NOT russify message strings and DE-russify russian ones
 FIX  doc: russify help
 ADD  doc: ORFO to doxygen page trailer
-ADD  doc: многофайловый проект
-ADD  doc: многооконность
-ADD  doc: anon namespace
+ADD  doc: многофайловый проект, многооконность, anon namespace
+
+Если твоя программа не работает - проверь, включена ли машина.
+Огрызки и фантики от конфет в дисковод не суй: не любит он этого.
+Помни, что блок питания главнее компьютера.
+Обнаружив в файле непонятный символ, протри сначала экран: вдруг это грязь.
+Не требуй от машины того, что она не может! Или не хочет.
+
+Чтобы доступ был легок и быстр,
+Переменную клади в регистр.
+
+Чтобы код был изящен и красив,
+Объявляй указатель на массив.
+
+Надо работать, а не программы писать!
+
+Действия в случае, если какой-либо прибор не работает
+(Примечание: все, что имеет выключатель - прибор, иначе - приспособление)
+
+1. Повторить действие.
+2. Нажать на кнопку Reset (если таковая имеется).
+3. Выключить и включить.
+4. Позвать коллегу.
+5. Позвать знающего коллегу.
+6. Прочесть manual.
+7. Проверить, включен ли прибор.
+8. Проверить, включен ли выключатель.
+9. Проверить, не работал ли прибор все это время.
+10. Повторить действия 1-9.
+11. Объявить прибор сломанным. 
 
 --
 
@@ -29,6 +53,8 @@ ADD  tinyTX
 
 ---
 
+ADD~ doc: beginners beginners beginners, code with TXLib
+FIX+ "    \n" in console output of OnTerminate... etc.
 ADD+ icon from memory (==jumping man)
 FIX+ setup: error: undefined, don't worry... --> remove
 ADD  VERIFY, verified macros
@@ -54,6 +80,7 @@ FIX+ doc: вынести текст уроков в отд. файл
 
 ADD? lower main process priority when second process speed decreases
 
+FIX- doc: do NOT russify message strings and DE-russify russian ones
 FIX- txLine -> #define txLine -- problem with default args
 ADD- txException (txExceptionInformation)
 CHG- _txErr-r->txError and do docs -- should use TX_ERROR
