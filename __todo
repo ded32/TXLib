@@ -1,4 +1,5 @@
 
+ADD  doc: beginners beginners beginners, code with TXLib
 FIX  "    \n" in console output of OnTerminate... etc.
 ADD  $-printing
 ADD  $r, $R, $rY - red on yellow, $n = \n, $r = \r

@@ -44,9 +44,8 @@ function SetConfigSettings (name, config, prj, compiler, linker)
 // config
 //  if (R) config.WholeProgramOptimization         = WholeProgramOptimizationLinkTimeCodeGen;
     
-           config.IntermediateDirectory            = "$(ConfigurationName)";
-
-           config.OutputDirectory                  = "$(ConfigurationName)";
+           config.OutputDirectory                  = "$(SolutionDir)$(Configuration)\\";
+           config.IntermediateDirectory            = "$(Configuration)\\";
 
            config.CharacterSet                     = config.charSetMBCS;
 
@@ -66,11 +65,12 @@ function SetConfigSettings (name, config, prj, compiler, linker)
            compiler.PreprocessorDefinitions        = preprocessorDefinitions;
           
            compiler.UsePrecompiledHeader           = pchNone;
+    try  { SetNoPchSettings (prj); } catch (e) {}
 
     if (D) compiler.RuntimeLibrary                 = rtMultiThreadedDebug;
     if (R) compiler.RuntimeLibrary                 = rtMultiThreaded;
 
-           compiler.AdditionalIncludeDirectories   = "$(SolutionDir)/Include";
+           compiler.AdditionalIncludeDirectories   = "$(SolutionDir)\\Include";
            
 // linker
 //           linker.TargetMachine                    = machineX86;
@@ -83,9 +83,9 @@ function SetConfigSettings (name, config, prj, compiler, linker)
     if (D) linker.LinkIncremental                  = linkIncrementalYes;
     if (R) linker.LinkIncremental                  = linkIncrementalNo;
 
-           linker.ProgramDatabaseFile              = "$(OutDir)/" + PROJECT_NAME() + ".pdb";
+           linker.ProgramDatabaseFile              = "$(OutDir)\\" + PROJECT_NAME() + ".pdb";
     
-           linker.AdditionalLibraryDirectories     = "$(SolutionDir)/Lib";
+           linker.AdditionalLibraryDirectories     = "$(SolutionDir)\\Lib";
       }
 
 //-----------------------------------------------------------------------------
@@ -96,7 +96,11 @@ function GetTargetName (item, prjName, resPath, helpPath)
         {
         switch (item.toLowerCase())
             {
-            case "_main.cpp": return prjName + ".cpp";
+            case "_main.cpp":
+            case "_main.u.cpp":  return prjName + ".cpp";
+
+            case "readme.txt":
+            case "readme.u.txt": return "ReadMe.txt";
             }
 
         return item; 
@@ -118,7 +122,7 @@ function AddFilters (prj)
     {
     try
         {
-        prj.Object.AddFilter ("Исходные тексты") .Filter = SOURCE_FILTER();
+        prj.Object.AddFilter ("Source Files") .Filter = SOURCE_FILTER();
         }
 
     catch (e) { throw e; }

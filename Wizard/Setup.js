@@ -1,6 +1,6 @@
 //=============================================================================
 // Setup program for the TX Application Wizard - (c) Ded, 2006
-// Currently supporting: MSVS 2003-2008, MSVS 6.0, CodeBlocks, Dev-CPP
+// Currently supporting: MSVS 2003-2010, MSVS 6.0, CodeBlocks, Dev-CPP
 //=============================================================================
 
 var IgnoreErrors = true;
@@ -44,19 +44,20 @@ function main_IgnoreErrors (argc, argv)
     if (!FS.FolderExists (src)) return Error ("Cannot find Wizard folder " + src);
 
     var ok = 0;
-    ok += VS_Setup  ("9.0", src + "\\VS");
-    ok += VS_Setup  ("8.0", src + "\\VS");
-    ok += VS_Setup  ("7.1", src + "\\VS");
-    ok += VS_Setup  ("7.0", src + "\\VS");
+    ok += VS_Setup  ("9.0",  src + "\\VS");
+    ok += VS_Setup  ("8.0",  src + "\\VS");
+    ok += VS_Setup  ("7.1",  src + "\\VS");
+    ok += VS_Setup  ("7.0",  src + "\\VS");
+    ok && VS_HelpSetup      (src + "\\VS\\Help");
 
-    if (ok) VS_HelpSetup   (src + "\\VS\\Help");
+    ok += VS_Setup  ("10.0", src + "\\VS");
 
-    ok += VS6_Setup ("6.0", src + "\\VS6");
+    ok += VS6_Setup ("6.0",  src + "\\VS6");
 
-    ok += DevCPP_Setup     (src + "\\DevCPP");
-    ok += CodeBlocks_Setup (src + "\\CodeBlocks");
+    ok += DevCPP_Setup      (src + "\\DevCPP");
+    ok += CodeBlocks_Setup  (src + "\\CodeBlocks");
 
-    if (!ok) return Error ("Cannot find where compilers are installed, or errors occured.");
+    if (!ok) return Error ("Cannot find compiler(s) or errors occured.");
 
     try 
         {

@@ -23,7 +23,8 @@ function GetFilesDir()
 
 function SetupProject (project)
     {
-    WarningsOn (project, Wizard.GetCompilerID());
+    WarningsOn      (project, Wizard.GetCompilerID());
+    CppExceptionsOn (project, Wizard.GetCompilerID());
 
     // Debug
     local target = project.GetBuildTarget (Wizard.GetDebugName());

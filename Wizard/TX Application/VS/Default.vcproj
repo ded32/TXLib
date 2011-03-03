@@ -9,7 +9,7 @@
 
     <Configurations>
         <Configuration Name="Debug|Win32"
-			           OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			           OutputDirectory="$(SolutionDir)$(ConfigurationName)\"
 			           CharacterSet="2">
 
 			<Tool      Name="VCCLCompilerTool"
@@ -31,7 +31,7 @@
 		</Configuration>
 
 		<Configuration Name="Release|Win32"
-					   OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+					   OutputDirectory="$(SolutionDir)$(ConfigurationName)\"
 					   CharacterSet="2"
 					   WholeProgramOptimization="1">
 
