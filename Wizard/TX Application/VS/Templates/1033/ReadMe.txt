@@ -18,6 +18,12 @@
 
 ========================================================================
 
+                                             To search and find,
+                                             To code and compile,
+                                             To test and debug
+                                             And have a luck
+                                             To finish before deadline...
+
 @todo           - Задать описание проекта
                 - Определить цель проекта
                 - Определить задачи проекта

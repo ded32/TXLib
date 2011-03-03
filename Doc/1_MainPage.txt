@@ -4,9 +4,6 @@
 //}============================================================================
 
 /*! @mainpage                         
-<!--<div align="right"><small><i>To search and find,<br>To code and compile,<br>
-    To test and debug<br>And have a luck<br>To finish before deadline</i></small></div>
-  -->
     @section    MainPage              Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib)
    
                 $Version$
