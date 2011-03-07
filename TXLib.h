@@ -42,7 +42,7 @@
 //}
 //============================================================================================
 
-#if !defined (__TXLIB_H) || defined (_TX)
+#if !defined (__TXLIB_H) || defined (_TX)        // <<<<<<<<< The code is here, unfold it
 #define       __TXLIB_H
 
 //--------------------------------------------------------------------------------------------
@@ -233,6 +233,8 @@
 #undef   UNICODE                                // Burn Unicode, burn
 #undef  _UNICODE
 
+#define _USE_MATH_DEFINES                       // math.h's M_PI etc.
+
 //--------------------------------------------------------------------------------------------
 
 #undef         _TX_NAME
@@ -259,7 +261,7 @@
 //--------------------------------------------------------------------------------------------
 
 #ifdef _MSC_VER_6
-    #pragma warning (push, 3)                   // MSVC 6: At level 4, std headers emit warnings
+    #pragma warning (push, 3)                   // MSVC 6: At level 4, some std headers emit warnings O_o
 #endif
 
 //--------------------------------------------------------------------------------------------
@@ -325,7 +327,7 @@ namespace _TX { namespace TX { }}
 
 /*! @cond INTERNAL */
 
-namespace _TX { namespace TX {    // <<<<<<<<< The main code goes here, unfold the namespaces
+namespace _TX { namespace TX {                   // <<<<<<<<< The main code is here, unfold it
 
 /*! @endcond */
 
@@ -1999,8 +2001,8 @@ inline int txMouseButtons();
 //!          txGetConsoleFontSize(), txClearConsole()
 //! @usage
 //! @code
-//!          txSetConsoleAttr (0x1e);
-//!          printf ("А в небе голубом есть город золотой");
+//!          txSetConsoleAttr (0x1E);
+//!          printf ("А в небе 0x1 есть город 0xE");
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
@@ -3096,8 +3098,9 @@ const unsigned _TX_BIGBUFSIZE             = 2048;
 //!          Ее вывод можно перехватить утилитами-логгерами, например,
 //!          <a href=http://technet.microsoft.com/ru-ru/sysinternals/bb896647%28en-us%29.aspx>DebugView</a>.
 //!          Если этого не сделать, и не задать первый символ @c '\a' (см. ниже), то о сообщении никто не узнает.
-//!
-//! @note    Если первый символ в строке @c '\a', то сообщение также дублирется MessageBox().
+//! @note
+//!        - Если первый            символ в строке <tt>'\a',</tt> то сообщение также дублируется MessageBox().
+//!        - Если первый или второй символ в строке <tt>'\f',</tt> то сообщение также дублируется printf().
 //!
 //! @warning Сообщение не должно превышать _TX_BIGBUFSIZE символов, иначе оно обрезается.
 //!
@@ -3271,7 +3274,7 @@ inline void _txTrace (const char* file, int line, const char* func)
 //!          класса и оператор @c bool).
 //!
 //! @note    Класс не инициализирует и не удаляет критическую секцию. Только синхронизирует.
-//!          остальное сами-сами :)
+//!          Остальное сами-сами :)
 //!
 //! @see     txLock(), txUnlock(), txGDI()
 //}-------------------------------------------------------------------------------------------
@@ -3653,7 +3656,7 @@ struct txDialog
 //! @param   id  Идентификатор сообщения
 //!
 //! @see     TX_BEGIN_MESSAGE_MAP(), TX_END_MESSAGE_MAP, TX_HANDLE(), TX_COMMAND_MAP,
-//! @see     txDialog::dialogProc(), txDialog 
+//! @see     txDialog::dialogProc(), txDialog
 //! @usage
 //! @code
 //!          Cм. реализацию функции txInputBox().
@@ -5632,16 +5635,20 @@ int txOutputDebugPrintf (const char format[], ...)
     {
     if (!format) return 0;
 
-    va_list arg; va_start (arg, format);
-
     bool msgbox = (*format == '\a')? (format++, true) : false;
+    bool print  = (*format == '\f')? (format++, true) : false;
 
     char str[_TX_BIGBUFSIZE] = "";
 
+    va_list arg; va_start (arg, format);
     int n = _vsnprintf_s (str, sizeof (str) - 2 _TX_TRUNCATE, format, arg);
-    str[n++] = '\n'; str[n] = 0;
+    str[n] = '\n'; str[n+1] = 0;
+    va_end (arg);
 
     OutputDebugString (str);
+
+    if (print)
+        printf ("\n" "%s", str);
 
     if (msgbox)
         {
@@ -5650,7 +5657,6 @@ int txOutputDebugPrintf (const char format[], ...)
                     str, "Оказывается, что", MB_ICONEXCLAMATION | MB_TOPMOST);
         }
 
-    va_end (arg);
     return n;
     }
 
@@ -7050,6 +7056,186 @@ using ::std::string;
 
 //}
 //--------------------------------------------------------------------------------------------
+
+//============================================================================================
+//{          [Experimental] Debugging macros
+//! @name    Экспериментальные отладочные макросы
+//============================================================================================
+
+//{-------------------------------------------------------------------------------------------
+//! @ingroup Misc
+//! @brief   Отладочная печать переменной во время вычисления выражения или участка кода
+//!          во время его выполнения
+//!
+//! @warning Эти макросы могут измениться в будущих версиях.
+//!
+//! @title   Назначение: @table
+//!          @tr <tt> $ (x) </tt>      @td Печать имени и значения переменной @c x внутри выражения.
+//!          @tr <tt> $_(x) </tt>      @td Печать только  значения переменной @c x внутри выражения.
+//!          @tbr
+//!          @tr <tt> $$ (expr)  </tt> @td Печать выражения, его вычисление, печать и возврат значения.<br>
+//!                                        Если выражение содержит оператор "запятая", не взятый
+//!                                        в скобки, необходимо окружать expr еще одной парой скобок.
+//!          @tr <tt> $$_(expr)  </tt> @td То же, что и <tt>$$(expr),</tt> но вторая печать идет без новой строки.
+//!          @tbr
+//!          @tr <tt> $$$ (expr) </tt> @td То же, что и <tt>$$(expr),</tt> но для операторов или блоков кода
+//!                                        (без возврата значения).
+//!          @tr <tt> $$$_(expr) </tt> @td То же, что и <tt>$$$(expr),</tt> но вторая печать идет без новой строки.
+//!          @tbr
+//!          @tr <tt> $$$$ </tt>       @td Печать местоположения в коде.
+//!          @tr <tt> $n   </tt>       @td Перевод строки (печать @c '\\n').
+//!          @endtable
+//!
+//! @title   Установка атрибутов символов консоли: @table
+//!          @tr @c $T @td Прозрачный      цвет @td @td @c $d @td Светло-серый     цвет
+//!          @tr @c $B @td Темно-синий     цвет @td @td @c $b @td Светло-синий     цвет
+//!          @tr @c $G @td Темно-зеленый   цвет @td @td @c $g @td Светло-зеленый   цвет
+//!          @tr @c $C @td Темно-бирюзовый цвет @td @td @c $c @td Светло-бирюзовый цвет
+//!          @tr @c $R @td Темно-красный   цвет @td @td @c $r @td Светло-красный   цвет
+//!          @tr @c $M @td Темно-малиновый цвет @td @td @c $m @td Светло-малиновый цвет
+//!          @tr @c $Y @td Темно-желтый    цвет @td @td @c $y @td Желтый           цвет
+//!          @tr @c $D @td Темно-серый     цвет @td @td @c $t @td Белый            цвет
+//! @endtable
+//! @title @table 
+//!          @tr @c $a @td Assertion        @td Светло-зеленый на зеленом
+//!          @tr @c $A @td Assertion bold   @td Желтый на зеленом             
+//!          @tr @c $i @td Information      @td Светло-синий на синем
+//!          @tr @c $I @td Information bold @td Желтый на синем
+//!          @tr @c $w @td Warning          @td Светло-малиновый на малиновом
+//!          @tr @c $W @td Warning bold     @td Желтый на малиновом
+//!          @tr @c $e @td Error            @td Светло-красный на красном
+//!          @tr @c $E @td Error bold       @td Желтый на красном
+//!          @tr @c $f @td Fatal            @td Черный на светло-красном
+//!          @tr @c $F @td Fatal bold       @td Малиновый на светло-красном
+//!          @tr @c $l @td Location         @td Черный на темно-сером
+//!          @tr @c $L @td Location bold    @td Светло-серый на темно-сером
+//! @endtable
+//! @title @table 
+//!          @tr @c $s  @td Запомнить атрибуты. При выходе из блока кода атрибуты восстанавливаются.
+//! @endtable
+//!
+//! @see     assert(), asserted, __TX_FILELINE__, __TX_FUNCTION__, TX_ERROR
+//! @usage
+//! @code
+//!          $g  // green
+//!          int x = 5;
+//!          int y = $(x) + 1;
+//!          $$( x = $(y) + 2 );
+//!      
+//!          $r  // red
+//!          double xy = $$( pow (x, y) );
+//!      
+//!          $$$$
+//!          double h  = $$(( $(x) = x*x, y = y*y, sqrt ($(x+y)) ));
+//!      
+//!          $$( txCreateWindow (800, 600) );
+//!      
+//!          $d  // default color
+//!          $$$( if ($(xy) < $(h)) { $s return $(h); } )
+//!      
+//!          $$$$
+//! @endcode
+//}-------------------------------------------------------------------------------------------
+
+#ifndef __TX_DEBUG_MACROS
+#define __TX_DEBUG_MACROS  ("Группа отладочных макросов")
+
+//! @cond INTERNAL
+
+#define $_(var)      _txDump (var)
+
+#define $(var)     ( _txDump ((var),  "[" #var " = ", "]") )
+
+#define $$(cmd)    (  std::cout <<  "\n[" __TX_FILELINE__ ": " #cmd "]\n",  \
+                     _txDump ((cmd),"\n[" __TX_FILELINE__ ": " #cmd ": ", ", DONE]\n") )
+
+#define $$_(cmd)   (  std::cout <<  "\n[" __TX_FILELINE__ ": " #cmd "]\n",  \
+                     _txDump ((cmd),  "[" __TX_FILELINE__ ": " #cmd ": ", ", DONE]\n") )
+
+#define $$$(cmd)   {  std::cout <<  "\n[" __TX_FILELINE__ ": " #cmd "]\n";  \
+                     _txDumpSuffix ("\n[" __TX_FILELINE__ ": " #cmd " DONE]\n"); { cmd; } }
+
+#define $$$_(cmd)  {  std::cout <<  "\n[" __TX_FILELINE__ ": " #cmd "]\n";  \
+                     _txDumpSuffix (  "[" __TX_FILELINE__ ": " #cmd " DONE]\n"); { cmd; } }
+
+#define $$$$       {  $s $l txOutputDebugPrintf ("\f[%s (%d) %s]", __FILE__, __LINE__, __TX_FUNCTION__); }
+
+#define $n            std::cout << "\n";
+
+#define $s            _txSaveConsoleAttr __txSaveConsoleAttr;
+
+#define $T            txSetConsoleAttr (0x00);
+#define $B            txSetConsoleAttr (0x01);
+#define $G            txSetConsoleAttr (0x02);
+#define $C            txSetConsoleAttr (0x03);
+#define $R            txSetConsoleAttr (0x04);
+#define $M            txSetConsoleAttr (0x05);
+#define $Y            txSetConsoleAttr (0x06);
+#define $d            txSetConsoleAttr (0x07);
+#define $D            txSetConsoleAttr (0x08);
+#define $b            txSetConsoleAttr (0x09);
+#define $g            txSetConsoleAttr (0x0a);
+#define $c            txSetConsoleAttr (0x0b);
+#define $r            txSetConsoleAttr (0x0c);
+#define $m            txSetConsoleAttr (0x0d);
+#define $y            txSetConsoleAttr (0x0e);
+#define $t            txSetConsoleAttr (0x0f);
+
+#define $i            txSetConsoleAttr (0x1b);
+#define $I            txSetConsoleAttr (0x1e);
+#define $a            txSetConsoleAttr (0x2a);
+#define $A            txSetConsoleAttr (0x2e);
+#define $e            txSetConsoleAttr (0x4f);
+#define $E            txSetConsoleAttr (0x4e);
+#define $w            txSetConsoleAttr (0x5d);
+#define $W            txSetConsoleAttr (0x5e);
+#define $f            txSetConsoleAttr (0xc0);
+#define $F            txSetConsoleAttr (0xc5);
+#define $l            txSetConsoleAttr (0x80);
+#define $L            txSetConsoleAttr (0x87);
+
+//--------------------------------------------------------------------------------------------
+
+template <typename T> inline
+const T& _txDump (const T& value, const char* prefix = "", const char* suffix = "")
+    {
+    if (prefix) std::cout << prefix << value << suffix;
+    return value;
+    }
+
+template <typename T> inline
+      T& _txDump (      T& value, const char* prefix = "", const char* suffix = "")
+    {
+    if (prefix) std::cout << prefix << value << suffix;
+    return value;
+    }
+
+struct _txDumpSuffix
+    {
+    const char* suffix_;
+
+    inline  _txDumpSuffix (const char* suffix = "") : suffix_ (suffix)     {}
+    inline ~_txDumpSuffix()                         { std::cout << suffix_; }
+
+    _txDumpSuffix             (const _txDumpSuffix&);
+    _txDumpSuffix& operator = (const _txDumpSuffix&);
+    };
+
+struct _txSaveConsoleAttr
+    {
+    WORD attr_;
+
+    inline  _txSaveConsoleAttr()           : attr_ (txGetConsoleAttr ()) {}
+    inline  _txSaveConsoleAttr (WORD attr) : attr_ (txGetConsoleAttr ()) { txSetConsoleAttr (attr);  }
+    inline ~_txSaveConsoleAttr()                                         { txSetConsoleAttr (attr_); }
+    };
+
+//! @endcond
+
+#endif
+
+//}
+//============================================================================================
 
 //--------------------------------------------------------------------------------------------
 //{          Compiler- and platform-specific

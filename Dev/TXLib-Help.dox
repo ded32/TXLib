@@ -94,7 +94,7 @@ ALIASES                = "title=<dl><dt>" \
                          "tr=<tr valign=top><td>" \
                          "endtr=</td></tr>" \
                          "tbr=\n @tr @endtr" \
-                         "td=&nbsp;</td><td>&nbsp;" \
+                         "td=&nbsp;&nbsp;</td><td>" \
                          "usage=</dl><dl class=\"usage\"><dt><b>Примеры использования:</b></dt><dd>" \
                          "endusage=</dd></dl>" \
                          "section=<hr> @section" \
