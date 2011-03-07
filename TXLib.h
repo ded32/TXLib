@@ -4383,7 +4383,7 @@ $1  _TX_IF_TXWINDOW_FAILED return false;
 $   txUpdateWindow (false);
 $   txAutoLock _lock;
 
-//{  Set defaults for graphics layer
+//{ Set defaults for graphics layer
 
 $   RECT r = {0};
 
@@ -4408,10 +4408,12 @@ $    Win32::SetROP2      (txDC(), R2_COPYPEN)               asserted;
 
 //}
 
-//{  Set defaults for console  layer
+//{ Set defaults for console  layer
+
+$   HANDLE out = GetStdHandle (STD_OUTPUT_HANDLE);
 
 $   CONSOLE_SCREEN_BUFFER_INFO con = {{0}, {0}, 0, {0, 0, 80, 25}, {80, 25}};
-$   GetConsoleScreenBufferInfo (GetStdHandle (STD_OUTPUT_HANDLE), &con);
+$   GetConsoleScreenBufferInfo (out, &con);
 
 $   SIZE szChr  = { (short) (con.srWindow.Right  - con.srWindow.Left + 1),
                     (short) (con.srWindow.Bottom - con.srWindow.Top  + 1) };
@@ -4427,6 +4429,28 @@ $   _txBuffer_Select (txFontExist (_TX_CONSOLE_FONT)? CreateFont (szFont.cy, szF
                                                     :
                                                       GetStockObject (SYSTEM_FIXED_FONT),
                       _txCanvas_BackBuf[1]) asserted;
+//}
+
+//{ Scroll the console for text to go above top of window and don't mix with graphics
+
+$   if (con.dwCursorPosition.X) con.dwCursorPosition.X = 0, con.dwCursorPosition.Y++;
+
+$   SHORT delta = con.dwCursorPosition.Y - con.srWindow.Top;
+
+$   con.srWindow.Left = con.srWindow.Right  = 0;
+$   con.srWindow.Top  = con.srWindow.Bottom = delta;
+
+$   SMALL_RECT src  = {0, 0, con.dwSize.X-1, con.dwSize.Y-1};
+$   CHAR_INFO  fill = {{0x20}, 0x07};  // Fill with spaces, light-gray on black
+$   COORD      dest = {0, -delta};     // New UL-corner of src, scroll up
+
+$   con.dwCursorPosition.X  = 0;
+$   con.dwCursorPosition.Y -= delta;
+
+$   SetConsoleWindowInfo      (out, false, &con.srWindow)        // Move the "window"
+    ||
+    ScrollConsoleScreenBuffer (out, &src, NULL, dest, &fill) &&  // Or scroll the buffer
+    SetConsoleCursorPosition  (out, con.dwCursorPosition);
 //}
 
 $   txUpdateWindow (true);
@@ -5194,11 +5218,7 @@ $1  HWND console = GetConsoleWindow();
 $   GetWindowRect (console, &_txConsole_Pos);
 $   _txConsole_Active = (console && GetForegroundWindow() == console);
 
-$   if (!console)
-        {
-$       FreeConsole();
-$       AllocConsole();
-        }
+$   if (!console) AllocConsole();
 
 $   console = GetConsoleWindow();
 $   if (!console) return NULL;
@@ -5209,7 +5229,7 @@ $   SetConsoleCP       (1251);
 $   SetConsoleOutputCP (1251);
 
     // Устанавливаем русскую кодовую страницу для стандартной библиотеки,
-    // иначе не будут работать Unicode-версии функций типа wprintf и т.д.
+    // иначе не будут работать Unicode-версии функций (wprintf, ...).
     // Если компилите с помощью gcc, не забудьте указать опции компилятора:
     // -finput-charset=CP1251 -fexec-charset=CP1251
     // если собираетесь использовать L"unicode-строки".
@@ -5239,33 +5259,6 @@ $   setvbuf (stderr, NULL, _IONBF, 0);
 $   std::ios::sync_with_stdio();
 
 #endif
-
-    // Скроллим консоль так, чтобы старый текст в ней оказался выше
-    // верхней рамки окна и не мешался картинке.
-
-$   HANDLE out = GetStdHandle (STD_OUTPUT_HANDLE);
-
-$   CONSOLE_SCREEN_BUFFER_INFO con = {{0}};
-$   bool ok = GetConsoleScreenBufferInfo (out, &con);
-
-$   if (con.dwCursorPosition.X) con.dwCursorPosition.X = 0, con.dwCursorPosition.Y++;
-
-$   SHORT delta = con.dwCursorPosition.Y - con.srWindow.Top;
-
-$   con.srWindow.Left = con.srWindow.Right  = 0;
-$   con.srWindow.Top  = con.srWindow.Bottom = delta;
-
-$   SMALL_RECT src  = {0, 0, con.dwSize.X-1, con.dwSize.Y-1};
-$   CHAR_INFO  fill = {{0x20}, 0x07}; // Space, light-gray on black
-$   COORD      dest = {0, -delta};    // New UL-corner of src, scroll up
-
-$   if (ok) SetConsoleWindowInfo      (out, false, &con.srWindow)     // Move the window
-         || ScrollConsoleScreenBuffer (out, &src, NULL, dest, &fill); // Or scroll the buffer
-
-$   con.dwCursorPosition.X  = 0;
-$   con.dwCursorPosition.Y -= delta;
-
-$   SetConsoleCursorPosition (out, con.dwCursorPosition);
 
     // That's all, folks
 
@@ -7355,4 +7348,3 @@ struct _txSaveConsoleAttr
 //============================================================================================
 // EOF
 //============================================================================================
-
