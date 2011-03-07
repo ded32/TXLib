@@ -1,6 +1,5 @@
 
 ADD  $-printing
-ADD  $r, $R, $rY - red on yellow, $n = \n, $r = \r
 ADD  tr(msg) { return translation (msg) /*tr from map*/ }
 ADD  VEC/SEH/signal (divide by zero etc)
 ADD  valuePipe
@@ -53,6 +52,7 @@ ADD  tinyTX
 
 ---
 
+ADD+ $r, $R, $rY - red on yellow, $n = \n, $r = \r
 ADD~ doc: beginners beginners beginners, code with TXLib
 FIX+ "    \n" in console output of OnTerminate... etc.
 ADD+ icon from memory (==jumping man)

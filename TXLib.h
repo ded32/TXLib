@@ -3248,7 +3248,7 @@ inline void _txTrace (const char* file, int line, const char* func)
 
     char mark = marks [id == _txMainThreadId] [id == _txCanvas_ThreadId] [_txInTX > 0];
 
-    txOutputDebugPrintf ("%s%s- [%c] %s (%d) %s",
+    txOutputDebugPrintf ("%s%s- [%c] %s (%d) %s" "\n",
                          _TX_VERSION, _TX_NAME, mark, file, line, (func? func : ""));
     }
 
@@ -3903,7 +3903,7 @@ HDC              _txBuffer_Create (HWND wnd, const POINT* size = NULL, HBITMAP b
 bool             _txBuffer_Delete (HDC* dc);
 bool             _txBuffer_Select (HGDIOBJ obj, HDC dc = txDC());
 
-HWND             _txConsole_Attach (bool forceRealloc);
+HWND             _txConsole_Attach();
 bool             _txConsole_OK();
 bool             _txConsole_Detach (bool restorePos);
 bool             _txConsole_Draw (HDC dc);
@@ -4317,7 +4317,7 @@ $   std::set_unexpected (_txOnUnexpected);
 $   std::set_terminate  (_txOnTerminate);
     #endif
 
-$   HWND console = _txConsole_Attach (true);
+$   HWND console = _txConsole_Attach();
 $   if (console) SetWindowTextA (console, txGetModuleFileName (false));
 
 $   InitializeCriticalSection (&_txCanvas_LockBackBuf);
@@ -4409,8 +4409,6 @@ $    Win32::SetROP2      (txDC(), R2_COPYPEN)               asserted;
 //}
 
 //{  Set defaults for console  layer
-
-$   _txConsole_Attach (false);
 
 $   CONSOLE_SCREEN_BUFFER_INFO con = {{0}, {0}, 0, {0, 0, 80, 25}, {80, 25}};
 $   GetConsoleScreenBufferInfo (GetStdHandle (STD_OUTPUT_HANDLE), &con);
@@ -4921,9 +4919,9 @@ $   dcs.clear();
 
     // Indicate that we are destroyed
 
-$   _txCanvas_Window = NULL;
-
 $   txUnlock();
+
+$   _txCanvas_Window = NULL;
 
 $   return true;
     }
@@ -5118,7 +5116,7 @@ $   _snprintf_s (text, sizeof (text) - 1 _TX_TRUNCATE,
 
 $   MessageBox (txWindow(), text, "About " ABOUT_NAME_, MB_ICONINFORMATION);
 
-//  And a bit of HTTP-code in C++ function:
+    // And a bit of HTTP-code in C++ function:
 
     goto http;
     http://ded32.net.ru                               // See valuable refs here :)
@@ -5189,14 +5187,14 @@ $       if (res) return res;
 //============================================================================================
 //! @{
 
-HWND _txConsole_Attach (bool forceRealloc)
+HWND _txConsole_Attach()
     {
 $1  HWND console = GetConsoleWindow();
 
 $   GetWindowRect (console, &_txConsole_Pos);
 $   _txConsole_Active = (console && GetForegroundWindow() == console);
 
-$   if (forceRealloc && !console)
+$   if (!console)
         {
 $       FreeConsole();
 $       AllocConsole();
@@ -5205,8 +5203,16 @@ $       AllocConsole();
 $   console = GetConsoleWindow();
 $   if (!console) return NULL;
 
+    // Устанавливаем русскую кодовую страницу для консоли Windows
+
 $   SetConsoleCP       (1251);
 $   SetConsoleOutputCP (1251);
+
+    // Устанавливаем русскую кодовую страницу для стандартной библиотеки,
+    // иначе не будут работать Unicode-версии функций типа wprintf и т.д.
+    // Если компилите с помощью gcc, не забудьте указать опции компилятора:
+    // -finput-charset=CP1251 -fexec-charset=CP1251
+    // если собираетесь использовать L"unicode-строки".
 
 $     setlocale (LC_CTYPE,  "Russian");
 $   _wsetlocale (LC_CTYPE, L"Russian_Russia.ACP");
@@ -5214,7 +5220,13 @@ $   _wsetlocale (LC_CTYPE, L"Russian_Russia.ACP");
 $   static bool done = false;
 $   if (done) return console;
 
+    // Впечатлительным лучше туда не смотреть.
+
 $   _txConsole_SetUnicodeFont();
+
+#ifndef _CONSOLE
+
+    // Переоткрываем заново <s>Америку</s> потоки ввода-вывода, если subsystem != console
 
 $                    *stdin  = *_fdopen (_open_osfhandle ((DWORD)(ptrdiff_t) GetStdHandle (STD_INPUT_HANDLE),  _O_TEXT), "r");
 $   fflush (stdout); *stdout = *_fdopen (_open_osfhandle ((DWORD)(ptrdiff_t) GetStdHandle (STD_OUTPUT_HANDLE), _O_TEXT), "w");
@@ -5226,6 +5238,37 @@ $   setvbuf (stderr, NULL, _IONBF, 0);
 
 $   std::ios::sync_with_stdio();
 
+#endif
+
+    // Скроллим консоль так, чтобы старый текст в ней оказался выше
+    // верхней рамки окна и не мешался картинке.
+
+$   HANDLE out = GetStdHandle (STD_OUTPUT_HANDLE);
+
+$   CONSOLE_SCREEN_BUFFER_INFO con = {{0}};
+$   bool ok = GetConsoleScreenBufferInfo (out, &con);
+
+$   if (con.dwCursorPosition.X) con.dwCursorPosition.X = 0, con.dwCursorPosition.Y++;
+
+$   SHORT delta = con.dwCursorPosition.Y - con.srWindow.Top;
+
+$   con.srWindow.Left = con.srWindow.Right  = 0;
+$   con.srWindow.Top  = con.srWindow.Bottom = delta;
+
+$   SMALL_RECT src  = {0, 0, con.dwSize.X-1, con.dwSize.Y-1};
+$   CHAR_INFO  fill = {{0x20}, 0x07}; // Space, light-gray on black
+$   COORD      dest = {0, -delta};    // New UL-corner of src, scroll up
+
+$   if (ok) SetConsoleWindowInfo      (out, false, &con.srWindow)     // Move the window
+         || ScrollConsoleScreenBuffer (out, &src, NULL, dest, &fill); // Or scroll the buffer
+
+$   con.dwCursorPosition.X  = 0;
+$   con.dwCursorPosition.Y -= delta;
+
+$   SetConsoleCursorPosition (out, con.dwCursorPosition);
+
+    // That's all, folks
+
 $   done = true;
 $   return console;
     }
@@ -5234,6 +5277,8 @@ $   return console;
 
 bool _txConsole_SetUnicodeFont()
     {
+    // Начиная с Висты все хорошо...
+
 $1  if (Win32::GetCurrentConsoleFontEx &&
         Win32::SetCurrentConsoleFontEx)
         {
@@ -5249,7 +5294,12 @@ $       Win32::SetCurrentConsoleFontEx (out, false, &info) asserted;
 $       return true;
         }
 
-$   const unsigned uniFont = 10;
+    // ...а до этого все не так сладко.
+
+$   const unsigned uniFont = 10;  // The Internet and W2K sources know this magic number
+
+    // Force Windows to use Unicode font by creating and run the console shortcut
+    // tuned to use that font.
 
 $   HANDLE out = GetStdHandle (STD_OUTPUT_HANDLE);
 
@@ -5266,7 +5316,6 @@ $       char comspec [MAX_PATH] = "";
 $       getenv_s (&sz, comspec, sizeof (comspec), "COMSPEC");
 
 $       CONSOLE_FONT_INFO font = { Win32::GetNumberOfConsoleFonts() - 1 };
-$ //!!! font.dwFontSize = Win32::GetConsoleFontSize (out, font.nFont);
 
 $       _txCreateShortcut (link, comspec, "/c exit", NULL, NULL,
                            SW_SHOWMINNOACTIVE, NULL, 0, font.dwFontSize.Y + 2) asserted;
@@ -5281,6 +5330,8 @@ $       if (init == S_OK) Win32::CoUninitialize();
 
 $   CONSOLE_FONT_INFO cur = {0, {-1, -1}};
 $   Win32::GetCurrentConsoleFont (out, false, &cur);
+
+    // If Unicode font is not already set, do set it.
 
 $   bool ok = (cur.nFont >= uniFont) || !!Win32::SetConsoleFont (out, uniFont);
 
@@ -5642,7 +5693,6 @@ int txOutputDebugPrintf (const char format[], ...)
 
     va_list arg; va_start (arg, format);
     int n = _vsnprintf_s (str, sizeof (str) - 2 _TX_TRUNCATE, format, arg);
-    str[n] = '\n'; str[n+1] = 0;
     va_end (arg);
 
     OutputDebugString (str);
@@ -7096,9 +7146,9 @@ using ::std::string;
 //!          @tr @c $Y @td Темно-желтый    цвет @td @td @c $y @td Желтый           цвет
 //!          @tr @c $D @td Темно-серый     цвет @td @td @c $t @td Белый            цвет
 //! @endtable
-//! @title @table 
+//! @title @table
 //!          @tr @c $a @td Assertion        @td Светло-зеленый на зеленом
-//!          @tr @c $A @td Assertion bold   @td Желтый на зеленом             
+//!          @tr @c $A @td Assertion bold   @td Желтый на зеленом
 //!          @tr @c $i @td Information      @td Светло-синий на синем
 //!          @tr @c $I @td Information bold @td Желтый на синем
 //!          @tr @c $w @td Warning          @td Светло-малиновый на малиновом
@@ -7110,7 +7160,7 @@ using ::std::string;
 //!          @tr @c $l @td Location         @td Черный на темно-сером
 //!          @tr @c $L @td Location bold    @td Светло-серый на темно-сером
 //! @endtable
-//! @title @table 
+//! @title @table
 //!          @tr @c $s  @td Запомнить атрибуты. При выходе из блока кода атрибуты восстанавливаются.
 //! @endtable
 //!
@@ -7121,24 +7171,24 @@ using ::std::string;
 //!          int x = 5;
 //!          int y = $(x) + 1;
 //!          $$( x = $(y) + 2 );
-//!      
+//!
 //!          $r  // red
 //!          double xy = $$( pow (x, y) );
-//!      
+//!
 //!          $$$$
 //!          double h  = $$(( $(x) = x*x, y = y*y, sqrt ($(x+y)) ));
-//!      
+//!
 //!          $$( txCreateWindow (800, 600) );
-//!      
+//!
 //!          $d  // default color
 //!          $$$( if ($(xy) < $(h)) { $s return $(h); } )
-//!      
+//!
 //!          $$$$
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
 #ifndef __TX_DEBUG_MACROS
-#define __TX_DEBUG_MACROS  ("Группа отладочных макросов")
+#define __TX_DEBUG_MACROS  ("Группа отладочных $-макросов")
 
 //! @cond INTERNAL
 
@@ -7158,7 +7208,7 @@ using ::std::string;
 #define $$$_(cmd)  {  std::cout <<  "\n[" __TX_FILELINE__ ": " #cmd "]\n";  \
                      _txDumpSuffix (  "[" __TX_FILELINE__ ": " #cmd " DONE]\n"); { cmd; } }
 
-#define $$$$       {  $s $l txOutputDebugPrintf ("\f[%s (%d) %s]", __FILE__, __LINE__, __TX_FUNCTION__); }
+#define $$$$       {{ $s $l txOutputDebugPrintf ("\f[%s (%d) %s]", __FILE__, __LINE__, __TX_FUNCTION__); } putchar ('\n'); }
 
 #define $n            std::cout << "\n";
 
