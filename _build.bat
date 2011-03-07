@@ -77,5 +77,7 @@ cd ..
 
 rd/s/q __archive
 
+rar x -o+ %.file% . Doc\HTML.ru > nul
+
 echo http://storage.ded32.net.ru/get.pl?url=http://dl.dropbox.com/u/1557330/TXLib/TX.72/%.file% | cliptext
 
