@@ -2157,7 +2157,7 @@ bool txTextCursor (bool blink = true);
 //!          с форматом картинок в txLoadImage().
 //! @usage
 //! @code
-//!          txPlaySound ("tada.wav"); // so happy that this always exists
+//!          txPlaySound ("tada.wav"); // So happy that this always exists
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
