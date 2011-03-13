@@ -84,24 +84,24 @@
                 по умолчанию, то во время исполнения могут потребоваться файлы библиотек,
                 без которых программа не запустится:
                 @n
-    @table      @tr @b Компилятор      @td <b>Среда разработки</b>     @td @b Конфигурация @td <b>Требуемые библиотеки</b>
+    @table      @tr @b Компилятор      @td <b>Среда разработки</b>     @td @b Конфигурация @td <b>Требуемые библиотеки</b> @td
 
-                @tr @c GCC @c g++      @td CodeBlocks, DevCpp, Eclipse @td Debug, Release  @td @c msvcrt.dll
+                @tr @c GCC @c g++      @td CodeBlocks, DevCpp, Eclipse @td Debug, Release  @td @c msvcrt.dll @td
 
-                @tr Microsoft Visual C @td Visual Studio 6             @td Debug, Release  @td <i>Не требуются</i>
-                @tr Intel Compiler 9.0 @td Visual Studio 6             @td Debug, Release  @td <i>Не требуются</i>
+                @tr Microsoft Visual C @td Visual Studio 6             @td Debug, Release  @td <i>Не требуются</i> @td
+                @tr Intel Compiler 9.0 @td Visual Studio 6             @td Debug, Release  @td <i>Не требуются</i> @td
 
-                @tr Microsoft Visual C @td Visual Studio 2003          @td Debug, Release  @td <i>Не требуются</i>
-                @tr Intel Compiler 9.0 @td Visual Studio 2003          @td Debug, Release  @td <i>Не требуются</i>
+                @tr Microsoft Visual C @td Visual Studio 2003          @td Debug, Release  @td <i>Не требуются</i> @td
+                @tr Intel Compiler 9.0 @td Visual Studio 2003          @td Debug, Release  @td <i>Не требуются</i> @td
                 
-                @tr Microsoft Visual C @td Visual Studio 2005          @td Debug           @td @c msvcp80d.dll,  @c msvcr80d.dll
-                @tr Microsoft Visual C @td Visual Studio 2005          @td Release         @td @c msvcp80.dll,   @c msvcr80.dll
+                @tr Microsoft Visual C @td Visual Studio 2005          @td Debug           @td @c msvcp80d.dll,  @c msvcr80d.dll  @td
+                @tr Microsoft Visual C @td Visual Studio 2005          @td Release         @td @c msvcp80.dll,   @c msvcr80.dll   @td
                                        
-                @tr Microsoft Visual C @td Visual Studio 2008          @td Debug           @td @c msvcp90d.dll,  @c msvcr90d.dll
-                @tr Microsoft Visual C @td Visual Studio 2008          @td Release         @td @c msvcp90.dll,   @c msvcr90.dll
+                @tr Microsoft Visual C @td Visual Studio 2008          @td Debug           @td @c msvcp90d.dll,  @c msvcr90d.dll  @td
+                @tr Microsoft Visual C @td Visual Studio 2008          @td Release         @td @c msvcp90.dll,   @c msvcr90.dll   @td
                                        
-                @tr Microsoft Visual C @td Visual Studio 2010          @td Debug           @td @c msvcp100d.dll, @c msvcr100d.dll
-                @tr Microsoft Visual C @td Visual Studio 2010          @td Release         @td @c msvcp100.dll,  @c msvcr100.dll
+                @tr Microsoft Visual C @td Visual Studio 2010          @td Debug           @td @c msvcp100d.dll, @c msvcr100d.dll @td
+                @tr Microsoft Visual C @td Visual Studio 2010          @td Release         @td @c msvcp100.dll,  @c msvcr100.dll  @td
     @endtable
                 Посмотреть эти зависимости можно утилитой <a href=http://www.dependencywalker.com>Depends.exe</a>.
    

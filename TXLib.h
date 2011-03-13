@@ -1642,9 +1642,9 @@ bool txTransparentBlt (HDC dest, int xDest, int yDest, int width, int height,
 //!
 //!          Изображение-источник и изображение-приемник не могут налагаться друг на друга.
 //!
-//!          Изображение должно быть загружено с помощью txLoadImage() и иметь
-//!          32-битовый RGBA-формат. Дополнительный канал (альфа-канал) этого
-//!          формата отвечает за прозрачность участков изображения.
+//! @note    Изображение должно быть загружено с помощью txLoadImage() и иметь 32-битовый RGBA-формат.
+//!          Дополнительный канал (альфа-канал) этого формата отвечает за прозрачность участков изображения.
+//!          24-битовый (TrueColor) формат функция txAlphaBlend не поддерживает.
 //!
 //!          Альфа-канал можно сделать, например, в Adobe Photoshop, командой
 //!          "Новый канал (New Channel)" в палитре каналов (Channels). Черный
@@ -3097,7 +3097,8 @@ const unsigned _TX_BIGBUFSIZE             = 2048;
 //!          Функция формирует сообщение по правилам printf() и передает его OutputDebugString().
 //!          Ее вывод можно перехватить утилитами-логгерами, например,
 //!          <a href=http://technet.microsoft.com/ru-ru/sysinternals/bb896647%28en-us%29.aspx>DebugView</a>.
-//!          Если этого не сделать, и не задать первый символ @c '\a' (см. ниже), то о сообщении никто не узнает.
+//!          Если этого не сделать, и не задать первый символ <tt>'\a'</tt> (см. ниже), то о сообщении никто
+//!          не узнает.
 //! @note
 //!        - Если первый            символ в строке <tt>'\a',</tt> то сообщение также дублируется MessageBox().
 //!        - Если первый или второй символ в строке <tt>'\f',</tt> то сообщение также дублируется printf().
@@ -3263,7 +3264,8 @@ inline void _txTrace (const char* file, int line, const char* func)
 //! @ingroup Service
 //! @brief   Класс для автоматической блокировки и разблокировки критической секции.
 //!
-//!          Начиная с Александреску, его пишут все и он прост как пробка: в конструкторе @d
+//!          Начиная с <a href=http://progbook.ru/2008/08/03/sovremennoe-proektirovanie-na-c-andrejj.html>
+//!          Александреску,</a> его пишут все и он прост как пробка: в конструкторе @d
 //!          EnterCriticalSection(), в деструкторе @d LeaveCriticalSection(). @c RAII в чистом
 //!          виде: вы никогда не забудете разблочить секцию and your thread show will always
 //!          go on.
@@ -4227,7 +4229,6 @@ const GUID IID_IPersistFile       = {0x0000010b, 0x0000, 0x0000, {0xc0,0x00,0x00
 #undef  INTERFACE
 
 }  // namespace Win32
-using namespace Win32;
 
 //} </tears>
 
@@ -4393,13 +4394,13 @@ $   SIZE szCanvas = { r.right - r.left, r.bottom - r.top };
 $   GetClientRect (Win32::GetConsoleWindow(), &r) asserted;
 $   SIZE szCon    = { r.right - r.left, r.bottom - r.top };
 
-$   _txBuffer_Select (GetStockObject (WHITE_PEN),   txDC()) asserted;
-$   _txBuffer_Select (GetStockObject (WHITE_BRUSH), txDC()) asserted;
-$   _txBuffer_Select (CreateFont (szCon.cy/25, szCon.cx/80, 0, 0,
-                                  FW_REGULAR, FALSE, FALSE, FALSE, RUSSIAN_CHARSET,
-                                  OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
-                                  DEFAULT_QUALITY, DEFAULT_PITCH, _TX_CONSOLE_FONT),
-                                  txDC()) asserted;
+$   _txBuffer_Select (Win32::GetStockObject (WHITE_PEN),   txDC()) asserted;
+$   _txBuffer_Select (Win32::GetStockObject (WHITE_BRUSH), txDC()) asserted;
+$   _txBuffer_Select (Win32::CreateFont (szCon.cy/25, szCon.cx/80, 0, 0,
+                                         FW_REGULAR, FALSE, FALSE, FALSE, RUSSIAN_CHARSET,
+                                         OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
+                                         DEFAULT_QUALITY, DEFAULT_PITCH, _TX_CONSOLE_FONT),
+                      txDC()) asserted;
 
 $   (Win32::SetTextColor (txDC(), TX_WHITE) != CLR_INVALID) asserted;
 $    Win32::SetBkMode    (txDC(), TRANSPARENT)              asserted;
@@ -4421,13 +4422,13 @@ $   SIZE szChr  = { (short) (con.srWindow.Right  - con.srWindow.Left + 1),
 $   SIZE szFont = { (short) ((1.0 * szCon.cx / szChr.cx) / (1.0 * szCon.cx / szCanvas.cx)),
                     (short) ((1.0 * szCon.cy / szChr.cy) / (1.0 * szCon.cy / szCanvas.cy)) };
 
-$   _txBuffer_Select (txFontExist (_TX_CONSOLE_FONT)? CreateFont (szFont.cy, szFont.cx, 0, 0,
-                                                                  FW_REGULAR, FALSE, FALSE, FALSE, RUSSIAN_CHARSET,
-                                                                  OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
-                                                                  DEFAULT_QUALITY, FIXED_PITCH,
-                                                                  _TX_CONSOLE_FONT)
-                                                    :
-                                                      GetStockObject (SYSTEM_FIXED_FONT),
+$   _txBuffer_Select (txFontExist (_TX_CONSOLE_FONT)?
+                          Win32::CreateFont (szFont.cy, szFont.cx, 0, 0,
+                                             FW_REGULAR, FALSE, FALSE, FALSE, RUSSIAN_CHARSET,
+                                             OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
+                                             DEFAULT_QUALITY, FIXED_PITCH, _TX_CONSOLE_FONT)
+                          :
+                          Win32::GetStockObject (SYSTEM_FIXED_FONT),
                       _txCanvas_BackBuf[1]) asserted;
 //}
 
@@ -4743,7 +4744,7 @@ $   WNDCLASSEX wc    = { sizeof (wc) };
 $   wc.style         = CS_HREDRAW | CS_VREDRAW;
 $   wc.lpfnWndProc   = _txCanvas_WndProc;
 $   wc.hCursor       = LoadCursor (NULL, IDC_ARROW);
-$   wc.hbrBackground = (HBRUSH) GetStockObject (HOLLOW_BRUSH);
+$   wc.hbrBackground = (HBRUSH) Win32::GetStockObject (HOLLOW_BRUSH);
 $   wc.lpszClassName = className;
 
 $   ATOM wndclass = RegisterClassEx (&wc);
@@ -5947,8 +5948,8 @@ $   assert (obj); if (!obj) return CLR_INVALID;
 
 $   union { EXTLOGPEN extLogPen; LOGPEN LogPen; } buf = {{0}};
 
-$   int size = GetObject (obj, 0, NULL);
-$   GetObject (obj, sizeof (buf), &buf) asserted;
+$   int size = Win32::GetObject (obj, 0, NULL);
+$   Win32::GetObject (obj, sizeof (buf), &buf) asserted;
 
 $   return (size == sizeof (LOGPEN))? buf.LogPen.lopnColor : buf.extLogPen.elpColor;
     }
@@ -6206,12 +6207,13 @@ bool txSelectFont (const char name[], int sizeY,
 $1  _TX_IF_TXWINDOW_FAILED        return false;
 $   _TX_IF_ARGUMENT_FAILED (name) return false;
 
-$   _txBuffer_Select (txFontExist (name)? CreateFont (sizeY, (int) ((sizeX != -1)? sizeX : sizeY/3), 0, 0,
-                                                      bold, italic, underline, strikeout, RUSSIAN_CHARSET,
-                                                      OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
-                                                      DEFAULT_QUALITY, FIXED_PITCH, name)
-                                        :
-                                          GetStockObject (SYSTEM_FIXED_FONT));
+$   _txBuffer_Select (txFontExist (name)?
+                          Win32::CreateFont (sizeY, (int) ((sizeX != -1)? sizeX : sizeY/3), 0, 0,
+                                             bold, italic, underline, strikeout, RUSSIAN_CHARSET,
+                                             OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
+                                             DEFAULT_QUALITY, FIXED_PITCH, name)
+                          :
+                          Win32::GetStockObject (SYSTEM_FIXED_FONT));
 $   return true;
     }
 
@@ -6614,7 +6616,7 @@ $   if (mode & SND_LOOP) mode = (mode & ~SND_SYNC) | SND_ASYNC;
 
 $   if (!filename) mode = SND_PURGE;
 
-$   return !!PlaySound (filename, NULL, mode);
+$   return !!Win32::PlaySound (filename, NULL, mode);
     }
 
 //--------------------------------------------------------------------------------------------
@@ -7089,7 +7091,6 @@ $   return pw;
 
 #ifndef _TX_NAMED
 using namespace TX;            // Allow easy usage of TXLib functions
-using namespace TX::Win32;     // Simulate linkage with Win32 libs
 #endif
 
 using ::std::cin;              // Predefined usings to avoid "using namespace std"
@@ -7130,31 +7131,31 @@ using ::std::string;
 //!          @endtable
 //!
 //! @title   Установка атрибутов символов консоли: @table
-//!          @tr @c $T @td Прозрачный      цвет @td @td @c $d @td Светло-серый     цвет
-//!          @tr @c $B @td Темно-синий     цвет @td @td @c $b @td Светло-синий     цвет
-//!          @tr @c $G @td Темно-зеленый   цвет @td @td @c $g @td Светло-зеленый   цвет
-//!          @tr @c $C @td Темно-бирюзовый цвет @td @td @c $c @td Светло-бирюзовый цвет
-//!          @tr @c $R @td Темно-красный   цвет @td @td @c $r @td Светло-красный   цвет
-//!          @tr @c $M @td Темно-малиновый цвет @td @td @c $m @td Светло-малиновый цвет
-//!          @tr @c $Y @td Темно-желтый    цвет @td @td @c $y @td Желтый           цвет
-//!          @tr @c $D @td Темно-серый     цвет @td @td @c $t @td Белый            цвет
+//!          @tr @c $d @td Светло-серый     цвет @td @td @c $T @td Прозрачный      цвет
+//!          @tr @c $b @td Светло-синий     цвет @td @td @c $B @td Темно-синий     цвет
+//!          @tr @c $g @td Светло-зеленый   цвет @td @td @c $G @td Темно-зеленый   цвет
+//!          @tr @c $c @td Светло-бирюзовый цвет @td @td @c $C @td Темно-бирюзовый цвет
+//!          @tr @c $r @td Светло-красный   цвет @td @td @c $R @td Темно-красный   цвет
+//!          @tr @c $m @td Светло-малиновый цвет @td @td @c $M @td Темно-малиновый цвет
+//!          @tr @c $y @td Желтый           цвет @td @td @c $Y @td Темно-желтый    цвет
+//!          @tr @c $t @td Белый            цвет @td @td @c $D @td Темно-серый     цвет
 //! @endtable
 //! @title @table
-//!          @tr @c $a @td Assertion        @td Светло-зеленый на зеленом
-//!          @tr @c $A @td Assertion bold   @td Желтый на зеленом
-//!          @tr @c $i @td Information      @td Светло-синий на синем
-//!          @tr @c $I @td Information bold @td Желтый на синем
-//!          @tr @c $w @td Warning          @td Светло-малиновый на малиновом
-//!          @tr @c $W @td Warning bold     @td Желтый на малиновом
-//!          @tr @c $e @td Error            @td Светло-красный на красном
-//!          @tr @c $E @td Error bold       @td Желтый на красном
-//!          @tr @c $f @td Fatal            @td Черный на светло-красном
-//!          @tr @c $F @td Fatal bold       @td Малиновый на светло-красном
-//!          @tr @c $l @td Location         @td Черный на темно-сером
-//!          @tr @c $L @td Location bold    @td Светло-серый на темно-сером
+//!          @tr @c $a @td Assertion        @td Светло-зеленый на зеленом     @td
+//!          @td @c $A @td Assertion bold   @td Желтый на зеленом             @td
+//!          @tr @c $i @td Information      @td Светло-синий на синем         @td
+//!          @td @c $I @td Information bold @td Желтый на синем               @td
+//!          @tr @c $w @td Warning          @td Светло-малиновый на малиновом @td
+//!          @td @c $W @td Warning bold     @td Желтый на малиновом           @td
+//!          @tr @c $e @td Error            @td Светло-красный на красном     @td
+//!          @td @c $E @td Error bold       @td Желтый на красном             @td
+//!          @tr @c $f @td Fatal            @td Черный на светло-красном      @td
+//!          @td @c $F @td Fatal bold       @td Малиновый на светло-красном   @td
+//!          @tr @c $l @td Location         @td Черный на темно-сером         @td
+//!          @td @c $L @td Location bold    @td Светло-серый на темно-сером   @td
 //! @endtable
 //! @title @table
-//!          @tr @c $s  @td Запомнить атрибуты. При выходе из блока кода атрибуты восстанавливаются.
+//!          @tr @c $s @td Запомнить атрибуты. При выходе из блока кода атрибуты восстанавливаются.
 //! @endtable
 //!
 //! @see     assert(), asserted, __TX_FILELINE__, __TX_FUNCTION__, TX_ERROR
