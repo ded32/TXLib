@@ -4089,7 +4089,7 @@ _TX_DLLIMPORT     ("Kernel32", BOOL,     SetConsoleFont,         (HANDLE console
 _TX_DLLIMPORT     ("Kernel32", BOOL,     GetConsoleFontInfo,     (HANDLE console, BOOL fullScreen, DWORD numFonts, CONSOLE_FONT_INFO* fontsInfo));
 _TX_DLLIMPORT     ("Kernel32", DWORD,    GetNumberOfConsoleFonts,(void));
 _TX_DLLIMPORT     ("Kernel32", COORD,    GetConsoleFontSize,     (HANDLE hConsoleOutput, DWORD nFont));
-_TX_DLLIMPORT_OPT ("Kernel32", BOOL,     GetCurrentConsoleFont,  (HANDLE console, BOOL maxWnd, CONSOLE_FONT_INFO* curFont));
+_TX_DLLIMPORT_OPT ("Kernel32", BOOL,     GetCurrentConsoleFont,  (HANDLE console, BOOL maxWnd, CONSOLE_FONT_INFO*   curFont));
 _TX_DLLIMPORT_OPT ("Kernel32", BOOL,     GetCurrentConsoleFontEx,(HANDLE console, BOOL maxWnd, CONSOLE_FONT_INFOEX* curFont));
 _TX_DLLIMPORT_OPT ("Kernel32", BOOL,     SetCurrentConsoleFontEx,(HANDLE console, BOOL maxWnd, CONSOLE_FONT_INFOEX* curFont));
 
@@ -5291,6 +5291,7 @@ $       return true;
     // ...а до этого все не так сладко.
 
 $   const unsigned uniFont = 10;  // The Internet and W2K sources know this magic number
+$   const unsigned uniSize = 20;  // Size of the font desired, should be > max of Raster Fonts
 
     // Force Windows to use Unicode font by creating and run the console shortcut
     // tuned to use that font.
@@ -5309,10 +5310,8 @@ $       strncat_s (link, "\\_txLink.lnk", sizeof (link));
 $       char comspec [MAX_PATH] = "";
 $       getenv_s (&sz, comspec, sizeof (comspec), "COMSPEC");
 
-$       CONSOLE_FONT_INFO font = { Win32::GetNumberOfConsoleFonts() - 1 };
-
 $       _txCreateShortcut (link, comspec, "/c exit", NULL, NULL,
-                           SW_SHOWMINNOACTIVE, NULL, 0, font.dwFontSize.Y + 2) asserted;
+                           SW_SHOWMINNOACTIVE, NULL, 0, uniSize) asserted;
 
 $       ShellExecute (NULL, NULL, link, NULL, NULL, SW_SHOWMINNOACTIVE) > (void*)32 asserted;
 $       _txWaitFor (FindWindow (NULL, "_txLink"));
@@ -5322,10 +5321,10 @@ $       _unlink (link) == 0 asserted;
 $       if (init == S_OK) Win32::CoUninitialize();
         }
 
-$   CONSOLE_FONT_INFO cur = {0, {-1, -1}};
-$   Win32::GetCurrentConsoleFont (out, false, &cur);
-
     // If Unicode font is not already set, do set it.
+
+$   CONSOLE_FONT_INFO cur = {0};
+$   Win32::GetCurrentConsoleFont (out, false, &cur);
 
 $   bool ok = (cur.nFont >= uniFont) || !!Win32::SetConsoleFont (out, uniFont);
 
@@ -5479,8 +5478,8 @@ $       Win32::NT_CONSOLE_PROPS props =
             0,                                          // nFont
             0,                                          // nInputBufferSize
            {0, (short) fontSize},                       // dwFontSize
-            0x36, 0, L"",                               // uFontFamily, uFontWeight, FaceName
-            15,                                         // UINT  uCursorSize;
+            0x36, 400, L"Lucida Console",               // uFontFamily, uFontWeight, FaceName
+            15,                                         // uCursorSize
             0,  1, 1, 0,                                // bFullScreen, bQuickEdit, bInsertMode, bAutoPosition
             50, 4, 0,                                   // uHistoryBufferSize, uNumberOfHistoryBuffers, bHistoryNoDup
 
