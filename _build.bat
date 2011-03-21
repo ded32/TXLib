@@ -12,6 +12,9 @@ attrib +h %~nx0
 :chm
 echo Making docs...
 
+del TXLib-v0172a.rar.exe-TXLib.h        >nul 2>nul
+del TXLib-v0172a.rar.exe-TXLib Help.chm >nul 2>nul
+
 set doxygen_=-nointeractive
 
 copy Dev\TXLib-Reference.dox >nul
@@ -78,6 +81,8 @@ cd ..
 rd/s/q __archive
 
 rar x -o+ %.file% . Doc\HTML.ru > nul
+copy TXLib.h        "TXLib-v0172a.rar.exe-TXLib.h"        > nul
+copy TXLib-Help.chm "TXLib-v0172a.rar.exe-TXLib Help.chm" > nul
 
 echo http://storage.ded32.net.ru/get.pl?url=http://dl.dropbox.com/u/1557330/TXLib/TX.72/%.file% | cliptext
 

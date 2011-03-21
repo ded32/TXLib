@@ -117,6 +117,12 @@
 
 #endif
 
+#if defined (_WINDOWS_H) || defined (_INC_WINDOWS) || defined (_WINDOWS_) || defined (__WINDOWS__)
+
+    #error TXLib.h: The TXLib.h file must be included before or instead of Windows.h file.
+
+#endif
+
 #if defined (__STRICT_ANSI__)     // Try to extend strict ANSI C
 
     #warning TXLib.h: Trying to extend strict ANSI compatibility
@@ -3007,7 +3013,7 @@ const unsigned _TX_BIGBUFSIZE             = 2048;
 //}-------------------------------------------------------------------------------------------
 
 #if !defined (NDEBUG)
-    #define asserted          || TX_ERROR ("\a" "Обнаружен нулевой или ложный результат")
+    #define asserted          || TX_ERROR ("\a" "Обнаружен нулевой или ложный результат.")
 
 #else
     #define asserted          || _txNOP (0)
@@ -3250,7 +3256,8 @@ inline void _txTrace (const char* file, int line, const char* func)
     char mark = marks [id == _txMainThreadId] [id == _txCanvas_ThreadId] [_txInTX > 0];
 
     txOutputDebugPrintf ("%s%s- [%c] %s (%d) %s" "\n",
-                         _TX_VERSION, _TX_NAME, mark, file, line, (func? func : ""));
+                         _TX_VERSION, _TX_NAME, mark,
+                         (file? file : "(NULL file)"), line, (func? func : ""));
     }
 
 //! @endcond
@@ -3968,7 +3975,7 @@ FARPROC      _txDllImport (const char dllFileName[], const char funcName[], bool
                                            !(cond) && GetTickCount() < _t;           \
                                            Sleep (_TX_WINDOW_UPDATE_INTERVAL)) ;     \
                                       if  (!(cond))                                  \
-                                           _txTrace (__FILE__, __LINE__, "WARNING: Timeout: " #cond); }
+                                           _txTrace (__FILE__, __LINE__, "WARNING: Timeout: " #cond "."); }
 
 //--------------------------------------------------------------------------------------------
 
@@ -4088,7 +4095,6 @@ _TX_DLLIMPORT     ("Kernel32", HWND,     GetConsoleWindow,       (void));
 _TX_DLLIMPORT     ("Kernel32", BOOL,     SetConsoleFont,         (HANDLE console, DWORD fontIndex));
 _TX_DLLIMPORT     ("Kernel32", BOOL,     GetConsoleFontInfo,     (HANDLE console, BOOL fullScreen, DWORD numFonts, CONSOLE_FONT_INFO* fontsInfo));
 _TX_DLLIMPORT     ("Kernel32", DWORD,    GetNumberOfConsoleFonts,(void));
-_TX_DLLIMPORT     ("Kernel32", COORD,    GetConsoleFontSize,     (HANDLE hConsoleOutput, DWORD nFont));
 _TX_DLLIMPORT_OPT ("Kernel32", BOOL,     GetCurrentConsoleFont,  (HANDLE console, BOOL maxWnd, CONSOLE_FONT_INFO*   curFont));
 _TX_DLLIMPORT_OPT ("Kernel32", BOOL,     GetCurrentConsoleFontEx,(HANDLE console, BOOL maxWnd, CONSOLE_FONT_INFOEX* curFont));
 _TX_DLLIMPORT_OPT ("Kernel32", BOOL,     SetCurrentConsoleFontEx,(HANDLE console, BOOL maxWnd, CONSOLE_FONT_INFOEX* curFont));
@@ -4116,15 +4122,20 @@ _TX_DLLIMPORT     ("Shell32",  HINSTANCE,ShellExecuteA,          (HWND wnd, LPCT
 #define NT_CONSOLE_PROPS_SIG  0xA0000002
 #endif
 
-#pragma pack (push, 1)
-
-#ifdef _MSC_VER_6
-
+#ifndef NIIF_INFO
 #define NIIF_INFO             0x00000001
 #define NIIF_WARNING          0x00000002
 #define NIIF_ERROR            0x00000003
+#endif
+
+#ifndef NIF_INFO
 #define NIF_STATE             0x00000008
 #define NIF_INFO              0x00000010
+#endif
+
+#pragma pack (push, 1)
+
+#ifdef _MSC_VER_6
 
 struct CONSOLE_FONT_INFO
     {
@@ -4229,6 +4240,7 @@ const GUID IID_IPersistFile       = {0x0000010b, 0x0000, 0x0000, {0xc0,0x00,0x00
 #undef  INTERFACE
 
 }  // namespace Win32
+using namespace Win32;
 
 //} </tears>
 
@@ -4255,7 +4267,7 @@ HDC              _txCanvas_BackBuf[2]   = {NULL,  // [0] Main TXLib memory DC, w
                                                   //     used in WM_PAINT handling when user frozen
                                                   //     screen auto-update by txBegin()... call.
 
-CRITICAL_SECTION _txCanvas_LockBackBuf  = {0};    // Prevent simultaneous access to back buffer,
+CRITICAL_SECTION _txCanvas_LockBackBuf  = {0,-1}; // Prevent simultaneous access to back buffer,
                                                   //   see txLock()/txUnlock()
 
 UINT             _txCanvas_RefreshTimer = 0;      // Timer to redraw TXLib window
@@ -4436,22 +4448,22 @@ $   _txBuffer_Select (txFontExist (_TX_CONSOLE_FONT)?
 
 $   if (con.dwCursorPosition.X) con.dwCursorPosition.X = 0, con.dwCursorPosition.Y++;
 
-$   SHORT delta = con.dwCursorPosition.Y - con.srWindow.Top;
+$   short delta = (short) (con.dwCursorPosition.Y - con.srWindow.Top);
 
 $   con.srWindow.Left = con.srWindow.Right  = 0;
 $   con.srWindow.Top  = con.srWindow.Bottom = delta;
 
-$   SMALL_RECT src  = {0, 0, con.dwSize.X-1, con.dwSize.Y-1};
-$   CHAR_INFO  fill = {{0x20}, 0x07};  // Fill with spaces, light-gray on black
-$   COORD      dest = {0, -delta};     // New UL-corner of src, scroll up
+$   SMALL_RECT src  = {0, 0, (short) (con.dwSize.X - 1), (short) (con.dwSize.Y - 1) };
+$   CHAR_INFO  fill = {{' '}, 0x07};       // Fill with spaces, light-gray on black
+$   COORD      dest = {0, (short) -delta};  // New UL-corner of src, scroll up
 
-$   con.dwCursorPosition.X  = 0;
-$   con.dwCursorPosition.Y -= delta;
+$   con.dwCursorPosition.X = 0;
+$   con.dwCursorPosition.Y = (short) (con.dwCursorPosition.Y - delta);
 
-$   SetConsoleWindowInfo      (out, false, &con.srWindow)        // Move the "window"
+$   SetConsoleWindowInfo       (out, false, &con.srWindow)        // Move the "window"
     ||
-    ScrollConsoleScreenBuffer (out, &src, NULL, dest, &fill) &&  // Or scroll the buffer
-    SetConsoleCursorPosition  (out, con.dwCursorPosition);
+    (ScrollConsoleScreenBuffer (out, &src, NULL, dest, &fill) &&  // Or scroll the buffer
+     SetConsoleCursorPosition  (out, con.dwCursorPosition));
 //}
 
 $   txUpdateWindow (true);
@@ -4477,7 +4489,7 @@ $   _txRunning = false;
 $   _txConsole_IsBlinking = false;
 
 $   HWND canvas  = txWindow();
-$   HWND console = GetConsoleWindow();
+$   HWND console = Win32::GetConsoleWindow();
 
 $   HWND wnd     = (canvas)? canvas : console;
 $   int isMaster = (canvas)? (GetWindowLong (canvas, GWL_STYLE) & WS_SYSMENU) : true;
@@ -4759,7 +4771,7 @@ $   SIZE caption = { 0, GetSystemMetrics (SM_CYCAPTION) };
 $   SIZE size    = { from->cx + 2*frame.cx, from->cy + 2*frame.cy + caption.cy };
 $   POINT center = { screen.cx / 2, screen.cy / 2 };
 
-$   HWND console = GetConsoleWindow();
+$   HWND console = Win32::GetConsoleWindow();
 $   GetWindowRect (console, &_txConsole_Pos);
 
 $   if (!centered)
@@ -4922,17 +4934,10 @@ $   bool locked = false;
 $   _txWaitFor ((locked = txLock (false), locked));
 $   if (!locked) TX_DEBUG_ERROR ("Cannot lock GDI to free resources");
 
-    // Освобождаем ресурсы, связанные с окном
-
-$   if (_txCanvas_BackBuf[0]) _txBuffer_Delete (&_txCanvas_BackBuf[0])  asserted;
-$   if (_txCanvas_BackBuf[1]) _txBuffer_Delete (&_txCanvas_BackBuf[1])  asserted;
-
-$   if (_txCanvas_RefreshTimer) KillTimer (wnd, _txCanvas_RefreshTimer) asserted;
-
     // Освобождаем пользовательские ресурсы
 
 $   std::vector <HDC>& dcs = _txCanvas_UserDCs;
-$   if (dcs.size()) _txNotifyIcon (NIIF_ERROR, NULL, "Вы забыли освободить %d HDC", dcs.size());
+$   if (dcs.size()) _txNotifyIcon (NIIF_ERROR, NULL, "Вы забыли освободить %d HDC.", dcs.size());
 
     struct _txBuffer_Delete_Wrapper { static bool func (HDC dc)
         {
@@ -4942,9 +4947,16 @@ $       return _txBuffer_Delete (&dc);
 $   std::for_each (dcs.begin(), dcs.end(), _txBuffer_Delete_Wrapper::func);
 $   dcs.clear();
 
-    // Indicate that we are destroyed
+    // Освобождаем ресурсы, связанные с окном
+
+$   if (_txCanvas_RefreshTimer) KillTimer (wnd, _txCanvas_RefreshTimer) asserted;
+
+$   if (_txCanvas_BackBuf[1]) _txBuffer_Delete (&_txCanvas_BackBuf[1])  asserted;
+$   if (_txCanvas_BackBuf[0]) _txBuffer_Delete (&_txCanvas_BackBuf[0])  asserted;
 
 $   txUnlock();
+
+    // Indicate that we are destroyed
 
 $   _txCanvas_Window = NULL;
 
@@ -5055,7 +5067,7 @@ bool _txCanvas_OnCmdCONSOLE (HWND wnd, WPARAM cmd)
     {
 $1  _TX_IF_ARGUMENT_FAILED (wnd) return false;
 
-$   HWND console = GetConsoleWindow();
+$   HWND console = Win32::GetConsoleWindow();
 $   if (!console) return false;
 
 $   bool visible = !!IsWindowVisible (console);
@@ -5214,14 +5226,14 @@ $       if (res) return res;
 
 HWND _txConsole_Attach()
     {
-$1  HWND console = GetConsoleWindow();
+$1  HWND console = Win32::GetConsoleWindow();
 
 $   GetWindowRect (console, &_txConsole_Pos);
 $   _txConsole_Active = (console && GetForegroundWindow() == console);
 
 $   if (!console) AllocConsole();
 
-$   console = GetConsoleWindow();
+$   console = Win32::GetConsoleWindow();
 $   if (!console) return NULL;
 
     // Устанавливаем русскую кодовую страницу для консоли Windows
@@ -5339,7 +5351,7 @@ $   return ok;
 
 inline bool _txConsole_OK()
     {
-$1  return GetConsoleWindow() != NULL;
+$1  return Win32::GetConsoleWindow() != NULL;
     }
 
 //--------------------------------------------------------------------------------------------
@@ -5557,6 +5569,8 @@ bool _txBuffer_Delete (HDC* dc)
 $1  _TX_IF_ARGUMENT_FAILED (dc) return false;
 $   if (!*dc) return false;
 
+$   if (!Win32::GetObjectType (Win32::GetCurrentObject (*dc, OBJ_BITMAP))) return false;
+
 $   txAutoLock _lock;
 
 $   _txBuffer_Select (Win32::GetStockObject         (NULL_PEN),    *dc) asserted;
@@ -5648,9 +5662,9 @@ $       return;
     #undef GET_DESCR_
 
     if (sig == SIGFPE && fpe)
-        _txError (NULL, 0, NULL, "signal (%d, 0x%02X): %s, %s"_ sig _ fpe _ sSig _ sFPE);
+        _txError (NULL, 0, NULL, "signal (%d, 0x%02X): %s, %s."_ sig _ fpe _ sSig _ sFPE);
     else
-        _txError (NULL, 0, NULL, "signal (%d): %s"            _ sig       _ sSig);
+        _txError (NULL, 0, NULL, "signal (%d): %s."            _ sig       _ sSig);
 
     _txOnExit();
     }
@@ -5685,20 +5699,17 @@ int txOutputDebugPrintf (const char format[], ...)
     char str[_TX_BIGBUFSIZE] = "";
 
     va_list arg; va_start (arg, format);
-    int n = _vsnprintf_s (str, sizeof (str) - 2 _TX_TRUNCATE, format, arg);
+    int n = _vsnprintf_s (str, sizeof (str) - 1 _TX_TRUNCATE, format, arg);
     va_end (arg);
 
     OutputDebugString (str);
 
     if (print)
-        printf ("\n" "%s", str);
+        printf (str);
 
     if (msgbox)
-        {
-        str[n] = 0; strncat_s (str, "    ", sizeof (str));
         MessageBox ((txWindow()? txWindow() : Win32::GetConsoleWindow()),
                     str, "Оказывается, что", MB_ICONEXCLAMATION | MB_TOPMOST);
-        }
 
     return n;
     }
@@ -5712,6 +5723,8 @@ $1  _TX_IF_ARGUMENT_FAILED (info) return false;
 $   va_list arg; va_start (arg, info);
 $   bool ok = true;
 
+    #if defined (_WIN32_IE) && (_WIN32_IE >= 0x0500)
+
 $   NOTIFYICONDATA nid = { sizeof (nid) };
 
 $   nid.uFlags = NIF_ICON | NIF_TIP | NIF_INFO;
@@ -5723,12 +5736,23 @@ $   strncpy_s    (nid.szInfoTitle, (title? title : "TXLib сообщает"), sizeof (ni
 $   _vsnprintf_s (nid.szInfo, sizeof (nid.szInfo) _TX_TRUNCATE, info, arg);
 $   nid.dwInfoFlags = flags;
 
-$   txOutputDebugPrintf (_TX_VERSION _TX_NAME "- Icon notification: %s", nid.szInfo);
+$   txOutputDebugPrintf (_TX_VERSION _TX_NAME "- Icon notification: %s\n", nid.szInfo);
 
 $   ok &= !!Shell_NotifyIcon (NIM_ADD,    (::NOTIFYICONDATA*) &nid);
 $   ok &= !!Shell_NotifyIcon (NIM_MODIFY, (::NOTIFYICONDATA*) &nid);
 
 $   if (nid.hIcon) DestroyIcon (nid.hIcon) asserted;
+
+    #else
+
+$   char nid_szInfo[_TX_BUFSIZE] = "";
+$   _vsnprintf_s (nid_szInfo, sizeof (nid_szInfo) _TX_TRUNCATE, info, arg);
+$   txOutputDebugPrintf (_TX_VERSION _TX_NAME "- Icon notification (NOT displayed): %s\n", nid_szInfo);
+$   ok = false;
+
+$   (void)flags; (void)title;
+
+    #endif
 
 $   va_end (arg);
 $   return ok;
@@ -5819,7 +5843,7 @@ const char* _txError (const char file[] /*= NULL*/, int line /*= 0*/, const char
             }
         };
 
-    OutputDebugString (tools::compressSpaces (str, what));
+    txOutputDebugPrintf ("%s%s- %s" "\n", _TX_VERSION, _TX_NAME, tools::compressSpaces (str, what));
 
     if (fmtOnly) return what;
 
@@ -6307,8 +6331,8 @@ $   std::vector <HDC>& dcs = _txCanvas_UserDCs;
 $   txAutoLock _lock;
 $   dcs.push_back (dc);
 
-$   if (dcs.size() > _TX_BIGBUFSIZE)
-        { $ _txNotifyIcon (NIIF_WARNING, NULL, "Вы загрузили уже %d HDC, системе может стать плохо", dcs.size()); }
+$   if (dcs.size() >= _TX_BUFSIZE)
+        { $ _txNotifyIcon (NIIF_WARNING, NULL, "Вы загрузили уже %d HDC, системе может стать плохо.", dcs.size()); }
 
 $   return dc;
     }
@@ -7201,7 +7225,8 @@ using ::std::string;
 #define $$$_(cmd)  {  std::cout <<  "\n[" __TX_FILELINE__ ": " #cmd "]\n";  \
                      _txDumpSuffix (  "[" __TX_FILELINE__ ": " #cmd " DONE]\n"); { cmd; } }
 
-#define $$$$       {{ $s $l txOutputDebugPrintf ("\f[%s (%d) %s]", __FILE__, __LINE__, __TX_FUNCTION__); } putchar ('\n'); }
+#define $$$$       {{ $s $l txOutputDebugPrintf ("\f\n" "[%s (%d) %s]", __FILE__, __LINE__, __TX_FUNCTION__); } \
+                            txOutputDebugPrintf ("\f\n"); }
 
 #define $n            std::cout << "\n";
 
