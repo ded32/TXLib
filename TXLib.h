@@ -4425,7 +4425,7 @@ $    Win32::SetROP2      (txDC(), R2_COPYPEN)               asserted;
 
 $   HANDLE out = GetStdHandle (STD_OUTPUT_HANDLE);
 
-$   CONSOLE_SCREEN_BUFFER_INFO con = {{0}, {0}, 0, {0, 0, 80, 25}, {80, 25}};
+$   CONSOLE_SCREEN_BUFFER_INFO con = {{80, 25}, {0}, 0, {0, 0, 80-1, 25-1}, {80, 25}};
 $   GetConsoleScreenBufferInfo (out, &con);
 
 $   SIZE szChr  = { (short) (con.srWindow.Right  - con.srWindow.Left + 1),
@@ -4448,21 +4448,22 @@ $   _txBuffer_Select (txFontExist (_TX_CONSOLE_FONT)?
 
 $   if (con.dwCursorPosition.X) con.dwCursorPosition.X = 0, con.dwCursorPosition.Y++;
 
-$   short delta = (short) (con.dwCursorPosition.Y - con.srWindow.Top);
+$   short delta  = (short) (con.dwCursorPosition.Y - con.srWindow.Top);
 
-$   con.srWindow.Left = con.srWindow.Right  = 0;
-$   con.srWindow.Top  = con.srWindow.Bottom = delta;
+$   con.srWindow.Top    += delta;
+$   con.srWindow.Bottom += delta;
 
 $   SMALL_RECT src  = {0, 0, (short) (con.dwSize.X - 1), (short) (con.dwSize.Y - 1) };
-$   CHAR_INFO  fill = {{' '}, 0x07};       // Fill with spaces, light-gray on black
+$   CHAR_INFO  fill = {{' '}, 0x07};        // Fill with spaces, light-gray on black
 $   COORD      dest = {0, (short) -delta};  // New UL-corner of src, scroll up
 
 $   con.dwCursorPosition.X = 0;
 $   con.dwCursorPosition.Y = (short) (con.dwCursorPosition.Y - delta);
 
-$   SetConsoleWindowInfo       (out, false, &con.srWindow)        // Move the "window"
+$   (con.srWindow.Bottom < con.dwSize.Y &&                        // Move the "window"
+     SetConsoleWindowInfo      (out, true, &con.srWindow))
     ||
-    (ScrollConsoleScreenBuffer (out, &src, NULL, dest, &fill) &&  // Or scroll the buffer
+    (ScrollConsoleScreenBuffer (out, &src, NULL, dest, &fill),    // Or scroll the buffer
      SetConsoleCursorPosition  (out, con.dwCursorPosition));
 //}
 
