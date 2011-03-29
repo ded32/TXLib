@@ -94,17 +94,26 @@
                 @tr Microsoft Visual C @td Visual Studio 2003          @td Debug, Release  @td <i>Не требуются</i> @td
                 @tr Intel Compiler 9.0 @td Visual Studio 2003          @td Debug, Release  @td <i>Не требуются</i> @td
                 
-                @tr Microsoft Visual C @td Visual Studio 2005          @td Debug           @td @c msvcp80d.dll,  @c msvcr80d.dll  @td
-                @tr Microsoft Visual C @td Visual Studio 2005          @td Release         @td @c msvcp80.dll,   @c msvcr80.dll   @td
+                @tr Microsoft Visual C @td Visual Studio 2005          @td Debug           @td @c msvcp80d.dll,    @c msvcr80d.dll  @td
+                @tr Microsoft Visual C @td Visual Studio 2005          @td Release         @td @c msvcp80.dll, @ss @c msvcr80.dll   @td
                                        
-                @tr Microsoft Visual C @td Visual Studio 2008          @td Debug           @td @c msvcp90d.dll,  @c msvcr90d.dll  @td
-                @tr Microsoft Visual C @td Visual Studio 2008          @td Release         @td @c msvcp90.dll,   @c msvcr90.dll   @td
+                @tr Microsoft Visual C @td Visual Studio 2008          @td Debug           @td @c msvcp90d.dll,    @c msvcr90d.dll  @td
+                @tr Microsoft Visual C @td Visual Studio 2008          @td Release         @td @c msvcp90.dll, @ss @c msvcr90.dll   @td
                                        
-                @tr Microsoft Visual C @td Visual Studio 2010          @td Debug           @td @c msvcp100d.dll, @c msvcr100d.dll @td
-                @tr Microsoft Visual C @td Visual Studio 2010          @td Release         @td @c msvcp100.dll,  @c msvcr100.dll  @td
+                @tr Microsoft Visual C @td Visual Studio 2010          @td Debug           @td @c msvcp100d.dll,   @c msvcr100d.dll @td
+                @tr Microsoft Visual C @td Visual Studio 2010          @td Release         @td @c msvcp100.dll,@s  @c msvcr100.dll  @td
     @endtable
                 Посмотреть эти зависимости можно утилитой <a href=http://www.dependencywalker.com>Depends.exe</a>.
-   
+
+    @section    UsageNotes            Особенности использования
+
+    @note    Файл @c TXLib.h должен быть включен <tt>(#include)</tt> в программу:
+             -  До или вместо файла @c Windows.h. Либо надо задать макро @c WINVER не ниже @c 0x0500.
+             -  До или вместо файлов @c String.h или @c StdIO.h, если используется режим строгого
+                соответствия стандарту ANSI.
+             -  После включения библиотек <a href=http://boost.org><tt>boost</tt></a>, использующих модуль
+                @c boost::preprocessor.
+                
     @section    VersionHistory        История изменений
    
     - <b>Версия 0.172</b>

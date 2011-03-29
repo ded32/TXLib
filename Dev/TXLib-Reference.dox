@@ -102,7 +102,8 @@ ALIASES                = "title=<dl><dt>" \
                          "endstrike=&nbsp;</span>" \
                          "n=<br><br>" \
                          "d=&ndash;" \
-                         "s=&nbsp;"
+                         "s=&nbsp;"  \
+                         "ss=&nbsp;&nbsp;"
 
 #---------------------------------------------------------------------------
 
@@ -342,4 +343,3 @@ WARN_IF_DOC_ERROR      = YES
 WARN_NO_PARAMDOC       = YES
 WARN_FORMAT            = "$file:$line: $text"
 WARN_LOGFILE           = 
-

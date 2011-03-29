@@ -50,9 +50,9 @@
 //--------------------------------------------------------------------------------------------
 
 //! @cond INTERNAL
-#define _TX_VERSION_(_1,file,ver,rev,date,auth,_2)  "TXLib [Version " #ver ", Revision " #rev "]"
-#define _TX_AUTHOR__(_1,file,ver,rev,date,auth,_2)  "Copyright (C) " auth
-#define _TX_VER_____(_1,file,ver,rev,date,auth,_2)  ((0x##ver << 16) | 0x##rev)
+#define _TX_V_FROM_CVS(_1,file,ver,rev,date,auth,_2)  "TXLib [Version " #ver ", Revision " #rev "]"
+#define _TX_A_FROM_CVS(_1,file,ver,rev,date,auth,_2)  "Copyright (C) " auth
+#define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver << 16) | 0x##rev)
 //! @endcond
 
 //{-------------------------------------------------------------------------------------------
@@ -70,8 +70,8 @@
 //}-------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VERSION           _TX_VERSION_ ($versioninfo$)
-#define _TX_AUTHOR            _TX_AUTHOR__ ($versioninfo$)
+#define _TX_VERSION           _TX_V_FROM_CVS ($versioninfo$)
+#define _TX_AUTHOR            _TX_A_FROM_CVS ($versioninfo$)
 
 //! @}
 //{----------------------------------------------------------------------------
@@ -94,7 +94,7 @@
 //! @hideinitializer
 //}----------------------------------------------------------------------------
 
-#define _TX_VER               _TX_VER_____ ($versioninfo$)
+#define _TX_VER               _TX_v_FROM_CVS ($versioninfo$)
 
 //}
 //--------------------------------------------------------------------------------------------
@@ -119,16 +119,22 @@
 
 #if defined (_WINDOWS_H) || defined (_INC_WINDOWS) || defined (_WINDOWS_) || defined (__WINDOWS__)
 
-    #error TXLib.h: The TXLib.h file must be included before or instead of Windows.h file.
+    #error TXLib.h: The "TXLib.h" file must be included before or instead of Windows.h file.
 
 #endif
 
-#if defined (__STRICT_ANSI__)     // Try to extend strict ANSI C
+#if defined (__STRICT_ANSI__)     // Try to extend strict ANSI rules
 
     #warning TXLib.h: Trying to extend strict ANSI compatibility
-    #undef __STRICT_ANSI__
+    #define __STRICT_ANSI__UNDEFINED
+    #undef  __STRICT_ANSI__
+
+    #if defined (_STRING_H_) || defined (_INC_STRING) || defined (_STDIO_H_) || defined (_INC_STDIO)
+    #error   TXLib.h: The "TXLib.h" file must be included before <String.h> or <StdIO.h> in Strict ANSI mode.
+    #endif
 
 #endif
+
 
 //--------------------------------------------------------------------------------------------
 
@@ -305,6 +311,10 @@
 
 #ifdef _MSC_VER_6
     #pragma warning (pop)                       // MSVC 6: Restore maximum level
+#endif
+
+#ifdef __STRICT_ANSI__UNDEFINED
+    #define  __STRICT_ANSI__                    // Redefine back this macro
 #endif
 
 //}
@@ -2935,7 +2945,7 @@ const unsigned _TX_BIGBUFSIZE             = 2048;
 #if !defined (NDEBUG)
     #undef  assert
     #define assert( cond )    _txNOP ( !(cond)? (TX_ERROR ("\a" "ВНЕЗАПНО: Логическая ошибка: " \
-                                                           "Неверно, что \"%s\"" _ #cond), 0) : 1 )
+                                                           "Неверно, что \"%s\"" TX_COMMA #cond), 0) : 1 )
 #else
     #undef  assert
     #define assert( cond )    ((void) 1)
@@ -3031,21 +3041,37 @@ const unsigned _TX_BIGBUFSIZE             = 2048;
 //! @brief   Выводит развернутое диагностическое сообщение.
 //!
 //! @param   msg  Сообщение с произвольным количеством параметров в стиле функции @c printf().
-//!               Если параметров несколько, они разделяются _ (@ref _ "символом подчеркивания",
-//!               переопределенным в запятую) вместо настоящей запятой, т.к. TX_ERROR - макрос.
+//!
+//! @note    @c GCC в режиме строгого соответствия стандарту ANSI (с ключом командной строки
+//!          <tt>-ansi</tt>) и Microsoft Visual Studio версий 6 и 2003 не поддерживают макросы
+//!          с переменным числом параметров. Поэтому, если параметров несколько, они разделяются
+//!          @b _ (@ref _ "символом подчеркивания", переопределенным в запятую) или символом TX_COMMA,
+//!          вместо настоящей запятой, так как TX_ERROR @d макрос. @n
+//!          Если в проекте используются библиотеки <a href=http://boost.org><tt>boost</tt></a>, то
+//!          их надо включать @b до @c TXLib.h и вместо символа подчеркивания пользоваться TX_COMMA, 
+//!          так как @c boost использует символ подчеркивания как свой собственный служебный макрос
+//!          в модуле @c boost::preprocessor, @strike где творится дефайновый ад. @endstrike
 //!
 //! @return  Всегда false
 //!
-//! @see     _, assert, asserted, verify, verified, TX_DEBUG_ERROR, txOutputDebugPrintf,
+//! @see     _, TX_COMMA, assert, asserted, verify, verified, TX_DEBUG_ERROR, txOutputDebugPrintf,
 //!          __TX_FILELINE__, __TX_FUNCTION__
 //! @usage
 //! @code
-//!          TX_ERROR ("Не смог прочитать 'Войну и мир'. Отмазка %d: не нашел '%s'" _ reasonNum _ fileName);
+//!          TX_ERROR ("Не смог прочитать 'Войну и мир'. Отмазка %d: не нашел '%s'", reasonNum, fileName);
 //! @endcode
 //! @hideinitializer
 //}-------------------------------------------------------------------------------------------
 
-#define TX_ERROR( msg )       _txError (__FILE__, __LINE__, __TX_FUNCTION__, msg)
+#if defined (__STRICT_ANSI__) || defined (_MSC_VER) && (_MSC_VER < 1400)
+    #define TX_ERROR( msg )   _txError (__FILE__, __LINE__, __TX_FUNCTION__, msg)
+
+#else
+    #define TX_ERROR( ... )   _txError (__FILE__, __LINE__, __TX_FUNCTION__, __VA_ARGS__)
+
+#endif
+
+// ...because variadic macros not supported in Strict ANSI mode and in MSVC prior to MSVC 8 (2005)
 
 //! @cond INTERNAL
 #define TX_THROW              TX_ERROR  //!< For compatibility with earlier releases
@@ -3059,11 +3085,11 @@ const unsigned _TX_BIGBUFSIZE             = 2048;
 //!
 //! @note    В режиме Release этот макрос не выводит ничего.
 //!
-//! @see     _, assert, asserted, verify, verified, TX_ERROR, txOutputDebugPrintf,
+//! @see     _, TX_COMMA, assert, asserted, verify, verified, TX_ERROR, txOutputDebugPrintf,
 //!          __TX_FILELINE__, __TX_FUNCTION__
 //! @usage
 //! @code
-//!          TX_DEBUG_ERROR ("Так и не смог прочитать 'Войну и мир'. Отмазка %d: потерял '%s'" _ reasonNum _ fileName);
+//!          TX_DEBUG_ERROR ("Так и не смог прочитать 'Войну и мир'. Отмазка %d: потерял '%s'", reasonNum, fileName);
 //! @endcode
 //! @hideinitializer
 //}-------------------------------------------------------------------------------------------
@@ -3080,7 +3106,7 @@ const unsigned _TX_BIGBUFSIZE             = 2048;
 //! @ingroup Misc
 //! @brief   Макрос, позволяющий передать переменное число параметров в какой-либо другой макрос.
 //!
-//! @note    <b>Символ подчеркивания просто переопределяется в запятую.</b>
+//! @note    <b>Символ подчеркивания и символ TX_COMMA просто переопределяются в запятую.</b>
 //!
 //! @see     TX_ERROR(), TX_DEBUG_ERROR()
 //! @usage
@@ -3089,9 +3115,12 @@ const unsigned _TX_BIGBUFSIZE             = 2048;
 //! @endcode
 //! @hideinitializer
 //}-------------------------------------------------------------------------------------------
+//! @{
 
 #define _                     ,
+#define TX_COMMA              ,  //!< Синоним макроса _ (@ref _ "символ подчеркивания")
 
+//! @}
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Misc
 //! @brief   Выводит сообщение в отладчике.
@@ -3888,7 +3917,7 @@ $   return dlg.str;
 //============================================================================================
 
 int              _txInitialize();
-void             _txOnExit();
+void             _txCleanup();
 
 HWND             _txCanvas_CreateWindow (CREATESTRUCT* from);
 inline bool      _txCanvas_OK();
@@ -4337,7 +4366,7 @@ $   InitializeCriticalSection (&_txCanvas_LockBackBuf);
 
 $   _txCanvas_UserDCs.reserve (_TX_BUFSIZE);
 
-$   atexit (_txOnExit);
+$   atexit (_txCleanup);
 
 $   (void) Win32::SetDIBitsToDevice;    // Just for warning "defined but not used" suppression
 $   (void) Win32::CreateRectRgn;
@@ -4400,7 +4429,7 @@ $   txAutoLock _lock;
 
 $   RECT r = {0};
 
-$   GetClientRect (txWindow(),  &r) asserted;
+$   GetClientRect (txWindow(), &r) asserted;
 $   SIZE szCanvas = { r.right - r.left, r.bottom - r.top };
 
 $   GetClientRect (Win32::GetConsoleWindow(), &r) asserted;
@@ -4446,12 +4475,12 @@ $   _txBuffer_Select (txFontExist (_TX_CONSOLE_FONT)?
 
 //{ Scroll the console for text to go above top of window and don't mix with graphics
 
-$   if (con.dwCursorPosition.X) con.dwCursorPosition.X = 0, con.dwCursorPosition.Y++;
+$   if (con.dwCursorPosition.X) _putch ('\n');
 
-$   short delta  = (short) (con.dwCursorPosition.Y - con.srWindow.Top);
+$   short delta = (short) (con.dwCursorPosition.Y - con.srWindow.Top);
 
-$   con.srWindow.Top    += delta;
-$   con.srWindow.Bottom += delta;
+$   con.srWindow.Top    = (short) (con.srWindow.Top    + delta);
+$   con.srWindow.Bottom = (short) (con.srWindow.Bottom + delta);
 
 $   SMALL_RECT src  = {0, 0, (short) (con.dwSize.X - 1), (short) (con.dwSize.Y - 1) };
 $   CHAR_INFO  fill = {{' '}, 0x07};        // Fill with spaces, light-gray on black
@@ -4479,9 +4508,9 @@ inline bool txOK()
 $1  return _txCanvas_OK();
     }
 
-//--------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
-void _txOnExit()
+void _txCleanup()
     {
 $1  if (!_txStaticInitialized) return;
     else _txStaticInitialized = false;
@@ -4506,7 +4535,11 @@ $   bool waitableParent = _txIsParentWaitable (&parent);
 $   if (isMaster && !_txExit && (!waitableParent || canvas) &&
         GetCurrentThreadId() == _txMainThreadId)
         {
-$       if (!canvas) printf ("\n" "[Нажмите любую клавишу для завершения]");
+$       if (!canvas)
+            {
+$           txSetConsoleAttr (0x07);
+$           printf ("\n" "[Нажмите любую клавишу для завершения]");
+            }
 
 $       while (_kbhit()) (void)_getch();
 
@@ -5667,7 +5700,7 @@ $       return;
     else
         _txError (NULL, 0, NULL, "signal (%d): %s."            _ sig       _ sSig);
 
-    _txOnExit();
+    _txCleanup();
     }
 
 //--------------------------------------------------------------------------------------------
@@ -5825,8 +5858,8 @@ const char* _txError (const char file[] /*= NULL*/, int line /*= 0*/, const char
             char* dst = dest;
 
             for (char last = ' '; *src; src++)
-                if (isspace ((unsigned)(*src))) { if (last != ' ') *dst++ = last = ' '; }
-                else                                               *dst++ = last = *src;
+                if (isspace ((unsigned char)(*src))) { if (last != ' ') *dst++ = last = ' '; }
+                else                                                    *dst++ = last = *src;
 
             if (dst > dest && dst[-1] == ' ') dst--;
             *dst++ = '\n'; *dst++ = 0;
