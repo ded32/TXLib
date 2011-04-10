@@ -279,3 +279,4 @@ void DrawCircle (double x, double y, double r)
     {
     txCircle ((int) (x + 0.5), (int) (y + 0.5), (int) (r + 0.5));
     }
+

@@ -26,9 +26,15 @@
 //!          См. также <a href=http://txlib.sourceforge.net>страницу проекта на SourceForge.</a>
 //!
 //! @warning <b>Это альфа-версия.
-//!          Для использования требуется согласование с автором библиотеки.</b> \n\n
+//!          Для использования требуется согласование с автором библиотеки.</b><br><br>
 //!          Правила использования материалов библиотеки и сайта см. на
 //!          <a href=http://ded32.net.ru/index/0-6> официальном сайте.</a>
+//!
+//! @par     Трекеры на SourceForge:
+//!        - <a href=https://sourceforge.net/tracker/?func=add&group_id=213688&atid=1026710>
+//!          <b>Сообщить об ошибке</b></a>
+//!        - <a href=https://sourceforge.net/tracker/?func=add&group_id=213688&atid=1026713>
+//!          <b>Предложить улучшение</b></a>
 //!
 //           $Author$
 //--------------------------------------------------------------------------------------------
@@ -4535,21 +4541,23 @@ $   bool waitableParent = _txIsParentWaitable (&parent);
 $   if (isMaster && !_txExit && (!waitableParent || canvas) &&
         GetCurrentThreadId() == _txMainThreadId)
         {
-$       if (!canvas)
+$       while (_kbhit()) (void)_getch();
+
+$       bool input = (_txPeekInput() != EOF);
+
+$       if (!canvas && !input)
             {
 $           txSetConsoleAttr (0x07);
 $           printf ("\n" "[Нажмите любую клавишу для завершения]");
             }
 
-$       while (_kbhit()) (void)_getch();
-
 $       for (int i = 1; ; i++)
             {
 $           Sleep (_TX_WINDOW_UPDATE_INTERVAL);
 
-            if (_txPeekInput())                { $ break; }  // Somebody hit something.
+            if (input || _txPeekInput() != EOF) { $ break; }  // Somebody hit something.
 
-            if (canvas && !_txCanvas_ThreadId) { $ break; }  // There was a window, and now there is not.
+            if (canvas && !_txCanvas_ThreadId)  { $ break; }  // There was a window, and now there is not.
 
             if (!(i % 100500))
                 printf ("\r" "[Нажмите же какую-нибудь клавишу для моего завершения]");
@@ -4587,8 +4595,8 @@ $   _txConsole_Detach (!waitableParent);
 
 int _txPeekInput()
     {
-    if (stdin->_cnt > 0)
-        return fgetc (stdin);
+    if (fseek (stdin, 1, SEEK_CUR) != EOF) 
+        return fseek (stdin, -1, SEEK_CUR), fgetc (stdin);
 
     HANDLE con = GetStdHandle (STD_INPUT_HANDLE);
 
@@ -4596,11 +4604,11 @@ int _txPeekInput()
     if (GetConsoleMode (con, &nchars) &&
         PeekNamedPipe  (con, NULL, 0, NULL, &nchars, NULL))
         {
-        return (nchars)?   fgetc (stdin) : 0;
+        return (nchars)?   fgetc (stdin) : EOF;
         }
     else
         {
-        return (_kbhit())? _getch()      : 0;
+        return (_kbhit())? _getch()      : EOF;
         }
     }
 
@@ -5028,8 +5036,12 @@ $   POINT size = { r.right - r.left, r.bottom - r.top };
 $   if (_txCanvas_RefreshLock <= 0 &&
         txLock (false))
         {
-$       Win32::BitBlt   (_txCanvas_BackBuf[1], 0, 0, size.x, size.y, txDC(), 0, 0, SRCCOPY);
-$       _txConsole_Draw (_txCanvas_BackBuf[1]);
+$       Win32::BitBlt (_txCanvas_BackBuf[1], 0, 0, size.x, size.y, txDC(), 0, 0, SRCCOPY);
+
+$       if (!IsWindowVisible (Win32::GetConsoleWindow())) 
+            {
+$           _txConsole_Draw (_txCanvas_BackBuf[1]);
+            }
 
 $       txUnlock();
         }
@@ -5817,9 +5829,10 @@ const char* _txError (const char file[] /*= NULL*/, int line /*= 0*/, const char
 
                 s +=  _snprintf_s  (s, SZARG_(1), "TXLib сообщает:" "\n\n");
 
-    if (file)   s +=  _snprintf_s  (s, SZARG_(1), "Файл: %s," _TX_NAME, file);
-    if (line)   s +=  _snprintf_s  (s, SZARG_(1), "Строка: %d, ",       line);
-    if (func)   s +=  _snprintf_s  (s, SZARG_(1), "Функция: %s" "\n\n", func);
+                s +=  _snprintf_s  (s, SZARG_(1), "Программа: %s, ", txGetModuleFileName());
+    if (file)   s +=  _snprintf_s  (s, SZARG_(1), "файл: %s," _TX_NAME, file);
+    if (line)   s +=  _snprintf_s  (s, SZARG_(1), "строка: %d, ",       line);
+    if (func)   s +=  _snprintf_s  (s, SZARG_(1), "функция: %s" "\n\n", func);
 
     if (msg)    s +=  _snprintf_s  (s, SZARG_(1), "%s: ", (file || line || func)? "Сообщение" : "ВНЕЗАПНО"),
                 s += _vsnprintf_s  (s, SZARG_(1), msg, arg),
@@ -7407,3 +7420,4 @@ struct _txSaveConsoleAttr
 //============================================================================================
 // EOF
 //============================================================================================
+
