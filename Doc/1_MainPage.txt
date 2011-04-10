@@ -183,4 +183,15 @@
              -# Добавлена txPlaySound().
     - <b>Версия 0.144</b>
              -# Исправлен баг в txMouseButtons().
+
+    @section    Trackers              Сообщения об ошибках
+
+    Тем, кто зарегистрирован на SourceForge.net, можно:
+
+    - <a href=https://sourceforge.net/tracker/?func=add&group_id=213688&atid=1026710>
+      <b>Сообщить об ошибке</b></a>
+    - <a href=https://sourceforge.net/tracker/?func=add&group_id=213688&atid=1026713>
+      <b>Предложить улучшение</b></a>
+
 */ 
+

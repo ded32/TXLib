@@ -48,7 +48,7 @@ ADD  doc: многофайловый проект, многооконность, anon namespace
 
 FIX  txObject
 ADD  CommonControls, toolbar, status bar
-ADD  tinyTX
+ADD  nanoTX
 
 ---
 
@@ -60,7 +60,7 @@ FIX+ setup: error: undefined, don't worry... --> remove
 ADD  VERIFY, verified macros
 CHK+ preconditions: assert(p); if (!p) return...
 ADD+ register HDCs and delete them
-ADD+  +it's too bad, you'll not free resources & will die Windows... in ExitBox
+ADD+   +it's too bad, you'll not free resources & will die Windows... in ExitBox
 ADD+ get parent process -- cb_console_runner? -- disable pause
 ADD+ версия и ревизия в сообщ. об ошибке
 FIX+ However, if the current font is a raster font, SetConsoleOutputCP does not affect how extended characters are displayed.
