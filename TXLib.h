@@ -915,7 +915,7 @@ COLORREF txRGB2HSL (COLORREF rgbColor);
 //!
 //!          Формат @b HSL определяется как
 //!
-//!          - Цветовой тон (Hue),        от 0 до 255 <b>(не до 360).</b>.
+//!          - Цветовой тон (Hue),        от 0 до 255 <b>(не до 360).</b>
 //!          - Насыщенность (Saturation), от 0 до 255.
 //!          - Светлота     (Lightness),  от 0 до 255.
 //!
@@ -5233,7 +5233,7 @@ $       if (res) return res;
         {
         case WM_CREATE:  $      _txCanvas_OnCREATE     (wnd);             break;
 
-        case WM_CLOSE:   $ if (!_txCanvas_OnCLOSE      (wnd))             return 0;
+        case WM_CLOSE:   $ if (!_txCanvas_OnCLOSE      (wnd)) return 0;   break;
         case WM_DESTROY: $      _txCanvas_OnDESTROY    (wnd);             break;
 
         case WM_PAINT:   $      _txCanvas_OnPAINT      (wnd);             break;
@@ -5339,13 +5339,11 @@ $1  if (Win32::GetCurrentConsoleFontEx &&
 $       HANDLE out = GetStdHandle (STD_OUTPUT_HANDLE);
 
 $       Win32::CONSOLE_FONT_INFOEX info = { sizeof (info) };
-$       Win32::GetCurrentConsoleFontEx (out, false, &info) asserted;
+$       if (!Win32::GetCurrentConsoleFontEx (out, false, &info)) return false;
 
 $       info.FontFamily = 0x36;  // Unicode fixed-pitch
 
-$       Win32::SetCurrentConsoleFontEx (out, false, &info) asserted;
-
-$       return true;
+$       return !!Win32::SetCurrentConsoleFontEx (out, false, &info);
         }
 
     // ...а до этого все не так сладко
