@@ -136,7 +136,7 @@
     #undef  __STRICT_ANSI__
 
     #if defined (_STRING_H_) || defined (_INC_STRING) || defined (_STDIO_H_) || defined (_INC_STDIO)
-    #error   TXLib.h: The "TXLib.h" file must be included before <String.h> or <StdIO.h> in Strict ANSI mode.
+    #error   TXLib.h: The "TXLib.h" file must be included before <string.h> or <stdio.h> in Strict ANSI mode.
     #endif
 
 #endif
@@ -885,7 +885,7 @@ int txExtractColor (COLORREF color, COLORREF component);
 //!
 //!          Формат @b HSL определяется как
 //!
-//!          - Цветовой тон (Hue),        от 0 до 360.
+//!          - Цветовой тон (Hue),        от 0 до 255 <b>(не до 360).</b>
 //!          - Насыщенность (Saturation), от 0 до 255.
 //!          - Светлота     (Lightness),  от 0 до 255.
 //!
@@ -915,7 +915,7 @@ COLORREF txRGB2HSL (COLORREF rgbColor);
 //!
 //!          Формат @b HSL определяется как
 //!
-//!          - Цветовой тон (Hue),        от 0 до 360.
+//!          - Цветовой тон (Hue),        от 0 до 255 <b>(не до 360).</b>.
 //!          - Насыщенность (Saturation), от 0 до 255.
 //!          - Светлота     (Lightness),  от 0 до 255.
 //!
@@ -3054,7 +3054,7 @@ const unsigned _TX_BIGBUFSIZE             = 2048;
 //!          @b _ (@ref _ "символом подчеркивания", переопределенным в запятую) или символом TX_COMMA,
 //!          вместо настоящей запятой, так как TX_ERROR @d макрос. @n
 //!          Если в проекте используются библиотеки <a href=http://boost.org><tt>boost</tt></a>, то
-//!          их надо включать @b до @c TXLib.h и вместо символа подчеркивания пользоваться TX_COMMA, 
+//!          их надо включать @b до @c TXLib.h и вместо символа подчеркивания пользоваться TX_COMMA,
 //!          так как @c boost использует символ подчеркивания как свой собственный служебный макрос
 //!          в модуле @c boost::preprocessor, @strike где творится дефайновый ад. @endstrike
 //!
@@ -4543,9 +4543,11 @@ $   if (isMaster && !_txExit && (!waitableParent || canvas) &&
         {
 $       while (_kbhit()) (void)_getch();
 
-$       bool input = (_txPeekInput() != EOF);
+$       CONSOLE_SCREEN_BUFFER_INFO con = {{0}};
+$       bool wait = _txPeekInput() == EOF &&
+                    GetConsoleScreenBufferInfo (GetStdHandle (STD_OUTPUT_HANDLE), &con);
 
-$       if (!canvas && !input)
+$       if (!canvas && wait)
             {
 $           txSetConsoleAttr (0x07);
 $           printf ("\n" "[Нажмите любую клавишу для завершения]");
@@ -4555,7 +4557,7 @@ $       for (int i = 1; ; i++)
             {
 $           Sleep (_TX_WINDOW_UPDATE_INTERVAL);
 
-            if (input || _txPeekInput() != EOF) { $ break; }  // Somebody hit something.
+            if (!wait || _txPeekInput() != EOF) { $ break; }  // Somebody hit something.
 
             if (canvas && !_txCanvas_ThreadId)  { $ break; }  // There was a window, and now there is not.
 
@@ -4595,8 +4597,8 @@ $   _txConsole_Detach (!waitableParent);
 
 int _txPeekInput()
     {
-    if (fseek (stdin, 1, SEEK_CUR) != EOF) 
-        return fseek (stdin, -1, SEEK_CUR), fgetc (stdin);
+    if (fseek (stdin, 1, SEEK_CUR) != EOF)
+        return (void)fseek (stdin, -1, SEEK_CUR), fgetc (stdin);
 
     HANDLE con = GetStdHandle (STD_INPUT_HANDLE);
 
@@ -5038,7 +5040,7 @@ $   if (_txCanvas_RefreshLock <= 0 &&
         {
 $       Win32::BitBlt (_txCanvas_BackBuf[1], 0, 0, size.x, size.y, txDC(), 0, 0, SRCCOPY);
 
-$       if (!IsWindowVisible (Win32::GetConsoleWindow())) 
+$       if (!IsWindowVisible (Win32::GetConsoleWindow()))
             {
 $           _txConsole_Draw (_txCanvas_BackBuf[1]);
             }
@@ -5346,7 +5348,7 @@ $       Win32::SetCurrentConsoleFontEx (out, false, &info) asserted;
 $       return true;
         }
 
-    // ...а до этого все не так сладко.
+    // ...а до этого все не так сладко
 
 $   const unsigned uniFont = 10;  // The Internet and W2K sources know this magic number
 $   const unsigned uniSize = 20;  // Size of the font desired, should be > max of Raster Fonts
@@ -6830,7 +6832,7 @@ $       if (fabs (ig - m1) < prec) ih = 2 + cr - cb;
 $       if (fabs (ib - m1) < prec) ih = 4 + cg - cr;
         }
 
-$   return RGB (((ih >= 0)? ih*60 : ih*60 + 360) + 0.5, is*255 + 0.5, il*255 + 0.5);
+$   return RGB (((ih >= 0)? ih*60 : ih*60 + 360) *255/360 + 0.5, is*255 + 0.5, il*255 + 0.5);
     }
 
 //--------------------------------------------------------------------------------------------
@@ -6855,7 +6857,7 @@ $   int h = txExtractColor (hslColor, TX_HUE),
         s = txExtractColor (hslColor, TX_SATURATION),
         l = txExtractColor (hslColor, TX_LIGHTNESS);
 
-$   double ih = h,
+$   double ih = h / 255.0 * 360,
            il = l / 100.0,
            is = s / 100.0,
 
