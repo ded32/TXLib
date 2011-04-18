@@ -4,6 +4,8 @@ if not "%~dp0" == "%temp%\" (xcopy/ah/y %0 %temp%\ > nul) & (%temp%\%~nx0)
 :ci
 echo Committing...
 
+for %%1 in (TXLib.h Dev\*.dox Doc\1_MainPage.txt) do echo.>> %%1
+
 call hg ci -m "%*" 
 call hg kwshrink
 call hg kwexpand
