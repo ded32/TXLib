@@ -3956,7 +3956,7 @@ bool             _txConsole_SetUnicodeFont();
 bool             _txIsParentWaitable (DWORD* parentPID);
 PROCESSENTRY32*  _txFindProcess (unsigned pid = GetCurrentProcessId());
 bool             _txKillProcess (DWORD pid);
-int              _txPeekInput();
+int              _txGetInput();
 
 bool             _txCreateShortcut (const char shortcutName[],
                                     const char fileToLink[], const char args[] = NULL, const char workDir[] = NULL,
@@ -4538,18 +4538,19 @@ $   if (wnd) SetWindowText (wnd, title);
 $   DWORD parent = 0;
 $   bool waitableParent = _txIsParentWaitable (&parent);
 
-$   if (isMaster && !_txExit && (!waitableParent || canvas) &&
+$   txSetConsoleAttr (0x07);
+
+$   if ((canvas || !waitableParent) && isMaster && !_txExit &&
         GetCurrentThreadId() == _txMainThreadId)
         {
 $       while (_kbhit()) (void)_getch();
 
 $       CONSOLE_SCREEN_BUFFER_INFO con = {{0}};
-$       bool wait = _txPeekInput() == EOF &&
-                    GetConsoleScreenBufferInfo (GetStdHandle (STD_OUTPUT_HANDLE), &con);
+$       bool kbRedir = !GetConsoleScreenBufferInfo (GetStdHandle (STD_OUTPUT_HANDLE), &con);
+$       bool kbWait  = (_txGetInput() == EOF);
 
-$       if (!canvas && wait)
+$       if (kbWait && !canvas && !kbRedir)
             {
-$           txSetConsoleAttr (0x07);
 $           printf ("\n" "[Нажмите любую клавишу для завершения]");
             }
 
@@ -4557,9 +4558,11 @@ $       for (int i = 1; ; i++)
             {
 $           Sleep (_TX_WINDOW_UPDATE_INTERVAL);
 
-            if (!wait || _txPeekInput() != EOF) { $ break; }  // Somebody hit something.
+            if (!kbWait || (kbRedir && !canvas)) { $ break; }  // No need to run and hide
 
-            if (canvas && !_txCanvas_ThreadId)  { $ break; }  // There was a window, and now there is not.
+            if (_txGetInput() != EOF)            { $ break; }  // Somebody hit something.
+
+            if (canvas && !_txCanvas_ThreadId)   { $ break; }  // There was a window, and now there is not.
 
             if (!(i % 100500))
                 printf ("\r" "[Нажмите же какую-нибудь клавишу для моего завершения]");
@@ -4595,23 +4598,29 @@ $   _txConsole_Detach (!waitableParent);
 
 //-----------------------------------------------------------------------------
 
-int _txPeekInput()
+int _txGetInput()
     {
-    if (fseek (stdin, 1, SEEK_CUR) != EOF)
-        return (void)fseek (stdin, -1, SEEK_CUR), fgetc (stdin);
+$1  HANDLE con = GetStdHandle (STD_INPUT_HANDLE);
 
-    HANDLE con = GetStdHandle (STD_INPUT_HANDLE);
+$   DWORD nchars = 0;
+$   if (!GetConsoleMode (con, &nchars) &&
+        PeekNamedPipe   (con, NULL, 0, NULL, &nchars, NULL))
+        {
+$       return (nchars)? fgetc (stdin) : EOF;
+        }
+    
+$   if (_kbhit())
+        {
+$       return _getch();
+	}
 
-    DWORD nchars = 0;
-    if (GetConsoleMode (con, &nchars) &&
-        PeekNamedPipe  (con, NULL, 0, NULL, &nchars, NULL))
-        {
-        return (nchars)?   fgetc (stdin) : EOF;
+$   if (fseek (stdin, 1, SEEK_CUR) != EOF)
+        { 
+$       (void) fseek (stdin, -1, SEEK_CUR);
+$       return fgetc (stdin);
         }
-    else
-        {
-        return (_kbhit())? _getch()      : EOF;
-        }
+ 
+$   return EOF;
     }
 
 //-----------------------------------------------------------------------------
