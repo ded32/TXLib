@@ -8,7 +8,7 @@
 //          (C) √еоргий Ўкуратов, 7 класс, 2009
 //}===========================================================================
 
-//#include "TXLib.h"
+#include "TXLib.h"
 
 #if !defined (_TX_VER) || (_TX_VER < 0x172a0000)
 #error Must use TXLib.h version >= 1.72 to compile this. -- Ded
