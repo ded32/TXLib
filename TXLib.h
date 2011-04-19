@@ -3953,6 +3953,7 @@ bool             _txConsole_Detach (bool restorePos);
 bool             _txConsole_Draw (HDC dc);
 bool             _txConsole_SetUnicodeFont();
 
+void             _txPauseBeforeTermination (HWND canvas);
 bool             _txIsParentWaitable (DWORD* parentPID);
 PROCESSENTRY32*  _txFindProcess (unsigned pid = GetCurrentProcessId());
 bool             _txKillProcess (DWORD pid);
@@ -4538,39 +4539,10 @@ $   if (wnd) SetWindowText (wnd, title);
 $   DWORD parent = 0;
 $   bool waitableParent = _txIsParentWaitable (&parent);
 
-$   txSetConsoleAttr (0x07);
-
 $   if ((canvas || !waitableParent) && isMaster && !_txExit &&
         GetCurrentThreadId() == _txMainThreadId)
         {
-$       while (_kbhit()) (void)_getch();
-
-$       CONSOLE_SCREEN_BUFFER_INFO con = {{0}};
-$       bool kbRedir = !GetConsoleScreenBufferInfo (GetStdHandle (STD_OUTPUT_HANDLE), &con);
-$       bool kbWait  = (_txGetInput() == EOF);
-
-$       if (kbWait && !canvas && !kbRedir)
-            {
-$           printf ("\n" "[Нажмите любую клавишу для завершения]");
-            }
-
-$       for (int i = 1; ; i++)
-            {
-$           Sleep (_TX_WINDOW_UPDATE_INTERVAL);
-
-            if (!kbWait || (kbRedir && !canvas)) { $ break; }  // No need to run and hide
-
-            if (_txGetInput() != EOF)            { $ break; }  // Somebody hit something.
-
-            if (canvas && !_txCanvas_ThreadId)   { $ break; }  // There was a window, and now there is not.
-
-            if (!(i % 100500))
-                printf ("\r" "[Нажмите же какую-нибудь клавишу для моего завершения]");
-            }
-
-$       while (_kbhit()) (void)_getch();
-
-$       printf ("\n");
+$       _txPauseBeforeTermination (canvas);
         }
 
 $   if (txWindow())
@@ -4594,6 +4566,44 @@ $   _txConsole_Detach (!waitableParent);
     OutputDebugString (_TX_VERSION _TX_NAME "- FINISHED\n");
     OutputDebugString ("\n");
     #endif
+    }
+
+//-----------------------------------------------------------------------------
+
+void _txPauseBeforeTermination (HWND canvas)
+    {
+$1  _TX_IF_ARGUMENT_FAILED (canvas) return;
+        
+$   txSetConsoleAttr (0x07);
+
+$   while (_kbhit()) (void)_getch();
+
+$   CONSOLE_SCREEN_BUFFER_INFO con = {{0}};
+$   bool kbRedir = !GetConsoleScreenBufferInfo (GetStdHandle (STD_OUTPUT_HANDLE), &con);
+$   bool kbWait  = (_txGetInput() == EOF);
+
+$   if (kbWait && !canvas && !kbRedir)
+        {
+$       printf ("\n" "[Нажмите любую клавишу для завершения]");
+        }
+
+$   for (int i = 1; ; i++)
+        {
+$       Sleep (_TX_WINDOW_UPDATE_INTERVAL);
+
+        if (!kbWait || (kbRedir && !canvas)) { $ break; }  // No need to run and hide
+
+        if (_txGetInput() != EOF)            { $ break; }  // Somebody hit something.
+
+        if (canvas && !_txCanvas_ThreadId)   { $ break; }  // There was a window, and now there is not.
+
+        if (!(i % 100500))
+            printf ("\r" "[Нажмите же какую-нибудь клавишу для моего завершения]");
+        }
+
+$   while (_kbhit()) (void)_getch();
+
+$   printf ("\n");
     }
 
 //-----------------------------------------------------------------------------
@@ -7429,4 +7439,5 @@ struct _txSaveConsoleAttr
 //============================================================================================
 // EOF
 //============================================================================================
+
 
