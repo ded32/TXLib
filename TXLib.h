@@ -4572,9 +4572,7 @@ $   _txConsole_Detach (!waitableParent);
 
 void _txPauseBeforeTermination (HWND canvas)
     {
-$1  _TX_IF_ARGUMENT_FAILED (canvas) return;
-        
-$   txSetConsoleAttr (0x07);
+$1  txSetConsoleAttr (0x07);
 
 $   while (_kbhit()) (void)_getch();
 
@@ -7439,5 +7437,6 @@ struct _txSaveConsoleAttr
 //============================================================================================
 // EOF
 //============================================================================================
+
 
 
