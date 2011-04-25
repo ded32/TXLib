@@ -113,19 +113,45 @@
 
 #if !defined (__cplusplus)
 
-    #error TXLib.h: Must use C++ to compile TXLib.h
+    #ifdef __GNUC__
+    #error
+    #error -----------------------------------------------------------------------------------
+    #endif
+    #error TXLib.h: Must use C++ to compile TXLib.h.
+    #error
+    #error Check your source file extension. Maybe it is ".C". It should be ".CPP".
+    #error If your file is named, for example, "PROGRAM.C", go to menu [File], [Save As]
+    #error and rename it to "PROGRAM.CPP". Please do not use russian letters or spaces.
+    #error -----------------------------------------------------------------------------------
+    #error
 
 #endif
 
 #if !defined (WIN32) && !defined (__WIN32__) && !defined(_WIN32) && !defined(_WIN32_WINNT)
 
+    #ifdef __GNUC__
+    #error
+    #error -----------------------------------------------------------------------------------
+    #endif
     #error TXLib.h: Windows (MSVC/Win32 or GCC/MinGW) is the only supported system, sorry.
+    #error
+    #error In Linux or iOS, you should write your own TXLib and share it with your friends.
+    #error -----------------------------------------------------------------------------------
+    #error
 
 #endif
 
 #if defined (_WINDOWS_H) || defined (_INC_WINDOWS) || defined (_WINDOWS_) || defined (__WINDOWS__)
 
-    #error TXLib.h: The "TXLib.h" file must be included before or instead of Windows.h file.
+    #ifdef __GNUC__
+    #error
+    #error -----------------------------------------------------------------------------------
+    #endif
+    #error TXLib.h: The "TXLib.h" file must be included *before* or *instead* of Windows.h file.
+    #error
+    #error Rearrange your #include directives.
+    #error -----------------------------------------------------------------------------------
+    #error
 
 #endif
 
@@ -136,7 +162,17 @@
     #undef  __STRICT_ANSI__
 
     #if defined (_STRING_H_) || defined (_INC_STRING) || defined (_STDIO_H_) || defined (_INC_STDIO)
-    #error   TXLib.h: The "TXLib.h" file must be included before <string.h> or <stdio.h> in Strict ANSI mode.
+
+    #ifdef __GNUC__
+    #error
+    #error -----------------------------------------------------------------------------------
+    #endif
+    #error TXLib.h: The "TXLib.h" file must be included before <string.h> or <stdio.h> in Strict ANSI mode.
+    #error
+    #error Rearrange your #include directives.
+    #error -----------------------------------------------------------------------------------
+    #error
+    
     #endif
 
 #endif
@@ -1701,7 +1737,7 @@ bool txTransparentBlt (HDC dest, int xDest, int yDest, int width, int height,
 //!          Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
 //!          HDC batman = txLoadImage ("Resources\\Images\\Batman.bmp");
-//!          if (!batman) MessageBox (txWindow(), "Your call to batman failed", "Help yourself out", 0);
+//!          if (!batman) MessageBox (txWindow(), "Your call to Batman failed", "Help yourself out", 0);
 //!
 //!          txAlphaBlend (txDC(), 0, 0, 800, 600, batman, 0, 0);
 //!          txDeleteDC (batman);  // Don't worry, batman will return in "Batman returns" movie
@@ -4616,18 +4652,18 @@ $   if (!GetConsoleMode (con, &nchars) &&
         {
 $       return (nchars)? fgetc (stdin) : EOF;
         }
-    
+
 $   if (_kbhit())
         {
 $       return _getch();
 	}
 
 $   if (fseek (stdin, 1, SEEK_CUR) != EOF)
-        { 
+        {
 $       (void) fseek (stdin, -1, SEEK_CUR);
 $       return fgetc (stdin);
         }
- 
+
 $   return EOF;
     }
 
@@ -7437,6 +7473,10 @@ struct _txSaveConsoleAttr
 //============================================================================================
 // EOF
 //============================================================================================
+
+
+
+
 
 
 
