@@ -120,8 +120,9 @@
     #error TXLib.h: Must use C++ to compile TXLib.h.
     #error
     #error Check your source file extension. Maybe it is ".C". It should be ".CPP".
-    #error If your file is named, for example, "PROGRAM.C", go to menu [File], [Save As]
-    #error and rename it to "PROGRAM.CPP". Please do not use russian letters or spaces.
+    #error If your file is named, for example, "PROGRAM.C", go to menu [File], then
+    #error [Save As] and rename it to "PROGRAM.CPP". Please do not use russian
+    #error letters or spaces.
     #error -----------------------------------------------------------------------------------
     #error
 
@@ -135,7 +136,8 @@
     #endif
     #error TXLib.h: Windows (MSVC/Win32 or GCC/MinGW) is the only supported system, sorry.
     #error
-    #error In Linux or iOS, you should write your own TXLib and share it with your friends.
+    #error In Linux or iOS, you should write your own TXLib and share it with your
+    #error friends.
     #error -----------------------------------------------------------------------------------
     #error
 
@@ -147,7 +149,7 @@
     #error
     #error -----------------------------------------------------------------------------------
     #endif
-    #error TXLib.h: The "TXLib.h" file must be included *before* or *instead* of Windows.h file.
+    #error TXLib.h: Should include "TXLib.h" *before* or *instead* of <Windows.h>.
     #error
     #error Rearrange your #include directives.
     #error -----------------------------------------------------------------------------------
@@ -167,12 +169,12 @@
     #error
     #error -----------------------------------------------------------------------------------
     #endif
-    #error TXLib.h: The "TXLib.h" file must be included before <string.h> or <stdio.h> in Strict ANSI mode.
+    #error TXLib.h: Should include "TXLib.h" *before* <string.h> or <stdio.h> in Strict ANSI mode.
     #error
     #error Rearrange your #include directives.
     #error -----------------------------------------------------------------------------------
     #error
-    
+
     #endif
 
 #endif
@@ -4164,9 +4166,9 @@ _TX_DLLIMPORT_OPT ("MSImg32",  BOOL,     AlphaBlend,             (HDC dest, int 
                                                                   BLENDFUNCTION blending));
 
 _TX_DLLIMPORT     ("Kernel32", HWND,     GetConsoleWindow,       (void));
-_TX_DLLIMPORT     ("Kernel32", BOOL,     SetConsoleFont,         (HANDLE console, DWORD fontIndex));
-_TX_DLLIMPORT     ("Kernel32", BOOL,     GetConsoleFontInfo,     (HANDLE console, BOOL fullScreen, DWORD numFonts, CONSOLE_FONT_INFO* fontsInfo));
-_TX_DLLIMPORT     ("Kernel32", DWORD,    GetNumberOfConsoleFonts,(void));
+_TX_DLLIMPORT_OPT ("Kernel32", BOOL,     SetConsoleFont,         (HANDLE console, DWORD fontIndex));
+_TX_DLLIMPORT_OPT ("Kernel32", BOOL,     GetConsoleFontInfo,     (HANDLE console, BOOL fullScreen, DWORD numFonts, CONSOLE_FONT_INFO* fontsInfo));
+_TX_DLLIMPORT_OPT ("Kernel32", DWORD,    GetNumberOfConsoleFonts,(void));
 _TX_DLLIMPORT_OPT ("Kernel32", BOOL,     GetCurrentConsoleFont,  (HANDLE console, BOOL maxWnd, CONSOLE_FONT_INFO*   curFont));
 _TX_DLLIMPORT_OPT ("Kernel32", BOOL,     GetCurrentConsoleFontEx,(HANDLE console, BOOL maxWnd, CONSOLE_FONT_INFOEX* curFont));
 _TX_DLLIMPORT_OPT ("Kernel32", BOOL,     SetCurrentConsoleFontEx,(HANDLE console, BOOL maxWnd, CONSOLE_FONT_INFOEX* curFont));
@@ -4177,6 +4179,8 @@ _TX_DLLIMPORT     ("OLE32",    void,     CoUninitialize,         (void));
 
 _TX_DLLIMPORT     ("Shell32",  HINSTANCE,ShellExecuteA,          (HWND wnd, LPCTSTR operation, LPCTSTR file,
                                                                   LPCTSTR parameters, LPCTSTR directory, INT showCmd));
+
+_TX_DLLIMPORT_OPT ("NTDLL",    char*,    wine_get_version,       ());
 
 //--------------------------------------------------------------------------------------------
 // Another issue, some of structs, consts and interfaces aren't defined in MinGW some ealry headers.
@@ -5337,6 +5341,18 @@ $   if (!console) AllocConsole();
 $   console = Win32::GetConsoleWindow();
 $   if (!console) return NULL;
 
+    // Linux::Wine v1.2.2 compatibility.
+    // Beer compatibility will be added in future versions.
+    // Минздрав РФ предупреждает: чрезмерное употребление wine
+    // вредит Вашему здоровью.
+
+$   if (Win32::wine_get_version)
+        {
+$       Win32::GetNumberOfConsoleFonts = NULL;
+$       Win32::GetCurrentConsoleFont   = NULL;
+$       Win32::SetConsoleFont          = NULL;
+        }
+
     // Устанавливаем русскую кодовую страницу для консоли Windows
 
 $   SetConsoleCP       (1251);
@@ -5348,13 +5364,13 @@ $   SetConsoleOutputCP (1251);
     // -finput-charset=CP1251 -fexec-charset=CP1251
     // если собираетесь использовать L"unicode-строки".
 
-$     setlocale (LC_CTYPE,  "Russian");
-$   _wsetlocale (LC_CTYPE, L"Russian_Russia.ACP");
+$   setlocale (LC_CTYPE, "Russian");
+$   if (!Win32::wine_get_version) _wsetlocale (LC_CTYPE, L"Russian_Russia.ACP");
 
 $   static bool done = false;
 $   if (done) return console;
 
-    // Впечатлительным лучше туда не смотреть.
+    // Впечатлительным лучше сюда не смотреть.
 
 $   _txConsole_SetUnicodeFont();
 
@@ -5409,7 +5425,7 @@ $   const unsigned uniSize = 20;  // Size of the font desired, should be > max o
 
 $   HANDLE out = GetStdHandle (STD_OUTPUT_HANDLE);
 
-$   if (Win32::GetNumberOfConsoleFonts() <= uniFont)
+$   if (_TX_SAFECALL (Win32::GetNumberOfConsoleFonts)() <= uniFont)
         {
 $       HRESULT init = Win32::CoInitialize (NULL);
 $       size_t sz = 0;
@@ -5435,9 +5451,9 @@ $       if (init == S_OK) Win32::CoUninitialize();
     // If Unicode font is not already set, do set it.
 
 $   CONSOLE_FONT_INFO cur = {0};
-$   Win32::GetCurrentConsoleFont (out, false, &cur);
+$   _TX_SAFECALL (Win32::GetCurrentConsoleFont) (out, false, &cur);
 
-$   bool ok = (cur.nFont >= uniFont) || !!Win32::SetConsoleFont (out, uniFont);
+$   bool ok = (cur.nFont >= uniFont) || !!(_TX_SAFECALL (Win32::SetConsoleFont) (out, uniFont));
 
 $   HWND console = Win32::GetConsoleWindow();
 $   InvalidateRect (console, NULL, false);
@@ -5550,6 +5566,8 @@ $   return true;
 
 //--------------------------------------------------------------------------------------------
 
+// Мало не покажется...
+
 bool _txCreateShortcut (const char shortcutName[],
                         const char fileToLink[], const char args[] /*= NULL*/, const char workDir[] /*= NULL*/,
                         const char description[] /*= NULL*/, int cmdShow /*= SW_SHOWNORMAL*/, const char iconFile[] /*= NULL*/, int iconIndex /*= 0*/,
@@ -5589,7 +5607,7 @@ $       Win32::NT_CONSOLE_PROPS props =
             0,                                          // nFont
             0,                                          // nInputBufferSize
            {0, (short) fontSize},                       // dwFontSize
-            0x36, 400, L"Lucida Console",               // uFontFamily, uFontWeight, FaceName
+            0x36, 400, L"Lucida Console",               // uFontFamily, uFontWeight, FaceName. We dance for this!
             15,                                         // uCursorSize
             0,  1, 1, 0,                                // bFullScreen, bQuickEdit, bInsertMode, bAutoPosition
             50, 4, 0,                                   // uHistoryBufferSize, uNumberOfHistoryBuffers, bHistoryNoDup
@@ -6564,7 +6582,7 @@ $   Sleep (time);
 
 $   if (ok) _txCanvas_SetRefreshLock (old);
 
-$   return (old != 0);
+$   return old != 0;
     }
 
 //--------------------------------------------------------------------------------------------
@@ -6707,8 +6725,7 @@ POINT txGetConsoleFontSize()
     {
 $1  CONSOLE_FONT_INFO font = {0, {8, 16}};
 
-$   if (Win32::GetCurrentConsoleFont)
-        Win32::GetCurrentConsoleFont (GetStdHandle (STD_OUTPUT_HANDLE), false, &font) asserted;
+$   (_TX_SAFECALL (Win32::GetCurrentConsoleFont) (GetStdHandle (STD_OUTPUT_HANDLE), false, &font)) asserted;
 
 $   SIZE size = { font.dwFontSize.X, font.dwFontSize.Y };
 $   txGDI (Win32::GetTextExtentPoint32 (_txCanvas_BackBuf[1], "W", 1, &size));
@@ -7473,10 +7490,5 @@ struct _txSaveConsoleAttr
 //============================================================================================
 // EOF
 //============================================================================================
-
-
-
-
-
 
 

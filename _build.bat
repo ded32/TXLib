@@ -87,4 +87,3 @@ copy TXLib.h        "%.file%-TXLib.h"        > nul
 copy TXLib-Help.chm "%.file%-TXLib Help.chm" > nul
 
 echo http://storage.ded32.net.ru/get.pl?url=http://dl.dropbox.com/u/1557330/TXLib/TX.72/%.file% | cliptext
-
