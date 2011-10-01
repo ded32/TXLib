@@ -4,7 +4,7 @@ ADD  tr(msg) { return translation (msg) /*tr from map*/ }
 ADD  VEC/SEH/signal (divide by zero etc)
 ADD  valuePipe
 
-FIX  pseudo-graphics chars in console-to-TX translation is wrong?
+FIX  pseudo-graphics chars in console-to-TX translation are wrong?
 
 ADD  doc: Fun examples (nightmare.cpp etc) to Demo\Fun
 ADD  doc: Fun texts from Fun\Ded to help
