@@ -58,7 +58,7 @@
     @section    PlatformsSupported    Поддерживаемые платформы
    
            -    Среды программирования и компиляторы
-             -# CodeBlocks 10.05  + MinGW GCC 4.5.1 (TDM-GCC)
+             -# CodeBlocks 10.05  + MinGW GCC 4.5.2 (TDM-GCC)
              -# CodeBlocks 10.05  + MinGW GCC 4.4.1
              -# CodeBlocks 8.02   + MinGW GCC 3.4.5
              -# CodeBlocks 1.0rc2 + MinGW GCC 3.4.4
@@ -74,6 +74,8 @@
              -# Windows 2003 SP1 R1/R2 ru/en
              -# Windows XP   SP2/SP3   ru/en
              -# Windows 2000 SP4       ru/en
+             -# Linux + Wine
+                - Ubuntu 10.04, 11.04 + Wine 1.2.2 
 
     @note
              -  <b>Принудительно отключается режим UNICODE</b> (кроме редактора ресурсов
@@ -194,5 +196,9 @@
       <b>Предложить улучшение</b></a>
 
 */ 
+
+
+
+
 
 

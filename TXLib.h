@@ -849,7 +849,7 @@ COLORREF txGetFillColor();
 //!          @tr R2_WHITE       @td Пиксели = белый  цвет (цвет кисти игнорируется)
 //!          @tr R2_NOT         @td Пиксели = ~пиксели    (цвет кисти игнорируется)
 //!          @tbr
-//!          @tr R2_XORPEN      @td Пиксели =    пиксели ^  кисть
+//!          @tr R2_XORPEN      @td Пиксели =    пиксели ^  кисть (удобный режим, cм. пример ниже)
 //!          @tr R2_NOTXORPEN   @td Пиксели = ~ (пиксели ^  кисть)
 //!          @tbr
 //!          @tr R2_MASKPEN     @td Пиксели =    пиксели &  кисть
@@ -1096,6 +1096,8 @@ bool txLine (int x0, int y0, int x1, int y1);
 //! @usage
 //! @code
 //!          txRectangle (100, 200, 400, 500);
+//!
+//!          Win32::RoundRect (txDC(), 100, 200, 400, 500, 30, 30); // И такое есть. См. RoundRect в MSDN
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
@@ -1321,14 +1323,19 @@ bool txTextOut (int x, int y, const char text[]);
 //!
 //!          Цвет текста задается функцией txSetColor(), выравнивание - txSetTextAlign().
 //!
+//! @note    Не выводит ничего, если координаты идут в неверном порядке (x0 > x1 или y0 > y1).
+//!
 //!          Флаги форматирования текста см. в MSDN (http://msdn.com), искать "DrawText Function
 //!          (Windows)": http://msdn.microsoft.com/en-us/library/dd162498%28VS.85%29.aspx.
+//!          
+//!          Автоматический перенос текста на несколько строк включается, если текст
+//!          состоит из нескольких строк (есть хотя бы один символ новой строки @c \n).
 //!
 //! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors, RGB()
 //!          txTextOut(), txSelectFont(), txGetTextExtent(), txGetTextExtentX(), txGetTextExtentY()
 //! @usage
 //! @code
-//!          txTextOut (100, 100, "И здесь могла бы быть Ваша реклама.");
+//!          txDrawText (100, 100, "И здесь могла бы быть Ваша реклама.");
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
@@ -1347,9 +1354,11 @@ bool txDrawText (int x0, int y0, int x1, int y1, const char text[],
 //! @param   underline  Подчеркивание
 //! @param   strikeout  Зачеркивание
 //!
-//! @return  Если операция была успешна - true, иначе - false.
+//! @return  Всегда true. Если шрифт не был найден, то устанавливается системный шрифт Windows
+//!          @c (SYSTEM_FIXED_FONT, см. MSDN). Существование шрифта можно проверить функцией
+//!          txFontExist.
 //!
-//! @see     txTextOut()
+//! @see     txTextOut(), txFontExist()
 //! @usage
 //! @code
 //!          txSelectFont ("Comic Sans MS", 20);
@@ -4133,6 +4142,7 @@ _TX_DLLIMPORT     ("GDI32",    BOOL,     MoveToEx,               (HDC dc, int x,
 _TX_DLLIMPORT     ("GDI32",    BOOL,     LineTo,                 (HDC dc, int x, int y));
 _TX_DLLIMPORT     ("GDI32",    BOOL,     Polygon,                (HDC dc, CONST POINT points[], int count));
 _TX_DLLIMPORT     ("GDI32",    BOOL,     Rectangle,              (HDC dc, int x0, int y0, int x1, int y1));
+_TX_DLLIMPORT     ("GDI32",    BOOL,     RoundRect,              (HDC dc, int x0, int y0, int x1, int y1, int sizeX, int sizeY));
 _TX_DLLIMPORT     ("GDI32",    BOOL,     Ellipse,                (HDC dc, int x0, int y0, int x1, int y1));
 _TX_DLLIMPORT     ("GDI32",    BOOL,     Arc,                    (HDC dc, int x0, int y0, int x1, int y1,
                                                                   int xStart, int yStart, int xEnd, int yEnd));
@@ -4416,6 +4426,7 @@ $   _txCanvas_UserDCs.reserve (_TX_BUFSIZE);
 $   atexit (_txCleanup);
 
 $   (void) Win32::SetDIBitsToDevice;    // Just for warning "defined but not used" suppression
+$   (void) Win32::RoundRect;
 $   (void) Win32::CreateRectRgn;
 $   (void) Win32::GetBitmapDimensionEx;
 $   (void) Win32::GetConsoleFontInfo;
@@ -4435,6 +4446,8 @@ $   if (!_txStaticInitialized) _txStaticInitialized = _txInitialize();
 $   _txRunning = false;
 
 $   if (style & 1) { sizeX *= -1; sizeY *= -1; }
+
+    // Store the properties - size and style
 
 $   static CREATESTRUCT from = { NULL, NULL, NULL, NULL,
                                  sizeY, sizeX, CW_USEDEFAULT, CW_USEDEFAULT,
@@ -4559,7 +4572,9 @@ $1  return _txCanvas_OK();
 
 void _txCleanup()
     {
-$1  if (!_txStaticInitialized) return;
+$1  Sleep (_TX_WINDOW_UPDATE_INTERVAL);
+
+$   if (!_txStaticInitialized) return;
     else _txStaticInitialized = false;
 
 $   _txRunning = false;
@@ -5752,8 +5767,8 @@ $       return;
         {
         GET_DESCR_ (sSig, SIGSEGV, "Доступ по неверному указателю. Ставьте ассерты!")
         GET_DESCR_ (sSig, SIGILL,  "Попытка выполнить недопустимую операцию. Проверьте указатели на функции.")
-        GET_DESCR_ (sSig, SIGABRT, "Аварийное завершение программы, вызвана функция abort.")
-        GET_DESCR_ (sSig, SIGTERM, "Получен сигнал принудительного завершения программы")
+        GET_DESCR_ (sSig, SIGABRT, "Аварийное завершение программы, вызвана функция abort().")
+        GET_DESCR_ (sSig, SIGTERM, "Получен сигнал принудительного завершения программы.")
         GET_DESCR_ (sSig, SIGFPE,  "Грубая ошибка в вычислениях, деление на 0 или что-то еще")
         default:   break;
         }
@@ -5781,7 +5796,7 @@ $       return;
     if (sig == SIGFPE && fpe)
         _txError (NULL, 0, NULL, "signal (%d, 0x%02X): %s, %s."_ sig _ fpe _ sSig _ sFPE);
     else
-        _txError (NULL, 0, NULL, "signal (%d): %s."            _ sig       _ sSig);
+        _txError (NULL, 0, NULL, "signal (%d): %s"             _ sig       _ sSig);
 
     _txCleanup();
     }
@@ -6589,7 +6604,7 @@ $   return old != 0;
 
 bool txLock (bool wait /*= true*/)
     {
-$1  if (_txExit) Sleep (0);
+$1  if (_txCanvas_RefreshLock <= 0 || _txExit) Sleep (0);
 
 $   if (wait) { $ return      EnterCriticalSection (&_txCanvas_LockBackBuf), true; }
     else      { $ return !!TryEnterCriticalSection (&_txCanvas_LockBackBuf);       }
@@ -6601,7 +6616,7 @@ bool txUnlock()
     {
 $1  LeaveCriticalSection (&_txCanvas_LockBackBuf);
 
-$   if (_txExit) Sleep (0);
+$   if (_txCanvas_RefreshLock <= 0 || _txExit) Sleep (0);
 $   return false;
     }
 
@@ -7490,5 +7505,9 @@ struct _txSaveConsoleAttr
 //============================================================================================
 // EOF
 //============================================================================================
+
+
+
+
 
 
