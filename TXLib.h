@@ -407,41 +407,22 @@ namespace _TX { namespace TX {                   // <<<<<<<<< The main code is h
 //!
 //! @param   sizeX     Размер окна по горизонтали (в пикселях)
 //! @param   sizeY     Размер окна по вертикали   (в пикселях)
-//! @param   style     Если 1 (по умолчанию), окно центрируется на экране.
+//! @param   centered  Центрирование окна на дисплее
 //!
 //! @return  Дескриптор (системный номер) окна TXLib. Если окно не открыто, возвращается NULL.
 //!
 //! @note
-//!        - На самом деле параметр @p style задает стиль окна. Если стиль окна содержит @c WS_SYSMENU
-//!	         (значение по умолчанию), окно считается главным.
-//!        - Если <i>младший бит стиля</i> выставлен в 1 (по умолчанию), окно центрируется на экране.
-//!        - Главное окно должно быть только одно и создаваться первым. При закрытии главного
-//!          окна программа завершается.<br>
-//!          Вспомогательные окна могут создаваться по одному на каждый файл многофайлового
-//!          проекта. При их создании @a не надо указывать WS_SYSMENU. Для закрытия вспомогательных
-//!          окон используется txDestroyWindow().
-//!        - При создании окна к стилю автоматически добавляются стили WS_POPUP, WS_BORDER и WS_CAPTION.
 //!        - Устанавливаются параметры рисования по умолчанию, см. функцию txSetDefaults().
 //!
 //! @see     txOK()
 //! @usage
 //! @code
-//!          txCreateWindow ( 800,  600);                 // Окно 800х600, главное, центрировано
-//!          txCreateWindow (1024,  768, WS_SYSMENU | 1); // Окно 800х600, главное, центрировано
-//!          txCreateWindow (1024,  768, 1);              // Окно 800х600, вспомогательное, центрировано
-//!          txCreateWindow (1024,  768, WS_SYSMENU);     // Окно 800х600, главное, не центрировано
+//!          txCreateWindow ( 800, 600);         // Окно  800х600, центрировано
+//!          txCreateWindow (1024, 768, false);  // Окно 1024х768, не центрировано
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-#ifdef _TX_NAMED
-
-HWND txCreateWindow (int sizeX = 800, int sizeY = 600, unsigned style =              1);
-
-#else
-
-HWND txCreateWindow (int sizeX = 800, int sizeY = 600, unsigned style = WS_SYSMENU | 1);
-
-#endif
+HWND txCreateWindow (int sizeX, int sizeY, bool centered = true);
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1327,7 +1308,7 @@ bool txTextOut (int x, int y, const char text[]);
 //!
 //!          Флаги форматирования текста см. в MSDN (http://msdn.com), искать "DrawText Function
 //!          (Windows)": http://msdn.microsoft.com/en-us/library/dd162498%28VS.85%29.aspx.
-//!          
+//!
 //!          Автоматический перенос текста на несколько строк включается, если текст
 //!          состоит из нескольких строк (есть хотя бы один символ новой строки @c \n).
 //!
@@ -1774,10 +1755,11 @@ bool txAlphaBlend (HDC dest, int xDest, int yDest, int width, int height,
 //!
 //!          Для снятия блокировки используется функция txEnd().
 //!
+//!          Если в программе требуется задержка, то используйте функцию txSleep(), так как
+//!          она автоматически обновляет изображение, независимо от состояния блокировки.
+//!
 //! @warning Избегайте блокирования на долгое время. Это может привести к дефектам
-//!          изображения в окне. Если в программе требуется задержка, то используйте
-//!          функцию txSleep(), так как она автоматически обновляет изображение,
-//!          независимо от состояния блокировки.
+//!          изображения в окне.
 //!
 //! @return  Значение счетчика блокировки (если 0, то рисование разблокировано).
 //!
@@ -2806,6 +2788,36 @@ template <typename T> inline T txUnlock (T value);
 
 #if !defined  (_TX_CONSOLE_MODE)
     #define    _TX_CONSOLE_MODE           SWP_HIDEWINDOW
+#endif
+
+//{-------------------------------------------------------------------------------------------
+//! @ingroup Technical
+//! @brief   Стиль графического окна библиотеки.
+//!
+//! @note
+//!        - Стиль окна устанавливается @b до открытия окна библиотеки.
+//!        - Если стиль окна содержит @c WS_SYSMENU (значение по умолчанию), окно считается главным.
+//!        - Главное окно должно быть только одно и создаваться первым. При закрытии главного
+//!          окна программа завершается.<br>
+//!          Вспомогательные окна могут создаваться по одному на каждый файл многофайлового
+//!          проекта. При их создании @a не надо указывать в стиле WS_SYSMENU. Для закрытия
+//!          вспомогательных окон используется txDestroyWindow().
+//!
+//! @usage
+//! @code
+//!          _TX_WINDOW_STYLE = ~WS_SYSMENU; // Главное окно без системного меню
+//!          txCreateWindow (800, 600);
+//! @endcode
+//}-------------------------------------------------------------------------------------------
+
+#ifdef _TX_NAMED
+
+unsigned _TX_WINDOW_STYLE = WS_POPUP | WS_BORDER | WS_CAPTION;
+
+#else
+
+unsigned _TX_WINDOW_STYLE = WS_POPUP | WS_BORDER | WS_CAPTION | WS_SYSMENU;
+
 #endif
 
 //{-------------------------------------------------------------------------------------------
@@ -3972,7 +3984,7 @@ $   return dlg.str;
 int              _txInitialize();
 void             _txCleanup();
 
-HWND             _txCanvas_CreateWindow (CREATESTRUCT* from);
+HWND             _txCanvas_CreateWindow (SIZE* size);
 inline bool      _txCanvas_OK();
 
 int              _txCanvas_SetRefreshLock (int count);
@@ -4437,7 +4449,7 @@ $   return 1;
 //}
 //--------------------------------------------------------------------------------------------
 
-HWND txCreateWindow (int sizeX, int sizeY, unsigned style /*= WS_SYSMENU | 1*/)
+HWND txCreateWindow (int sizeX, int sizeY, bool centered /*= true*/)
     {
 $1  if (txOK()) return 0;
 
@@ -4445,22 +4457,19 @@ $   if (!_txStaticInitialized) _txStaticInitialized = _txInitialize();
 
 $   _txRunning = false;
 
-$   if (style & 1) { sizeX *= -1; sizeY *= -1; }
+    // Store the size
 
-    // Store the properties - size and style
-
-$   static CREATESTRUCT from = { NULL, NULL, NULL, NULL,
-                                 sizeY, sizeX, CW_USEDEFAULT, CW_USEDEFAULT,
-                                 style & ~1, NULL, NULL, 0 };
+$   static SIZE size = { sizeX, sizeY };
+$   if (centered) { size.cx *= -1; size.cy *= -1; }
 
     // In Thread, where REAL creation lies...
 
     #if !( defined (_MSC_VER) && (_MSC_VER < 1400) && !defined (_MT) )
 $   unsigned id = 0;
-$   _txCanvas_Thread = (HANDLE) _beginthreadex (NULL, 0,                        _txCanvas_ThreadProc, &from, 0, &id);
+$   _txCanvas_Thread = (HANDLE) _beginthreadex (NULL, 0,                        _txCanvas_ThreadProc, &size, 0, &id);
     #else
 $   DWORD    id = 0;
-$   _txCanvas_Thread =          CreateThread   (NULL, 0, (PTHREAD_START_ROUTINE)_txCanvas_ThreadProc, &from, 0, &id);
+$   _txCanvas_Thread =          CreateThread   (NULL, 0, (PTHREAD_START_ROUTINE)_txCanvas_ThreadProc, &size, 0, &id);
     #endif
 
 $   if (!_txCanvas_Thread) return TX_DEBUG_ERROR ("\a" "Cannot start canvas thread."), (HWND)NULL;
@@ -4818,7 +4827,7 @@ $1  _txCanvas_ThreadId = GetCurrentThreadId();
 
 $   _TX_IF_ARGUMENT_FAILED (data) return false;
 
-$   _txCanvas_CreateWindow ((CREATESTRUCT*) data);
+$   _txCanvas_CreateWindow ((SIZE*) data);
 $   if (!txWindow()) return TX_DEBUG_ERROR ("\a" "Cannot create canvas"), 0;
 
 $   HICON icon32 = _txCreateTXIcon (32); SetClassLong (txWindow(), GCL_HICON,   (DWORD)(ptrdiff_t) icon32);
@@ -4858,9 +4867,9 @@ $   return true;
 
 //--------------------------------------------------------------------------------------------
 
-HWND _txCanvas_CreateWindow (CREATESTRUCT* from)
+HWND _txCanvas_CreateWindow (SIZE* size)
     {
-$1  _TX_IF_ARGUMENT_FAILED (from) return false;
+$1  _TX_IF_ARGUMENT_FAILED (size) return false;
 
 $   static char className[_TX_BUFSIZE] = "";
 $   _snprintf_s (className, sizeof (className) - 1 _TX_TRUNCATE,
@@ -4879,12 +4888,12 @@ $   ATOM wndclass = RegisterClassEx (&wc);
 $   if (!wndclass) return TX_DEBUG_ERROR ("RegisterClass (\"%s\") failed"_ className), (HWND) NULL;
 
 $   int centered = false;
-$   if (from->cx < 0 && from->cy < 0) { from->cx *= -1; from->cy *= -1; centered = true; }
+$   if (size->cx < 0 && size->cy < 0) { size->cx *= -1; size->cy *= -1; centered = true; }
 
 $   SIZE screen  = { GetSystemMetrics (SM_CXSCREEN),     GetSystemMetrics (SM_CYSCREEN)     };
 $   SIZE frame   = { GetSystemMetrics (SM_CXFIXEDFRAME), GetSystemMetrics (SM_CYFIXEDFRAME) };
 $   SIZE caption = { 0, GetSystemMetrics (SM_CYCAPTION) };
-$   SIZE size    = { from->cx + 2*frame.cx, from->cy + 2*frame.cy + caption.cy };
+$   SIZE sz      = { size->cx + 2*frame.cx, size->cy + 2*frame.cy + caption.cy };
 $   POINT center = { screen.cx / 2, screen.cy / 2 };
 
 $   HWND console = Win32::GetConsoleWindow();
@@ -4896,16 +4905,14 @@ $       center.x = (_txConsole_Pos.right  + _txConsole_Pos.left) / 2;
 $       center.y = (_txConsole_Pos.bottom + _txConsole_Pos.top)  / 2;
         }
 
-$   HWND wnd = CreateWindowEx (from->dwExStyle, className,
-                               from->lpszName? from->lpszName : txGetModuleFileName (false),
-                               from->style | WS_POPUP | WS_BORDER | WS_CAPTION,
-                               center.x - size.cx/2, center.y - size.cy/2, size.cx, size.cy,
-                               NULL, from->hMenu, NULL, from->lpCreateParams);
+$   HWND wnd = CreateWindowEx (0, className, txGetModuleFileName (false), _TX_WINDOW_STYLE,
+                               center.x - sz.cx/2, center.y - sz.cy/2, sz.cx, sz.cy,
+                               NULL, NULL, NULL, NULL);
 
 $   if (!wnd || !txWindow()) return TX_DEBUG_ERROR ("Cannot create canvas: CreateWindowEx (\"%s\") failed"_
                                                      className), (HWND) NULL;
 $   if (console)
-        { $ SetWindowPos (console, HWND_NOTOPMOST, center.x - size.cx*2/5, center.y - size.cy*2/5, 0, 0,
+        { $ SetWindowPos (console, HWND_NOTOPMOST, center.x - sz.cx*2/5, center.y - sz.cy*2/5, 0, 0,
                           SWP_NOSIZE | SWP_NOACTIVATE | _TX_CONSOLE_MODE) asserted; }
 
 $   ShowWindow          (txWindow(), SW_SHOW);
@@ -7505,9 +7512,4 @@ struct _txSaveConsoleAttr
 //============================================================================================
 // EOF
 //============================================================================================
-
-
-
-
-
 
