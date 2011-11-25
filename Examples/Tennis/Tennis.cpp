@@ -18,6 +18,8 @@ int main()
     {
     txCreateWindow (800, 600);
 
+    // Загружаем изображения один раз, в начале программы
+    
     HDC table  = txLoadImage ("Resources\\Images\\Table.bmp");
     HDC racket = txLoadImage ("Resources\\Images\\Racket.bmp");
 
@@ -41,6 +43,8 @@ int main()
         if (alpha < 0) alpha = 0;
         if (alpha > 1) alpha = 1;
 
+        // Копирование на экран разными способами
+
         switch (mode)
             {
             case 1: txBitBlt         (txDC(), x-200/2, y-150/2, 200, 150, racket, 0, 0);        break;
@@ -51,6 +55,8 @@ int main()
 
         txSleep (20);
         }
+
+    // Удаляем ненужные DC, освобождая системные ресурсы 
 
     txDeleteDC (table);
     txDeleteDC (racket);
