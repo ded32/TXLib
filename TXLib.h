@@ -1511,24 +1511,24 @@ HDC txCreateCompatibleDC (int sizeX, int sizeY, HBITMAP bitmap = NULL);
 //!          Если изображение не загружено (не найден файл, неверный формат файла и т.д.), то NULL.
 //!
 //! @warning Изображение загружается в создаваемый контекст рисования в памяти ("виртуальный холст"),
-//!          который затем будет нужно <b>обязательно</b> удалить при помощи txDeleteDC(). \n
+//!          который затем будет нужно <b>обязательно удалить</b> при помощи txDeleteDC(). \n
 //!          <small>When the program will be shutting down, TXLib will try to delete DCs which were
 //!          not deleted, but this is not guaranteed.</small>
 //!
-//! @note    Изображения поддерживаются только в формате BMP. Если взять файл другого формата, например JPG, и
+//! @note    Изображения поддерживаются <b>только в формате BMP.</b> Если взять файл другого формата, например JPG, и
 //!          переименовать его со сменой расширения на BMP, то от этого формат не изменится. Такое изображение
 //!          загружено не будет.
 //!
-//!          Если функция вернула NULL, то надо прежде всего проверить наличие файла изображения
+//!          Если функция вернула NULL, то надо прежде всего <b>проверить наличие файла изображения</b>
 //!          по указанному в программе пути и формат файла. Если путь к файлу не указан (или указан
 //!          как неполный), то путь отсчитывается от текущей папки программы, которая может не совпадать
 //!          текущей папкой среды программирования. Текущую папку программы можно посмотреть по
 //!          команде About в системном меню (она указана там как "Run from").
 //!
-//! @note    <b>НЕ НАДО часто загружать</b> одно и то же изображение, особенно в цикле.
-//!          От этого программа начинает тормозить! \n\n
-//!          Загрузите один раз перед циклом, потом используйте много раз.
-//!          Только не забудьте уничтожить DC, когда он будет не нужен.
+//! @note    <b>Не надо часто загружать</b> одно и то же изображение, особенно в цикле.
+//!          От этого программа начинает тормозить!
+//! @note    Загрузите один раз перед циклом, потом используйте много раз. Посмотрите, как это сделано в 
+//!          примере TX\Examples\Tennis\Tennis.cpp.
 //!
 //! @see     txCreateWindow(), txCreateCompatibleDC(), txLoadImage(), txDeleteDC(), txBitBlt(), txAlphaBlend(),
 //!          txTransparentBlt()
@@ -1538,11 +1538,9 @@ HDC txCreateCompatibleDC (int sizeX, int sizeY, HBITMAP bitmap = NULL);
 //!          HDC background = txLoadImage ("Resources\\Images\\Background.bmp");
 //!          if (!background) MessageBox (txWindow(), "Cannot load background", "Epic fail", 0);
 //!
-//!          // НЕ НАДО часто загружать одно и то же изображение, особенно в цикле.
-//!          // От этого программа начинает тормозить!
-//!
+//!          // НЕ НАДО часто загружать одно и то же изображение, особенно в цикле - программа будет тормозить!
 //!          // Загрузите один раз перед циклом, потом используйте много раз.
-//!          // Только не забудьте уничтожить DC, когда он будет не нужен.
+//!          // Посмотрите, как сделано в примере TX\Examples\Tennis\Tennis.cpp.
 //!
 //!          txBitBlt (txDC(), 0, 0, 800, 600, background, 0, 0);
 //!
@@ -1569,11 +1567,9 @@ HDC txLoadImage (const char filename[]);
 //!          HDC background = txLoadImage ("Resources\\Images\\Background.bmp");
 //!          if (!background) MessageBox (txWindow(), "Cannot load background", "Oh, not now", 0);
 //!
-//!          // НЕ НАДО часто загружать одно и то же изображение, особенно в цикле.
-//!          // От этого программа начинает тормозить!
-//!
+//!          // НЕ НАДО часто загружать одно и то же изображение, особенно в цикле - программа будет тормозить!
 //!          // Загрузите один раз перед циклом, потом используйте много раз.
-//!          // Только не забудьте уничтожить DC, когда он будет не нужен.
+//!          // Посмотрите, как сделано в примере TX\Examples\Tennis\Tennis.cpp.
 //!
 //!          txBitBlt (txDC(), 0, 0, 800, 600, background, 0, 0);
 //!
@@ -1638,11 +1634,9 @@ bool txDeleteDC (HDC* dc);
 //!          HDC background = txLoadImage ("Resources\\Images\\Background.bmp");
 //!          if (!background) MessageBox (txWindow(), "Cannot load background", "Once again :(", 0);
 //!
-//!          // НЕ НАДО часто загружать одно и то же изображение, особенно в цикле.
-//!          // От этого программа начинает тормозить!
-//!
+//!          // НЕ НАДО часто загружать одно и то же изображение, особенно в цикле - программа будет тормозить!
 //!          // Загрузите один раз перед циклом, потом используйте много раз.
-//!          // Только не забудьте уничтожить DC, когда он будет не нужен.
+//!          // Посмотрите, как сделано в примере TX\Examples\Tennis\Tennis.cpp.
 //!
 //!          txBitBlt (txDC(), 0, 0, 800, 600, background, 0, 0);
 //!
@@ -1689,11 +1683,9 @@ bool txBitBlt (HDC dest, int xDest, int yDest, int width, int height,
 //!          HDC superman = txLoadImage ("Resources\\Images\\Superman.bmp");
 //!          if (!superman) MessageBox (txWindow(), "Cannot load superman, all the monsters will succeed", "Sorry", 0);
 //!
-//!          // НЕ НАДО часто загружать одно и то же изображение, особенно в цикле.
-//!          // От этого программа начинает тормозить!
-//!
+//!          // НЕ НАДО часто загружать одно и то же изображение, особенно в цикле - программа будет тормозить!
 //!          // Загрузите один раз перед циклом, потом используйте много раз.
-//!          // Только не забудьте уничтожить DC, когда он будет не нужен.
+//!          // Посмотрите, как сделано в примере TX\Examples\Tennis\Tennis.cpp.
 //!
 //!          txTransparentBlt (txDC(), 0, 0, 800, 600, superman, 0, 0);
 //!
@@ -1732,17 +1724,19 @@ bool txTransparentBlt (HDC dest, int xDest, int yDest, int width, int height,
 //!
 //!          Изображение-источник и изображение-приемник не могут налагаться друг на друга.
 //!
-//! @note    Изображение должно быть загружено с помощью txLoadImage() и иметь 32-битовый RGBA-формат.
-//!          Дополнительный канал (альфа-канал) этого формата отвечает за прозрачность участков изображения.
-//!          24-битовый (TrueColor) формат функция txAlphaBlend не поддерживает.
+//! @note    Изображение должно быть загружено с помощью txLoadImage() и иметь <b>32-битовый RGBA-формат.</b>
+//!          Дополнительный канал <b>(A, альфа-канал)</b> этого формата отвечает за прозрачность участков
+//!          изображения. 24-битовый формат (TrueColor RGB) функция txAlphaBlend не поддерживает.
 //!
 //!          Альфа-канал можно сделать, например, в Adobe Photoshop, командой
 //!          "Новый канал (New Channel)" в палитре каналов (Channels). Черный
 //!          цвет в альфа-канале соответствует полной прозрачности, белый -
 //!          полной непрозрачности. <b>При этом в прозрачных областях само изображение
 //!          (в каналах R, G, B) должно быть черным, и чем прозрачнее, тем чернее.</b>
+//!          См. изображение с альфа-каналом в примере TX\Examples\Tennis\Tennis.cpp
+//!          (файл с теннисной ракеткой: TX\Examples\Tennis\Resources\Images\Racket.bmp).
 //!
-//!          Строго говоря, надо умножить каналы R,G,B на альфа-канал:
+//!          Строго говоря, надо домножить каналы R,G,B на альфа-канал:
 //!          <tt>R,G,B *= A</tt>. Получится вот что:
 //!
 //!        - Если значение альфа-канала для некоторого пикселя равно 0 (полная прозрачность),
@@ -1771,11 +1765,9 @@ bool txTransparentBlt (HDC dest, int xDest, int yDest, int width, int height,
 //!          HDC batman = txLoadImage ("Resources\\Images\\Batman.bmp");
 //!          if (!batman) MessageBox (txWindow(), "Call to Batman failed", "Save yourself", 0);
 //!
-//!          // НЕ НАДО часто загружать одно и то же изображение, особенно в цикле.
-//!          // От этого программа начинает тормозить!
-//!
+//!          // НЕ НАДО часто загружать одно и то же изображение, особенно в цикле - программа будет тормозить!
 //!          // Загрузите один раз перед циклом, потом используйте много раз.
-//!          // Только не забудьте уничтожить DC, когда он будет не нужен.
+//!          // Посмотрите, как сделано в примере TX\Examples\Tennis\Tennis.cpp.
 //!
 //!          txAlphaBlend (txDC(), 0, 0, 800, 600, batman, 0, 0);
 //!
@@ -4647,7 +4639,7 @@ $   int isMaster = (canvas)? (GetWindowLong (canvas, GWL_STYLE) & WS_SYSMENU) : 
 $   static char title [_TX_BUFSIZE] = "";
 $   if (wnd) GetWindowText (wnd, title, sizeof (title));
 $   strncat_s (title, " [ЗАВЕРШЕНО]", sizeof (title) - 1);
-$   if (wnd) SendMessage (wnd, WM_SETTEXT, NULL, (LPARAM) title);
+$   if (wnd) SendMessage (wnd, WM_SETTEXT, NULL, (LPARAM) title); // SetWindowText sometimes freezes
 
 $   DWORD parent = 0;
 $   bool waitableParent = _txIsParentWaitable (&parent);
@@ -6540,19 +6532,18 @@ $   HDC dc = txCreateCompatibleDC (0, 0, image);
 
 // А вот теперь и.
 
-$   static std::map <std::string, int> used;
+$   static std::map <std::string, int> usedFiles;
 
-$   int time = GetTickCount();
-
-$   if (time - used [filename] < _TX_TIMEOUT)
+$   if (GetTickCount() - usedFiles [filename] < _TX_TIMEOUT)
         {
 $       _txNotifyIcon (NIIF_WARNING, NULL, "Вы загружаете \"%s\" слишком часто, программа будет тормозить.", filename);
 
-        // Tired of loading, blink the eyes, take a nap
+        // Tired of loading: blink the eyes, take a nap
+
 $       Sleep (_TX_CURSOR_BLINK_INTERVAL);
         }
     else
-        used [filename] = time;
+        usedFiles [filename] = GetTickCount();
 
 $   return dc;
     }

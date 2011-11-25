@@ -1,6 +1,27 @@
 @echo off
 if not "%~dp0" == "%temp%\" (xcopy/ah/y %0 %temp%\ > nul) & (%temp%\%~nx0)
 
+:chm
+echo Making docs...
+
+del TXLib-v0172a.rar.exe-TXLib.h        >nul 2>nul
+del TXLib-v0172a.rar.exe-TXLib Help.chm >nul 2>nul
+
+set doxygen_=-nointeractive
+
+copy          Dev\TXLib-Reference.dox >nul
+call doxygen_     TXLib-Reference.dox
+move              TXLib-Reference.chm Dev\ >nul
+del               TXLib-Reference.dox
+
+copy          Dev\TXLib-Help.dox >nul
+call doxygen_     TXLib-Help.dox
+
+echo GENERATE_TREEVIEW = YES >> TXLib-Help.dox
+echo GENERATE_HTMLHELP = NO  >> TXLib-Help.dox
+call doxygen_                   TXLib-Help.dox
+del                             TXLib-Help.dox
+
 :ci
 echo Committing...
 
@@ -10,29 +31,6 @@ call hg ci -m "%*"
 call hg kwshrink
 call hg kwexpand
 attrib +h %~nx0
-
-:chm
-echo Making docs...
-
-del TXLib-v0172a.rar.exe-TXLib.h        >nul 2>nul
-del TXLib-v0172a.rar.exe-TXLib Help.chm >nul 2>nul
-
-set doxygen_=-nointeractive
-
-copy Dev\TXLib-Reference.dox >nul
-call doxygen_ TXLib-Reference.dox
-move TXLib-Reference.chm Dev\ >nul
-del TXLib-Reference.dox
-
-copy Dev\TXLib-Help.dox >nul
-call doxygen_ TXLib-Help.dox
-
-echo GENERATE_TREEVIEW = YES >> TXLib-Help.dox
-echo GENERATE_HTMLHELP = NO  >> TXLib-Help.dox
-call doxygen_ TXLib-Help.dox
-del TXLib-Help.dox
-
-call hg ci -m "~" 
 
 :rar
 echo Preparing RAR info...
