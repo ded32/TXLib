@@ -338,6 +338,7 @@
 #include <math.h>
 
 #include <iostream>
+#include <map>
 #include <vector>
 #include <string>
 #include <algorithm>
@@ -1524,6 +1525,11 @@ HDC txCreateCompatibleDC (int sizeX, int sizeY, HBITMAP bitmap = NULL);
 //!          текущей папкой среды программирования. Текущую папку программы можно посмотреть по
 //!          команде About в системном меню (она указана там как "Run from").
 //!
+//! @note    <b>НЕ НАДО часто загружать</b> одно и то же изображение, особенно в цикле.
+//!          От этого программа начинает тормозить! \n\n
+//!          Загрузите один раз перед циклом, потом используйте много раз.
+//!          Только не забудьте уничтожить DC, когда он будет не нужен.
+//!
 //! @see     txCreateWindow(), txCreateCompatibleDC(), txLoadImage(), txDeleteDC(), txBitBlt(), txAlphaBlend(),
 //!          txTransparentBlt()
 //! @usage
@@ -1532,7 +1538,15 @@ HDC txCreateCompatibleDC (int sizeX, int sizeY, HBITMAP bitmap = NULL);
 //!          HDC background = txLoadImage ("Resources\\Images\\Background.bmp");
 //!          if (!background) MessageBox (txWindow(), "Cannot load background", "Epic fail", 0);
 //!
+//!          // НЕ НАДО часто загружать одно и то же изображение, особенно в цикле.
+//!          // От этого программа начинает тормозить!
+//!
+//!          // Загрузите один раз перед циклом, потом используйте много раз.
+//!          // Только не забудьте уничтожить DC, когда он будет не нужен.
+//!
 //!          txBitBlt (txDC(), 0, 0, 800, 600, background, 0, 0);
+//!
+//!          ...
 //!          txDeleteDC (background);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -1555,7 +1569,15 @@ HDC txLoadImage (const char filename[]);
 //!          HDC background = txLoadImage ("Resources\\Images\\Background.bmp");
 //!          if (!background) MessageBox (txWindow(), "Cannot load background", "Oh, not now", 0);
 //!
+//!          // НЕ НАДО часто загружать одно и то же изображение, особенно в цикле.
+//!          // От этого программа начинает тормозить!
+//!
+//!          // Загрузите один раз перед циклом, потом используйте много раз.
+//!          // Только не забудьте уничтожить DC, когда он будет не нужен.
+//!
 //!          txBitBlt (txDC(), 0, 0, 800, 600, background, 0, 0);
+//!
+//!          ...
 //!          txDeleteDC (background);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -1616,7 +1638,15 @@ bool txDeleteDC (HDC* dc);
 //!          HDC background = txLoadImage ("Resources\\Images\\Background.bmp");
 //!          if (!background) MessageBox (txWindow(), "Cannot load background", "Once again :(", 0);
 //!
+//!          // НЕ НАДО часто загружать одно и то же изображение, особенно в цикле.
+//!          // От этого программа начинает тормозить!
+//!
+//!          // Загрузите один раз перед циклом, потом используйте много раз.
+//!          // Только не забудьте уничтожить DC, когда он будет не нужен.
+//!
 //!          txBitBlt (txDC(), 0, 0, 800, 600, background, 0, 0);
+//!
+//!          ...
 //!          txDeleteDC (background);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -1650,6 +1680,8 @@ bool txBitBlt (HDC dest, int xDest, int yDest, int width, int height,
 //!          use original function TransparentBlt and don't mess with stupid TX-based tools.
 //!          (See implementation of txTransparentBlt in TXLib.h).
 //!
+//! @note    Если TransparentBlt не работает, используйте функцию AlphaBlend, она вообще лучше.
+//!
 //! @see     txBitBlt(), txTransparentBlt(), txLoadImage(), txCreateCompatibleDC()
 //! @usage
 //!          Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
@@ -1657,7 +1689,15 @@ bool txBitBlt (HDC dest, int xDest, int yDest, int width, int height,
 //!          HDC superman = txLoadImage ("Resources\\Images\\Superman.bmp");
 //!          if (!superman) MessageBox (txWindow(), "Cannot load superman, all the monsters will succeed", "Sorry", 0);
 //!
+//!          // НЕ НАДО часто загружать одно и то же изображение, особенно в цикле.
+//!          // От этого программа начинает тормозить!
+//!
+//!          // Загрузите один раз перед циклом, потом используйте много раз.
+//!          // Только не забудьте уничтожить DC, когда он будет не нужен.
+//!
 //!          txTransparentBlt (txDC(), 0, 0, 800, 600, superman, 0, 0);
+//!
+//!          ...
 //!          txDeleteDC (superman);  // So pity :(
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -1699,8 +1739,8 @@ bool txTransparentBlt (HDC dest, int xDest, int yDest, int width, int height,
 //!          Альфа-канал можно сделать, например, в Adobe Photoshop, командой
 //!          "Новый канал (New Channel)" в палитре каналов (Channels). Черный
 //!          цвет в альфа-канале соответствует полной прозрачности, белый -
-//!          полной непрозрачности. При этом в прозрачных областях само изображение
-//!          (в каналах R, G, B) должно быть черным, и чем прозрачнее, тем чернее.
+//!          полной непрозрачности. <b>При этом в прозрачных областях само изображение
+//!          (в каналах R, G, B) должно быть черным, и чем прозрачнее, тем чернее.</b>
 //!
 //!          Строго говоря, надо умножить каналы R,G,B на альфа-канал:
 //!          <tt>R,G,B *= A</tt>. Получится вот что:
@@ -1729,9 +1769,17 @@ bool txTransparentBlt (HDC dest, int xDest, int yDest, int width, int height,
 //!          Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
 //!          HDC batman = txLoadImage ("Resources\\Images\\Batman.bmp");
-//!          if (!batman) MessageBox (txWindow(), "Your call to Batman failed", "Help yourself out", 0);
+//!          if (!batman) MessageBox (txWindow(), "Call to Batman failed", "Save yourself", 0);
+//!
+//!          // НЕ НАДО часто загружать одно и то же изображение, особенно в цикле.
+//!          // От этого программа начинает тормозить!
+//!
+//!          // Загрузите один раз перед циклом, потом используйте много раз.
+//!          // Только не забудьте уничтожить DC, когда он будет не нужен.
 //!
 //!          txAlphaBlend (txDC(), 0, 0, 800, 600, batman, 0, 0);
+//!
+//!          ...
 //!          txDeleteDC (batman);  // Don't worry, batman will return in "Batman returns" movie
 //!          ...
 //!
@@ -2247,7 +2295,8 @@ double txQueryPerformance();
 //! @warning sizearr() выдает неверный размер, если определение массива вместе с его размером,
 //!          известным при компиляции, недоступно в месте использования sizearr(). См. пример ниже.
 //!
-//! @note    В Microsoft Visual Studio 6 макрос SIZEARR() недоступен.
+//! @note    В Microsoft Visual Studio 6 макрос SIZEARR() недоступен - у ее компилятора недостаточно
+//!          сил, чтобы его скомпилировать :(
 //!
 //! @usage
 //! @code
@@ -2428,7 +2477,7 @@ inline int random (int range);
 //!          if (money < 0)
 //!              {
 //!              char message[100] = "Maybe...";
-//!              sprintf ("Играли в лотерею? Верните %d рублей", -money);
+//!              sprintf ("Проиграли в лотерею? Отдайте %d рублей", -money);
 //!              MessageBox (txWindow(), message, "Быстро!", 0);
 //!              }
 //! @endcode
@@ -2467,7 +2516,7 @@ inline double random (double left, double right);
 //! @see     MAX()
 //! @usage
 //! @code
-//!          if (MIN (3, 7) != 3) printf ("Your CPU is still broken, throw it away again.");
+//!          if (MIN (3, 7) != 3) printf ("Your CPU is still broken, throw it away twice.");
 //! @endcode
 //! @hideinitializer
 //}-------------------------------------------------------------------------------------------
@@ -2651,7 +2700,7 @@ template <typename T> inline T txUnlock (T value);
 //!          Если система рисования не готова, возвращается значение false.
 //!
 //! @note    Если система рисования не готова (txDC() возвращает NULL),
-//!          то команда GDI не выполняется, а txGDI() возвращает значение false.
+//!          то команда GDI не выполняется, а txGDI() возвращает значение false. \n
 //!
 //! @note    Если в вызове функции GDI используются запятые, то используйте двойные
 //!          скобки, чтобы получился один параметр, так как txGDI() все-таки макрос.
@@ -4598,7 +4647,7 @@ $   int isMaster = (canvas)? (GetWindowLong (canvas, GWL_STYLE) & WS_SYSMENU) : 
 $   static char title [_TX_BUFSIZE] = "";
 $   if (wnd) GetWindowText (wnd, title, sizeof (title));
 $   strncat_s (title, " [ЗАВЕРШЕНО]", sizeof (title) - 1);
-$   if (wnd) SetWindowText (wnd, title);
+$   if (wnd) SendMessage (wnd, WM_SETTEXT, NULL, (LPARAM) title);
 
 $   DWORD parent = 0;
 $   bool waitableParent = _txIsParentWaitable (&parent);
@@ -6488,6 +6537,22 @@ $   HBITMAP image = (HBITMAP) Win32::LoadImage (NULL, filename, IMAGE_BITMAP, 0,
 $   if (!image) return NULL;
 
 $   HDC dc = txCreateCompatibleDC (0, 0, image);
+
+// А вот теперь и.
+
+$   static std::map <std::string, int> used;
+
+$   int time = GetTickCount();
+
+$   if (time - used [filename] < _TX_TIMEOUT)
+        {
+$       _txNotifyIcon (NIIF_WARNING, NULL, "Вы загружаете \"%s\" слишком часто, программа будет тормозить.", filename);
+
+        // Tired of loading, blink the eyes, take a nap
+$       Sleep (_TX_CURSOR_BLINK_INTERVAL);
+        }
+    else
+        used [filename] = time;
 
 $   return dc;
     }
