@@ -47,8 +47,8 @@
 
                 Официальный сайт библиотеки:
                 <a href=http://ded32.net.ru>ded32.net.ru.</a>
-                См. также <a href=http://txlib.sourceforge.net>
-                страницу проекта на SourceForge.</a>
+                См. также <a href=http://txlib.sourceforge.net> страницу проекта на SourceForge</a>
+                и <a href=http://code.google.com/p/txlib>на Google Code.</a>
 
     @warning    <b>Это альфа-версия.
                 Для использования требуется согласование с автором библиотеки.</b> @n
@@ -196,4 +196,5 @@
       <b>Предложить улучшение</b></a>
 
 */ 
+
 
