@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// Uninstall program for the TX Application Wizard - (c) Ded, 2006
+// Uninstall script for the TX Application Wizard - (c) Ded, 2006
 //-----------------------------------------------------------------------------
 
 var Shell = WScript.CreateObject ("WScript.Shell");
@@ -13,8 +13,8 @@ function main (argc, argv)
     var cmd = "Setup.js /uninstall ";
     for (var i = 0; i < argc; i++) cmd += argv (i);
 
-    if (!Ask ("\n"+"В Вашей совести не осталось достаточно места для совершения    \n" +
-                   "этого поступка."+"\n\n"+"Очистить совесть?  :)")) return;
+    if (!Ask ("В Вашей совести не осталось достаточно места для совершения    \n" +
+              "этого поступка."+"\n\n"+"Очистить совесть?  :)")) return;
 
     Shell.Run (cmd);
     }

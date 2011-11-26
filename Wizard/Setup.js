@@ -1,5 +1,5 @@
 //=============================================================================
-// Setup program for the TX Application Wizard - (c) Ded, 2006
+// Setup script for the TX Application Wizard - (c) Ded, 2006-2011
 // Currently supporting: MSVS 2003-2010, MSVS 6.0, CodeBlocks, Dev-CPP
 //=============================================================================
 
@@ -12,22 +12,25 @@ var Action       = "install";
 
 //-----------------------------------------------------------------------------
 
-var Shell        = WScript.CreateObject ("WScript.Shell");
-var FS           = WScript.CreateObject ("Scripting.FileSystemObject");
-
-main (WScript.Arguments.length, WScript.Arguments);
+var Shell   = WScript.CreateObject ("WScript.Shell");
+var FS      = WScript.CreateObject ("Scripting.FileSystemObject");
+var Desktop = Shell.SpecialFolders ("Desktop");
+var Startup = Shell.SpecialFolders ("Startup");
 
 //-----------------------------------------------------------------------------
 
-function main (argc, argv)
+if (IgnoreErrors)  main_IgnoreErrors (WScript.Arguments.length, WScript.Arguments);
+else               main              (WScript.Arguments.length, WScript.Arguments);
+
+function main_IgnoreErrors (argc, argv)
     {
-    try { main_IgnoreErrors (argc, argv); }
+    try { return main (argc, argv); } 
     catch (e) {}
     }
 
 //-----------------------------------------------------------------------------
 
-function main_IgnoreErrors (argc, argv)
+function main (argc, argv)
     {
     for (var i = 0; i < argc; i++)
         {
@@ -38,8 +41,12 @@ function main_IgnoreErrors (argc, argv)
     var src = FS.GetAbsolutePathName (FS.FolderExists ("Wizard")? "Wizard" : ".");
     if (src == null || src == "") src = ".";
 
+    var txFolder = FS.GetAbsolutePathName (src + "\\..");
+    
     src += "\\" + FilesPath;
     Debug ("main(): src = " + src);
+
+    try { ProcessRegAndLnk (txFolder, src); } catch (e) {}
 
     if (!FS.FolderExists (src)) return Error ("Cannot find Wizard folder " + src);
 
@@ -59,13 +66,30 @@ function main_IgnoreErrors (argc, argv)
 
     if (!ok) return Error ("Cannot find compiler(s) or errors occured.");
 
-    try 
+    if (Action == "install" && !DebugMode) Shell.Run (txFolder);
+
+    return 0;
+    }
+
+//-----------------------------------------------------------------------------
+
+function ProcessRegAndLnk (txFolder, src)
+    {                              
+    if (Action == "install")
         {
-        if (Action == "install" && !DebugMode) 
-            Shell.Run (FS.GetAbsolutePathName (src + "\\..\\..\\"));
+        Shell.RegWrite ("HKCU\\Software\\TX Library\\ProductDir", txFolder);
+
+        CreateShortcut (Desktop + "\\ßðëûê äëÿ TX.lnk", txFolder, "", "", 
+                        "Ïàïêà TX Library", src + "\\VS\\TX Application.ico");
         }
 
-    catch (e) {}
+    if (Action == "uninstall")
+        {
+        DeleteFile (Desktop + "\\ßðëûê äëÿ TX.lnk", DebugMode);
+        DeleteFile (Startup + "\\TXUpdate.lnk",     DebugMode);
+
+        Shell.RegDelete ("HKCU\\Software\\TX Library\\");
+        }
     }
 
 //=============================================================================
@@ -515,6 +539,24 @@ function CreateFolder (folder)
 
 //-----------------------------------------------------------------------------
 
+function CreateShortcut (lnkName, target, args, workDir, descr, icon, wndStyle)
+    {
+    var lnk = Shell.CreateShortcut (lnkName);
+
+    lnk.TargetPath       = target;
+    lnk.Arguments        = args;
+    lnk.WorkingDirectory = workDir;
+    lnk.Description      = descr;
+    lnk.IconLocation     = icon;
+    lnk.WindowStyle      = wndStyle;
+
+    lnk.Save();
+
+    return lnk;
+    }
+
+//-----------------------------------------------------------------------------
+
 function Error (e, msg)
     {
     var descr = "";
@@ -564,5 +606,4 @@ function Echo (msg)
     return Shell.Popup (msg + "    ", 10, "TX Application Wizard Setup", 
                         OK + Information);
     }
-
 
