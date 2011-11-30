@@ -51,15 +51,14 @@ function main (argc, argv)
     if (!FS.FolderExists (src)) return Error ("Cannot find Wizard folder " + src);
 
     var ok = 0;
+    ok += VS_Setup  ("10.0", src + "\\VS");
     ok += VS_Setup  ("9.0",  src + "\\VS");
     ok += VS_Setup  ("8.0",  src + "\\VS");
     ok += VS_Setup  ("7.1",  src + "\\VS");
     ok += VS_Setup  ("7.0",  src + "\\VS");
-    ok && VS_HelpSetup      (src + "\\VS\\Help");
-
-    ok += VS_Setup  ("10.0", src + "\\VS");
-
     ok += VS6_Setup ("6.0",  src + "\\VS6");
+
+//  ok && VS_HelpSetup      (src + "\\VS\\Help");
 
     ok += DevCPP_Setup      (src + "\\DevCPP");
     ok += CodeBlocks_Setup  (src + "\\CodeBlocks");

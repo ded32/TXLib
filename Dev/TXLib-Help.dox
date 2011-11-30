@@ -12,7 +12,7 @@ IGNORE_PREFIX          = tx TX TX_ TXLib.h
 PREDEFINED             = _TX_CHECK_RESULT= \
                          _TX_CHECK_FORMAT=
 
-EXCLUDE_PATTERNS       = */_OFF/* */.hg/* */Wizard/* */*_/* 
+EXCLUDE_PATTERNS       = */_OFF/* */.hg/* */Wizard/* */*_/*
 
 EXTRACT_ALL            = NO
 INTERNAL_DOCS          = NO
@@ -344,8 +344,4 @@ WARN_IF_DOC_ERROR      = YES
 WARN_NO_PARAMDOC       = YES
 WARN_FORMAT            = "$file:$line: $text"
 WARN_LOGFILE           = 
-
-
-
-
 
