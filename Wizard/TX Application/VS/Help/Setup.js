@@ -12,19 +12,19 @@ var Action       = "install";
 var Shell        = WScript.CreateObject ("WScript.Shell");
 var FS           = WScript.CreateObject ("Scripting.FileSystemObject");
 
-main (WScript.Arguments.length, WScript.Arguments);
+main_IgnoreErrors (WScript.Arguments.length, WScript.Arguments);
 
 //-----------------------------------------------------------------------------
 
-function main (argc, argv)
+function main_IgnoreErrors (argc, argv)
     {
-    try { main_IgnoreErrors (argc, argv); }
+    try { main (argc, argv); }
     catch (e) {}
     }
 
 //-----------------------------------------------------------------------------
 
-function main_IgnoreErrors (argc, argv)
+function main (argc, argv)
     {
     if (argc > 0 && argv (0) == "/debug")     DebugMode  = true;
     if (argc > 0 && argv (0) == "/uninstall") Action = "uninstall";
