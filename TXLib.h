@@ -4382,7 +4382,7 @@ DECLARE_INTERFACE_ (IShellLinkDataList, IUnknown)
     STDMETHOD (GetFlags)        (THIS_ DWORD* flags)                PURE;
     STDMETHOD (SetFlags)        (THIS_ DWORD  flags)                PURE;
 
-    private:
+    protected:
     virtual ~IShellLinkDataList();
     };
 
@@ -4652,7 +4652,7 @@ $   int isMaster = (canvas)? (GetWindowLong (canvas, GWL_STYLE) & WS_SYSMENU) : 
 $   static char title [_TX_BUFSIZE] = "";
 $   if (wnd) GetWindowText (wnd, title, sizeof (title));
 $   strncat_s (title, " [ЗАВЕРШЕНО]", sizeof (title) - 1);
-$   if (wnd) SendMessage (wnd, WM_SETTEXT, NULL, (LPARAM) title); // SetWindowText sometimes freezes
+$   if (wnd) SendMessage (wnd, WM_SETTEXT, 0, (LPARAM) title); // SetWindowText sometimes freezes
 
 $   DWORD parent = 0;
 $   bool waitableParent = _txIsParentWaitable (&parent);
@@ -5898,7 +5898,7 @@ int txOutputDebugPrintf (const char format[], ...)
     OutputDebugString (str);
 
     if (print)
-        printf (str);
+        printf ("%s", str);
 
     if (msgbox)
         MessageBox ((txWindow()? txWindow() : Win32::GetConsoleWindow()),
@@ -6545,9 +6545,9 @@ $   HDC dc = txCreateCompatibleDC (0, 0, image);
 
 // А вот теперь и.
 
-$   static std::map <std::string, int> usedFiles;
+$   static std::map <std::string, unsigned> usedFiles;
 
-$   if (GetTickCount() - usedFiles [filename] < _TX_TIMEOUT)
+$   if ((long) (GetTickCount() - usedFiles [filename]) < _TX_TIMEOUT)
         {
 $       _txNotifyIcon (NIIF_WARNING, NULL, "Вы загружаете \"%s\" слишком часто, программа будет тормозить.", filename);
 
@@ -7583,4 +7583,5 @@ struct _txSaveConsoleAttr
 //============================================================================================
 // EOF
 //============================================================================================
+
 

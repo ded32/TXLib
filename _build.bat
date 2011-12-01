@@ -135,8 +135,7 @@ goto end
 :push
 echo Pushing to Google Code...
 
-%do% _OFF\Bin\hg-push
-%do% echo Finished
+%do% call _OFF\Bin\hg-push
 
 goto end
 
