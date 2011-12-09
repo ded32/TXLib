@@ -261,7 +261,7 @@ void doSleep (int time)
 
     double delay = (GetAsyncKeyState (VK_RIGHT)? 0 : DELAY);
 
-    txSleep ((int) (time * delay + 0.5));
+    txSleep (time * delay);
 
     while (GetAsyncKeyState (VK_DOWN)) txSleep (10);
 
@@ -965,13 +965,13 @@ void drawLeafPart (int x, int y, int size)
     txSetColor (TX_TRANSPARENT);
 
     txSetFillColor (GREEN_DARK);
-    txCircle ((int) (x-0.3*size), (int) (y+0.7*size), size);
+    txCircle (x-0.3*size, y+0.7*size, size);
 
     txSetFillColor (GREEN_MEDIUM);
-    txCircle ((int) (x-0.5*size), (int) (y-0.5*size), size);
+    txCircle (x-0.5*size, y-0.5*size, size);
 
     txSetFillColor (GREEN_LIGHT);
-    txCircle ((int) (x+0.7*size), (int) (y-0.3*size), size);
+    txCircle (x+0.7*size, y-0.3*size, size);
     }
 
 void drawLeafRow (int x, int y, int leafNumber, int leafSize)
@@ -991,7 +991,7 @@ void drawFruitRow (int x, int y, int leafNumber, int leafsize, HDC fruit)
     txBegin();
 
     for (int i = 0; i < leafNumber-1; i++)
-        txTransparentBlt (txDC(), (int) (x - totalsize/2 + i * (leafsize*2 + space) + leafsize*1.8), y-15, 30, 30, fruit, 0, 0, TX_BLACK);
+        txTransparentBlt (txDC(), x - totalsize/2 + i * (leafsize*2 + space) + leafsize*1.8, y-15, 30, 30, fruit, 0, 0, TX_BLACK);
 
     txEnd();
     }
@@ -1092,25 +1092,25 @@ void drawTurtleBody (int x, int y, int width, int height, int walkingPos, COLORR
     txPolygon (polygon, 5);
 
     txEllipse (x - walkingPos/3, y + height *3/4, x + width, y + height);
-    txEllipse (x + width, y + walkingPos/2, (int) (x + width*1.3), (int) (y + height*0.4 + walkingPos/2));
+    txEllipse (x + width, y + walkingPos/2, x + width*1.3, y + height*0.4 + walkingPos/2);
 
     txSetColor (TX_TRANSPARENT);
     txPolygon (polygon, 5);
 
     txSetFillColor (eye);
     txSetColor (eyeBorder);
-    txEllipse ((int) (x + width * 1.1), (int) (y + height * 0.05 + walkingPos/2 + walkingPos/5),
-               (int) (x + width * 1.2), (int) (y + height * 0.3  + walkingPos/2 - walkingPos/3));
+    txEllipse (x + width * 1.1, y + height * 0.05 + walkingPos/2 + walkingPos/5,
+               x + width * 1.2, y + height * 0.3  + walkingPos/2 - walkingPos/3);
 
     txSetFillColor (eyeBorder);
-    txCircle ((int) (x + width * 1.15), (int) (y + height * 0.15 + walkingPos / 2), 2);
+    txCircle (x + width * 1.15, y + height * 0.15 + walkingPos / 2, 2);
 
     txSetFillColor (body);
     txSetColor (border, 2);
-    txCircle ((int) (x + width * 0.9 - walkingPos), y + height, width / 16);
-    txCircle ((int) (x + width * 0.8 + walkingPos), y + height, width / 16);
-    txCircle ((int) (x + width * 0.3 - walkingPos), y + height, width / 16);
-    txCircle ((int) (x + width * 0.2 + walkingPos), y + height, width / 16);
+    txCircle (x + width * 0.9 - walkingPos, y + height, width / 16);
+    txCircle (x + width * 0.8 + walkingPos, y + height, width / 16);
+    txCircle (x + width * 0.3 - walkingPos, y + height, width / 16);
+    txCircle (x + width * 0.2 + walkingPos, y + height, width / 16);
 
     txBegin();
     txTransparentBlt (txDC(), x + width/20, y + height/10 + walkingPos/3, width-1, height,
@@ -1151,8 +1151,8 @@ void drawBaloon (int x, int y, int radius, int sizeOfStripe, COLORREF centerStri
     for (number = 0; number < radius / sizeOfStripe; number++)
         {
         txSetColor (border, 1);
-        txLine (x - radius + number * sizeOfStripe,     y, x - radius/2 + number * sizeOfStripe / 2, (int) (y + radius * 1.5));
-        txLine (x + radius - number * sizeOfStripe - 1, y, x + radius/2 - number * sizeOfStripe / 2, (int) (y + radius * 1.5));
+        txLine (x - radius + number * sizeOfStripe,     y, x - radius/2 + number * sizeOfStripe / 2, y + radius * 1.5);
+        txLine (x + radius - number * sizeOfStripe - 1, y, x + radius/2 - number * sizeOfStripe / 2, y + radius * 1.5);
 
         txSetColor (TX_BLACK, 1);
         txSetFillColor ((number % 2 == 0)? centerStripe : secondStripe);
@@ -1164,7 +1164,7 @@ void drawBaloon (int x, int y, int radius, int sizeOfStripe, COLORREF centerStri
     txEllipse (x - sizeOfStripe / 2, y - radius, x + sizeOfStripe / 2, y + radius);
 
     txSetColor (border);
-    txLine (x, y + radius, x, (int) (y + radius * 1.5));
+    txLine (x, y + radius, x, y + radius * 1.5);
     }
 
 void calculateTables()
@@ -1662,7 +1662,7 @@ void printEffect (int x, int y, const char* text, int lenght, int delay)
     for (int i = 0; i < lenght; i++)
         {
         char buf[2] = { text[i] };
-        txTextOut ((int) (x + txGetTextExtentX (text) * i / lenght * 1.2), y, buf);
+        txTextOut (x + txGetTextExtentX (text) * i / lenght * 1.2, y, buf);
 
         doSleep (delay);
         }
@@ -1745,7 +1745,7 @@ void fromAssemblerAndUpToTheVeryEnd()
         txSetFillColor (TX_BLACK);
         txClear();
 
-        int roundY = (int)sourceCodeYScrolled;
+        int roundY = (int) sourceCodeYScrolled;
 
         HDC hDC = txDC();
         txBitBlt (hDC, 0,     - (roundY % 600), 800, 600, sourceCodeParts[roundY / 600    ], 0, 0);

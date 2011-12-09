@@ -88,8 +88,6 @@ void GraphView_t::draw (unsigned what) const
     txSelectFont ("Arial", 12);
     txSetTextAlign();
 
-    POINT pos = MousePos;
-
     if (what & ViewEdges)
         for (int i = 0; i < graph.size_; i++)
             for (int j = 0; j < graph.size_; j++)

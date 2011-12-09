@@ -12,6 +12,31 @@
 
 //----------------------------------------------------------------------------
 
+void DrawTree (double x, double y, double length, double angle);
+
+//----------------------------------------------------------------------------
+
+int main ()
+    {
+    txCreateWindow (800, 600);
+    txBegin();
+
+    while (!GetAsyncKeyState (VK_ESCAPE))
+        {
+        txSetFillColor (TX_BLACK);
+        txClear();
+
+        DrawTree (400, 0, 100, txPI/2);
+
+        txSleep (100);
+        }
+
+    txEnd();
+    return 0;
+    }
+
+//----------------------------------------------------------------------------
+
 void DrawTree (double x, double y, double length, double angle)
     {
     if (length <= 0) return;
@@ -38,31 +63,9 @@ void DrawTree (double x, double y, double length, double angle)
     double x1 = x + length * cos (angle),
            y1 = y + length * sin (angle);
 
-    txLine ((int)x, 600 - (int)y, (int)x1, 600 - (int)y1);
+    txLine (x, 600 - y, x1, 600 - y1);
 
     DrawTree (x1, y1, length - 10 + random (-1, +1) + height, angle + 0.35 + random (-0.2, +0.2) + wind);
     DrawTree (x1, y1, length - 10 + random (-1, +1) + height, angle - 0.35 - random (-0.2, +0.2) + wind);
     }
-
-//----------------------------------------------------------------------------
-
-int main ()
-    {
-    txCreateWindow (800, 600);
-    txBegin();
-
-    while (!GetAsyncKeyState (VK_ESCAPE))
-        {
-        txSetFillColor (TX_BLACK);
-        txClear();
-
-        DrawTree (400, 0, 100, txPI/2);
-
-        txSleep (100);
-        }
-
-    txEnd();
-    return 0;
-    }
-
 
