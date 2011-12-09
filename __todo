@@ -1,4 +1,8 @@
 
+
+CHG? InvalidateRect to all drawing funcs
+
+
 ADD  tr(msg) { return translation (msg) /*tr from map*/ }
 ADD  VEC/SEH/signal (divide by zero etc)
 
@@ -10,7 +14,6 @@ ADD  doc: GCC 3.x debug: 1) missing initializers -- is normal; release: 1) missi
 ADD  doc: warning level & disablings explained in help
 ADD  doc: "Ошибка в библиотеке"
 FIX  doc: russify help
-ADD  doc: ORFO to doxygen page trailer
 ADD  doc: многофайловый проект, многооконность, anon namespace
 
 Если твоя программа не работает - проверь, включена ли машина.
@@ -50,6 +53,10 @@ ADD  nanoTX
 
 ---
 
+CHG+ _txNotifyIcon to public
+ADD+ doc: link to storage.ded32.net.ru in help mainpage to log help reads: pic-chm, pic-chm-ref, pic-htm
+FIX+ TX_ macro breaks TXLIB #include guard
+ADD+ doc: ORFO to doxygen page trailer
 ADD+ $-printing
 ADD+ $r, $R, $rY - red on yellow, $n = \n, $r = \r
 ADD~ doc: beginners beginners beginners, code with TXLib

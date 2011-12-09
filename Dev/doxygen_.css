@@ -1,5 +1,10 @@
-
-/* The standard CSS for doxygen */
+/*-----------------------------------------------------------------------------
+  doxygen_.css
+ 
+  $Version$
+  $Copyright$
+  $Date$
+ ----------------------------------------------------------------------------*/
 
 body, table, div, p, dl 
     {
@@ -9,6 +14,25 @@ body, table, div, p, dl
     font-size: 15px;
 
 /*  color: #FF0000 */ /* !!! */
+    }
+
+table.smalltext
+    { 
+    border-style: outset;
+    border-color: gray;
+    border-width: 1px;
+    border-spacing: 0px;
+    border-collapse: collapse; 
+    } 
+    
+table.smalltext td 
+    { 
+    border-style: inset;
+    border-color: gray;
+    border-width: 1px;
+    padding: 3px;
+    font-size: small;
+    font-family: Lucida Console, monospace;
     }
 
 /* @group Heading Levels */
