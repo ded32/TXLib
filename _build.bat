@@ -127,11 +127,11 @@ echo Making RAR (%.file%)...
 %do% del              ..\%.file% >> %log% 2>>&1
 %do% rar a -r -s -sfx ..\%.file% -z%Temp%\~log >> %log% 2>>&1
 
+%do% rd/s/q ..\Doc\HTML.ru         >> %log% 2>>&1
+%do% move      Doc\HTML.ru ..\Doc\ >> %log% 2>>&1
+
 %do% cd ..
 %do% rd/s/q __archive
-
-%do% rd/s/q              Doc\HTML.ru  >> %log% 2>>&1
-%do% rar x -o+ %.file% . Doc\HTML.ru\ >> %log% 2>>&1
 
 %do% move /y %.file% _OFF\Public >> %log% 2>>&1
 

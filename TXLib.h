@@ -198,10 +198,13 @@
 
 #if defined (__GNUC__)
 
-    #if (__GNUC__ >= 4) && (__GNUC_MINOR__ >= 3)
+    #define _GCC_VER                   ( __GNUC__*100 + __GNUC_MINOR__*10 + __GNUC_PATCHLEVEL__ )
 
-        #pragma GCC optimize   push
+    #if defined (_GCC_VER) && (_GCC_VER >= 420)
+
+        #if (_GCC_VER >= 460)
         #pragma GCC diagnostic push
+        #endif
 
         #pragma GCC optimize         ("no-strict-aliasing")
         #pragma GCC diagnostic ignored "-Wstrict-aliasing"
@@ -3283,12 +3286,12 @@ int txOutputDebugPrintf (const char format[], ...) _TX_CHECK_FORMAT (1);
 //!          ‘ункци€ формирует сообщение по правилам printf() и выводит во всплывающем окне.
 //!
 //! @warning
-//!        - Ёта функци€ требует, чтобы при компил€ции константа версии Internet Explorer 
+//!        - Ёта функци€ требует, чтобы при компил€ции константа версии Internet Explorer
 //!          @c (_WIN32_IE) была задана не ниже 0x0500. ƒл€ этого надо либо <b>включить TXLib.h
-//!          вместо @c windows.h или перед ним.</b> Ћибо надо самосто€тельно определить @c (#define) 
-//!          эту константу. 
+//!          вместо @c windows.h или перед ним.</b> Ћибо надо самосто€тельно определить @c (#define)
+//!          эту константу.
 //!          <small>— версией Internet Explorer это св€зано потому, что при его установке в Windows
-//!          обновл€ютс€ многие компоненты (например, @c shell32.dll и @c comctl32.dll), которые 
+//!          обновл€ютс€ многие компоненты (например, @c shell32.dll и @c comctl32.dll), которые
 //!          вли€ют на функциональность системы независимо от использовани€ браузера.</small>
 //!        - —ообщение не должно превышать _TX_BUFSIZE символов, иначе оно обрезаетс€.
 //!
@@ -3297,7 +3300,7 @@ int txOutputDebugPrintf (const char format[], ...) _TX_CHECK_FORMAT (1);
 //! @code
 //!          int platform = 3;
 //!          ...
-//!          txNotifyIcon (NIIF_INFO, "”важаемые пассажиры", 
+//!          txNotifyIcon (NIIF_INFO, "”важаемые пассажиры",
 //!                        "ѕоезд на  удыкину гору отправл€етс€ с %d-го пути.", platform);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -5981,7 +5984,7 @@ $   if (nid.hIcon) DestroyIcon (nid.hIcon) asserted;
     #else
 
 $   char nid_szInfo[_TX_BUFSIZE] = "";
-$   _vsnprintf_s (nid_szInfo, sizeof (nid_szInfo) _TX_TRUNCATE, info, arg);
+$   _vsnprintf_s (nid_szInfo, sizeof (nid_szInfo) _TX_TRUNCATE, format, arg);
 $   txOutputDebugPrintf (_TX_VERSION " - Icon notification (NOT displayed): %s\n", nid_szInfo);
 $   ok = false;
 
@@ -7565,10 +7568,19 @@ struct _txSaveConsoleAttr
 //--------------------------------------------------------------------------------------------
 //! @cond INTERNAL
 
-#if defined (__GNUC__) && (__GNUC__ >= 4) && (__GNUC_MINOR__ >= 3)
+#if defined (_GCC_VER) && (_GCC_VER >= 420)
 
-    #pragma GCC optimize   pop
+    #pragma GCC optimize          ("strict-aliasing")
+
+    #if (_GCC_VER >= 460)
     #pragma GCC diagnostic pop
+
+    #else
+    #pragma GCC diagnostic warning "-Wstrict-aliasing"
+    #pragma GCC diagnostic warning "-Wshadow"
+    #pragma GCC diagnostic warning "-Wold-style-cast"
+
+    #endif
 
     // Still block this warning to avoid reporting about "= {0}" or "= {}" initialization.
 
@@ -7591,14 +7603,14 @@ struct _txSaveConsoleAttr
 
     #pragma warning (default: 4511)             // copy constructor could not be generated
     #pragma warning (default: 4512)             // assignment operator could not be generated
-    #pragma warning (default: 4514)             // unreferenced inline function has been removed
     #pragma warning (default: 4663)             // C++ language change: to explicitly specialize class template
     #pragma warning (default: 4702)             // unreachable code
-    #pragma warning (default: 4786)             // identifier was truncated to '255' characters in the debug information
 
     // This warning really occur at end of compilation, so still block it.
 
+    #pragma warning (disable: 4514)             // unreferenced inline function has been removed
     #pragma warning (disable: 4710)             // function not inlined
+    #pragma warning (disable: 4786)             // identifier was truncated to '255' characters in the debug information
 
 #endif
 
@@ -7621,4 +7633,5 @@ struct _txSaveConsoleAttr
 //============================================================================================
 // EOF
 //============================================================================================
+
 
