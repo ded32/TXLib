@@ -7,6 +7,7 @@
     @section    MainPage              Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib)
    
                 $Version$
+                $Date$
                 $Copyright$
 
     @section    Description           Назначение
@@ -58,7 +59,7 @@
     @section    PlatformsSupported    Поддерживаемые платформы
    
            -    Среды программирования и компиляторы
-             -# CodeBlocks 10.05  + MinGW GCC 4.5.2 (TDM-GCC)
+             -# CodeBlocks 10.05  + MinGW GCC 4.6.1 (TDM-GCC)
              -# CodeBlocks 10.05  + MinGW GCC 4.4.1
              -# CodeBlocks 8.02   + MinGW GCC 3.4.5
              -# CodeBlocks 1.0rc2 + MinGW GCC 3.4.4
@@ -110,19 +111,53 @@
     @section    UsageNotes            Особенности использования
 
     @note    Файл @c TXLib.h должен быть включен <tt>(#include)</tt> в программу:
-             -  До или вместо файла @c Windows.h. Либо надо задать макро @c WINVER не ниже @c 0x0500.
-             -  До или вместо файлов @c String.h или @c StdIO.h, если используется режим строгого
-                соответствия стандарту ANSI.
-             -  После включения библиотек <a href=http://boost.org><tt>boost</tt></a>, использующих модуль
-                @c boost::preprocessor.
+             -  @b До или вместо файла @c @b windows.h. Либо надо задать @c (#define) константы @c WINVER и
+                @c _WIN32_IE не ниже @c 0x0500 и отменить @c (#undef) макросы @c UNICODE и @c _UNICODE.
+             -  @b До или вместо файлов @c @b string.h или @c @b stdio.h, если используется режим строгого
+                соответствия стандарту @b ANSI. Имейте в виду, что эти файлы могут включаться в @c windows.h.
+             -  @b После включения библиотек <a href=http://boost.org><tt>boost</tt></a>, использующих модуль
+                @c @b boost::preprocessor.
                 
+    @title      Опции командной строки: </dt><dd>
+
+    <table class=smalltext>
+                <tr valign=middle><td>           Компилятор                       </td><td> Режим   </td><td> Опции командной строки </td></tr>
+                <tr valign=middle><td rowspan=2> Dev-Cpp 4.9.9.2,  GCC&nbsp;3.4.2 </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  @i -ansi @i -std=c++98           -Wall         -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo </td></tr>
+                <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O2 @i -ansi @i -std=c++98           -Wall         -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo </td></tr>
+                <tr valign=middle><td rowspan=2> CodeBlocks 10.05, GCC&nbsp;3.4.2 </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  @i -ansi @i -std=c++98 -pedantic -Wall         -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo </td></tr>
+                <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O2 @i -ansi @i -std=c++98 -pedantic -Wall         -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo </td></tr>
+                <tr valign=middle><td rowspan=2> CodeBlocks  8.02, GCC&nbsp;3.4.5 </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  @i -ansi @i -std=c++98 -pedantic -Wall         -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo </td></tr>
+                <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O2 @i -ansi @i -std=c++98 -pedantic -Wall         -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo </td></tr>
+                <tr valign=middle><td rowspan=2> CodeBlocks 10.05, GCC&nbsp;4.4.1 </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  @i -ansi @i -std=c++0x -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel </td></tr>
+                <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O2 @i -ansi @i -std=c++0x -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel </td></tr>
+                <tr valign=middle><td rowspan=2> TDM-GCC,          GCC&nbsp;4.6.1 </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  @i -ansi @i -std=c++0x -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel </td></tr>
+                <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O2 @i -ansi @i -std=c++0x -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel </td></tr>
+                <tr valign=middle><td rowspan=2> MSVS&nbsp;6                      </td><td> Debug   </td><td> /D&nbsp;_DEBUG /Od /Gm  /GX /GR    /GZ                                 /MLd     /W4       /ZI     /FD                                                          /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_MBCS </td></tr>
+                <tr valign=middle>                                                     <td> Release </td><td> /D&nbsp;NDEBUG /O2      /GX /GR                                        /ML      /W4               /FD                                                          /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_MBCS </td></tr>
+                <tr valign=middle><td rowspan=2> Intel C++ 9 (MSVS&nbsp;6)        </td><td> Debug   </td><td> /D&nbsp;_DEBUG /Od /Gm  /GX /GR    /GZ                                 /MLd     /W4       /ZI     /FD /Wall /Wcheck /Wport                                     /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_MBCS </td></tr>
+                <tr valign=middle>                                                     <td> Release </td><td> /D&nbsp;NDEBUG /O2      /GX /GR                                        /ML      /W4               /FD /Wall /Wcheck /Wport                                     /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_MBCS </td></tr>
+                <tr valign=middle><td rowspan=2> MSVS&nbsp;2003                   </td><td> Debug   </td><td> /D&nbsp;_DEBUG /Od /Gm  /GS /GR                      /EHsc /RTC1 /RTCc /MTd     /W4 /Wp64 /ZI /TP                                                              /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_MBCS </td></tr>
+                <tr valign=middle>                                                     <td> Release </td><td> /D&nbsp;NDEBUG /O2      /GS /GR                      /EHsc             /MT      /W4 /Wp64 /Zi /TP /FD                                                          /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_MBCS </td></tr>
+                <tr valign=middle><td rowspan=2> Intel C++ 9 (MSVS&nbsp;2003)     </td><td> Debug   </td><td> /D&nbsp;_DEBUG /Od /Gm  /GS /GR /Gd                  /EHsc /RTC1 /RTCc /MTd     /W4 /Wp64 /ZI         /Wall /Wcheck /Wport /Qtrapuv /Qmultibyte-chars /Qvc7.1  /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_MBCS </td></tr>
+                <tr valign=middle>                                                     <td> Release </td><td> /D&nbsp;NDEBUG /O2          /GR /Gd                  /EHsc             /MT      /W4 /Wp64 /Zi     /FD /Wall /Wcheck /Wport          /Qmultibyte-chars /Qvc7.1  /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_MBCS </td></tr>
+                <tr valign=middle><td rowspan=2> MSVS&nbsp;2005                   </td><td> Debug   </td><td> /D&nbsp;_DEBUG /Od /Gm                               /EHsc /RTC1 /RTCc /MDd     /W4 /Wp64 /ZI /TP     /analyze /fp:except                                      /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_UNICODE /D&nbsp;UNICODE </td></tr>
+                <tr valign=middle>                                                     <td> Release </td><td> /D&nbsp;NDEBUG /O2                  /GL              /EHsc             /MD      /W4 /Wp64 /Zi /TP /FD /analyze                                                 /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_UNICODE /D&nbsp;UNICODE </td></tr>
+                <tr valign=middle><td rowspan=2> MSVS&nbsp;2008                   </td><td> Debug   </td><td> /D&nbsp;_DEBUG /Od /Gm                               /EHsc /RTC1 /RTCc /MDd     /W4       /ZI /TP     /analyze /fp:except                                      /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_UNICODE /D&nbsp;UNICODE </td></tr>
+                <tr valign=middle>                                                     <td> Release </td><td> /D&nbsp;NDEBUG /O2                  /GL /Gy /Oi      /EHsc             /MD      /W4       /Zi /TP /FD /analyze                                                 /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_UNICODE /D&nbsp;UNICODE </td></tr>
+                <tr valign=middle><td rowspan=2> MSVS&nbsp;2010                   </td><td> Debug   </td><td> /D&nbsp;_DEBUG /Od /Gm  /GS /GR /Gd             /Oy- /EHsc /RTC1 /RTCc /MDd /MP /W4 /WX-  /ZI /TP     /analyze /fp:except /fp:precise /Zc:wchar_t /Zc:forScope /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_UNICODE /D&nbsp;UNICODE /D&nbsp;CODE_ANALYSIS </td></tr>
+                <tr valign=middle>                                                     <td> Release </td><td> /D&nbsp;NDEBUG /O2 /Gm- /GS /GR /Gd /GL /Gy /Oi /Oy- /EHsc             /MD  /MP /W4 /WX-  /Zi /TP     /analyze            /fp:precise /Zc:wchar_t /Zc:forScope /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_UNICODE /D&nbsp;UNICODE /D&nbsp;CODE_ANALYSIS </td></tr>
+    </table>
+                Эти ключи могут вызывать появление предупреждений для файла @c TXLib.h о символе @c $, использующемся для
+                отладки, и о директиве @c #warning. Они настолько суровы, что могут вызвать <small>@strike Чака Норриса @endstrike</small>
+                предупреждения даже для файлов стандартных библиотек C++ (вне зависимости от того, используется TXLib.h или нет).
+    
     @section    VersionHistory        История изменений
    
     - <b>Версия 0.172</b>
            -#   <b>API</b>
              -# Добавлена cовместимость с MS Visual Studio 2010.
-             -# Соответствие стандарту @c C++0x в MSVS 2010 и GCC 4.5 в режиме
-                компиляции @c -Wall @c -Wextra.
+             -# Соответствие стандарту @c C++0x в MSVS 2010 и GCC 4.6 в режиме
+                компиляции @c -Wall @c -Wextra @c -Weffc++.
              -# Убраны лишние предупреждения о неинициализированнях полях структур при
                 инициализации вида <tt>= {}</tt> (только для компиляторов MS и GCC версии 4).
              -# Изменен диалог About, заголовки окна и окон сообщений.
@@ -133,8 +168,10 @@
                 Добавлены макросы @ref verify, @ref verified. Обеспечена обратная совместимость.
              -# @ref _TX_IMPORT переименован @ref _TX_DLLIMPORT, так больше похоже на __declspec (dllimport).
              -# Убрана облегченная поддержка регионов отсечения (теперь @d только средствами Win32).
+             -# Добавлена системная клавиша Alt+Ctrl+Shift+PrintScreen, временно отменяющая блокировку
+                обновления окна, см. txBegin().
              -# Добавлена многооконность (experimental and not fully documented).
-             -# Файл Graphics.h больше не поддерживается.
+             -# Файл @c Graphics.h больше не поддерживается @d не нужен он никому.
            -#   <b>Документация</b>
              -# Дополнен текст примеров использования, добавлены демонстрационные программы
                 и дополнения от разных авторов (в папке TX/Examples/Demo). Подробно документирован исходный
@@ -188,14 +225,12 @@
 
     @section    Trackers              Сообщения об ошибках
 
-    Тем, кто зарегистрирован на SourceForge.net, можно:
+    Тем, кто зарегистрирован на <a href=https://sourceforge.net/account/login.php>SourceForge.net,</a>
+    можно:
 
     - <a href=https://sourceforge.net/tracker/?func=add&group_id=213688&atid=1026710>
       <b>Сообщить об ошибке</b></a>
     - <a href=https://sourceforge.net/tracker/?func=add&group_id=213688&atid=1026713>
       <b>Предложить улучшение</b></a>
-
 */ 
-
-
 
