@@ -108,7 +108,7 @@ struct vec2d
     vec2d (double px, double py) : x (px),  y (py)  {}
     vec2d (double r)             : x (r),   y (r)   {}
 
-    operator POINT() { POINT p = {(int)(x+0.5), (int)(y+0.5)}; return p; }
+    operator POINT() { POINT p = { (int) round (x), (int) round (y) }; return p; }
     };
 
 //-----------------------------------------------------------------------------

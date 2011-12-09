@@ -43,9 +43,6 @@ void DrawFlag    (int x, int y, int sizeX, int sizeY, COLORREF color, COLORREF b
 
 void DrawFrame   (int sizeX, int sizeY, int size, COLORREF color);
 
-void DrawLine    (double x0, double y0, double x1, double y1);
-void DrawCircle  (double x, double y, double r);
-
 //----------------------------------------------------------------------------
 
 int main()
@@ -156,15 +153,15 @@ void DrawMan (int x, int y, int sizeX, int sizeY, COLORREF color,
     txSetColor     (color);
     txSetFillColor (color);
 
-    DrawLine (x + twist*sizeX, y - 0.35*sizeY, x, y - 0.7*sizeY);
+    txLine (x + twist*sizeX, y - 0.35*sizeY, x, y - 0.7*sizeY);
 
-    DrawLine (x + twist*sizeX, y - 0.35*sizeY, x - (0.5 + legs) * sizeX, y);
-    DrawLine (x + twist*sizeX, y - 0.35*sizeY, x + (0.5 + legs) * sizeX, y);
+    txLine (x + twist*sizeX, y - 0.35*sizeY, x - (0.5 + legs) * sizeX, y);
+    txLine (x + twist*sizeX, y - 0.35*sizeY, x + (0.5 + legs) * sizeX, y);
 
-    DrawLine (x, y - 0.65*sizeY, x - sizeX/2,   y - 0.4*sizeY);
-    DrawLine (x, y - 0.65*sizeY, x + sizeX/1.2, y - (0.7 + hand) * sizeY);
+    txLine (x, y - 0.65*sizeY, x - sizeX/2,   y - 0.4*sizeY);
+    txLine (x, y - 0.65*sizeY, x + sizeX/1.2, y - (0.7 + hand) * sizeY);
 
-    DrawCircle (x, y - sizeY + (0.3 + head) * sizeX, 0.3*sizeX);
+    txCircle (x, y - sizeY + (0.3 + head) * sizeX, 0.3*sizeX);
     }
 
 //----------------------------------------------------------------------------
@@ -187,7 +184,7 @@ void DrawEarth (int x, int y, int sizeX, int sizeY, COLORREF color)
         r -= sizeY/6;
         }
 
-    DrawLine (x - sizeX/2, y, x + sizeX/2, y);
+    txLine (x - sizeX/2, y, x + sizeX/2, y);
     }
 
 //----------------------------------------------------------------------------
@@ -241,8 +238,10 @@ void DrawFlag (int x, int y, int sizeX, int sizeY, COLORREF color, COLORREF bkCo
     {
     txSetColor     (color);
     txSetFillColor (bkColor);
-    DrawLine    (x, y, x, y - sizeY);
+    
+    txLine (x, y, x, y - sizeY);
     txRectangle (x, y - sizeY/2, x + sizeX, y - sizeY);
+    
     txSelectFont ("Times", sizeX/2 + 1);
     txTextOut (x + sizeX/2, y - sizeY*7/8, "C++");
     }
@@ -252,8 +251,10 @@ void DrawFlag (int x, int y, int sizeX, int sizeY, COLORREF color, COLORREF bkCo
 void DrawHello (int x, int y, const char* text, int size, COLORREF color)
     {
     txSetColor (color);
+    
     txSelectFont ("Times", size);
     txSetTextAlign (TA_CENTER);
+    
     txTextOut (x, y, text);
     }
 
@@ -263,20 +264,6 @@ void DrawFrame (int sizeX, int sizeY, int size, COLORREF color)
     {
     txSetColor (color);
     txSetFillColor (TX_TRANSPARENT);
+
     txRectangle (size, size, sizeX-size, sizeY-size);
     }
-
-//----------------------------------------------------------------------------
-
-void DrawLine (double x0, double y0, double x1, double y1)
-    {
-    txLine ((int) (x0 + 0.5), (int) (y0 + 0.5), (int) (x1 + 0.5), (int) (y1 + 0.5));
-    }
-
-//----------------------------------------------------------------------------
-
-void DrawCircle (double x, double y, double r)
-    {
-    txCircle ((int) (x + 0.5), (int) (y + 0.5), (int) (r + 0.5));
-    }
-

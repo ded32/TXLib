@@ -63,7 +63,7 @@ void Ball_t::draw (bool shading) const
             double c = pow (t + 0.05, 0.25);
             txColor     (r*c, g*c, b*c);
             txFillColor (r*c, g*c, b*c);
-            txCircle ((int)x_, (int)y_, (int) (r_ * (1-t) + 0.5));
+            txCircle (x_, y_, r_ * (1-t) + 0.5);
 
             if (GetTickCount() > Time) break;
             }
@@ -72,7 +72,7 @@ void Ball_t::draw (bool shading) const
         {
         txSetColor     (color_);
         txSetFillColor (color_);
-        txCircle ((int)x_, (int)y_, (int)r_);
+        txCircle (x_, y_, r_);
         }
     }
 
@@ -99,6 +99,8 @@ void Ball_t::move (const POINT& d)
     }
 
 //============================================================================
+
+POINT TxGetWindowOrg();
 
 POINT TxGetWindowOrg()
     {

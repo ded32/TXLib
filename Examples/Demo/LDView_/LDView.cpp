@@ -199,7 +199,7 @@ void DrawTree (vec2d pos, double length, double angle)
 
     txSetColor (RGB (128-16, 0, 0), (int) (length / 15 + 1));
 
-    txLine ((int)pos.x, (int)pos.y, (int)p.x, (int)p.y);
+    txLine (pos.x, pos.y, p.x, p.y);
 
                     DrawTree (p, -length * random (0.7, 0.8), angle - random (-0.2, +0.8) - shift.x/50);
                     DrawTree (p, -length * random (0.7, 0.8), angle + random (-0.2, +0.8) - shift.x/50);
