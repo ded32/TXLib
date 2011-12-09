@@ -46,25 +46,24 @@ goto end
 :docs
 echo Making docs...
 
-     set .html=%Temp%\Doxygen\HTML
-%do% set doxygen_=-nointeractive
+%do% del /q ~TXLib.h.sav          >> %log% 2>>&1
+%do% copy    TXLib.h ~TXLib.h.sav >> %log% 2>>&1
+%do% attrib ~TXLib.h.sav +r +h +s >> %log% 2>>&1
+if errorlevel 1 (echo ERROR: Cannot save TXLib.h) & exit
 
 %do% for %%1 in (Dev\TXLib-Help.dox Dev\TXLib-Reference.dox Dev\doxygen_*.* Dev\dot_filter.bat) do copy %%1 >> %log% 2>>&1
+%do% set doxygen_=-nointeractive
 
 :doc-ref
 
-%do% echo HHC_LOCATION = none.exe       >> TXLib-Reference.dox
+%do% sed32 -e "s/namespace { namespace TX {   /            namespace TX {   /" -e "s/^} } /  } /" ~TXLib.h.sav > TXLib.h
+%do% copy /y TXLib.h %Temp%\~TXLib.h >> %log% 2>>&1
+
 %do% echo HTML_FOOTER = doxygen_chm.htm >> TXLib-Reference.dox
 %do% call doxygen_ TXLib-Reference.dox
 
-pushd %.html%
-for %%1 in (*.htm *.map) do (%do% copy %%1 %temp%\~ > nul) & (%do% sed32 "s/anonymous_namespace{TXLib.h}:://g" %temp%\~ > %%1)
-%do% "%ProgramFiles%\HTML Help Workshop\hhc.exe" index.hhp >> %log% 2>>&1
-del %Temp%\~hh*.tmp >> %log% 2>>&1
-popd
-
-%do% del      Dev\TXLib-Reference.chm      >> %log% 2>>&1
-%do% move %.html%\TXLib-Reference.chm Dev\ >> %log% 2>>&1
+%do% del /q Dev\TXLib-Reference.chm      >> %log% 2>>&1
+%do% move /y    TXLib-Reference.chm Dev\ >> %log% 2>>&1
 
 :doc-help
 
@@ -77,6 +76,10 @@ popd
 %do% call doxygen_ TXLib-Help.dox
 
 %do% for %%1 in (TXLib-Help.dox TXLib-Reference.dox doxygen_*.* dot_filter.bat) do del %%1 >> %log% 2>>&1
+del %Temp%\~hh*.tmp >> %log% 2>>&1
+
+%do% attrib  ~TXLib.h.sav -r -h -s >> %log% 2>>&1
+%do% move /y ~TXLib.h.sav TXLib.h  >> %log% 2>>&1
 
 goto end
 
