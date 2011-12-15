@@ -50,12 +50,12 @@ void DrawTree (double x, double y, double length, double angle)
     if (GetAsyncKeyState (VK_UP))    height =               +5;
     if (GetAsyncKeyState (VK_DOWN))  height =               -5;
 
-    double leafs = 0;
-    if (height ==  0) leafs = 20;
-    if (height ==  5) leafs = 25;
-    if (height == -5) leafs = 15;
+    double leaves = 0;
+    if (height ==  0) leaves = 20;
+    if (height ==  5) leaves = 25;
+    if (height == -5) leaves = 15;
 
-    txSetColor ((length > leafs)? RGB (115, 65, 10) : RGB (35, 255, 10),
+    txSetColor ((length > leaves)? RGB (115, 65, 10) : RGB (35, 255, 10),
                 (int) (pow (length/7, 0.9) + 0.5));
 
     // Here comes the tree
@@ -66,6 +66,6 @@ void DrawTree (double x, double y, double length, double angle)
     txLine (x, 600 - y, x1, 600 - y1);
 
     DrawTree (x1, y1, length - 10 + random (-1, +1) + height, angle + 0.35 + random (-0.2, +0.2) + wind);
-    DrawTree (x1, y1, length - 10 + random (-1, +1) + height, angle - 0.35 - random (-0.2, +0.2) + wind);
+    DrawTree (x1, y1, length - 10                           , angle - 0.35 - random (-0.2, +0.2) + wind);
     }
 

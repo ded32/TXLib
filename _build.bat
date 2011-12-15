@@ -16,7 +16,8 @@ set .file=%.file: $=%
 
 set .md5="TXLib Update.md5"
 
-if /i "%1" == "" %0 ci doc rar update push push-doc push-sf
+if /i "%1" == ""    (echo %~n0 ci doc rar update push push-doc push-sf | cliptext) & (exit)
+if /i "%1" == "all"       %0   ci doc rar update push push-doc push-sf
 
 :-------------------------------------------------
 
@@ -152,7 +153,7 @@ echo Copying files for TXUpdate...
 %do% attrib -h %.md5%
 %do% del %.md5% >> %log% 2>>&1
 
-%do% for /r %%1 in (*.*) do (set .f=%%~1) & (set .f=!.f:%cd%\=!) & (set .f=!.f:\=/!) & %do% md5sum "!.f!" >> %.md5%
+%do% for /r %%1 in (*.*) do (set .f=%%~1) & (set .f=!.f:%cd%\=!) & (set .f=!.f:\=/!) & (%do% md5sum "!.f!" >> %.md5%)
 %do% attrib +h %.md5%
 
 %do% popd

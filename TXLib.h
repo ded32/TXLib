@@ -136,8 +136,7 @@
     #endif
     #error TXLib.h: Windows (MSVC/Win32 or GCC/MinGW) is the only supported system, sorry.
     #error
-    #error In Linux or iOS, you should write your own TXLib and share it with your
-    #error friends.
+    #error In Linux or iOS, you should write your own TXLib and share it with your friends.
     #error -----------------------------------------------------------------------------------
     #error
 
@@ -642,13 +641,13 @@ const char* txGetModuleFileName (bool fileNameOnly = true);
 //! @code
 //!          const int MY_PRECIOUS_BLACK     = RGB (  1,   1,   1),
 //!                    MY_DEEP_ROMANTIC_BLUE = RGB (  0,   0, 129),
-//!                    MY_SHINING_GREEN      = RGB (128, 255, 128);
+//!                    MY_SHINING_MOONLIGHT  = RGB (128, 255,  64);
 //!
 //!          txSetColor     (TX_RED);
 //!          txSetFillColor (TX_NULL);
 //!
-//!          txSetFillColor (MY_DEEP_ROMANTIC_BLUE);  // TODO А. Куинджи, "Ночь на Днепре"
-//!          txSetColor     (MY_SHINING_GREEN);
+//!          txSetFillColor (MY_DEEP_ROMANTIC_BLUE);  // А.И. Куинджи, "Лунная ночь на Днепре"
+//!          txSetColor     (MY_SHINING_MOONLIGHT);   // http://tanais.info/art/pic/kuindzhi1.html
 //! @endcode
 //! @hideinitializer
 //}-------------------------------------------------------------------------------------------
@@ -2574,24 +2573,30 @@ template <typename T> inline T zero();
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Misc
-//! @brief   Возведение числа в квадрат
+//! @brief   <i>Очень удобное</i> возведение числа в квадрат.
 //!
 //! @param   x  Число для возведения в него
 //!
 //! @return  Квадрат, полученный путем возведения в него числа, заданного для возведения в квадрат
 //!
-//! @note    Это пример, как <b> не надо </b> писать код @d функция с "медвежьей услугой".
-//!          Многие любят гордо печатать в функции результаты ее вычислений <small>(я не имею
-//!          в виду отладку),</small> вместо того, чтобы тихо возвращать их тому, кто эту функцию
-//!          вызывал. Пусть эти люди почаще пользуются txSqr() для какого-нибудь нужного дела,
-//!          особенно в циклах. См. в исходном тексте TXLib.h код этой навязчивой радости.
+//! @note    Это пример, как <b> не надо </b> писать код: txSqr() @d функция с "медвежьей услугой".
+//!          Иногда встречаются те, кто любит печатать в функции результат ее вычислений <small>(не
+//!          данные для отладки, а именно результат),</small> вместо того, чтобы просто возвращать его
+//!          тому, кто эту функцию вызывал. Пусть эти люди воспользуются приведенной txSqr() для
+//!          какого-нибудь нужного дела, особенно в цикле. Пример, конечно, несколько преувеличен.
+//!          См. в исходном тексте код этой навязчивой радости.
 //! @usage
 //! @code
+//!          printf ("\n" "Радиус\t\t" "Площадь круга\n\n");
+//!
 //!          for (double r = 100; r > 0; r--)
 //!              {
-//!              double s = M_PI * txSqr (r);  // Надолго запомним эту площадь
+//!              printf ("%6.2lf...", r);
 //!
-//!              printf ("Площадь круга с радиусом %lg = %lg\n", r, s);
+//!              double square = M_PI * txSqr (r);  // Надолго запомним эту площадь
+//!              printf ("\b\b\b   \t");
+//!
+//!              printf ("%-.2lf\n", square);
 //!              }
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -2599,14 +2604,27 @@ template <typename T> inline T zero();
 inline
 double txSqr (double x)
     {
-    double sqr = pow (sqrt (x) * sqrt (x), 2);  // Бурная вычислительная деятельность
+    double sqr = pow (sqrt (x) * sqrt (x), sqrt (4.0));  // Бурная вычислительная деятельность
 
     char str[1024] = "";
-    _snprintf_s (str, sizeof (str), "Возвездение дало %g!!!!! Вы рады????    ", sqr);
+    _snprintf_s (str, sizeof (str), "Возведение дало %g!!!!! Вы рады????    ", sqr);
     MessageBox (txWindow(), str, "Получен ОТВЕТ!!!", MB_ICONEXCLAMATION | MB_YESNO) != IDNO ||
-        (MessageBox (txWindow(), "Жаль", "А я так старалась", MB_ICONINFORMATION),
-         MessageBox (txWindow(), "Уйду я от вас       ", "Злые вы",  MB_ICONSTOP),
-         txDestroyWindow());
+        (
+        MessageBox (txWindow(), "Жаль...", "А я так старалась", MB_ICONINFORMATION),
+        MessageBox (txWindow(), "Уйду я от вас       ", "Злые вы...",  MB_ICONSTOP),
+        exit (EXIT_FAILURE), 0
+        );
+
+    #if defined (_WIN32_IE) && (_WIN32_IE >= 0x0500)
+
+    bool txNotifyIcon (unsigned, const char*, const char*, ...);
+    txNotifyIcon (NIIF_INFO, NULL, "\n%s\n", "Высшая математика!  \0"  // А как это работает, а?
+                                             "С ума сойти...      \0"  //
+                                             "а КЭП подтверждает  \0"  //       и кто это будет
+                                             "Главное - отчитаться\0"  //       поддерживать?..
+                                             "Невероятно, но факт \0"
+                                             "Кто бы мог подумать?\0" + GetTickCount() % 6 * 21);
+    #endif
 
     return sqr;  // Ну мы же не звери
     }
@@ -2766,18 +2784,18 @@ template <typename T> inline T txUnlock (T value);
 //============================================================================================
 
 //============================================================================================
-//{          Tune-up constants
-//! @name    Настроечные константы
+//{          Tune-up constants and variables
+//! @name    Настроечные константы и переменные
 //============================================================================================
 //! @{
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Technical
-//! @brief   Запрет статической инициализации TXLib
+//! @brief   Запрет ранней инициализации TXLib
 //!
 //!          Если константа определена с помощью #define до включения TXLib.h в программу,
-//!          статическая инициализация не проводится. По умолчанию она проводится.
+//!          ранняя инициализация (до запуска функции @c main) @b не проводится.
 //!
-//! @note    Статическая инициализация включает:
+//! @note    Ранняя инициализация включает:
 //!        - Открытие окна консоли,
 //!        - Установку кодовой страницы 1251 консоли для поддержки русского языка,
 //!        - Установку русской локали стандартной библиотеки,
@@ -2790,11 +2808,12 @@ template <typename T> inline T txUnlock (T value);
 //!        - Подавление паузы при запуске из сред программирования, заставляющей нажимать на
 //!          клавишу два раза. @n
 //!
-//! @note    Если статическая инициализация запрещена, но создается окно TXLib с помощью
+//! @note    Если ранняя инициализация запрещена, но создается окно TXLib с помощью
 //!          txCreateWindow(), то библиотека все равно будет инициализирована.
 //!
-//!          Может задаваться перед включением TXLib.h в программу.
-//! @see     txCreateWindow(), _TX_ALLOW_KILL_PARENTS, _TX_WAITABLE_PARENTS, _TX_CONSOLE_MODE
+//!          Может задаваться перед @b включением TXLib.h в программу.
+//!
+//! @see     txCreateWindow(), _TX_ALLOW_KILL_PARENTS, _TX_WAITABLE_PARENTS, _txConsoleMode
 //! @usage
 //! @code
 //!          #define _TX_NOINIT
@@ -2820,69 +2839,65 @@ template <typename T> inline T txUnlock (T value);
 //!
 //!          По умолчанию: @c SWP_HIDEWINDOW @d Скрывать консольное окно.
 //!
-//!          Может задаваться перед включением TXLib.h в программу.
+//! @note    Переменная устанавливается @b до открытия окна библиотеки.
 //!
 //! @see     _TX_NOINIT
 //! @usage
 //! @code
-//!          #define _TX_CONSOLE_MODE SWP_SHOWWINDOW // Наоборот, показать окно
-//!          #include "TXLib.h"
+//!          _txConsoleMode = SWP_HIDEWINDOW;  // Всегда скрывать консольное окно
+//!          txCreateWindow (800, 600);
+//!
+//!          _txConsoleMode = SWP_SHOWWINDOW;  // Всегда показывать консольное окно
+//!          txCreateWindow (800, 600);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-#if !defined  (_TX_CONSOLE_MODE)
-    #define    _TX_CONSOLE_MODE           SWP_HIDEWINDOW
-#endif
+unsigned _txConsoleMode                   = SWP_HIDEWINDOW;
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Technical
 //! @brief   Стиль графического окна библиотеки.
 //!
+//! @note    Переменная устанавливается @b до открытия окна библиотеки.
+//!
 //! @note
-//!        - Стиль окна устанавливается @b до открытия окна библиотеки.
 //!        - Если стиль окна содержит @c WS_SYSMENU (значение по умолчанию), окно считается главным.
 //!        - Главное окно должно быть только одно и создаваться первым. При закрытии главного
 //!          окна программа завершается.<br>
 //!          Вспомогательные окна могут создаваться по одному на каждый файл многофайлового
 //!          проекта. При их создании @a не надо указывать в стиле WS_SYSMENU. Для закрытия
 //!          вспомогательных окон используется txDestroyWindow().
-//!
 //! @usage
 //! @code
-//!          _TX_WINDOW_STYLE = ~WS_SYSMENU; // Главное окно без системного меню
+//!          _txWindowStyle &= ~WS_SYSMENU; // Главное окно без системного меню
 //!          txCreateWindow (800, 600);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-unsigned _TX_WINDOW_STYLE = WS_POPUP | WS_BORDER | WS_CAPTION | WS_SYSMENU;
+unsigned _txWindowStyle                   = WS_POPUP | WS_BORDER | WS_CAPTION | WS_SYSMENU;
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Technical
 //! @brief   Шрифт консоли
+//! @note    Переменная устанавливается @b до открытия окна библиотеки.
 //}-------------------------------------------------------------------------------------------
 
-const char     _TX_CONSOLE_FONT[]         = "Lucida Console";
-
-//{-------------------------------------------------------------------------------------------
-//! @ingroup Technical
-//! @brief   Цвет шрифта консоли
-//}-------------------------------------------------------------------------------------------
-
-const COLORREF _TX_CONSOLE_COLOR          = TX_LIGHTGRAY;
+const char*    _txConsoleFont             = "Lucida Console";
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Technical
 //! @brief   Интервал мигания курсора консоли (мс)
 //}-------------------------------------------------------------------------------------------
 
-const unsigned _TX_CURSOR_BLINK_INTERVAL  = 250;
+unsigned       _txCursorBlinkInterval     = 250;
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Technical
 //! @brief   Интервал обновления холста (мс)
+//! @note    Переменная устанавливается @b до открытия окна библиотеки.
 //}-------------------------------------------------------------------------------------------
 
-const int      _TX_WINDOW_UPDATE_INTERVAL = 10;
+int            _txWindowUpdateInterval    = 25;
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Technical
@@ -2890,12 +2905,17 @@ const int      _TX_WINDOW_UPDATE_INTERVAL = 10;
 //}-------------------------------------------------------------------------------------------
 
 #if !defined (TX_TRACE)
-    const int  _TX_TIMEOUT                = 1000;
+    const int  _TX_TIMEOUT                = 1000
 
 #else
-    const int  _TX_TIMEOUT                = 5000;
+    const int  _TX_TIMEOUT                = 5000
 
 #endif
+
+#if  defined (_TX_USE_DEVPARTNER)
+    * 10
+#endif
+    ;
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Technical
@@ -2913,8 +2933,7 @@ const unsigned _TX_BIGBUFSIZE             = 2048;
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Technical
-//! @brief   Список запускающих программ, которые ждут нажатия клавиши после завершения процесса
-//!          TXLib.
+//! @brief   Список запускающих программ, которые ждут нажатия клавиши после завершения процесса TXLib.
 //!
 //!          Если программа перечислена в списке и TXLib запущена из нее, то при завершении TXLib
 //!          указанная программа будет закрыта. (Это произойдет, если не открыто графическое окно
@@ -2959,7 +2978,7 @@ const unsigned _TX_BIGBUFSIZE             = 2048;
 //}-------------------------------------------------------------------------------------------
 
 #if !defined (_TX_ALLOW_KILL_PARENT)
-#define       _TX_ALLOW_KILL_PARENT       true  // Все, это последняя настроечная константа! Хватит уже.
+#define       _TX_ALLOW_KILL_PARENT       true  // Все, это последняя настроечная константа!
 #endif                                          // И да, я не призываю к убийству родителей. Это технический термин.
 
 //! @}
@@ -3281,14 +3300,14 @@ const unsigned _TX_BIGBUFSIZE             = 2048;
 //!
 //! @return  Количество напечатанных символов.
 //!
-//!          Функция формирует сообщение по правилам printf() и передает его OutputDebugString().
-//!          Ее вывод можно перехватить утилитами-логгерами, например,
+//!          Функция формирует сообщение по правилам printf() и передает его в OutputDebugString().
+//!          Ее вывод можно перехватить отладчиком или утилитами-логгерами, например,
 //!          <a href=http://technet.microsoft.com/ru-ru/sysinternals/bb896647%28en-us%29.aspx>DebugView</a>.
-//!          Если этого не сделать, и не задать первый символ <tt>'\a'</tt> (см. ниже), то о сообщении никто
+//!          Если этого не сделать, и не задать первый символ @c '\\a' (см. ниже), то о сообщении никто
 //!          не узнает.
 //! @note
-//!        - Если первый            символ в строке <tt>'\a',</tt> то сообщение также дублируется MessageBox().
-//!        - Если первый или второй символ в строке <tt>'\f',</tt> то сообщение также дублируется printf().
+//!        - Если первый            символ в строке @c '\\a', то сообщение также дублируется MessageBox().
+//!        - Если первый или второй символ в строке @c '\\f', то сообщение также дублируется printf().
 //!
 //! @warning Сообщение не должно превышать _TX_BIGBUFSIZE символов, иначе оно обрезается.
 //!
@@ -3468,7 +3487,7 @@ struct _txFuncEntry
 
 //! @cond INTERNAL
 
-inline void _txTrace (const char* file, int line, const char* func)
+void _txTrace (const char* file, int line, const char* func)
     {
     unsigned id = GetCurrentThreadId();
 
@@ -3962,7 +3981,7 @@ struct txDialog
 //! @see     txDialog, TX_BEGIN_MESSAGE_MAP, TX_BEGIN_COMMAND_MAP, TX_HANDLE, TX_END_MESSAGE_MAP
 //! @usage
 //! @code
-//!          const char* name = txInputBox ("So what's ur name??!", "System", "Sorry I'm Vasya Pupkin");
+//!          const char* name = txInputBox ("So what's ur name?!?!", "System", "Sorry I'm Vasya Pupkin");
 //!          MessageBox (txWindow(), name, "Aaand nooowww.. the winner iiis...", 0);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -4135,7 +4154,7 @@ bool             _txBuffer_Select (HGDIOBJ obj, HDC dc = txDC());
 
 HWND             _txConsole_Attach();
 bool             _txConsole_OK();
-bool             _txConsole_Detach (bool restorePos);
+bool             _txConsole_Detach();
 bool             _txConsole_Draw (HDC dc);
 bool             _txConsole_SetUnicodeFont();
 
@@ -4172,7 +4191,7 @@ void             _txOnUnexpected();
 
 FARPROC      _txDllImport (const char dllFileName[], const char funcName[], bool required = true);
 
-#define      _TX_SAFECALL(func)     (func) && func
+#define      _TX_SAFECALL(func)     (!(func))? 0 : func
 
 //--------------------------------------------------------------------------------------------
 
@@ -4194,7 +4213,7 @@ FARPROC      _txDllImport (const char dllFileName[], const char funcName[], bool
 
 #define      _txWaitFor(cond)       { for (DWORD _t = GetTickCount() + _TX_TIMEOUT;  \
                                            !(cond) && GetTickCount() < _t;           \
-                                           Sleep (_TX_WINDOW_UPDATE_INTERVAL)) ;     \
+                                           Sleep (_txWindowUpdateInterval)) ;        \
                                       if  (!(cond))                                  \
                                            _txTrace (__FILE__, __LINE__, "WARNING: Timeout: " #cond "."); }
 
@@ -4464,7 +4483,10 @@ const GUID IID_IPersistFile       = {0x0000010b, 0x0000, 0x0000, {0xc0,0x00,0x00
 #undef  INTERFACE
 
 }  // namespace Win32
+
+#ifdef _MSC_VER_6
 using namespace Win32;
+#endif
 
 //} </tears>
 
@@ -4483,42 +4505,39 @@ unsigned         _txMainThreadId        = 0;      // ID потока, где выполняется 
 
 HANDLE           _txCanvas_Thread       = NULL;   // Поток, владеющий окном холста TXLib
 unsigned         _txCanvas_ThreadId     = 0;      // ID этого потока
-
 HWND             _txCanvas_Window       = NULL;   // Дескриптор окна холста TXLib
 
-HDC              _txCanvas_BackBuf[2]   = {NULL,  // [0] Main TXLib memory DC, where user picture lies
-                                           NULL}; // [1] Intermediate buffer for console text, also
-                                                  //     used in WM_PAINT handling when user frozen
-                                                  //     screen auto-update by txBegin()... call.
-
-CRITICAL_SECTION _txCanvas_LockBackBuf  = {0,-1}; // Prevent simultaneous access to back buffer, see txLock/txUnlock
-
 UINT             _txCanvas_RefreshTimer = 0;      // Timer to redraw TXLib window
-
 int              _txCanvas_RefreshLock  = 0;      // Blocks auto on-timer canvas update, see txBegin/txEnd
+bool             _txCanvas_ForceRedraw  = false;  // Alt+Ctrl+Shift+PrintScreen pressed
 
-bool             _txForceRedraw         = false;  // Alt+Ctrl+Shift+PrintScreen pressed
+HDC              _txCanvas_BackBuf[2]   = {NULL,  // [0] Main working TXLib memory DC, where user picture lies
+                                           NULL}; // [1] Image ready for auto-refresh, see txCanvas_OnPAINT()
+CRITICAL_SECTION _txCanvas_LockBackBuf  = {0,-1}; // Prevent simultaneous access to back buffer, see txLock()
 
-std::vector<HDC> _txCanvas_UserDCs;
+std::vector<HDC> _txCanvas_UserDCs;               // List of DCs allocated, for auto-free
 
 bool             _txConsole_IsBlinking  = true;   // To blink or not to blink, that is the question.
-bool             _txConsole_Active      = true;
-RECT             _txConsole_Pos         = {0};
+bool             _txConsole_Active      = true;   // Console window was on top when creating Canvas window
+RECT             _txConsole_Pos         = {0};    // Position before hiding the console window
+
+DWORD            _txParentProcess       = 0;      // Parent of our process
+bool             _txParentWaitable      = false;  // Parent process may want a key; see _TX_WAITABLE_RARENTS
 
 bool             _txRunning             = false;  // Indicate that main() is still running
 bool             _txExit                = false;  // Indicate that exit() is active
 
-POINT            _txMousePos            = {0};
+POINT            _txMousePos            = {0};    // Ask Captn Obviouos about it. See txCanvas_OnMOUSE()
 int              _txMouseButtons        =  0;
 
 WNDPROC          _txAltWndProc          = NULL;   // Альтернативная оконная функция. См. txSetWindowHandler().
 
-const char*      _txFile                = NULL;
+const char*      _txFile                = NULL;   // Current execution point tracking, see $ macro
 int              _txLine                = 0;
 const char*      _txFunc                = NULL;
-int              _txInTX                = 0;
+int              _txInTX                = 0;      // We are inside one of TXLib's functions
 
-int              _txStaticInitialized   = _TX_NOINIT || _txInitialize();
+int              _txInitialized         = _TX_NOINIT || _txInitialize();
 
 //! @}
 //}
@@ -4556,6 +4575,8 @@ $   std::set_terminate  (_txOnTerminate);
 $   HWND console = _txConsole_Attach();
 $   if (console) SetWindowTextA (console, txGetModuleFileName (false));
 
+$   _txParentWaitable = _txIsParentWaitable (&_txParentProcess);
+
 $   InitializeCriticalSection (&_txCanvas_LockBackBuf);
 
 $   _txCanvas_UserDCs.reserve (_TX_BUFSIZE);
@@ -4578,7 +4599,9 @@ HWND txCreateWindow (double sizeX, double sizeY, bool centered /*= true*/)
     {
 $1  if (txOK()) return 0;
 
-$   if (!_txStaticInitialized) _txStaticInitialized = _txInitialize();
+$   if (!_txInitialized) _txInitialized = _txInitialize();
+
+$   if (_txWindowUpdateInterval < 10) _txWindowUpdateInterval = 10;
 
 $   _txRunning = false;
 
@@ -4634,7 +4657,7 @@ $   _txBuffer_Select (Win32::GetStockObject (WHITE_BRUSH), txDC()) asserted;
 $   _txBuffer_Select (Win32::CreateFont (szCon.cy/25, szCon.cx/80, 0, 0,
                                          FW_REGULAR, FALSE, FALSE, FALSE, RUSSIAN_CHARSET,
                                          OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
-                                         DEFAULT_QUALITY, DEFAULT_PITCH, _TX_CONSOLE_FONT),
+                                         DEFAULT_QUALITY, DEFAULT_PITCH, _txConsoleFont),
                       txDC()) asserted;
 
 $   (Win32::SetTextColor (txDC(), TX_WHITE) != CLR_INVALID) asserted;
@@ -4657,11 +4680,11 @@ $   SIZE szChr  = { (short) (con.srWindow.Right  - con.srWindow.Left + 1),
 $   SIZE szFont = { (short) ((1.0 * szCon.cx / szChr.cx) / (1.0 * szCon.cx / szCanvas.cx)),
                     (short) ((1.0 * szCon.cy / szChr.cy) / (1.0 * szCon.cy / szCanvas.cy)) };
 
-$   _txBuffer_Select (txFontExist (_TX_CONSOLE_FONT)?
+$   _txBuffer_Select (txFontExist (_txConsoleFont)?
                           Win32::CreateFont (szFont.cy, szFont.cx, 0, 0,
                                              FW_REGULAR, FALSE, FALSE, FALSE, RUSSIAN_CHARSET,
                                              OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
-                                             DEFAULT_QUALITY, FIXED_PITCH, _TX_CONSOLE_FONT)
+                                             DEFAULT_QUALITY, FIXED_PITCH, _txConsoleFont)
                           :
                           Win32::GetStockObject (SYSTEM_FIXED_FONT),
                       _txCanvas_BackBuf[1]) asserted;
@@ -4706,30 +4729,36 @@ $1  return _txCanvas_OK();
 
 void _txCleanup()
     {
-$1  Sleep (_TX_WINDOW_UPDATE_INTERVAL);
+$1  Sleep (_txWindowUpdateInterval);
 
-$   if (!_txStaticInitialized) return;
-    else _txStaticInitialized = false;
+$   if (!_txInitialized) return;
+    else _txInitialized = false;
 
 $   _txRunning = false;
 $   _txConsole_IsBlinking = false;
 
-$   HWND canvas  = txWindow();
-$   HWND console = Win32::GetConsoleWindow();
+$   HWND canvas     = txWindow();
+$   HWND console    = Win32::GetConsoleWindow();
+$   unsigned thread = GetCurrentThreadId();
 
-$   HWND wnd     = (canvas)? canvas : console;
-$   int isMaster = (canvas)? (GetWindowLong (canvas, GWL_STYLE) & WS_SYSMENU) : true;
+$   HWND wnd        = (canvas)? canvas : console;
+$   int isMaster    = (canvas)? (GetWindowLong (canvas, GWL_STYLE) & WS_SYSMENU) : true;
 
-$   static char title [_TX_BUFSIZE] = "";
-$   if (wnd) GetWindowText (wnd, title, sizeof (title));
-$   strncat_s (title, " [ЗАВЕРШЕНО]", sizeof (title) - 1);
-$   if (wnd) SendMessage (wnd, WM_SETTEXT, 0, (LPARAM) title); // SetWindowText sometimes freezes
+$   bool externTerm = (thread != _txMainThreadId &&
+                       thread != _txCanvas_ThreadId);
 
-$   DWORD parent = 0;
-$   bool waitableParent = _txIsParentWaitable (&parent);
+$   bool waitableParent = !externTerm && _txParentWaitable;
+
+$   if (wnd != NULL && !externTerm)
+        {
+$       static char title [_TX_BUFSIZE] = "";
+$       GetWindowText (wnd, title, sizeof (title));
+$       strncat_s (title, " [ЗАВЕРШЕНО]", sizeof (title) - 1);
+$       SetWindowText (wnd, title);
+        }
 
 $   if ((canvas || !waitableParent) && isMaster && !_txExit &&
-        GetCurrentThreadId() == _txMainThreadId)
+        thread == _txMainThreadId)
         {
 $       _txPauseBeforeTermination (canvas);
         }
@@ -4746,9 +4775,10 @@ $   if (_txCanvas_Thread)
         { $ CloseHandle (_txCanvas_Thread) asserted; _txCanvas_Thread = NULL; }
 
 $   if (canvas && waitableParent && _txNOP (_TX_ALLOW_KILL_PARENT))
-        { $ waitableParent |= !_txKillProcess (parent); }
+        { $ waitableParent |= !_txKillProcess (_txParentProcess); }
 
-$   _txConsole_Detach (!waitableParent);
+$   if (!externTerm)
+        { $ _txConsole_Detach(); }
 
     #ifndef NDEBUG
     OutputDebugString ("\n");
@@ -4776,7 +4806,7 @@ $       printf ("\n" "[Нажмите любую клавишу для завершения]");
 
 $   for (int i = 1; ; i++)
         {
-$       Sleep (_TX_WINDOW_UPDATE_INTERVAL);
+$       Sleep (_txWindowUpdateInterval);
 
         if (!kbWait || (kbRedir && !canvas)) { $ break; }  // No need to run and hide
 
@@ -4836,7 +4866,7 @@ $   if (parentPID) *parentPID = info->th32ProcessID;
 
 $   info = _txFindProcess (info->th32ParentProcessID);  // info: grandparent
 
-$   static char list[_TX_BUFSIZE] = _TX_WAITABLE_PARENTS;
+$   char list[_TX_BUFSIZE] = _TX_WAITABLE_PARENTS;
 $   char* ctx = NULL;
 
 $   for (char* p = strtok_s (list, ", ", &ctx); p; p = strtok_s (NULL, ", ", &ctx))
@@ -4846,7 +4876,7 @@ $       char* gp = strchr (p, ':');
 $       if (gp)
             {
 $           *gp++ = 0;
-$           if (_stricmp (p, parent) != 0) continue;
+$           if (_stricmp (p, parent) != 0) { continue; }
 
 $           if (info) if (_stricmp (gp, info->szExeFile) == 0)  // Was &&, but OMG MSVC /analyze..
                 { $ return true; }
@@ -4974,8 +5004,8 @@ $       DispatchMessage  (&msg);
 $       Sleep (0);
         }
 
-$   DestroyIcon (icon16);
-$   DestroyIcon (icon32);
+$   DestroyIcon (icon16);        // If Explorer is displaying Tray Notification, these
+$   DestroyIcon (icon32);        // calls will possibly fail, and we'll get resource leak.
 
 $   if (_txRunning && isMaster)  // Master window is destroyed but main() is still running.
         {                        // No chances for good termination, so use exit().
@@ -5030,15 +5060,15 @@ $       center.x = (_txConsole_Pos.right  + _txConsole_Pos.left) / 2;
 $       center.y = (_txConsole_Pos.bottom + _txConsole_Pos.top)  / 2;
         }
 
-$   HWND wnd = CreateWindowEx (0, className, txGetModuleFileName (false), _TX_WINDOW_STYLE,
+$   HWND wnd = CreateWindowEx (0, className, txGetModuleFileName (false), _txWindowStyle,
                                center.x - sz.cx/2, center.y - sz.cy/2, sz.cx, sz.cy,
                                NULL, NULL, NULL, NULL);
 
 $   if (!wnd || !txWindow()) return TX_DEBUG_ERROR ("Cannot create canvas: CreateWindowEx (\"%s\") failed"_
                                                      className), (HWND) NULL;
-$   if (console)
+$   if (console && (_txConsoleMode & SWP_HIDEWINDOW))
         { $ SetWindowPos (console, HWND_NOTOPMOST, center.x - sz.cx*2/5, center.y - sz.cy*2/5, 0, 0,
-                          SWP_NOSIZE | SWP_NOACTIVATE | _TX_CONSOLE_MODE) asserted; }
+                          SWP_NOSIZE | SWP_NOACTIVATE | _txConsoleMode) asserted; }
 
 $   ShowWindow          (txWindow(), SW_SHOW);
 $   SetForegroundWindow (txWindow());
@@ -5153,8 +5183,8 @@ $       _txCanvas_OnCmdABOUT (wnd,      wpar);
 $       return DefWindowProc (wnd, msg, wpar, lpar);
         }
 
-    _txForceRedraw = GetAsyncKeyState (VK_MENU)  && GetAsyncKeyState (VK_CONTROL) &&
-                     GetAsyncKeyState (VK_SHIFT) && GetAsyncKeyState (VK_SNAPSHOT);
+    _txCanvas_ForceRedraw = GetAsyncKeyState (VK_MENU)  && GetAsyncKeyState (VK_CONTROL) &&
+                            GetAsyncKeyState (VK_SHIFT) && GetAsyncKeyState (VK_SNAPSHOT);
 
     WNDPROC altWndProc = _txAltWndProc;  // Cache to prevent change from main thread
     if (altWndProc)
@@ -5205,7 +5235,7 @@ $1  _TX_IF_ARGUMENT_FAILED (wnd) return false;
 $   _txCanvas_BackBuf[0] = _txBuffer_Create (wnd); assert (_txCanvas_BackBuf[0]);
 $   _txCanvas_BackBuf[1] = _txBuffer_Create (wnd); assert (_txCanvas_BackBuf[1]);
 
-$   SetTimer (wnd, _txCanvas_RefreshTimer, _TX_WINDOW_UPDATE_INTERVAL, NULL) asserted;
+$   SetTimer (wnd, _txCanvas_RefreshTimer, _txWindowUpdateInterval, NULL) asserted;
 
 $   _txCanvas_Window = wnd;
 
@@ -5284,7 +5314,7 @@ bool _txCanvas_OnTIMER (HWND wnd, WPARAM)
     {
 $1  _TX_IF_ARGUMENT_FAILED (wnd) return false;
 
-$   if (_txCanvas_RefreshLock > 0 && !_txForceRedraw) return false;
+$   if (_txCanvas_RefreshLock > 0 && !_txCanvas_ForceRedraw) return false;
 
 $   InvalidateRect (wnd, NULL, false) asserted;
 $   UpdateWindow   (wnd)              asserted;
@@ -5306,12 +5336,15 @@ $   RECT r = {0};
 $   GetClientRect (wnd, &r) asserted;
 $   POINT size = { r.right - r.left, r.bottom - r.top };
 
-$   if ((_txCanvas_RefreshLock <= 0 || _txForceRedraw) &&
+$   bool renderConsole = !IsWindowVisible (Win32::GetConsoleWindow()) ||
+                         !(_txConsoleMode & SWP_HIDEWINDOW);
+
+$   if ((_txCanvas_RefreshLock <= 0 || _txCanvas_ForceRedraw) &&
         txLock (false))
         {
 $       Win32::BitBlt (_txCanvas_BackBuf[1], 0, 0, size.x, size.y, txDC(), 0, 0, SRCCOPY);
 
-$       if (!IsWindowVisible (Win32::GetConsoleWindow()))
+$       if (renderConsole)
             {
 $           _txConsole_Draw (_txCanvas_BackBuf[1]);
             }
@@ -5554,12 +5587,12 @@ $1  return Win32::GetConsoleWindow() != NULL;
 
 //--------------------------------------------------------------------------------------------
 
-bool _txConsole_Detach (bool restorePos)
+bool _txConsole_Detach()
     {
 $1  HWND console = Win32::GetConsoleWindow();
 $   if (!console) return false;
 
-$   if (restorePos)
+$   if (_txConsoleMode & SWP_HIDEWINDOW)
         {
 $       RECT r = {0};
 $       GetWindowRect (console, &r);
@@ -5568,8 +5601,8 @@ $       MoveWindow (console, _txConsole_Pos.left, _txConsole_Pos.top,
                     r.right - r.left, r.bottom - r.top, true);
         }
 
-$   if (_TX_CONSOLE_MODE & SWP_HIDEWINDOW) ShowWindow (console, SW_SHOW);
-$   if (_txConsole_Active)                 SetForegroundWindow (console);
+$   if (_txConsoleMode & SWP_HIDEWINDOW) ShowWindow (console, SW_SHOW);
+$   if (_txConsole_Active)               SetForegroundWindow (console);
 
 $   return !!FreeConsole();
     }
@@ -5624,7 +5657,7 @@ $   Win32::SetBkMode    (dc, TRANSPARENT);
 
 $   if (_txConsole_IsBlinking &&
         In (con.dwCursorPosition, con.srWindow) &&
-        GetTickCount() % _TX_CURSOR_BLINK_INTERVAL*2 > _TX_CURSOR_BLINK_INTERVAL &&
+        GetTickCount() % _txCursorBlinkInterval*2 > _txCursorBlinkInterval &&
         GetForegroundWindow() == txWindow())
         {
 $       Win32::TextOut (dc, (con.dwCursorPosition.X - con.srWindow.Left) * fontSz.cx,
@@ -5636,7 +5669,7 @@ $   return true;
     }
 
 //--------------------------------------------------------------------------------------------
-//{          Welcome to the Duck Side...
+//{          Welcome to the Duck Side! Together we will rule the Bathroom!
 //--------------------------------------------------------------------------------------------
 
 bool _txConsole_SetUnicodeFont()
@@ -5681,7 +5714,7 @@ $       getenv_s (&sz, comspec, sizeof (comspec), "COMSPEC");
 $       _txCreateShortcut (link, comspec, "/c exit", NULL, NULL,
                            SW_SHOWMINNOACTIVE, NULL, 0, uniSize) asserted;
 
-$       ShellExecute (NULL, NULL, link, NULL, NULL, SW_SHOWMINNOACTIVE) > (void*)32 asserted;
+$       Win32::ShellExecuteA (NULL, NULL, link, NULL, NULL, SW_SHOWMINNOACTIVE) > (void*)32 asserted;
 $       _txWaitFor (FindWindow (NULL, "_txLink"));
 
 $       _unlink (link) == 0 asserted;
@@ -6009,7 +6042,7 @@ $   strncpy_s    (nid.szInfoTitle, (title? title : "TXLib сообщает"), sizeof (ni
 $   _vsnprintf_s (nid.szInfo, sizeof (nid.szInfo) _TX_TRUNCATE, format, arg);
 $   nid.dwInfoFlags = flags;
 
-$   txOutputDebugPrintf (_TX_VERSION " - Icon notification: %s\n", nid.szInfo);
+$   txOutputDebugPrintf (_TX_VERSION " - Icon notification: %s: %s\n", nid.szInfoTitle, nid.szInfo);
 
 $   ok &= !!Shell_NotifyIcon (NIM_ADD,    (::NOTIFYICONDATA*) &nid);
 $   ok &= !!Shell_NotifyIcon (NIM_MODIFY, (::NOTIFYICONDATA*) &nid);
@@ -6020,7 +6053,7 @@ $   if (nid.hIcon) DestroyIcon (nid.hIcon) asserted;
 
 $   char nid_szInfo[_TX_BUFSIZE] = "";
 $   _vsnprintf_s (nid_szInfo, sizeof (nid_szInfo) _TX_TRUNCATE, format, arg);
-$   txOutputDebugPrintf (_TX_VERSION " - Icon notification (NOT displayed): %s\n", nid_szInfo);
+$   txOutputDebugPrintf (_TX_VERSION " - Icon notification (NOT displayed): %s: %s\n", title, nid_szInfo);
 $   ok = false;
 
 $   (void)flags; (void)title;
@@ -6639,24 +6672,14 @@ $   if (!image) return NULL;
 
 $   HDC dc = txCreateCompatibleDC (0, 0, image);
 
-// А вот теперь и.
-
-$   static std::map <std::string, unsigned> usedFiles;
-
+$   static std::map <std::string, unsigned> loadTimes;
 $   std::string file = filename;
+$   unsigned time    = GetTickCount();
 
-$   if ((long) (GetTickCount() - usedFiles [file]) < _TX_TIMEOUT)
-        {
-$       txNotifyIcon (NIIF_WARNING, NULL, "Вы загружаете \"%s\" слишком часто, программа будет тормозить.", filename);
+$   if ((long) (time - loadTimes [file]) < _TX_TIMEOUT)
+        { $ txNotifyIcon (NIIF_WARNING, NULL, "Вы загружаете \"%s\" слишком часто, программа будет тормозить.", filename); }
 
-        // Tired of loading: blink the eyes, take a nap
-
-$       Sleep (_TX_CURSOR_BLINK_INTERVAL);
-        }
-    else
-        {
-$       usedFiles [file] = GetTickCount();
-        }
+$   loadTimes [file] = time;
 
 $   return dc;
     }
@@ -6984,7 +7007,7 @@ o\
 s\
 e\
 AndIWillNotBeAsking\
-WhereIsMyPicture/*???*/()     // И так можно. Обратный слеш в конце строки, но бойтесь пробелов
+WhereIsMyPicture/*?!?!?*/()     // И так можно. Обратный слеш в конце строки, но бойтесь пробелов
     {
 $1  MessageBox (txWindow(),
                 "Это запланированная ошибка. Такое бывает. Вы хотели вызвать:" "\n\n"
@@ -7651,13 +7674,14 @@ struct _txSaveConsoleAttr
     #else
     #pragma GCC diagnostic warning "-Wstrict-aliasing"
     #pragma GCC diagnostic warning "-Wshadow"
-    #pragma GCC diagnostic warning "-Wold-style-cast"
 
     #endif
 
-    // Still block this warning to avoid reporting about "= {0}" or "= {}" initialization.
+    // Still block this warnings to avoid reporting about "= {0}" or "= {}" init style,
+    // and old style cast used in Windows.h RGB() macro.
 
     #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+    #pragma GCC diagnostic ignored "-Wold-style-cast"
 
     // These warnings really occur at end of compilation, so block them too.
 
@@ -7706,7 +7730,4 @@ struct _txSaveConsoleAttr
 //============================================================================================
 // EOF
 //============================================================================================
-
-
-
 
