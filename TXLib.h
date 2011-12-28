@@ -2291,17 +2291,17 @@ double txQueryPerformance();
 //!
 //! @return  Размер массива в элементах (не в байтах).
 //!
-//!          Макрос SIZEARR() вычисляет размер массива в элементах, проверяя, можно ли его
+//!          Макрос sizearr() вычисляет размер массива в элементах, проверяя, можно ли его
 //!          правильно вычислить при компиляции.
 //!
-//!          Макрос sizearr() просто делит размер всего массива в байтах на размер его элемента,
+//!          Макрос SIZEARR() просто делит размер всего массива в байтах на размер его элемента,
 //!          получается размер массива в элементах. Он не проверяет, можно ли его правильно
 //!          вычислить, и при неправильном использовании выдает неверный размер.
 //!
-//! @warning sizearr() выдает неверный размер, если определение массива вместе с его размером,
-//!          известным при компиляции, недоступно в месте использования sizearr(). См. пример ниже.
+//! @warning SIZEARR() выдает неверный размер, если определение массива вместе с его размером,
+//!          известным при компиляции, недоступно в месте использования SIZEARR(). См. пример ниже.
 //!
-//! @note    В Microsoft Visual Studio 6 макрос SIZEARR() недоступен - у ее компилятора недостаточно
+//! @note    В Microsoft Visual Studio 6 макрос sizearr() недоступен - у ее компилятора недостаточно
 //!          сил, чтобы его скомпилировать :(
 //!
 //! @usage
@@ -2315,11 +2315,11 @@ double txQueryPerformance();
 //!
 //!              // Здесь размер массива известен при компиляции, т.к. он определен здесь же.
 //!
-//!              for (int i = 0; i < SIZEARR (coord) - 1; i++)
+//!              for (int i = 0; i < sizearr (coord) - 1; i++)
 //!                  txLine (coord[i].x, coord[i].y, coord[i+1].x, coord[i+1].y);
 //!
 //!              DrawLines1 (coord);                  // Попытка передать массив без передачи размера.
-//!              DrawLines2 (coord, SIZEARR (coord)); // Правильная передача размера массива.
+//!              DrawLines2 (coord, sizearr (coord)); // Правильная передача размера массива.
 //!
 //!              DrawLines3 (coord);                  // В принципе, можно и так, но тут водятся шаблоны.
 //!              }
@@ -2329,11 +2329,11 @@ double txQueryPerformance();
 //!          void DrawLines1 (const POINT coord[])
 //!              {
 //!              // Массивы в Си передаются как указатели на начало массива. Поэтому:
-//!              // 1) SIZEARR здесь выдаст ошибку компиляции, и ее легко будет найти.
-//!              // 2) sizearr здесь неправильно посчитает размер, что намного хуже,
+//!              // 1) sizearr здесь выдаст ошибку компиляции, и ее легко будет найти.
+//!              // 2) SIZEARR здесь неправильно посчитает размер, что намного хуже,
 //!              //      т.к. он будет равен sizeof (POINT*) / sizeof (POINT) == 4/8 == 0.
 //!
-//!              for (int i = 0; i < SIZEARR (coord) - 1; i++)
+//!              for (int i = 0; i < sizearr (coord) - 1; i++)
 //!                  txLine (coord[i].x, coord[i].y, coord[i+1].x, coord[i+1].y);
 //!              }
 //!
@@ -2360,7 +2360,7 @@ double txQueryPerformance();
 
 #ifndef _MSC_VER_6
 
-    #define SIZEARR( arr )    ( sizeof (get_size_of_an_array_with_unknown_or_nonconst_size_ (arr)) )
+    #define sizearr( arr )    ( sizeof (get_size_of_an_array_with_unknown_or_nonconst_size_ (arr)) )
 
     //! @cond INTERNAL
     template <typename T, int N> char (&get_size_of_an_array_with_unknown_or_nonconst_size_ (T (&) [N])) [N]; // ;)
@@ -2368,9 +2368,9 @@ double txQueryPerformance();
 
 #endif
 
-//! Замена макросу SIZEARR() для работы в Microsoft Visual Studio 6
+//! Замена макросу sizearr() для работы в Microsoft Visual Studio 6
 
-#define sizearr( arr )        ( sizeof (arr) / sizeof (arr)[0] )
+#define SIZEARR( arr )        ( sizeof (arr) / sizeof (arr)[0] )
 
 //! @}
 //{-------------------------------------------------------------------------------------------
@@ -2573,26 +2573,35 @@ template <typename T> inline T zero();
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Misc
-//! @brief   Автоматический вызов функции при завершении другой функции
+//! @brief   Автоматический вызов функции при завершении другой функции (аналог @c __finally)
 //!
 //! @param   param_t  Тип параметра автоматически вызываемой функции
-//! @param   param    Имя параметра автоматически вызываемой функции, должно
-//! @param   func     Тело автоматически вызываемой функции. Фигурные скобки можно опустить
+//! @param   param    Имя параметра автоматически вызываемой функции
+//! @param   func     Тело автоматически вызываемой функции (фигурные скобки не обязательны)
 //!
+//! @par     Макрос @c TX_AUTO_FUNC ( @c param_t, @c param, @c func )
 //! @note
-//!        - Допускается один и только один параметр.
+//!        - Для автоматически вызываемой функции допускается только @i один параметр.
 //!        - Его тип @c param_t и имя @c param должны соответствовать определению переменной,
 //!          доступной в текущей области видимости. Параметр вызываемой функции будет связан
 //!          с этой переменной через ссылку.
 //!
-//! @warning В Microsoft Visual Studio 6 и 2003 в отладочной конфигурации (Debug) макрос работать
+//! @warning В Microsoft Visual Studio 6 и 2003 в отладочной конфигурации (Debug) этот макрос работать
 //!          не будет, см. <a href="http://support.microsoft.com/kb/199057">MS KB Article 199057</a>.
-//!          Можно обходиться макросом _TX_AUTO_FUNC, см. исходный текст TXLib.h.
+//!          Можно обходиться макросом @c _TX_AUTO_FUNC, см. его определение в исходном тексте рядом
+//!          с определением @c TX_AUTO_FUNC.
+//!
+//! @par     Макрос @c tx_auto_func ( @c func )
+//! @note
+//!        - @i Все переменные вызываемой функции связываются с переменными внешней функции по ссылке.
+//!        - Их названия и типы @i не указываются. Указывается только тело вызываемой функции.
+//!        - Эта форма использует лямбда-функции @c C++0x, поэтому при компиляции требуется <i> MSVS
+//!          2010 </i> или <i> GCC не ниже версии 4.5 с ключом компиляции @c -std=c++0x. </i>
 //!
 //! @see     txAutoLock
 //! @usage
 //! @code
-//!          void f()
+//!          void f1()
 //!              {
 //!              int x = 1;
 //!              TX_AUTO_FUNC (int, x, $(x));              // Will be printed at return
@@ -2601,12 +2610,26 @@ template <typename T> inline T zero();
 //!              TX_AUTO_FUNC (FILE*, f, fclose (f));
 //!
 //!              fprintf (f, "start: x = %d\n", x);        // Do some job
-//!
 //!              x = 2;                                    // Do some job
+//!              }
+//!
+//!          void f2()                                     // Do the same. For C++0x only
+//!              {
+//!              int x = 1;
+//!              tx_auto_func ($(x));                      // More simple usage
+//!
+//!              FILE* f = fopen (__FILE__".o.txt", "w");
+//!              tx_auto_func (fclose (f));                // More simple usage
+//!
+//!              fprintf (f, "start: x = %d\n", x);
+//!              x = 2;
 //!              }
 //! @endcode
 //! @hideinitializer
 //}-------------------------------------------------------------------------------------------
+//! @{
+
+// C++03 version
 
 #define  TX_AUTO_FUNC(           param_t, param, func )                  \
         _TX_AUTO_FUNC( __LINE__, param_t, param, func )
@@ -2623,10 +2646,35 @@ template <typename T> inline T zero();
         _TX_AUTO_FUNC_##n (param_t& __p) : param (__p) {       }         \
        ~_TX_AUTO_FUNC_##n ()                           { func; }         \
                                                                          \
-        this_t& operator= (const this_t&)              { return *this; } \
+        private: this_t& operator= (const this_t&)     { return *this; } \
         }                                                                \
         _TX_AUTO_FUNC_##n (param)
 
+// C++0x version, use MSVS 2010 or GCC v.4.5+ and -std=c++0x in command line
+
+#define  tx_auto_func(    func )  _tx_auto_fun1 ( __LINE__, func )
+#define _tx_auto_fun1( n, func )  _tx_auto_fun2 ( n,        func )
+#define _tx_auto_fun2( n, func )  auto _tx_auto_func_##n = _tx_auto_func ([&]() { func; })
+
+template <typename T>
+struct _tx_auto_func_
+    {
+    typedef _tx_auto_func_ this_t;
+    T func_;
+
+    _tx_auto_func_ (T func) : func_ (func) {}
+   ~_tx_auto_func_ () { func_(); }
+
+    private: this_t& operator= (const this_t&) { return *this; }
+    };
+
+template <typename T>
+_tx_auto_func_<T> _tx_auto_func  (T   func)
+    {
+    return        _tx_auto_func_ <T> (func);
+    }
+
+//! @}
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Misc
 //! @brief   <i>Очень удобное</i> возведение числа в квадрат.
@@ -5696,8 +5744,8 @@ $   for (int y = 0; y < size.y; y++)
         COORD coord = { (short) (con.srWindow.Left), (short) (y + con.srWindow.Top) };
         DWORD read  = 0;
 
-        if (!ReadConsoleOutputCharacter (out, chr, sizearr (chr) - 1, coord, &read)) continue;
-        if (!ReadConsoleOutputAttribute (out, atr, sizearr (atr) - 1, coord, &read)) continue;
+        if (!ReadConsoleOutputCharacter (out, chr, SIZEARR (chr) - 1, coord, &read)) continue;
+        if (!ReadConsoleOutputAttribute (out, atr, SIZEARR (atr) - 1, coord, &read)) continue;
 
         for (int x = 0, xEnd = size.x; x < size.x; x = xEnd)
             {
@@ -7793,7 +7841,5 @@ struct _txSaveConsoleAttr
 //============================================================================================
 // EOF
 //============================================================================================
-                                                                                              
-                                                                                              
-                                                      
+                                                                                   
 
