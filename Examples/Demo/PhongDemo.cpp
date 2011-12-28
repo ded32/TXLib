@@ -186,12 +186,12 @@ int main()
         static double avr[5] = {0};
         static unsigned n = 0;
 
-        avr [n++ % sizearr (avr)] = time;
-        if  (n   < sizearr (avr)) continue;
+        avr [n++ % SIZEARR (avr)] = time;
+        if  (n   < SIZEARR (avr)) continue;
 
         time = 0;
-        for (unsigned i = 0; i < sizearr (avr); i++) time += avr[i];
-        time /= sizearr (avr);
+        for (unsigned i = 0; i < SIZEARR (avr); i++) time += avr[i];
+        time /= SIZEARR (avr);
 
         static double perf = txQueryPerformance();
         if (GetAsyncKeyState ('Q')) perf = txQueryPerformance();

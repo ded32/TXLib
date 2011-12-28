@@ -140,8 +140,8 @@ int main()
         POINT org0 = org1; org1 = TxGetWindowOrg();
         POINT d = { org1.x - org0.x, org1.y - org0.y };
 
-        for (unsigned i = 0; i < sizearr (balls); i++) balls[i].move (d);
-        for (unsigned i = 0; i < sizearr (balls); i++) balls[i].draw (true);
+        for (unsigned i = 0; i < SIZEARR (balls); i++) balls[i].move (d);
+        for (unsigned i = 0; i < SIZEARR (balls); i++) balls[i].draw (true);
 
         txSleep (0);
 
