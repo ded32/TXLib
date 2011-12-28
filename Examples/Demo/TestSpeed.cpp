@@ -83,11 +83,11 @@ double TrySleep (int ms)
     static double avr[100] = {};
     static unsigned n = 0;
 
-    avr [n++ % sizearr (avr)] = time;
-    if  (n   < sizearr (avr)) return time;
+    avr [n++ % SIZEARR (avr)] = time;
+    if  (n   < SIZEARR (avr)) return time;
 
     time = 0;
-    for (unsigned i = 0; i < sizearr (avr); i++) time += avr[i];
-    return time / sizearr (avr);
+    for (unsigned i = 0; i < SIZEARR (avr); i++) time += avr[i];
+    return time / SIZEARR (avr);
     }
 

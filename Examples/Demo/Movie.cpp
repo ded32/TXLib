@@ -1415,7 +1415,7 @@ void drawPortal (int x, int y, int radius, int each, int bonusRot, COLORREF colo
 
 const char* getRandomRegister()
     {
-    return registers [rand() % sizearr (registers)];
+    return registers [rand() % SIZEARR (registers)];
     }
 
 const char* getRandomCommand()
@@ -1425,10 +1425,10 @@ const char* getRandomCommand()
     if (rand() % 20 == 0)
         switch (rand() % 2)
             {
-            case 0:  sprintf (buf, "call %s", functionNames [rand() % sizearr (functionNames)]);
+            case 0:  sprintf (buf, "call %s", functionNames [rand() % SIZEARR (functionNames)]);
                      return buf;
 
-            case 1:  sprintf (buf, "jump %s", functionNames [rand() % sizearr (functionNames)]);
+            case 1:  sprintf (buf, "jump %s", functionNames [rand() % SIZEARR (functionNames)]);
                      return buf;
 
             default: break;
@@ -1436,11 +1436,11 @@ const char* getRandomCommand()
     else
         switch (rand() % 2)
             {
-            case 0:  sprintf (buf, "%s %s, %s", twoRegisterCommands [rand() % sizearr (twoRegisterCommands)],
+            case 0:  sprintf (buf, "%s %s, %s", twoRegisterCommands [rand() % SIZEARR (twoRegisterCommands)],
                                                 getRandomRegister(), getRandomRegister());
                      return buf;
 
-            case 1:  sprintf (buf, "%s %s",     oneRegisterCommands [rand() % sizearr (oneRegisterCommands)],
+            case 1:  sprintf (buf, "%s %s",     oneRegisterCommands [rand() % SIZEARR (oneRegisterCommands)],
                                                 getRandomRegister());
                      return buf;
 
