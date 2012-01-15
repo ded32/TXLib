@@ -1958,16 +1958,17 @@ bool txDestroyWindow();
 //!              txTextOut (txGetExtentX()/2, txGetExtentY()/2, "Press any key to exit!");
 //!
 //
-//                 +--<<< Это текст системы помощи. Ищите дальше! Жмите [F3]
+//                 +--<<< Это текст системы помощи. Ищите дальше! Жмите [F3] или "Найти далее"
 //                 |
 //                 v
+//               txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillCloseAndIWillNotBeAskingWhereIsMyPicture();
 //!              txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillCloseAndIWillNotBeAskingWhereIsMyPicture();
 //!              return 0;
 //!              }
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-//     +--<<< Это прототип функции, а надо найти ее определение. Ищите дальше! Жмите [F3]
+//     +--<<< Это прототип функции, а надо найти ее определение. Ищите дальше! Жмите [F3] или "Найти далее"
 //     |
 //     v
 bool txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillCloseAndIWillNotBeAskingWhereIsMyPicture();
@@ -5154,7 +5155,7 @@ $   _snprintf_s (className, sizeof (className) - 1 _TX_TRUNCATE,
                   "--------------------------[TXLib]---*/", (int) GetTickCount());
 
 $   WNDCLASSEX wc    = { sizeof (wc) };
-$   wc.style         = CS_HREDRAW | CS_VREDRAW;
+$   wc.style         = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 $   wc.lpfnWndProc   = _txCanvas_WndProc;
 $   wc.hCursor       = LoadCursor (NULL, IDC_ARROW);
 $   wc.hbrBackground = (HBRUSH) Win32::GetStockObject (HOLLOW_BRUSH);
@@ -7113,7 +7114,8 @@ $   return !!Win32::PlaySound (filename, NULL, mode);
 
 //--------------------------------------------------------------------------------------------
 
-// Это НЕ имеет отношение к паузе в конце программы...
+// Это вряд ли имеет отношение к тому, что вы ищете :) 
+// Смотрите не только вверх, но и вниз...
 
 WNDPROC txSetWindowHandler (WNDPROC handler /*= NULL*/)
     {
@@ -7124,7 +7126,7 @@ $   return  old;
 //--------------------------------------------------------------------------------------------
 
 //     +--<<< А это, наконец, искомое определение этой функции.
-//     |      Смотрите по сторонам! Нужная функция где-то рядом...
+//     |      Смотрите по сторонам! Нужная вам функция где-то рядом.
 //     |
 //     v
 bool txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillCloseAndIWillNotBeAskingWhereIsMyPicture()
@@ -7863,7 +7865,5 @@ struct _txSaveConsoleAttr
 // EOF
 //============================================================================================
                                                                                               
-                                                                                              
-                                                                                              
-                    
+ 
 
