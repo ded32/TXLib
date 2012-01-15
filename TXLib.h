@@ -1957,14 +1957,19 @@ bool txDestroyWindow();
 //!              txSetTextAlign (TA_CENTER);
 //!              txTextOut (txGetExtentX()/2, txGetExtentY()/2, "Press any key to exit!");
 //!
+//
+//                 +--<<< Это текст системы помощи. Ищите дальше! Жмите [F3]
+//                 |
+//                 v
 //!              txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillCloseAndIWillNotBeAskingWhereIsMyPicture();
 //!              return 0;
 //!              }
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-// See definition of this function below in this file.
-
+//     +--<<< Это прототип функции, а надо найти ее определение. Ищите дальше! Жмите [F3]
+//     |
+//     v
 bool txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillCloseAndIWillNotBeAskingWhereIsMyPicture();
 
 //! @}
@@ -5809,6 +5814,7 @@ $       return !!Win32::SetCurrentConsoleFontEx (out, false, &info);
 
 $   const unsigned uniFont = 10;  // The Internet and W2K sources know this magic number
 $   const unsigned uniSize = 20;  // Size of the font desired, should be > max of Raster Fonts
+$   bool ok = true;
 
     // Force Windows to use Unicode font by creating and run the console shortcut
     // tuned to use that font.
@@ -5822,18 +5828,20 @@ $       size_t sz = 0;
 
 $       char link [MAX_PATH] = "";
 $       getenv_s (&sz, link, sizeof (link), "TEMP");
-$       strncat_s (link, "\\_txLink.lnk", sizeof (link));
+$       strncat_s (link, "\\~txLink.lnk", sizeof (link));
 
 $       char comspec [MAX_PATH] = "";
 $       getenv_s (&sz, comspec, sizeof (comspec), "COMSPEC");
 
+$       (void) _unlink (link);
+
 $       _txCreateShortcut (link, comspec, "/c exit", NULL, NULL,
                            SW_SHOWMINNOACTIVE, NULL, 0, uniSize) asserted;
 
-$       Win32::ShellExecuteA (NULL, NULL, link, NULL, NULL, SW_SHOWMINNOACTIVE) > (void*)32 asserted;
-$       _txWaitFor (FindWindow (NULL, "_txLink"));
+$       ok = (Win32::ShellExecuteA (NULL, NULL, link, NULL, NULL, SW_SHOWMINNOACTIVE) > (void*)32);
+        if (ok) { $ _txWaitFor (FindWindow (NULL, "~txLink")); }
 
-$       _unlink (link) == 0 asserted;
+$       (void) _unlink (link);
 
 $       if (init == S_OK) Win32::CoUninitialize();
         }
@@ -5843,7 +5851,7 @@ $       if (init == S_OK) Win32::CoUninitialize();
 $   CONSOLE_FONT_INFO cur = {0};
 $   _TX_SAFECALL (Win32::GetCurrentConsoleFont) (out, false, &cur);
 
-$   bool ok = (cur.nFont >= uniFont) || !!(_TX_SAFECALL (Win32::SetConsoleFont) (out, uniFont));
+$   ok &= (cur.nFont >= uniFont) || !!(_TX_SAFECALL (Win32::SetConsoleFont) (out, uniFont));
 
 $   HWND console = Win32::GetConsoleWindow();
 $   InvalidateRect (console, NULL, false);
@@ -7105,6 +7113,8 @@ $   return !!Win32::PlaySound (filename, NULL, mode);
 
 //--------------------------------------------------------------------------------------------
 
+// Это НЕ имеет отношение к паузе в конце программы...
+
 WNDPROC txSetWindowHandler (WNDPROC handler /*= NULL*/)
     {
 $1  WNDPROC old = _txAltWndProc; _txAltWndProc = handler;
@@ -7113,28 +7123,32 @@ $   return  old;
 
 //--------------------------------------------------------------------------------------------
 
-bool txIDontWant\
-ToHave\
-APause\
-AfterMyProgram\
-BeforeTheWindow\
-Will\
-C\
-l\
-o\
-s\
-e\
-AndIWillNotBeAsking\
-WhereIsMyPicture/*?!?!?*/()     // Так можно. Обратный слеш в конце строки, но бойтесь пробелов
+//     +--<<< А это, наконец, искомое определение этой функции.
+//     |      Смотрите по сторонам! Нужная функция где-то рядом...
+//     |
+//     v
+bool txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillCloseAndIWillNotBeAskingWhereIsMyPicture()
     {
 $1  MessageBox (txWindow(),
                 "Это запланированная ошибка. Такое бывает. Вы хотели вызвать:" "\n\n"
+
                 "txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillCloseAndIWillNotBeAskingWhereIsMyPicture()" "\n\n"
-                "Хоть вы долго [копировали]набирали это имя, на самом деле эта функция не работает." "\n"
-                "Но для нее есть работающий синоним. См. определение этой функции в исходных текстах библиотеки."    "\n\n",
+
+                "Хоть вы долго [копировали]набирали это имя, на самом деле эта функция не реализована. "
+                "Есть другая функция, которая убирает авто-паузу в конце программы, но в хелпе про нее "
+                "не написано." "\n\n"
+
+                "Но не все так плохо. Определение нужной функции есть в исходных текстах библиотеки TXLib, "
+                "прямо рядом с определением той функции с длинным названием, которую вы сейчас вызвали, "
+                "а она не заработала." "\n\n"
+
+                "Нажмите в редакторе Ctrl+O, найдите и откройте файл TXLib.h (он лежит в папке, куда вы "
+                "установили TXLib), затем нажмите Ctrl+F и ищите \"txIDontWant\". Удачи!" "\n\n",
+
                 "Не получилось", MB_ICONSTOP);
 
     // The truth is out there...
+    //
 
 $   return false;
     }
@@ -7849,6 +7863,7 @@ struct _txSaveConsoleAttr
 // EOF
 //============================================================================================
                                                                                               
-                                                 
-
+                                                                                              
+                                                                                              
+                    
 
