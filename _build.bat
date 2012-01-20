@@ -126,10 +126,10 @@ echo Making RAR (%.file%)...
 %do% copy     "..\TXLib-*.chm" "TXLib *.chm"     >> %log% 2>>&1
 %do% copy "..\Dev\TXLib-*.chm" "Dev\TXLib *.chm" >> %log% 2>>&1
 
-%do% xcopy/s %Temp%\Doxygen\HTML Doc\HTML.ru /i >> %log% 2>>&1
+%do% xcopy/s %Temp%\Doxygen\HTML Doc\HTML.ru /i  >> %log% 2>>&1
 
-%do% del              ..\%.file% >> %log% 2>>&1
-%do% rar a -r -s -sfx ..\%.file% -z%Temp%\~log >> %log% 2>>&1
+%do% del                           ..\%.file%               >> %log% 2>>&1
+%do% rar a -r -s -sfx -rr5p -av -k ..\%.file% -z%Temp%\~log >> %log% 2>>&1
 
 %do% rd/s/q ..\Doc\HTML.ru         >> %log% 2>>&1
 %do% move      Doc\HTML.ru ..\Doc\ >> %log% 2>>&1

@@ -84,9 +84,8 @@
 //! @ingroup   Technical
 //! @brief     Версия библиотеки в целочисленном формате.
 //!
-//!            Формат: старшее слово - номер версии, младшее - номер ревизии,
-//!            в двоично-десятичном формате.
-//!            Например, @c 0x172a0050 - версия @c 0.172a, ревизия @c 50.
+//!            Формат: старшее слово - номер версии, младшее - номер ревизии, в двоично-десятичном
+//!            формате. Например, @c 0x172a0050 - версия @c 0.172a, ревизия @c 50.
 //!
 //!            Эта константа автоматически обновляется при обновлении версии.
 //!
@@ -4873,10 +4872,11 @@ $   bool waitableParent = !externTerm && _txParentWaitable;
 
 $   if (wnd != NULL && !externTerm)
         {
-$       static char title [_TX_BUFSIZE] = "";
-$       GetWindowText (wnd, title, sizeof (title));
-$       strncat_s (title, " [ЗАВЕРШЕНО]", sizeof (title) - 1);
-$       SetWindowText (wnd, title);
+$       static wchar_t title [_TX_BUFSIZE] = L"";
+$       GetWindowTextW (wnd, title, SIZEARR (title));
+$       int len = (int) wcslen (title);
+$       MultiByteToWideChar (1251, 0, " [ЗАВЕРШЕНО]", -1, title + len, SIZEARR (title) - len);
+$       SetWindowTextW (wnd, title);
         }
 
 $   if ((canvas || !waitableParent) && isMaster && !_txExit &&
@@ -5094,8 +5094,8 @@ $   return title + 1;
 //============================================================================================
 
 //============================================================================================
-//{          [Internal] TXLib window functions      (_txCanvas...)
-//! @name    Функции окна TXLib                     (_txCanvas...)
+//{          [Internal] TXLib window functions     (_txCanvas...)
+//! @name    Функции окна TXLib                    (_txCanvas...)
 //============================================================================================
 
 unsigned WINAPI _txCanvas_ThreadProc (void* data)
@@ -5664,8 +5664,8 @@ $   SetConsoleOutputCP (1251);
 
     // Устанавливаем русскую кодовую страницу для стандартной библиотеки,
     // иначе не будут работать Unicode-версии функций (wprintf, ...).
-    // Если компилите с помощью gcc и собираетесь использовать L"unicode-строки",
-    // не забудьте указать опции в командной строке компилятора:
+    // Если компилите с помощью gcc и собираетесь использовать L"unicode-строки"
+    // с русским языком, не забудьте указать опции в командной строке компилятора:
     // -finput-charset=CP1251 -fexec-charset=CP1251
 
 $   setlocale (LC_CTYPE, "Russian");
@@ -5806,7 +5806,9 @@ $       HANDLE out = GetStdHandle (STD_OUTPUT_HANDLE);
 $       Win32::CONSOLE_FONT_INFOEX info = { sizeof (info) };
 $       if (!Win32::GetCurrentConsoleFontEx (out, false, &info)) return false;
 
-$       info.FontFamily = 0x36;  // Unicode fixed-pitch
+$       info.FontFamily = 0x36;                       // Unicode fixed-pitch
+$       if (!*info.FaceName) info.dwFontSize.Y += 2;  // Terminal font is too small
+$       wcsncpy_s (info.FaceName, L"Lucida Console", SIZEARR (info.FaceName));
 
 $       return !!Win32::SetCurrentConsoleFontEx (out, false, &info);
         }
@@ -5933,7 +5935,7 @@ $       _TX_CHECKED (shellLink->QueryInterface (Win32::IID_IPersistFile, (void**
 $       if (!file) _TX_FAIL;
 
 $       wchar_t wName[MAX_PATH] = L"";
-$       MultiByteToWideChar (CP_ACP, MB_PRECOMPOSED, shortcutName, -1, wName, MAX_PATH);
+$       MultiByteToWideChar (CP_ACP, 0, shortcutName, -1, wName, MAX_PATH);
 
 $       _TX_CHECKED (file->Save (wName, true));
         }
@@ -7114,7 +7116,7 @@ $   return !!Win32::PlaySound (filename, NULL, mode);
 
 //--------------------------------------------------------------------------------------------
 
-// Это вряд ли имеет отношение к тому, что вы ищете :) 
+// Это вряд ли имеет отношение к тому, что вы ищете :)
 // Смотрите не только вверх, но и вниз...
 
 WNDPROC txSetWindowHandler (WNDPROC handler /*= NULL*/)
@@ -7865,5 +7867,11 @@ struct _txSaveConsoleAttr
 // EOF
 //============================================================================================
                                                                                               
- 
+                                                              
+
+
+
+
+
+
 
