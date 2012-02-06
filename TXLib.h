@@ -69,7 +69,7 @@
 //!            #define _TX_VERSION "TXLib [Version: 1.72a, Revision 50]" (пример)
 //!            #define _TX_AUTHOR  "Copyright (C) Ded (Ilya Dedinsky, http://ded32.net.ru)"
 //! @endcode
-//!            Эти константы автоматически обновляется при обновлении версии.
+//!            Эти константы автоматически обновляются при изменении версии.
 //!
 //! @see       txVersion()
 //! @hideinitializer
@@ -87,7 +87,7 @@
 //!            Формат: старшее слово - номер версии, младшее - номер ревизии, в двоично-десятичном
 //!            формате. Например, @c 0x172a0050 - версия @c 0.172a, ревизия @c 50.
 //!
-//!            Эта константа автоматически обновляется при обновлении версии.
+//!            Эта константа автоматически обновляется при изменении версии.
 //!
 //! @see       txVersion()
 //! @usage
@@ -118,10 +118,10 @@
     #endif
     #error TXLib.h: Must use C++ to compile TXLib.h.
     #error
-    #error Check your source file extension. Maybe it is ".C". It should be ".CPP".
-    #error If your file is named, for example, "PROGRAM.C", go to menu [File], then
-    #error [Save As] and rename it to "PROGRAM.CPP". Please do not use russian
-    #error letters or spaces.
+    #error CHECK source file EXTENSION. Maybe it is ".C". It must be ".CPP".
+    #error If your file is named, for example, "Untitled.C", go to menu [File], then
+    #error then [Save As] and rename it to "Untitled.CPP". Please do NOT use spaces
+    #error and russian letters.
     #error -----------------------------------------------------------------------------------
     #error
 
@@ -135,7 +135,8 @@
     #endif
     #error TXLib.h: Windows (MSVC/Win32 or GCC/MinGW) is the only supported system, sorry.
     #error
-    #error In Linux or iOS, you should write your own TXLib and share it with your friends.
+    #error In Linux or iOS, you should write your own TXLib and share it with your friends,
+    #error or use wine.
     #error -----------------------------------------------------------------------------------
     #error
 
@@ -156,9 +157,9 @@
     #error
     #error -----------------------------------------------------------------------------------
     #endif
-    #error TXLib.h: Should include "TXLib.h" *before* or *instead* of <Windows.h> in UNICODE mode.
+    #error TXLib.h: Should include "TXLib.h" BEFORE or INSTEAD of <Windows.h> in UNICODE mode.
     #error
-    #error Rearrange your #include directives.
+    #error REARRANGE your #include directives.
     #error -----------------------------------------------------------------------------------
     #error
 
@@ -181,9 +182,9 @@
     #error
     #error -----------------------------------------------------------------------------------
     #endif
-    #error TXLib.h: Should include "TXLib.h" *before* <string.h> or <stdio.h> in Strict ANSI mode.
+    #error TXLib.h: Should include "TXLib.h" BEFORE <string.h> or <stdio.h> in Strict ANSI mode.
     #error
-    #error Rearrange your #include directives.
+    #error REARRANGE your #include directives.
     #error -----------------------------------------------------------------------------------
     #error
 
@@ -239,7 +240,7 @@
 
 #if  defined (_MSC_VER) && (_MSC_VER == 1200)   // MSVC 6 (1998)
 
-    #define _MSC_VER_6                          // Flag the bad compiler
+    #define _MSC_VER_6                          // Flag the bad dog
 
     #pragma warning (disable: 4511)             // copy constructor could not be generated
     #pragma warning (disable: 4512)             // assignment operator could not be generated
@@ -266,10 +267,11 @@
     #define  wcsncpy_s              wcsncpy     //   functions, so use insecure ones.
     #define _snprintf_s            _snprintf    //   ...
     #define _vsnprintf_s           _vsnprintf
-    #define  strerror_s(buf,code)               (              strncpy  ((buf), strerror (code),  sizeof(buf)-1) )
-    #define  getenv_s(sz,buf,sizeof_buf,name)   ( (void)(sz),  strncpy  ((buf), getenv (name),   (sizeof_buf)-1) )
-    #define  strtok_s(str,delim,ctx)            ( (void)(ctx), strtok   ((str), (delim)) )
-    #define  ctime_s(str,sizeof_str,time)       (              strncpy  ((str), ctime (time),    (sizeof_str)-1) )
+
+    #define  strerror_s(   buf,             code )  (              strncpy  ((buf), strerror (code), sizeof(buf)-1) )
+    #define  ctime_s(      buf, sizeof_buf, time )  (              strncpy  ((buf), ctime (time),   (sizeof_buf)-1) )
+    #define  getenv_s( sz, buf, sizeof_buf, name )  ( (void)(sz),  strncpy  ((buf), getenv (name),  (sizeof_buf)-1) )
+    #define  strtok_s(     buf, delim, ctx )        ( (void)(ctx), strtok   ((buf), (delim)) )
 
     #define _TX_TRUNCATE
 
@@ -347,11 +349,11 @@
 //--------------------------------------------------------------------------------------------
 
 #ifdef _MSC_VER_6
-    #pragma warning (pop)                       // MSVC 6: Restore maximum level
+    #pragma warning (pop)                       // MSVC 6: Restore max level
 #endif
 
 #ifdef __STRICT_ANSI__UNDEFINED
-    #define  __STRICT_ANSI__                    // Redefine back this macro
+    #define  __STRICT_ANSI__                    // Redefine back
 #endif
 
 //}
@@ -433,7 +435,7 @@ HWND txCreateWindow (double sizeX, double sizeY, bool centered = true);
 //!          - Линии - цвет белый (TX_WHITE), толщина 1
 //!          - Заливка - цвет белый (TX_WHITE)
 //!          - Шрифт - Системный шрифт, цвет белый (TX_WHITE)
-//!          - Логическая растровая операция - копирование цвета (R2_COPYPEN)
+//!          - Растровая операция - копирование цвета (R2_COPYPEN)
 //!
 //! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors, RGB()
 //! @see     txSelectFont(), txSetROP2()
@@ -4921,7 +4923,7 @@ $   CONSOLE_SCREEN_BUFFER_INFO con = {{0}};
 $   bool kbRedir = !GetConsoleScreenBufferInfo (GetStdHandle (STD_OUTPUT_HANDLE), &con);
 $   bool kbWait  = (_txGetInput() == EOF);
 
-$   if (kbWait && !canvas && !kbRedir)
+$   if (kbWait && !canvas && !kbRedir && !Win32::wine_get_version)
         {
 $       printf ("\n" "[Нажмите любую клавишу для завершения]");
         }
@@ -4936,7 +4938,7 @@ $       Sleep (_txWindowUpdateInterval);
 
         if (canvas && !_txCanvas_ThreadId)   { $ break; }  // There was a window, and now there is not.
 
-        if (!(i % 100500))
+        if (!(i % 100500) && !Win32::wine_get_version)
             printf ("\r" "[Нажмите же какую-нибудь клавишу для моего завершения]");
         }
 
@@ -5640,12 +5642,16 @@ $1  HWND console = Win32::GetConsoleWindow();
 $   GetWindowRect (console, &_txConsole_Pos);
 $   _txConsole_Active = (console && GetForegroundWindow() == console);
 
-$   if (!console) AllocConsole();
+$   if (!console)
+        {
+$       FreeConsole();
+$       AllocConsole();
+        }
 
 $   console = Win32::GetConsoleWindow();
 $   if (!console) return NULL;
 
-    // Linux::Wine v1.2.2 compatibility.
+    // Linux::Wine v1.2.2+ compatibility.
     // Beer compatibility will be added in future versions.
     // Минздрав РФ предупреждает: чрезмерное употребление wine
     // вредит Вашему здоровью.
@@ -6235,7 +6241,8 @@ const char* _txError (const char file[] /*= NULL*/, int line /*= 0*/, const char
     if (winerr) s +=  _snprintf_s  (s, SZARG_(0), ", GetLastError(): %lu (", winerr),
                 s += FormatMessage (FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
                                     NULL, winerr, MAKELANGID (LANG_NEUTRAL, SUBLANG_DEFAULT),
-                                    s, (DWORD) (sizeof (what) - (s-what)), NULL) - 3,
+                                    s, (DWORD) (sizeof (what) - (s-what)), NULL) - 2,
+                s -=  (s[-1] == '.')? 1 : 0,
                 s +=  _snprintf_s  (s, SZARG_(1), ")");
 
     if (crterr) s +=  _snprintf_s  (s, SZARG_(1), ", errno: %d (%s)",
@@ -7866,12 +7873,5 @@ struct _txSaveConsoleAttr
 //============================================================================================
 // EOF
 //============================================================================================
-                                                                                              
-                                                              
-
-
-
-
-
-
+          
 

@@ -76,7 +76,9 @@
              -# Windows XP   SP2/SP3   ru/en
              -# Windows 2000 SP4       ru/en
              -# Linux + Wine
-                - Ubuntu 10.04, 11.04 + Wine 1.2.2 
+                - Ubuntu 10.04, 11.04 + Wine 1.2.2+
+             -# MacOS X + Wine
+                - Snow Leopard 10.6.8 + Wine 1.4-rc2
 
     @note
              -  <b>Принудительно отключается режим UNICODE</b> (кроме редактора ресурсов
@@ -233,9 +235,4 @@
     - <a href=https://sourceforge.net/tracker/?func=add&group_id=213688&atid=1026713>
       <b>Предложить улучшение</b></a>
 */ 
-
-
-
-
-
 
