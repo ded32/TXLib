@@ -13,9 +13,9 @@
  * \date     2009
  */
 
-#include "..\DirectTX.cpp"
+#include "DirectTX.cpp"
 
-const int Size     = 300;
+const int Size     = 600;
       int Distance = 100;
 
 struct Point

@@ -11,6 +11,15 @@
 //              $Author$
 //}===========================================================================
 
+// Press Alt+Ctrl+Shift+F12 to view this info in About Box
+
+#define __MODULE      "Example06"
+#define __VERSION     "1.0"
+#define __AUTHOR      "Ilya Dedinsky"
+#define __DESCRIPTION "Пример использования библиотеки TXLib"
+
+//----------------------------------------------------------------------------
+
 #include <conio.h>
 #include "TXLib.h"
 

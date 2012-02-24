@@ -13,10 +13,10 @@
  * \date     2009
  */
 
-#include "..\DirectTX.cpp"
+#include "DirectTX.cpp"
 
-const int SizeX = 400,
-          SizeY = 250;
+const int SizeX = 600,
+          SizeY = 400;
 
 struct Normal
     {
@@ -33,8 +33,8 @@ Normal        NormalMap       [SizeX] [SizeY] = {};
 void CreateTextMap()
     {
     txSetTextAlign (TA_CENTER | TA_BASELINE);
-    txSelectFont ("Arial", 80); txTextOut (SizeX/2, SizeY/2 + 20, "DirectTX");
-    txSelectFont ("Arial", 30); txTextOut (SizeX/2, SizeY/2 + 80, "Your dreams now");
+    txSelectFont ("Arial", 90); txTextOut (SizeX/2, SizeY/2 - 10, "DirectTX");
+    txSelectFont ("Arial", 40); txTextOut (SizeX/2, SizeY/2 + 40, "Your dreams now");
 
     for (int y = 0; y < SizeY; y++)
     for (int x = 0; x < SizeX; x++)
