@@ -27,7 +27,13 @@
  * \defgroup DirectTX DirectTX: Движок (Н. Уваров)
  */
 
+#ifndef __TXLIB_H
 #include "TXLib.h"
+#endif
+
+#if !defined (_TX_VER) || (_TX_VER < 0x172a0193)
+#error Must use TXLib.h version >= 1.72 build >= 193 to compile this. -- Ded
+#endif
 
 enum DirectTXInfo
     {
@@ -44,9 +50,9 @@ struct DirectTXColor
             DirectTXColor (float r, float g, float b);
             DirectTXColor (COLORREF c);
 
-    bool    operator == (DirectTXColor c);
+            operator COLORREF();
 
-    DirectTXColor Mix (DirectTXColor c, float howManyOfThatColor);
+    DirectTXColor Mix (const DirectTXColor& c, float howManyOfThatColor);
     };
 
 /** \ingroup DirectTX
@@ -81,6 +87,12 @@ void DirectTXCreateWindow (int width, int height, const char* header = 0);
  */
 
 void DirectTXFlush();
+
+/** \ingroup DirectTX
+ *  \brief   Копирует пиксели из буфера TXLib в буфер DirectTX.
+ */
+
+void DirectTXFlushBack();
 
 /** \ingroup DirectTX
  *  \brief   Функция блокирует обновление окна - аналогична txBegin.
@@ -122,7 +134,7 @@ int  DirectTXGetPixelIndex (int x, int y, int offset = 0);
  *           вызова \ref DirectTXFlush.
  */
 
-void DirectTXPutPixel (int x, int y, DirectTXColor c);
+void DirectTXPutPixel (int x, int y, const DirectTXColor& c);
 
 /** \ingroup DirectTX
  *  \brief   Устанавливает значения цвета пикселя.
@@ -163,7 +175,7 @@ DirectTXColor DirectTXGetPixel (int x, int y);
  *           цвет DirectTX, за исключением \ref DirectTXTextOut.
  */
 
-void DirectTXSetColor (DirectTXColor c);
+void DirectTXSetColor (const DirectTXColor& c);
 
 /** \ingroup DirectTX
  *  \brief   Устанавливает цвет заливки.
@@ -175,7 +187,7 @@ void DirectTXSetColor (DirectTXColor c);
  *           цвет DirectTX, за исключением \ref DirectTXTextOut.
  */
 
-void DirectTXSetFillColor (DirectTXColor c);
+void DirectTXSetFillColor (const DirectTXColor& c);
 
 /** \ingroup DirectTX
  *  \brief   Рисует прямоугольник. Работает быстрее, чем txRectangle.
@@ -326,9 +338,9 @@ void DirectTXTextOut (int x, int y, const char* text, ...);
                      }
                  }
     \endcode
-             Эта программа создаёт окно и вечно рисует в нём квадрат и круг. Ключевое
-             слово - вечно. DirectTX рассчитан на покадровую отрисовку, то есть когда
-             в секунду рисуются десятки, а то и сотни кадров. Рассмотрим аналогичную
+             Эта программа создаёт окно и вечно рисует в нём квадрат и круг. Ключевые
+             слова - "вечно рисует". DirectTX рассчитан на покадровую отрисовку, то есть
+             когда в секунду рисуются десятки, а то и сотни кадров. Рассмотрим аналогичную
              по смыслу программу на DirectTX:
     \code
              #include "DirectTX.cpp"
@@ -385,7 +397,7 @@ void DirectTXTextOut (int x, int y, const char* text, ...);
           -# DirectTXCreateWindow может не только создавать окно, но и присваивать
              ему имя. Например, можно вызвать его так:
     \code
-             DirectTXCreateWindow (800, 600, "Window with title");
+             DirectTXCreateWindow (800, 600, "A window with title");
     \endcode
           -# Между DirectTXFlush и DirectTXEnd нет кода. На самом деле, туда
              можно поместить любой TXLib-овский код. Например, пусть рисуется
@@ -395,7 +407,7 @@ void DirectTXTextOut (int x, int y, const char* text, ...);
              DirectTXFlush();
 
              if (DirectTXKeyPressed ('L'))
-                 DirectTXDrawLine(0, 0, 800, 600);
+                 DirectTXDrawLine (0, 0, 800, 600);
 
              DirectTXEnd();
              ...
@@ -469,11 +481,11 @@ void DirectTXCreateWindow (int width, int height, const char* header)
 
     DirectTXScreenSize.x     = width;
     DirectTXScreenSize.y     = height;
-    DirectTXScreenBufferSize = width * height * 3;
+    DirectTXScreenBufferSize = (width * 3 + width % 4) * height;
     DirectTXScreen           = new unsigned char [DirectTXScreenBufferSize];
 
     BITMAPINFOHEADER hdr     = { sizeof (BITMAPINFOHEADER), DirectTXScreenSize.x, DirectTXScreenSize.y,
-                                 1, 24, 0, 0, 0, 0 };
+                                 1, 24, BI_RGB, 0, 0, 0 };
 
     RGBQUAD          palette = {};
     BITMAPINFO            bi = { hdr, { palette } };
@@ -493,6 +505,18 @@ void DirectTXFlush()
     DirectTXLastRenderMoment = GetTickCount();
     }
 
+void DirectTXFlushBack()
+    {
+    Win32::GetDIBits         (txDC(),
+                             (HBITMAP) Win32::GetCurrentObject (txDC(), OBJ_BITMAP),
+                              0, DirectTXScreenBitmapInfo.bmiHeader.biHeight,
+                              DirectTXScreen,
+                              &DirectTXScreenBitmapInfo, DIB_RGB_COLORS);
+
+    DirectTXLastRenderTime   = GetTickCount() - DirectTXLastRenderMoment;
+    DirectTXLastRenderMoment = GetTickCount();
+    }
+
 void DirectTXDrawFPS (bool fps)
     {
     static long lastGoodFPS = 0;
@@ -501,12 +525,12 @@ void DirectTXDrawFPS (bool fps)
 
     if (fps)
         {
-        if (DirectTXLastRenderTime != 0) lastGoodFPS = (int) (1000 / DirectTXLastRenderTime);
+        if (ROUND (DirectTXLastRenderTime) != 0) lastGoodFPS = ROUND (1000.0 / DirectTXLastRenderTime);
 
         sprintf (buf, "FPS: %ld", lastGoodFPS);
         }
     else
-        sprintf (buf, "Rendered in: %f ms.", DirectTXLastRenderTime);
+        sprintf (buf, "Rendered in: %.0f ms.", DirectTXLastRenderTime);
 
     txTextOut (0, 0, buf);
     }
@@ -527,23 +551,44 @@ inline void DirectTXEnd()
     Sleep (0);
     }
 
-inline int DirectTXGetPixelIndex (int x, int y, int offset)
+inline int DirectTXGetPixelIndex (int x, int y, int color)
     {
-    return ((DirectTXScreenBufferSize - y * DirectTXScreenSize.x - DirectTXScreenSize.x + x) * 3 + offset +
-             DirectTXScreenBufferSize * 4)
-           % DirectTXScreenBufferSize;
+    POINT size = DirectTXScreenSize;
+
+    if (!(0 <= x && x < size.x &&
+          0 <= y && y < size.y)) return -1;
+
+    int rowSize = size.x * 3 + size.x % 4;
+    int offset  = (size.y - y) * rowSize + x*3 + color;
+
+    return (0 <= offset && offset < DirectTXScreenBufferSize)? offset : -1;
     }
 
 inline void DirectTXPutPixel (int x, int y, int r, int g, int b)
     {
-    DirectTXScreen [DirectTXGetPixelIndex (x, y, 2)] = (char) r;
-    DirectTXScreen [DirectTXGetPixelIndex (x, y, 1)] = (char) g;
-    DirectTXScreen [DirectTXGetPixelIndex (x, y, 0)] = (char) b;
+    int index = DirectTXGetPixelIndex (x, y, 0);
+    if (index < 0) return;
+
+    DirectTXScreen [index + 0] = (char) b;
+    DirectTXScreen [index + 1] = (char) g;
+    DirectTXScreen [index + 2] = (char) r;
     }
 
-inline void DirectTXPutPixel (int x, int y, DirectTXColor c)
+inline void DirectTXPutPixel (int x, int y, const DirectTXColor& c)
     {
     DirectTXPutPixel (x, y, c.red, c.green, c.blue);
+    }
+
+inline DirectTXColor DirectTXGetPixel (int x, int y)
+    {
+    int index = DirectTXGetPixelIndex (x, y, 0);
+    if (index < 0) return DirectTXColor (0);
+
+    int b = DirectTXScreen [index + 0];
+    int g = DirectTXScreen [index + 1];
+    int r = DirectTXScreen [index + 2];
+
+    return DirectTXColor (r, g, b);
     }
 
 inline DirectTXColor::DirectTXColor() :
@@ -559,9 +604,9 @@ inline DirectTXColor::DirectTXColor (int r, int g, int b) :
     {}
 
 inline DirectTXColor::DirectTXColor (float r, float g, float b) :
-    red   ((char) (r + 0.5f)),
-    green ((char) (g + 0.5f)),
-    blue  ((char) (b + 0.5f))
+    red   ((char) round (r)),
+    green ((char) round (g)),
+    blue  ((char) round (b))
     {}
 
 inline DirectTXColor::DirectTXColor (COLORREF c) :
@@ -570,48 +615,39 @@ inline DirectTXColor::DirectTXColor (COLORREF c) :
     blue  ((char) ((c >>  0) & 0xFF))
     {}
 
-inline DirectTXColor DirectTXGetPixel (int x, int y)
+inline DirectTXColor::operator COLORREF()
     {
-    return DirectTXColor (DirectTXScreen [DirectTXGetPixelIndex (x, y, 2)],
-                          DirectTXScreen [DirectTXGetPixelIndex (x, y, 1)],
-                          DirectTXScreen [DirectTXGetPixelIndex (x, y, 0)]);
+    return RGB (red, green, blue);
     }
 
-bool DirectTXColor::operator == (DirectTXColor c)
-    {
-    return (red   == c.red)   &&
-           (green == c.green) &&
-           (blue  == c.blue);
-    }
-
-DirectTXColor DirectTXColor::Mix (DirectTXColor c, float howManyOfFirst)
+inline DirectTXColor DirectTXColor::Mix (const DirectTXColor& c, float howManyOfFirst)
     {
     return DirectTXColor (red   * howManyOfFirst + c.red   * (1 - howManyOfFirst),
                           green * howManyOfFirst + c.green * (1 - howManyOfFirst),
                           blue  * howManyOfFirst + c.blue  * (1 - howManyOfFirst));
     }
 
-void DirectTXSetColor (DirectTXColor c)
+inline void DirectTXSetColor (const DirectTXColor& c)
     {
     DirectTXCurrentColor = c;
     }
 
-void DirectTXSetFillColor (DirectTXColor c)
+inline void DirectTXSetFillColor (const DirectTXColor& c)
     {
     DirectTXCurrentFillColor = c;
     }
 
-bool DirectTXKeyPressed (char c)
+inline bool DirectTXKeyPressed (char c)
     {
     return (GetKeyState (c) >> 7) == -1;
     }
 
-bool DirectTXLeftButtonPressed()
+inline bool DirectTXLeftButtonPressed()
     {
     return (txMouseButtons() & 1) == 1;
     }
 
-bool DirectTXRightButtonPressed()
+inline bool DirectTXRightButtonPressed()
     {
     return (txMouseButtons() & 2) == 1;
     }
@@ -649,7 +685,10 @@ void DirectTXDrawLine (int x0, int y0, int x1, int y1)
     int length  = (lengthX > lengthY)? lengthX : lengthY;
 
     if (length == 0)
+        {
         DirectTXPutPixel (x1, y1, DirectTXCurrentColor);
+        return;
+        }
 
     if (lengthY <= lengthX)
         {
@@ -697,6 +736,8 @@ void DirectTXDrawLine (int x0, int y0, int x1, int y1)
 
 void DirectTXDrawCircle (int xc, int yc, int r)
     {
+    if (r < 0) return;
+
     int x = 0;
     int y = r;
     int d = 3 - (r << 1);

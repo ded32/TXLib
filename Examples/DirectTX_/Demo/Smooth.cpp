@@ -13,7 +13,7 @@
  * \date     2009
  */
 
-#include "..\DirectTX.cpp"
+#include "DirectTX.cpp"
 
 const int SizeX = 600,
           SizeY = 600;
@@ -43,7 +43,7 @@ int main()
     {
     srand (time (0));
 
-    DirectTXCreateWindow (SizeX, SizeY, "*PIMKIN & KORNEY are COPY-PASTERS!*  [Esc] to exit");
+    DirectTXCreateWindow (SizeX, SizeY, "Smoothing Demo... [Esc] to exit");
 
     for (int y = 1; y < SizeY; y++)
     for (int x = 1; x < SizeX; x++)
