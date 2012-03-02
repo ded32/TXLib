@@ -30,7 +30,7 @@ goto end
 :ci
 echo Committing...
 
-%do% for %%1 in (TXLib.h Dev\*.dox Doc\1_MainPage.txt Dev\doxygen_hdr.htm) do echo.>> %%1
+%do% for %%1 in (TXLib.h Dev\*.dox Doc\1_MainPage.txt) do echo.>> %%1
 del %%1 >> %log% 2>>&1
 
  %do% call hg ci

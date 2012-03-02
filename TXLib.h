@@ -1349,6 +1349,7 @@ bool txDrawText (double x0, double y0, double x1, double y1, const char text[],
 //! @param   italic     Курсив
 //! @param   underline  Подчеркивание
 //! @param   strikeout  Зачеркивание
+//! @param   angle      Угол поворота текста (в градусах)
 //!
 //! @return  Всегда true. Если шрифт не был найден, то устанавливается системный шрифт Windows
 //!          @c (SYSTEM_FIXED_FONT, см. MSDN). Существование шрифта можно проверить функцией
@@ -1359,17 +1360,18 @@ bool txDrawText (double x0, double y0, double x1, double y1, const char text[],
 //! @code
 //!          txSelectFont ("Comic Sans MS", 40);
 //!          txTextOut (100, 100, "И здесь могла бы быть Ваша реклама.");
-//!          txSelectFont ("Comic Sans MS", 40, 10, false, true, false, true);
+//!          txSelectFont ("Comic Sans MS", 40, 10, false, true, false, true, 15);
 //!          txTextOut (100, 200, "Но ее почему-то нет.");
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
 bool txSelectFont (const char name[], double sizeY,
-                   double sizeX   = -1,
-                   int  bold      = FW_DONTCARE,
-                   bool italic    = false,
-                   bool underline = false,
-                   bool strikeout = false);
+                   double sizeX     = -1,
+                   int    bold      = FW_DONTCARE,
+                   bool   italic    = false,
+                   bool   underline = false,
+                   bool   strikeout = false,
+                   double angle     = 0);
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -6683,18 +6685,19 @@ $   return true;
 //--------------------------------------------------------------------------------------------
 
 bool txSelectFont (const char name[], double sizeY,
-                   double sizeX   /*= -1*/,
-                   int  bold      /*= FW_DONTCARE*/,
-                   bool italic    /*= false*/,
-                   bool underline /*= false*/,
-                   bool strikeout /*= false*/)
+                   double sizeX     /*= -1*/,
+                   int    bold      /*= FW_DONTCARE*/,
+                   bool   italic    /*= false*/,
+                   bool   underline /*= false*/,
+                   bool   strikeout /*= false*/,
+                   double angle     /*= 0*/)
     {
 $1  _TX_IF_TXWINDOW_FAILED        return false;
 $   _TX_IF_ARGUMENT_FAILED (name) return false;
 
 $   _txBuffer_Select (txFontExist (name)?
                           Win32::CreateFont (ROUND (sizeY), ROUND ((sizeX >= 0)? sizeX : sizeY/3),
-                                             0, 0, bold, italic, underline, strikeout,
+                                             ROUND (angle*10), 0, bold, italic, underline, strikeout,
                                              RUSSIAN_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
                                              DEFAULT_QUALITY, FIXED_PITCH,
                                              name)
@@ -7972,10 +7975,7 @@ struct _txSaveConsoleAttr
                                                                                               
                                                                                               
                                                                                               
-                                                                                              
-                                                                                              
-                                                                                 
-
+                                                                                         
 
 
 
