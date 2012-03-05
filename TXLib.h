@@ -462,7 +462,7 @@ bool txSetDefaults();
 //!          txCreateWindow (800, 600);
 //!          if (!txOK())
 //!              {
-//!              MessageBox (txWindow(), "Не смогла создать окно", "Извините", MB_ICONSTOP);
+//!              txMessageBox ("Не смогла создать окно", "Извините", MB_ICONSTOP);
 //!              return;
 //!              }
 //! @endcode
@@ -555,7 +555,7 @@ inline HDC& txDC();
 //! @usage
 //! @code
 //!          SetWindowText (txWindow(), "Новые заголовки - теперь и в ваших окнах!");
-//!          MessageBox (txWindow(), "Распишитесь", "Получите", MB_ICONINFORMATION);
+//!          txMessageBox ("Распишитесь", "Получите", MB_ICONINFORMATION);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
@@ -616,7 +616,7 @@ inline unsigned txVersionNumber();
 //!              txSleep (50);
 //!              }
 //!
-//!          MessageBox (txWindow(), "Вот такой вот progress bar", "TXLib forever)", 0);
+//!          txMessageBox ("Вот такой вот progress bar", "TXLib forever)", 0);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
@@ -1554,7 +1554,7 @@ HDC txCreateCompatibleDC (double sizeX, double sizeY, HBITMAP bitmap = NULL);
 //!          Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
 //!          HDC background = txLoadImage ("Resources\\Images\\Background.bmp");
-//!          if (!background) MessageBox (txWindow(), "Cannot load background", "Epic fail", 0);
+//!          if (!background) txMessageBox ("Cannot load background", "Epic fail", 0);
 //!
 //!          // НЕ НАДО часто загружать одно и то же изображение, особенно в цикле - программа будет тормозить!
 //!          // Загрузите один раз перед циклом, потом используйте много раз.
@@ -1583,7 +1583,7 @@ HDC txLoadImage (const char filename[]);
 //!          Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
 //!          HDC background = txLoadImage ("Resources\\Images\\Background.bmp");
-//!          if (!background) MessageBox (txWindow(), "Cannot load background", "Oh, not now", 0);
+//!          if (!background) txMessageBox ("Cannot load background", "Oh, not now", 0);
 //!
 //!          // НЕ НАДО часто загружать одно и то же изображение, особенно в цикле - программа будет тормозить!
 //!          // Загрузите один раз перед циклом, потом используйте много раз.
@@ -1650,7 +1650,7 @@ bool txDeleteDC (HDC* dc);
 //!          Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
 //!          HDC background = txLoadImage ("Resources\\Images\\Background.bmp");
-//!          if (!background) MessageBox (txWindow(), "Cannot load background", "Once again :(", 0);
+//!          if (!background) txMessageBox ("Cannot load background", "Once again :(", 0);
 //!
 //!          // НЕ НАДО часто загружать одно и то же изображение, особенно в цикле - программа будет тормозить!
 //!          // Загрузите один раз перед циклом, потом используйте много раз.
@@ -1699,7 +1699,7 @@ bool txBitBlt (HDC dest, double xDest, double yDest, double width, double height
 //!          Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
 //!          HDC superman = txLoadImage ("Resources\\Images\\Superman.bmp");
-//!          if (!superman) MessageBox (txWindow(), "Cannot load superman, all the monsters will succeed", "Sorry", 0);
+//!          if (!superman) txMessageBox ("Cannot load superman, all the monsters will succeed", "Sorry", 0);
 //!
 //!          // НЕ НАДО часто загружать одно и то же изображение, особенно в цикле - программа будет тормозить!
 //!          // Загрузите один раз перед циклом, потом используйте много раз.
@@ -1780,7 +1780,7 @@ bool txTransparentBlt (HDC dest, double xDest, double yDest, double width, doubl
 //!          Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
 //!          HDC batman = txLoadImage ("Resources\\Images\\Batman.bmp");
-//!          if (!batman) MessageBox (txWindow(), "Call to Batman failed", "Do save yourself", 0);
+//!          if (!batman) txMessageBox ("Call to Batman failed", "Do save yourself", 0);
 //!
 //!          // НЕ НАДО часто загружать одно и то же изображение, особенно в цикле - программа будет тормозить!
 //!          // Загрузите один раз перед циклом, потом используйте много раз.
@@ -1806,6 +1806,26 @@ bool txAlphaBlend (HDC dest, double xDest, double yDest, double width, double he
 //! @name    Вспомогательные функции
 //============================================================================================
 //! @{
+//{-------------------------------------------------------------------------------------------
+//! @ingroup Drawing
+//! @brief   Задерживает выполнение программы на определенное время.
+//!
+//! @param   time  Задержка в миллисекундах.
+//!
+//! @return  Состояние блокировки обновления окна.
+//!
+//! @note    <b>Перед началом задержки изображение в окне обязательно обновится,</b> даже если
+//!          рисование заблокировано через txBegin().
+//!
+//! @see     txBegin(), txEnd(), txUpdateWindow()
+//! @usage
+//! @code
+//!          txSleep (500); // Поспать полсекунды
+//! @endcode
+//}-------------------------------------------------------------------------------------------
+
+bool txSleep (double time);
+
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Drawing
 //! @brief   Блокирует обновление изображения окна, во избежание мигания.
@@ -1862,26 +1882,6 @@ inline int txBegin();
 inline int txEnd();
 
 //{-------------------------------------------------------------------------------------------
-//! @ingroup Misc
-//! @brief   Задерживает выполнение программы на определенное время.
-//!
-//! @param   time  Задержка в миллисекундах.
-//!
-//! @return  Состояние блокировки обновления окна.
-//!
-//! @note    <b>Перед началом задержки изображение в окне обязательно обновится,</b> даже если
-//!          рисование заблокировано через txBegin().
-//!
-//! @see     txBegin(), txEnd(), txUpdateWindow()
-//! @usage
-//! @code
-//!          txSleep (500); // Поспать полсекунды
-//! @endcode
-//}-------------------------------------------------------------------------------------------
-
-bool txSleep (double time);
-
-//{-------------------------------------------------------------------------------------------
 //! @ingroup Service
 //! @brief   Разрешает или запрещает автоматическое обновление изображения в окне.
 //!
@@ -1927,6 +1927,42 @@ inline int txUpdateWindow (int update = true);
 bool txSelectObject (HGDIOBJ obj);
 
 //{-------------------------------------------------------------------------------------------
+//! @ingroup Service
+//! @brief   Делает нечто иногда удобное. См. название функции.
+//!
+//! @return  Если операция была успешна - true, иначе - false.
+//!
+//!          У этой функции есть синоним с простым понятным названием, поищите его в файле
+//!          библиотеки, около @a определения этой функции. Или можно @strike скопировать @endstrike
+//!          набрать это километровое имя и посмотреть, что получится.
+//!
+//! @see     txCreateWindow(), txSleep()
+//! @usage
+//! @code
+//!          int main()
+//!              {
+//!              txCreateWindow (800, 600);
+//!
+//!              txSetTextAlign (TA_CENTER);
+//!              txTextOut (txGetExtentX()/2, txGetExtentY()/2, "Press any key to exit!");
+//! @endcode
+//
+//                 +--<<< Это текст системы помощи. Ищите дальше! Жмите [F3] или "Найти далее"
+//                 |
+//                 v
+//               txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillClose_AndIWillNotBeAskingWhereIsMyPicture();
+//! @code        txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillClose_AndIWillNotBeAskingWhereIsMyPicture();
+//!              return 0;
+//!              }
+//! @endcode
+//}-------------------------------------------------------------------------------------------
+
+//     +--<<< Это прототип функции, а надо найти ее определение. Ищите дальше! Жмите [F3] или "Найти далее"
+//     |
+//     v
+bool txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillClose_AndIWillNotBeAskingWhereIsMyPicture();
+
+//{-------------------------------------------------------------------------------------------
 //! @ingroup Drawing
 //! @brief   Уничтожает окно TXlib.
 //!
@@ -1946,46 +1982,25 @@ bool txSelectObject (HGDIOBJ obj);
 bool txDestroyWindow();
 
 //{-------------------------------------------------------------------------------------------
-//! @ingroup Service
-//! @brief   Делает нечто иногда удобное. См. название функции.
+//! @ingroup Drawing
+//! @brief   Оценивает скорость работы компьютера.
 //!
-//! @return  Если операция была успешна - true, иначе - false.
+//! @return  Скорость работы (графических операций) в условных единицах.
 //!
-//!          У этой функции есть синоним с простым понятным названием, поищите его в файле
-//!          библиотеки, около @a определения этой функции. Или можно @strike скопировать @endstrike
-//!          набрать это километровое имя и посмотреть, что получится.
-//!
-//! @see     txCreateWindow(), txSleep()
+//! @see     txSleep()
 //! @usage
 //! @code
-//!          int main()
-//!              {
-//!              txCreateWindow (800, 600);
-//!
-//!              txSetTextAlign (TA_CENTER);
-//!              txTextOut (txGetExtentX()/2, txGetExtentY()/2, "Press any key to exit!");
-//!
-//
-//                 +--<<< Это текст системы помощи. Ищите дальше! Жмите [F3] или "Найти далее"
-//                 |
-//                 v
-//               txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillClose_AndIWillNotBeAskingWhereIsMyPicture();
-//!              txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillClose_AndIWillNotBeAskingWhereIsMyPicture();
-//!              return 0;
-//!              }
+//!          if (txQueryPerformance() < 1) printf ("Хочется новый компьютер");
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-//     +--<<< Это прототип функции, а надо найти ее определение. Ищите дальше! Жмите [F3] или "Найти далее"
-//     |
-//     v
-bool txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillClose_AndIWillNotBeAskingWhereIsMyPicture();
+double txQueryPerformance();
 
 //! @}
 //}
 
 //============================================================================================
-//{          Mouse
+//{          Mouse functions
 //! @name    Работа с мышью
 //============================================================================================
 //! @{
@@ -2284,18 +2299,97 @@ bool txPlaySound (const char filename[] = NULL, DWORD mode = SND_ASYNC);
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Misc
-//! @brief   Оценивает скорость работы компьютера.
+//! @brief   Выводит сообщение в окне с помощью функции MessageBox.
 //!
-//! @return  Скорость работы в условных единицах.
+//! @param   text    Текст сообщения
+//! @param   header  Заголовок сообщения
+//! @param   flags   Флаги отображения сообщения
 //!
-//! @see     txSleep()
+//! @return  Значение, возвращаемое функцией MessageBox.
+//!
+//! @warning Текст не должен превышать _TX_BIGBUFSIZE символов, а заголовок - _TX_BIGBUFSIZE символов,
+//!          иначе они обрезаются.
+//!
+//! @see     TX_ERROR(), TX_DEBUG_ERROR(), txOutputDebugPrintf(), txNotifyIcon()
 //! @usage
 //! @code
-//!          if (txQueryPerformance() < 1) printf ("Хочется новый компьютер");
+//!          if (txMessageBox ("Прочитали?", "Пришло сообщение!", MB_YESNO) == IDYES)
+//!              txMessageBox ("Очень хорошо");
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-double txQueryPerformance();
+unsigned txMessageBox (const char* text, const char* header = "TXLib сообщает", unsigned flags = 0);
+
+//{-------------------------------------------------------------------------------------------
+//! @ingroup Misc
+//! @brief   Выводит всплывающее сообщение в системном трее.
+//!
+//! @param   flags   Флаги сообщения
+//! @param   title   Заголовок сообщения
+//! @param   format  Строка для печати, как в printf().
+//!
+//! @title   Флаги сообщения:
+//! @table   @tr @c NIIF_INFO    @td Информация
+//!          @tr @c NIIF_WARNING @td Предупреждение
+//!          @tr @c NIIF_ERROR   @td Сообщение об ошибке
+//! @endtable
+//!
+//! @return  Удалось ли отобразить сообщение.
+//!
+//!          Функция формирует сообщение по правилам printf() и выводит во всплывающем окне.
+//!
+//! @warning
+//!        - Эта функция требует, чтобы при компиляции константа версии Internet Explorer
+//!          @c (_WIN32_IE) была задана не ниже 0x0500. Для этого надо либо <b>включить TXLib.h
+//!          вместо @c windows.h или перед ним.</b> Либо надо самостоятельно определить @c (#define)
+//!          эту константу.
+//!          <small>С версией Internet Explorer это связано потому, что при его установке в Windows
+//!          обновляются многие компоненты (например, @c shell32.dll и @c comctl32.dll), которые
+//!          влияют на функциональность системы независимо от использования браузера.</small>
+//!        - Сообщение не должно превышать _TX_BUFSIZE символов, иначе оно обрезается.
+//!
+//! @see     TX_ERROR(), TX_DEBUG_ERROR(), txOutputDebugPrintf(), txMessageBox()
+//! @usage
+//! @code
+//!          int hours = 3, minutes = 10;
+//!          const char station[] = "Юму";
+//!          ...
+//!          txNotifyIcon (NIIF_INFO, "Уважаемые пассажиры",
+//!                        "Поезд на %s отправляется в %d:%d.", station, hours, minutes);
+//! @endcode
+//}-------------------------------------------------------------------------------------------
+
+bool txNotifyIcon (unsigned flags, const char title[], const char format[], ...) _TX_CHECK_FORMAT (3);
+
+//{-------------------------------------------------------------------------------------------
+//! @ingroup Misc
+//! @brief   Выводит сообщение в отладчике.
+//!
+//! @param   format  Строка для печати, как в printf().
+//!
+//! @return  Количество напечатанных символов.
+//!
+//!          Функция формирует сообщение по правилам printf() и передает его в OutputDebugString().
+//!          Ее вывод можно перехватить отладчиком или утилитами-логгерами, например,
+//!          <a href=http://technet.microsoft.com/ru-ru/sysinternals/bb896647%28en-us%29.aspx>DebugView</a>.
+//!          Если этого не сделать, и не задать первый символ @c '\\a' (см. ниже), то о сообщении никто
+//!          не узнает.
+//! @note
+//!        - Если первый            символ в строке @c '\\a', то сообщение также дублируется txMessageBox().
+//!        - Если первый или второй символ в строке @c '\\f', то сообщение также дублируется printf().
+//!
+//! @warning Сообщение не должно превышать _TX_BIGBUFSIZE символов, иначе оно обрезается.
+//!
+//! @see     TX_ERROR(), TX_DEBUG_ERROR(), txNotifyIcon(), txMessageBox()
+//! @usage
+//! @code
+//!          int x = 42;
+//!          ...
+//!          txOutputDebugPrintf ("Никто не узнает, что %d.", x);
+//! @endcode
+//}-------------------------------------------------------------------------------------------
+
+int txOutputDebugPrintf (const char format[], ...) _TX_CHECK_FORMAT (1);
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Misc
@@ -2474,7 +2568,7 @@ inline bool In (const COORD& pt, const SMALL_RECT& rect);
 //! @code
 //!          char message[100] = "Maybe...";
 //!          sprintf ("You SUDDENLY got %d bucks now. But note that tax rate is $%d.", random (100), 100);
-//!          MessageBox (txWindow(), message, "Lottery", 0);
+//!          txMessageBox (message, "Lottery", 0);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
@@ -2497,7 +2591,7 @@ inline int random (int range);
 //!              {
 //!              char message[100] = "Maybe...";
 //!              sprintf ("Проиграли в лотерею? Отдайте долг в %d рублей", -money);
-//!              MessageBox (txWindow(), message, "Быстро!", 0);
+//!              txMessageBox (message, "Быстро!", 0);
 //!              }
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -2574,12 +2668,70 @@ inline double random (double left, double right);
 //!
 //! @usage
 //! @code
-//!          if (txPI == 1) MessageBox (txWindow(), "Вы попали в другую Вселенную.", "Поздравляем", MB_ICONSTOP);
+//!          if (txPI == 1) txMessageBox ("Вы попали в другую Вселенную.", "Поздравляем", MB_ICONSTOP);
 //! @endcode
 //! @hideinitializer
 //}-------------------------------------------------------------------------------------------
 
 const double txPI = asin (1.0) * 2;
+
+//{-------------------------------------------------------------------------------------------
+//! @ingroup Misc
+//! @brief   <i>Очень удобное</i> возведение числа в квадрат.
+//!
+//! @param   x  Число для возведения в него
+//!
+//! @return  Квадрат, полученный путем возведения в него числа, заданного для возведения в квадрат
+//!
+//! @note    Это пример, как <b> не надо </b> писать код: txSqr() @d функция с "медвежьей услугой".
+//!          Иногда встречаются те, кто любит печатать в функции результат ее вычислений <small>(не
+//!          данные для отладки, а именно результат),</small> вместо того, чтобы просто возвращать его
+//!          тому, кто эту функцию вызывал. Пусть эти люди воспользуются приведенной txSqr() для
+//!          какого-нибудь нужного дела, особенно в цикле. Пример, конечно, несколько преувеличен.
+//!          См. в исходном тексте код этой навязчивой радости.
+//! @usage
+//! @code
+//!          printf ("\n" "Радиус\t\t" "Площадь круга\n\n");
+//!
+//!          for (double r = 100; r > 0; r--)
+//!              {
+//!              printf ("%6.2lf...", r);
+//!
+//!              double square = M_PI * txSqr (r);  // Надолго запомним эту площадь
+//!              printf ("\b\b\b   \t");
+//!
+//!              printf ("%-.2lf\n", square);
+//!              }
+//! @endcode
+//}-------------------------------------------------------------------------------------------
+
+inline
+double txSqr (double x)
+    {
+    double sqr = pow (sqrt (x) * sqrt (x), sqrt (4.0));  // Бурная вычислительная деятельность
+
+    char str[1024] = "";
+    _snprintf_s (str, sizeof (str), "Возведение дало %g!" "!!" "!!" " Вы рады????    ", sqr);
+    txMessageBox (str, "Получен ОТВЕТ!" "!!", MB_ICONEXCLAMATION | MB_YESNO) != IDNO ||
+        (
+        txMessageBox ("Жаль...", "А я так старалась", MB_ICONINFORMATION),
+        txMessageBox ("Уйду я от вас       ", "Злые вы...",  MB_ICONSTOP),
+        exit (EXIT_FAILURE), 0
+        );
+
+    #if defined (_WIN32_IE) && (_WIN32_IE >= 0x0500)
+
+    bool txNotifyIcon (unsigned, const char*, const char*, ...);
+    txNotifyIcon (NIIF_INFO, NULL, "\n%s\n", "Высшая математика!  \0"  // А как это работает, а?
+                                             "С ума сойти...      \0"  //
+                                             "а КЭП подтверждает  \0"  //       и кто это будет
+                                             "Главное - отчитаться\0"  //       поддерживать?..
+                                             "Невероятно, но факт \0"
+                                             "Кто бы мог подумать?\0" + GetTickCount() % 6 * 21);
+    #endif
+
+    return sqr;  // Ну мы же не звери
+    }
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Misc
@@ -2667,7 +2819,7 @@ template <typename T> inline T zero();
 //}-------------------------------------------------------------------------------------------
 //! @{
 
-// C++03 version
+//{ C++03 version
 
 #define  TX_AUTO_FUNC(           param_t, param, func )                  \
         _TX_AUTO_FUNC( __LINE__, param_t, param, func )
@@ -2687,8 +2839,9 @@ template <typename T> inline T zero();
         private: this_t& operator= (const this_t&)     { return *this; } \
         }                                                                \
         _TX_AUTO_FUNC_##n (param)
+//}
 
-// C++0x version, use MSVS 2010 or GCC v.4.5+ and -std=c++0x in command line
+//{ C++0x version, use MSVS 2010 or GCC v.4.5+ and -std=c++0x in command line
 
 #define  tx_auto_func(    func )  _tx_auto_fun1 ( __LINE__, func )
 #define _tx_auto_fun1( n, func )  _tx_auto_fun2 ( n,        func )
@@ -2711,70 +2864,321 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
     {
     return        _tx_auto_func_ <T> (func);
     }
+//}
 
-// Compatibility
+//{ Compatibility
 
 #define TX_FINALLY( param_t, param, func )  TX_AUTO_FUNC (param_t, param, func)
 #define tx_finally( func )                  tx_auto_func (func)
 
+//}
+
 //! @}
+
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Misc
-//! @brief   <i>Очень удобное</i> возведение числа в квадрат.
+//! @brief   Замена стандартного макроса assert(), с выдачей сообщения через txMessageBox(),
+//!          консоль и OutputDebugString().
 //!
-//! @param   x  Число для возведения в него
+//! @param   cond  Условие для проверки
 //!
-//! @return  Квадрат, полученный путем возведения в него числа, заданного для возведения в квадрат
+//! @return  Не определено
 //!
-//! @note    Это пример, как <b> не надо </b> писать код: txSqr() @d функция с "медвежьей услугой".
-//!          Иногда встречаются те, кто любит печатать в функции результат ее вычислений <small>(не
-//!          данные для отладки, а именно результат),</small> вместо того, чтобы просто возвращать его
-//!          тому, кто эту функцию вызывал. Пусть эти люди воспользуются приведенной txSqr() для
-//!          какого-нибудь нужного дела, особенно в цикле. Пример, конечно, несколько преувеличен.
-//!          См. в исходном тексте код этой навязчивой радости.
+//!          Если условие, проверяемое assert(), истинно, то макрос ничего не делает. @n
+//!          Если условие оказывается ложно, то выводится диагностическое сообщение и
+//!          программа аварийно завершается.
+//!
+//! @note    <b>При компиляции в режиме Release (или если определен NDEBUG) assert
+//!          превращается в пустой оператор.</b> @n
+//!          Не надо помещать в assert() действия, которые важны для работы алгорима.
+//!
+//! @see     asserted, verified, verify(), TX_ERROR(), TX_DEBUG_ERROR(), txOutputDebugPrintf(),
+//!          txMessageBox(), txNotifyIcon(), __TX_FILELINE__, __TX_FUNCTION__
 //! @usage
 //! @code
-//!          printf ("\n" "Радиус\t\t" "Площадь круга\n\n");
+//!          assert (0 <= i && i < ARRAY_SIZE);
 //!
-//!          for (double r = 100; r > 0; r--)
-//!              {
-//!              printf ("%6.2lf...", r);
+//!          FILE* input = fopen ("a.txt", "r");
+//!          assert (input);
 //!
-//!              double square = M_PI * txSqr (r);  // Надолго запомним эту площадь
-//!              printf ("\b\b\b   \t");
+//!          // Этот вызов fgets() НЕ будет выполнен в режиме Release:
+//!          assert (fgets (str, sizeof (str) - 1, input));
 //!
-//!              printf ("%-.2lf\n", square);
-//!              }
+//!          // Здесь все будет правильно:
+//!          bool ok = (fclose (input) == 0);
+//!          assert (ok);
 //! @endcode
+//! @hideinitializer
 //}-------------------------------------------------------------------------------------------
 
-inline
-double txSqr (double x)
-    {
-    double sqr = pow (sqrt (x) * sqrt (x), sqrt (4.0));  // Бурная вычислительная деятельность
+#if !defined (NDEBUG)
+    #undef  assert
+    #define assert( cond )    _txNOP ( !(cond)? (TX_ERROR ("\a" "ВНЕЗАПНО: Логическая ошибка: " \
+                                                           "Неверно, что \"%s\"" TX_COMMA #cond), 0) : 1 )
+#else
+    #undef  assert
+    #define assert( cond )    ((void) 1)
 
-    char str[1024] = "";
-    _snprintf_s (str, sizeof (str), "Возведение дало %g!" "!!" "!!" " Вы рады????    ", sqr);
-    MessageBox (txWindow(), str, "Получен ОТВЕТ!" "!!", MB_ICONEXCLAMATION | MB_YESNO) != IDNO ||
-        (
-        MessageBox (txWindow(), "Жаль...", "А я так старалась", MB_ICONINFORMATION),
-        MessageBox (txWindow(), "Уйду я от вас       ", "Злые вы...",  MB_ICONSTOP),
-        exit (EXIT_FAILURE), 0
-        );
+#endif
 
-    #if defined (_WIN32_IE) && (_WIN32_IE >= 0x0500)
+//{-------------------------------------------------------------------------------------------
+//! @ingroup Misc
+//! @brief   Выводит диагностическое сообщение в случае нулевого или ложного результата.
+//!
+//! @return  Всегда 0
+//!
+//!          Суффиксная форма макроса assert(), не теряющая в режиме Release
+//!          исполнения предиката.
+//!
+//! @note    <b>Предполагается, что операция в случае неуспеха возвращает 0 или false.</b> @n@n
+//!          <b>При компиляции в режиме Release (или если определен NDEBUG) asserted
+//!          превращается в пустое место.</b>
+//!
+//! @see     assert(), verify(), verified, TX_ERROR(), TX_DEBUG_ERROR(), txOutputDebugPrintf(),
+//!          txMessageBox(), txNotifyIcon(), __TX_FILELINE__, __TX_FUNCTION__
+//! @usage
+//! @code
+//!          FILE* input = fopen ("a.txt", "r"); assert (input);
+//!
+//!          // Этот вызов fgets() будет выполнен в любом случае:
+//!          fgets (str, sizeof (str) - 1, input) asserted;
+//!
+//!          // Этот вызов fgets() НЕ будет выполнен в режиме Release:
+//!          assert (fgets (str, sizeof (str) - 1, input));
+//!
+//!          (fclose (input) != 0) asserted;
+//! @endcode
+//! @hideinitializer
+//}-------------------------------------------------------------------------------------------
 
-    bool txNotifyIcon (unsigned, const char*, const char*, ...);
-    txNotifyIcon (NIIF_INFO, NULL, "\n%s\n", "Высшая математика!  \0"  // А как это работает, а?
-                                             "С ума сойти...      \0"  //
-                                             "а КЭП подтверждает  \0"  //       и кто это будет
-                                             "Главное - отчитаться\0"  //       поддерживать?..
-                                             "Невероятно, но факт \0"
-                                             "Кто бы мог подумать?\0" + GetTickCount() % 6 * 21);
-    #endif
+#if !defined (NDEBUG)
+    #define asserted          || TX_ERROR ("\a" "Обнаружен нулевой или ложный результат.")
 
-    return sqr;  // Ну мы же не звери
-    }
+#else
+    #define asserted          || _txNOP (0)
+
+#endif
+
+#define verified              asserted  //!< For compatibility with assert macro
+
+//! @cond INTERNAL
+#define TX_NEEDED             asserted  //!< For compatibility with earlier releases
+//! @endcond
+
+//{-------------------------------------------------------------------------------------------
+//! @ingroup Misc
+//! @brief   Выполняет команду (вычисляет выражение) и проверяет результат.
+//!
+//! @param   expr  Команда (выражение)
+//!
+//! @return  1, если выражение @p expr истинно, иначе 0.
+//!
+//!          Если условие, проверяемое verify(), истинно, то макрос ничего не делает. @n
+//!          Если условие оказывается ложно, то выводится диагностическое сообщение и
+//!          программа аварийно завершается.
+//!
+//! @note    Действие макроса аналогично assert(), но при компиляции в режиме Release
+//!          (или если определен NDEBUG) verify @b не превращается в пустой оператор.
+//!
+//! @see     verified, assert(), asserted, TX_ERROR(), TX_DEBUG_ERROR(), txOutputDebugPrintf(),
+//!          txMessageBox(), txNotifyIcon(), __TX_FILELINE__, __TX_FUNCTION__
+//! @usage
+//! @code
+//!          FILE* input = verify (fopen ("a.txt", "r"));
+//!
+//!          // Этот вызов fgets() БУДЕТ выполнен в режиме Release:
+//!          verify (fgets (str, sizeof (str) - 1, input));
+//!
+//!          // Здесь все тоже будет правильно:
+//!          verify (fclose (input) == 0);
+//! @endcode
+//! @hideinitializer
+//}-------------------------------------------------------------------------------------------
+
+#if !defined (NDEBUG)
+    #undef  verify
+    #define verify            assert
+
+#else
+    #undef  verify
+    #define verify( expr )    ( expr )
+
+#endif
+
+//{-------------------------------------------------------------------------------------------
+//! @ingroup Misc
+//! @brief   Выводит развернутое диагностическое сообщение.
+//!
+//! @param   msg  Сообщение с произвольным количеством параметров в стиле функции @c printf().
+//!
+//! @note    @c GCC в режиме строгого соответствия стандарту ANSI (с ключом командной строки
+//!          <tt>-ansi</tt>) и Microsoft Visual Studio версий 6 и 2003 не поддерживают макросы
+//!          с переменным числом параметров. Поэтому, если параметров несколько, они разделяются
+//!          @b _ (@ref _ "символом подчеркивания", переопределенным в запятую) или символом TX_COMMA,
+//!          вместо настоящей запятой, так как TX_ERROR @d макрос. @n
+//!          Если в проекте используются библиотеки <a href=http://boost.org><tt>boost</tt></a>, то
+//!          их надо включать @b до @c TXLib.h и вместо символа подчеркивания пользоваться TX_COMMA,
+//!          так как @c boost использует символ подчеркивания как свой собственный служебный макрос
+//!          в модуле @c boost::preprocessor, @strike где творится дефайновый ад. @endstrike
+//!
+//! @return  Всегда false
+//!
+//! @see     _, TX_COMMA, assert(), asserted, verify(), verified, TX_DEBUG_ERROR(), txOutputDebugPrintf(),
+//!          txMessageBox(), txNotifyIcon(), __TX_FILELINE__, __TX_FUNCTION__
+//! @usage
+//! @code
+//!          TX_ERROR ("Не смог прочитать 'Войну и мир'. Отмазка %d: не нашел '%s'", reasonNum, fileName);
+//! @endcode
+//! @hideinitializer
+//}-------------------------------------------------------------------------------------------
+
+// Variadic macros not supported in Strict ANSI mode and in MSVC prior to MSVC 8 (2005)
+
+#if defined (__STRICT_ANSI__) || defined (_MSC_VER) && (_MSC_VER < 1400)
+    #define TX_ERROR( msg )   _txError (__FILE__, __LINE__, __TX_FUNCTION__, msg)
+
+#else
+    #define TX_ERROR( ... )   _txError (__FILE__, __LINE__, __TX_FUNCTION__, __VA_ARGS__)
+
+#endif
+
+//! @cond INTERNAL
+#define TX_THROW              TX_ERROR  //!< For compatibility with earlier releases
+//! @endcond
+
+//{-------------------------------------------------------------------------------------------
+//! @ingroup Misc
+//! @brief   Выводит развернутое диагностическое сообщение в отладочном режиме.
+//!
+//!          Описание см. в TX_ERROR.
+//!
+//! @note    В режиме Release этот макрос не выводит ничего.
+//!
+//! @see     _, TX_COMMA, assert(), asserted, verify(), verified, TX_ERROR(), txOutputDebugPrintf(),
+//!          txMessageBox(), txNotifyIcon(), __TX_FILELINE__, __TX_FUNCTION__
+//! @usage
+//! @code
+//!          TX_DEBUG_ERROR ("Так и не смог прочитать 'Войну и мир'. Отмазка %d: потерял '%s'", reasonNum, fileName);
+//! @endcode
+//! @hideinitializer
+//}-------------------------------------------------------------------------------------------
+
+#if !defined (NDEBUG)
+    #define TX_DEBUG_ERROR    TX_ERROR
+
+#else
+    #define TX_DEBUG_ERROR(m) ((void) 0)
+
+#endif
+
+//{-------------------------------------------------------------------------------------------
+//! @ingroup Misc
+//! @brief   Макрос, позволяющий передать переменное число параметров в какой-либо другой макрос.
+//!
+//! @note    <b>Символ подчеркивания и символ TX_COMMA просто переопределяются в запятую.</b>
+//!
+//! @see     TX_ERROR(), TX_DEBUG_ERROR()
+//! @usage
+//! @code
+//!          TX_ERROR ("Слишком умный абзац: роман 'Война и мир', файл '%s', строка %d" _ fileName _ lineNum);
+//! @endcode
+//! @hideinitializer
+//}-------------------------------------------------------------------------------------------
+//! @{
+
+#define _                     ,
+#define TX_COMMA              ,  //!< Синоним макроса _ (@ref _ "символ подчеркивания")
+
+//! @}
+
+//{-------------------------------------------------------------------------------------------
+//! @ingroup Misc
+//! @brief   Имя и версия текущего компилятора
+//! @hideinitializer
+//}-------------------------------------------------------------------------------------------
+
+#if   defined (__GNUC__)
+    #define __TX_COMPILER__   "GNU C++ "            TX_QUOTE (__GNUC__)       "."  \
+                                                    TX_QUOTE (__GNUC_MINOR__) "."  \
+                                                    TX_QUOTE (__GNUC_PATCHLEVEL__) \
+                                         ", C++ = " TX_QUOTE (__cplusplus)
+#elif defined (_MSC_VER)
+    #define __TX_COMPILER__   "Microsoft C++ "      TX_QUOTE (_MSC_VER) \
+                                         ", C++ = " TX_QUOTE (__cplusplus)
+
+#elif defined (__INTEL_COMPILER)
+    #define __TX_COMPILER__   "Intel C++ Compiler " TX_QUOTE (__INTEL_COMPILER) \
+                                         ", C++ = " TX_QUOTE (__cplusplus)
+
+#else
+    #define __TX_COMPILER__   "Unknown compiler" \
+                                         ", C++ = " TX_QUOTE (__cplusplus)
+
+#endif
+
+//{-------------------------------------------------------------------------------------------
+//! @ingroup Misc
+//! @brief   Макрос, раскрывающийся в имя файла и номер строки файла, где он встретился.
+//! @hideinitializer
+//}-------------------------------------------------------------------------------------------
+
+#define __TX_FILELINE__       __FILE__ " (" TX_QUOTE (__LINE__) ")"
+
+//{-------------------------------------------------------------------------------------------
+//! @ingroup Misc
+//! @brief   Имя текущей функции
+//!
+//! @warning Если определение имени функции не поддерживается компилятором, то __TX_FUNCTION__
+//!          раскрывается в имя исходного файла и номер строки.
+//!
+//! @hideinitializer
+//}-------------------------------------------------------------------------------------------
+
+#if defined (__GNUC__)
+    #define __TX_FUNCTION__   __PRETTY_FUNCTION__
+
+#elif defined (__FUNCSIG__)
+    #define __TX_FUNCTION__   __FUNCSIG__
+
+#elif defined (__TX_FUNCTION__)
+    #define __TX_FUNCTION__   __FUNCTION__
+
+#elif defined (__INTEL_COMPILER) && (__INTEL_COMPILER >= 600)
+    #define __TX_FUNCTION__   __FUNCTION__
+
+#elif defined (__BORLANDC__) && (__BORLANDC__ >= 0x550)
+    #define __TX_FUNCTION__   __FUNC__
+
+#elif defined (__STDC_VERSION__) && (__STDC_VERSION__ >= 199901)
+    #define __TX_FUNCTION__   __func__
+
+#else
+    #define __TX_FUNCTION__   "(" __TX_FILELINE__ ")"
+
+#endif
+
+//{-------------------------------------------------------------------------------------------
+//! @ingroup Misc
+//! @brief   Имя режима сборки
+//! @hideinitializer
+//}-------------------------------------------------------------------------------------------
+
+#if   !defined (NDEBUG) &&  defined (_DEBUG)
+    #define _TX_BUILDMODE     "DEBUG"
+
+#elif !defined (NDEBUG) && !defined (_DEBUG)
+    #define _TX_BUILDMODE     "Debug"
+
+#elif  defined (NDEBUG)
+    #define _TX_BUILDMODE     "Release"
+#endif
+
+//! @{ @cond INTERNAL
+
+#define  TX_QUOTE( symbol )   _TX_QUOT2 (symbol)
+#define _TX_QUOT2( symbol )   #symbol
+
+//! @endcond
 
 //! @}
 //}
@@ -2943,7 +3347,7 @@ template <typename T> inline T txUnlock (T value);
 //!
 //! @note    Ранняя инициализация включает:
 //!        - Открытие окна консоли,
-//!        - Установку кодовой страницы 1251 консоли для поддержки русского языка,
+//!        - Установку кодовой страницы _TX_CP (1251) консоли для поддержки русского языка,
 //!        - Установку русской локали стандартной библиотеки,
 //!        - Переинициализация библиотек stdio и iostream на случай, если приложение
 //!          не скомпоновано как консольное и библиотеки остались неинициализированы,
@@ -2998,7 +3402,7 @@ template <typename T> inline T txUnlock (T value);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-unsigned _txConsoleMode                   = SW_HIDE;
+unsigned       _txConsoleMode             = SW_HIDE;
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Technical
@@ -3019,7 +3423,7 @@ unsigned _txConsoleMode                   = SW_HIDE;
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-unsigned _txWindowStyle                   = WS_POPUP | WS_BORDER | WS_CAPTION | WS_SYSMENU;
+unsigned       _txWindowStyle             = WS_POPUP | WS_BORDER | WS_CAPTION | WS_SYSMENU;
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Technical
@@ -3057,7 +3461,7 @@ int            _txWindowUpdateInterval    = 25;
 
 #endif
 
-#if  defined (_TX_USE_DEVPARTNER)
+#if  defined  (_TX_USE_DEVPARTNER)
     * 10
 #endif
     ;
@@ -3122,8 +3526,8 @@ const unsigned _TX_BIGBUFSIZE             = 2048;
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-#if !defined (_TX_ALLOW_KILL_PARENT)            // DISCLAIMER: Я не призываю к убийству родителей.
-#define       _TX_ALLOW_KILL_PARENT       true  //             Это технический термин.
+#if !defined (_TX_ALLOW_KILL_PARENT)            // DISCLAIMER: Я не призываю к убийству родителей!
+#define       _TX_ALLOW_KILL_PARENT       true  //             Это лишь технический термин.
 #endif
 
 //! @}
@@ -3131,383 +3535,10 @@ const unsigned _TX_BIGBUFSIZE             = 2048;
 //============================================================================================
 
 //============================================================================================
-//{          Diagnostics and Tools
-//! @name    Диагностика и утилиты
+//{          Internal diagnostics
+//! @name    Внутренняя диагностика
 //============================================================================================
-//! @{ @cond INTERNAL
-
-#define  TX_QUOTE( symbol )   _TX_QUOT2 (symbol)
-#define _TX_QUOT2( symbol )   #symbol
-
-//! @endcond
-//{-------------------------------------------------------------------------------------------
-//! @ingroup Misc
-//! @brief   Имя и версия текущего компилятора
-//! @hideinitializer
-//}-------------------------------------------------------------------------------------------
-
-#if   defined (__GNUC__)
-    #define __TX_COMPILER__   "GNU C++ "            TX_QUOTE (__GNUC__)       "."  \
-                                                    TX_QUOTE (__GNUC_MINOR__) "."  \
-                                                    TX_QUOTE (__GNUC_PATCHLEVEL__) \
-                                         ", C++ = " TX_QUOTE (__cplusplus)
-#elif defined (_MSC_VER)
-    #define __TX_COMPILER__   "Microsoft C++ "      TX_QUOTE (_MSC_VER) \
-                                         ", C++ = " TX_QUOTE (__cplusplus)
-
-#elif defined (__INTEL_COMPILER)
-    #define __TX_COMPILER__   "Intel C++ Compiler " TX_QUOTE (__INTEL_COMPILER) \
-                                         ", C++ = " TX_QUOTE (__cplusplus)
-
-#else
-    #define __TX_COMPILER__   "Unknown compiler" \
-                                         ", C++ = " TX_QUOTE (__cplusplus)
-
-#endif
-
-//{-------------------------------------------------------------------------------------------
-//! @ingroup Misc
-//! @brief   Макрос, раскрывающийся в имя файла и номер строки файла, где он встретился.
-//! @hideinitializer
-//}-------------------------------------------------------------------------------------------
-
-#define __TX_FILELINE__       __FILE__ " (" TX_QUOTE (__LINE__) ")"
-
-//{-------------------------------------------------------------------------------------------
-//! @ingroup Misc
-//! @brief   Имя текущей функции
-//!
-//! @warning Если определение имени функции не поддерживается компилятором, то __TX_FUNCTION__
-//!          раскрывается в имя исходного файла и номер строки.
-//!
-//! @hideinitializer
-//}-------------------------------------------------------------------------------------------
-
-#if defined (__GNUC__)
-    #define __TX_FUNCTION__   __PRETTY_FUNCTION__
-
-#elif defined (__FUNCSIG__)
-    #define __TX_FUNCTION__   __FUNCSIG__
-
-#elif defined (__TX_FUNCTION__)
-    #define __TX_FUNCTION__   __FUNCTION__
-
-#elif defined (__INTEL_COMPILER) && (__INTEL_COMPILER >= 600)
-    #define __TX_FUNCTION__   __FUNCTION__
-
-#elif defined (__BORLANDC__) && (__BORLANDC__ >= 0x550)
-    #define __TX_FUNCTION__   __FUNC__
-
-#elif defined (__STDC_VERSION__) && (__STDC_VERSION__ >= 199901)
-    #define __TX_FUNCTION__   __func__
-
-#else
-    #define __TX_FUNCTION__   "(" __TX_FILELINE__ ")"
-
-#endif
-
-//{-------------------------------------------------------------------------------------------
-//! @ingroup Misc
-//! @brief   Имя режима сборки
-//! @hideinitializer
-//}-------------------------------------------------------------------------------------------
-
-#if   !defined (NDEBUG) &&  defined (_DEBUG)
-    #define _TX_BUILDMODE     "DEBUG"
-
-#elif !defined (NDEBUG) && !defined (_DEBUG)
-    #define _TX_BUILDMODE     "Debug"
-
-#elif  defined (NDEBUG)
-    #define _TX_BUILDMODE     "Release"
-#endif
-
-//{-------------------------------------------------------------------------------------------
-//! @ingroup Misc
-//! @brief   Замена стандартного макроса assert(), с выдачей сообщения через MessageBox(),
-//!          консоль и OutputDebugString().
-//!
-//! @param   cond  Условие для проверки
-//!
-//! @return  Не определено
-//!
-//!          Если условие, проверяемое assert(), истинно, то макрос ничего не делает. @n
-//!          Если условие оказывается ложно, то выводится диагностическое сообщение и
-//!          программа аварийно завершается.
-//!
-//! @note    <b>При компиляции в режиме Release (или если определен NDEBUG) assert
-//!          превращается в пустой оператор.</b> @n
-//!          Не надо помещать в assert() действия, которые важны для работы алгорима.
-//!
-//! @see     asserted, verified, verify(), TX_ERROR(), TX_DEBUG_ERROR(), txOutputDebugPrintf(),
-//!          txNotifyIcon(), __TX_FILELINE__, __TX_FUNCTION__
-//! @usage
-//! @code
-//!          assert (0 <= i && i < ARRAY_SIZE);
-//!
-//!          FILE* input = fopen ("a.txt", "r");
-//!          assert (input);
-//!
-//!          // Этот вызов fgets() НЕ будет выполнен в режиме Release:
-//!          assert (fgets (str, sizeof (str) - 1, input));
-//!
-//!          // Здесь все будет правильно:
-//!          bool ok = (fclose (input) == 0);
-//!          assert (ok);
-//! @endcode
-//! @hideinitializer
-//}-------------------------------------------------------------------------------------------
-
-#if !defined (NDEBUG)
-    #undef  assert
-    #define assert( cond )    _txNOP ( !(cond)? (TX_ERROR ("\a" "ВНЕЗАПНО: Логическая ошибка: " \
-                                                           "Неверно, что \"%s\"" TX_COMMA #cond), 0) : 1 )
-#else
-    #undef  assert
-    #define assert( cond )    ((void) 1)
-
-#endif
-
-//{-------------------------------------------------------------------------------------------
-//! @ingroup Misc
-//! @brief   Выполняет команду (вычисляет выражение) и проверяет результат.
-//!
-//! @param   expr  Команда (выражение)
-//!
-//! @return  1, если выражение @p expr истинно, иначе 0.
-//!
-//!          Если условие, проверяемое verify(), истинно, то макрос ничего не делает. @n
-//!          Если условие оказывается ложно, то выводится диагностическое сообщение и
-//!          программа аварийно завершается.
-//!
-//! @note    Действие макроса аналогично assert(), но при компиляции в режиме Release
-//!          (или если определен NDEBUG) verify @b не превращается в пустой оператор.
-//!
-//! @see     verified, assert(), asserted, TX_ERROR(), TX_DEBUG_ERROR(), txOutputDebugPrintf(),
-//!          txNotifyIcon(), __TX_FILELINE__, __TX_FUNCTION__
-//! @usage
-//! @code
-//!          FILE* input = verify (fopen ("a.txt", "r"));
-//!
-//!          // Этот вызов fgets() БУДЕТ выполнен в режиме Release:
-//!          verify (fgets (str, sizeof (str) - 1, input));
-//!
-//!          // Здесь все тоже будет правильно:
-//!          verify (fclose (input) == 0);
-//! @endcode
-//! @hideinitializer
-//}-------------------------------------------------------------------------------------------
-
-#if !defined (NDEBUG)
-    #undef  verify
-    #define verify            assert
-
-#else
-    #undef  verify
-    #define verify( expr )    ( expr )
-
-#endif
-
-//{-------------------------------------------------------------------------------------------
-//! @ingroup Misc
-//! @brief   Выводит диагностическое сообщение в случае нулевого или ложного результата.
-//!
-//! @return  Всегда 0
-//!
-//!          Суффиксная форма макроса assert(), не теряющая в режиме Release
-//!          исполнения предиката.
-//!
-//! @note    <b>Предполагается, что операция в случае неуспеха возвращает 0 или false.</b> @n@n
-//!          <b>При компиляции в режиме Release (или если определен NDEBUG) asserted
-//!          превращается в пустое место.</b>
-//!
-//! @see     assert(), verify(), verified, TX_ERROR(), TX_DEBUG_ERROR(), txOutputDebugPrintf(),
-//!          txNotifyIcon(), __TX_FILELINE__, __TX_FUNCTION__
-//! @usage
-//! @code
-//!          FILE* input = fopen ("a.txt", "r"); assert (input);
-//!
-//!          // Этот вызов fgets() будет выполнен в любом случае:
-//!          fgets (str, sizeof (str) - 1, input) asserted;
-//!
-//!          // Этот вызов fgets() НЕ будет выполнен в режиме Release:
-//!          assert (fgets (str, sizeof (str) - 1, input));
-//!
-//!          (fclose (input) != 0) asserted;
-//! @endcode
-//! @hideinitializer
-//}-------------------------------------------------------------------------------------------
-
-#if !defined (NDEBUG)
-    #define asserted          || TX_ERROR ("\a" "Обнаружен нулевой или ложный результат.")
-
-#else
-    #define asserted          || _txNOP (0)
-
-#endif
-
-#define verified              asserted  //!< For compatibility with assert macro
-
-//! @cond INTERNAL
-#define TX_NEEDED             asserted  //!< For compatibility with earlier releases
-//! @endcond
-
-//{-------------------------------------------------------------------------------------------
-//! @ingroup Misc
-//! @brief   Выводит развернутое диагностическое сообщение.
-//!
-//! @param   msg  Сообщение с произвольным количеством параметров в стиле функции @c printf().
-//!
-//! @note    @c GCC в режиме строгого соответствия стандарту ANSI (с ключом командной строки
-//!          <tt>-ansi</tt>) и Microsoft Visual Studio версий 6 и 2003 не поддерживают макросы
-//!          с переменным числом параметров. Поэтому, если параметров несколько, они разделяются
-//!          @b _ (@ref _ "символом подчеркивания", переопределенным в запятую) или символом TX_COMMA,
-//!          вместо настоящей запятой, так как TX_ERROR @d макрос. @n
-//!          Если в проекте используются библиотеки <a href=http://boost.org><tt>boost</tt></a>, то
-//!          их надо включать @b до @c TXLib.h и вместо символа подчеркивания пользоваться TX_COMMA,
-//!          так как @c boost использует символ подчеркивания как свой собственный служебный макрос
-//!          в модуле @c boost::preprocessor, @strike где творится дефайновый ад. @endstrike
-//!
-//! @return  Всегда false
-//!
-//! @see     _, TX_COMMA, assert(), asserted, verify(), verified, TX_DEBUG_ERROR(), txOutputDebugPrintf(),
-//!          txNotifyIcon(), __TX_FILELINE__, __TX_FUNCTION__
-//! @usage
-//! @code
-//!          TX_ERROR ("Не смог прочитать 'Войну и мир'. Отмазка %d: не нашел '%s'", reasonNum, fileName);
-//! @endcode
-//! @hideinitializer
-//}-------------------------------------------------------------------------------------------
-
-// Variadic macros not supported in Strict ANSI mode and in MSVC prior to MSVC 8 (2005)
-
-#if defined (__STRICT_ANSI__) || defined (_MSC_VER) && (_MSC_VER < 1400)
-    #define TX_ERROR( msg )   _txError (__FILE__, __LINE__, __TX_FUNCTION__, msg)
-
-#else
-    #define TX_ERROR( ... )   _txError (__FILE__, __LINE__, __TX_FUNCTION__, __VA_ARGS__)
-
-#endif
-
-//! @cond INTERNAL
-#define TX_THROW              TX_ERROR  //!< For compatibility with earlier releases
-//! @endcond
-
-//{-------------------------------------------------------------------------------------------
-//! @ingroup Misc
-//! @brief   Выводит развернутое диагностическое сообщение в отладочном режиме.
-//!
-//!          Описание см. в TX_ERROR.
-//!
-//! @note    В режиме Release этот макрос не выводит ничего.
-//!
-//! @see     _, TX_COMMA, assert(), asserted, verify(), verified, TX_ERROR(), txOutputDebugPrintf(),
-//!          txNotifyIcon(), __TX_FILELINE__, __TX_FUNCTION__
-//! @usage
-//! @code
-//!          TX_DEBUG_ERROR ("Так и не смог прочитать 'Войну и мир'. Отмазка %d: потерял '%s'", reasonNum, fileName);
-//! @endcode
-//! @hideinitializer
-//}-------------------------------------------------------------------------------------------
-
-#if !defined (NDEBUG)
-    #define TX_DEBUG_ERROR    TX_ERROR
-
-#else
-    #define TX_DEBUG_ERROR(m) ((void) 0)
-
-#endif
-
-//{-------------------------------------------------------------------------------------------
-//! @ingroup Misc
-//! @brief   Макрос, позволяющий передать переменное число параметров в какой-либо другой макрос.
-//!
-//! @note    <b>Символ подчеркивания и символ TX_COMMA просто переопределяются в запятую.</b>
-//!
-//! @see     TX_ERROR(), TX_DEBUG_ERROR()
-//! @usage
-//! @code
-//!          TX_ERROR ("Слишком умный абзац: роман 'Война и мир', файл '%s', строка %d" _ fileName _ lineNum);
-//! @endcode
-//! @hideinitializer
-//}-------------------------------------------------------------------------------------------
 //! @{
-
-#define _                     ,
-#define TX_COMMA              ,  //!< Синоним макроса _ (@ref _ "символ подчеркивания")
-
-//! @}
-//{-------------------------------------------------------------------------------------------
-//! @ingroup Misc
-//! @brief   Выводит сообщение в отладчике.
-//!
-//! @param   format  Строка для печати, как в printf().
-//!
-//! @return  Количество напечатанных символов.
-//!
-//!          Функция формирует сообщение по правилам printf() и передает его в OutputDebugString().
-//!          Ее вывод можно перехватить отладчиком или утилитами-логгерами, например,
-//!          <a href=http://technet.microsoft.com/ru-ru/sysinternals/bb896647%28en-us%29.aspx>DebugView</a>.
-//!          Если этого не сделать, и не задать первый символ @c '\\a' (см. ниже), то о сообщении никто
-//!          не узнает.
-//! @note
-//!        - Если первый            символ в строке @c '\\a', то сообщение также дублируется MessageBox().
-//!        - Если первый или второй символ в строке @c '\\f', то сообщение также дублируется printf().
-//!
-//! @warning Сообщение не должно превышать _TX_BIGBUFSIZE символов, иначе оно обрезается.
-//!
-//! @see     TX_ERROR(), TX_DEBUG_ERROR(), txNotifyIcon()
-//! @usage
-//! @code
-//!          int x = 71;
-//!          ...
-//!          txOutputDebugPrintf ("Никто не узнает, что %d.", x);
-//! @endcode
-//}-------------------------------------------------------------------------------------------
-
-int txOutputDebugPrintf (const char format[], ...) _TX_CHECK_FORMAT (1);
-
-//{-------------------------------------------------------------------------------------------
-//! @ingroup Misc
-//! @brief   Выводит всплывающее сообщение в системном трее.
-//!
-//! @param   flags   Флаги сообщения
-//! @param   title   Заголовок сообщения
-//! @param   format  Строка для печати, как в printf().
-//!
-//! @title   Флаги сообщения:
-//! @table   @tr @c NIIF_INFO    @td Информация
-//!          @tr @c NIIF_WARNING @td Предупреждение
-//!          @tr @c NIIF_ERROR   @td Сообщение об ошибке
-//! @endtable
-//!
-//! @return  Удалось ли отобразить сообщение.
-//!
-//!          Функция формирует сообщение по правилам printf() и выводит во всплывающем окне.
-//!
-//! @warning
-//!        - Эта функция требует, чтобы при компиляции константа версии Internet Explorer
-//!          @c (_WIN32_IE) была задана не ниже 0x0500. Для этого надо либо <b>включить TXLib.h
-//!          вместо @c windows.h или перед ним.</b> Либо надо самостоятельно определить @c (#define)
-//!          эту константу.
-//!          <small>С версией Internet Explorer это связано потому, что при его установке в Windows
-//!          обновляются многие компоненты (например, @c shell32.dll и @c comctl32.dll), которые
-//!          влияют на функциональность системы независимо от использования браузера.</small>
-//!        - Сообщение не должно превышать _TX_BUFSIZE символов, иначе оно обрезается.
-//!
-//! @see     TX_ERROR(), TX_DEBUG_ERROR(), txOutputDebugPrintf()
-//! @usage
-//! @code
-//!          int hours = 3, minutes = 10;
-//!          const char station[] = "Юму";
-//!          ...
-//!          txNotifyIcon (NIIF_INFO, "Уважаемые пассажиры",
-//!                        "Поезд на %s отправляется в %d:%d.", station, hours, minutes);
-//! @endcode
-//}-------------------------------------------------------------------------------------------
-
-bool txNotifyIcon (unsigned flags, const char title[], const char format[], ...) _TX_CHECK_FORMAT (3);
-
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Technical
 //! @brief   Включает/отключает внутреннюю трассировку исполнения кода библиотеки.
@@ -4128,7 +4159,7 @@ struct txDialog
 //! @usage
 //! @code
 //!          const char* name = txInputBox ("So what's ur name?!?!", "System", "Sorry I'm Vasya Pupkin");
-//!          MessageBox (txWindow(), name, "Aaand nooowww.. the winner iiis...", 0);
+//!          txMessageBox (name, "Aaand nooowww.. the winner iiis...", 0);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
@@ -4273,6 +4304,15 @@ const char* txInputBox (const char* text, const char* caption, const char* input
 //           Прототипы внутренних функций, макросы и константы
 //============================================================================================
 
+const int     _TX_CP                = 1251;   // Информация о локали
+const char    _TX_LC_CTYPE[]        = "Russian";
+const wchar_t _TX_LC_CTYPE_W[]      = L"Russian_Russia.ACP";
+
+const int     _TX_IDM_ABOUT         = 40000;  // Идентификаторы системного меню окна
+const int     _TX_IDM_CONSOLE       = 40001;
+
+//--------------------------------------------------------------------------------------------
+
 int              _txInitialize();
 void             _txCleanup();
 
@@ -4363,12 +4403,6 @@ FARPROC      _txDllImport (const char dllFileName[], const char funcName[], bool
                                            Sleep (_txWindowUpdateInterval)) ;        \
                                       if  (!(cond))                                  \
                                            _txTrace (__FILE__, __LINE__, "WARNING: Timeout: " #cond "."); }
-
-//--------------------------------------------------------------------------------------------
-
-const int    _TX_IDM_ABOUT          = 40000;  // Идентификаторы системного меню окна
-const int    _TX_IDM_CONSOLE        = 40001;
-
 //}
 //============================================================================================
 
@@ -4908,7 +4942,7 @@ $   if (wnd != NULL && !externTerm)
 $       static wchar_t title [_TX_BUFSIZE] = L"";
 $       GetWindowTextW (wnd, title, SIZEARR (title));
 $       int len = (int) wcslen (title);
-$       MultiByteToWideChar (1251, 0, " [ЗАВЕРШЕНО]", -1, title + len, SIZEARR (title) - len);
+$       MultiByteToWideChar (_TX_CP, 0, " [ЗАВЕРШЕНО]", -1, title + len, SIZEARR (title) - len);
 $       SetWindowTextW (wnd, title);
         }
 
@@ -5452,9 +5486,9 @@ bool _txCanvas_OnCLOSE (HWND wnd)
 $1  _TX_IF_ARGUMENT_FAILED (wnd && _txCanvas_OK()) return false;
 
 $   if (_txRunning &&
-        MessageBox (wnd, "Функция main() не завершена. Программа все еще работает. Прервать аварийно?    \n\n"
-                         "Лучше подождать, когда main() завершится - это отображается в заголовке окна.",
-                    txGetModuleFileName (false), MB_OKCANCEL | MB_ICONSTOP) != IDOK) return false;
+        txMessageBox ("Функция main() не завершена. Программа все еще работает. Прервать аварийно?    \n\n"
+                      "Лучше подождать, когда main() завершится - это отображается в заголовке окна.",
+                      txGetModuleFileName (false), MB_OKCANCEL | MB_ICONSTOP) != IDOK) return false;
 $   return true;
     }
 
@@ -5636,7 +5670,7 @@ $   _snprintf_s (text, sizeof (text) - 1 _TX_TRUNCATE,
                  _getcwd (cwd, sizeof (cwd) - 1));
     #undef EOL_
 
-$   MessageBox (txWindow(), text, "About " ABOUT_NAME_, MB_ICONINFORMATION);
+$   txMessageBox (text, "About " ABOUT_NAME_, MB_ICONINFORMATION);
 
     // And a bit of HTTP-code in C++ function:
 
@@ -5685,8 +5719,8 @@ $       Win32::SetConsoleFont          = NULL;
 
     // Устанавливаем русскую кодовую страницу для консоли Windows
 
-$   SetConsoleCP       (1251);
-$   SetConsoleOutputCP (1251);
+$   SetConsoleCP       (_TX_CP);
+$   SetConsoleOutputCP (_TX_CP);
 
     // Устанавливаем русскую кодовую страницу для стандартной библиотеки,
     // иначе не будут работать Unicode-версии функций (wprintf, ...).
@@ -5694,8 +5728,8 @@ $   SetConsoleOutputCP (1251);
     // с русским языком, не забудьте указать опции в командной строке компилятора:
     // -finput-charset=CP1251 -fexec-charset=CP1251
 
-$   setlocale (LC_CTYPE, "Russian");
-$   if (!Win32::wine_get_version) _wsetlocale (LC_CTYPE, L"Russian_Russia.ACP");
+$   setlocale (LC_CTYPE, _TX_LC_CTYPE);
+$   if (!Win32::wine_get_version) _wsetlocale (LC_CTYPE, _TX_LC_CTYPE_W);
 
 $   static bool done = false;
 $   if (done) return console;
@@ -5742,8 +5776,8 @@ $1  HWND console = Win32::GetConsoleWindow();
 $   if (!console) return false;
 
 $   if (console && _txIsParentWaitable())
-        { 
-$       ShowWindow (console, SW_SHOW); 
+        {
+$       ShowWindow (console, SW_SHOW);
         }
 
 $   if (activate)
@@ -5964,7 +5998,7 @@ $       _TX_CHECKED (shellLink->QueryInterface (Win32::IID_IPersistFile, (void**
 $       if (!file) _TX_FAIL;
 
 $       wchar_t wName[MAX_PATH] = L"";
-$       MultiByteToWideChar (CP_ACP, 0, shortcutName, -1, wName, MAX_PATH);
+$       MultiByteToWideChar (_TX_CP, 0, shortcutName, -1, wName, MAX_PATH);
 
 $       _TX_CHECKED (file->Save (wName, true));
         }
@@ -6153,77 +6187,6 @@ void _txOnTerminate()
 
 //--------------------------------------------------------------------------------------------
 
-int txOutputDebugPrintf (const char format[], ...)
-    {
-    if (!format) return 0;
-
-    bool msgbox = (*format == '\a')? (format++, true) : false;
-    bool print  = (*format == '\f')? (format++, true) : false;
-
-    char str[_TX_BIGBUFSIZE] = "";
-
-    va_list arg; va_start (arg, format);
-    int n = _vsnprintf_s (str, sizeof (str) - 1 _TX_TRUNCATE, format, arg);
-    va_end (arg);
-
-    OutputDebugString (str);
-
-    if (print)
-        printf ("%s", str);
-
-    if (msgbox)
-        MessageBox ((txWindow()? txWindow() : Win32::GetConsoleWindow()),
-                    str, "Оказывается, что", MB_ICONEXCLAMATION | MB_TOPMOST);
-
-    return n;
-    }
-
-//--------------------------------------------------------------------------------------------
-
-bool txNotifyIcon (unsigned flags, const char title[], const char format[], ...)
-    {
-$1  _TX_IF_ARGUMENT_FAILED (format) return false;
-
-$   va_list arg; va_start (arg, format);
-$   bool ok = true;
-
-    #if defined (_WIN32_IE) && (_WIN32_IE >= 0x0500)
-
-$   NOTIFYICONDATA nid = { sizeof (nid) };
-
-$   nid.uFlags = NIF_ICON | NIF_TIP | NIF_INFO;
-$   nid.hWnd   = NULL;
-$   nid.uID    = 1;
-$   nid.hIcon  = _txCreateTXIcon (16); assert (nid.hIcon);
-$   strncpy_s    (nid.szTip, "TXLib Information", sizeof (nid.szTip));
-$   strncpy_s    (nid.szInfoTitle, (title? title : "TXLib сообщает"), sizeof (nid.szInfoTitle));
-$   _vsnprintf_s (nid.szInfo, sizeof (nid.szInfo) _TX_TRUNCATE, format, arg);
-$   nid.dwInfoFlags = flags;
-
-$   txOutputDebugPrintf (_TX_VERSION " - Icon notification: %s: %s\n", nid.szInfoTitle, nid.szInfo);
-
-$   ok &= !!Shell_NotifyIcon (NIM_ADD,    (::NOTIFYICONDATA*) &nid);
-$   ok &= !!Shell_NotifyIcon (NIM_MODIFY, (::NOTIFYICONDATA*) &nid);
-
-$   if (nid.hIcon) DestroyIcon (nid.hIcon) asserted;
-
-    #else
-
-$   char nid_szInfo[_TX_BUFSIZE] = "";
-$   _vsnprintf_s (nid_szInfo, sizeof (nid_szInfo) _TX_TRUNCATE, format, arg);
-$   txOutputDebugPrintf (_TX_VERSION " - Icon notification (NOT displayed): %s: %s\n", title, nid_szInfo);
-$   ok = false;
-
-$   (void)flags; (void)title;
-
-    #endif
-
-$   va_end (arg);
-$   return ok;
-    }
-
-//--------------------------------------------------------------------------------------------
-
 const char* _txError (const char file[] /*= NULL*/, int line /*= 0*/, const char func[] /*= NULL*/,
                       const char msg [] /*= NULL*/, ...)
     {
@@ -6319,15 +6282,101 @@ const char* _txError (const char file[] /*= NULL*/, int line /*= 0*/, const char
                  "--------------------------------------------------" "\n", str);
 
     tools::replace (str, what, '\v', '\n');
-    MessageBox (NULL, str, isFatal? "Фатальная ошибка" : "Ошибка в программе",
-                MB_ICONSTOP | MB_TOPMOST | MB_SYSTEMMODAL);
+    txMessageBox (str, isFatal? "Фатальная ошибка" : "Ошибка в программе",
+                  MB_ICONSTOP | MB_TOPMOST | MB_SYSTEMMODAL);
 
     if (!isFatal) return what;
 
     if (!IsDebuggerPresent()) exit (EXIT_FAILURE);
 
-    DebugBreak();  // >>> Вы в отладчике, есть шанс посмотреть переменные и разобраться.
-    return what;   //     Выходите из функции пошаговой отладкой. Смотрите на стек вызовов.
+//  vvvvvvvvvvvvvvvvvv
+    DebugBreak();   //>>> Вы в отладчике, есть шанс посмотреть переменные и разобраться.
+//  ^^^^^^^^^^^^^^^^^^
+
+    return what;       // Выходите из функции пошаговой отладкой. Смотрите на стек вызовов.
+    }
+
+//--------------------------------------------------------------------------------------------
+
+int txOutputDebugPrintf (const char format[], ...)
+    {
+    if (!format) return 0;
+
+    bool msgbox = (*format == '\a')? (format++, true) : false;
+    bool print  = (*format == '\f')? (format++, true) : false;
+
+    char str[_TX_BIGBUFSIZE] = "";
+
+    va_list arg; va_start (arg, format);
+    int n = _vsnprintf_s (str, sizeof (str) - 1 _TX_TRUNCATE, format, arg);
+    va_end (arg);
+
+    OutputDebugString (str);
+
+    if (print)
+        printf ("%s", str);
+
+    if (msgbox)
+        txMessageBox (str, "Оказывается, что", MB_ICONEXCLAMATION | MB_TOPMOST);
+
+    return n;
+    }
+
+//--------------------------------------------------------------------------------------------
+
+unsigned txMessageBox (const char* text, const char* header, unsigned flags)
+    {
+    static wchar_t textW   [_TX_BIGBUFSIZE * sizeof (wchar_t)] = L"[NULL text]";
+    static wchar_t headerW [_TX_BUFSIZE    * sizeof (wchar_t)] = L"[NULL header]";
+
+    if (text)   MultiByteToWideChar (_TX_CP, 0, text,   -1, textW,   SIZEARR (textW));
+    if (header) MultiByteToWideChar (_TX_CP, 0, header, -1, headerW, SIZEARR (headerW));
+
+    return MessageBoxW ((txWindow()? txWindow() : Win32::GetConsoleWindow()), textW, headerW, flags);
+    }
+
+//--------------------------------------------------------------------------------------------
+
+bool txNotifyIcon (unsigned flags, const char title[], const char format[], ...)
+    {
+$1  _TX_IF_ARGUMENT_FAILED (format) return false;
+
+$   va_list arg; va_start (arg, format);
+$   bool ok = true;
+
+    #if defined (_WIN32_IE) && (_WIN32_IE >= 0x0500)
+
+$   NOTIFYICONDATA nid = { sizeof (nid) };
+
+$   nid.uFlags = NIF_ICON | NIF_TIP | NIF_INFO;
+$   nid.hWnd   = NULL;
+$   nid.uID    = 1;
+$   nid.hIcon  = _txCreateTXIcon (16); assert (nid.hIcon);
+$   strncpy_s    (nid.szTip, "TXLib Information", sizeof (nid.szTip));
+$   strncpy_s    (nid.szInfoTitle, (title? title : "TXLib сообщает"), sizeof (nid.szInfoTitle));
+$   _vsnprintf_s (nid.szInfo, sizeof (nid.szInfo) _TX_TRUNCATE, format, arg);
+$   nid.dwInfoFlags = flags;
+
+$   txOutputDebugPrintf (_TX_VERSION " - Icon notification: %s: %s\n", nid.szInfoTitle, nid.szInfo);
+
+$   ok &= !!Shell_NotifyIcon (NIM_ADD,    (::NOTIFYICONDATA*) &nid);
+$   ok &= !!Shell_NotifyIcon (NIM_MODIFY, (::NOTIFYICONDATA*) &nid);
+
+$   if (nid.hIcon) DestroyIcon (nid.hIcon) asserted;
+
+    #else
+
+$   char nid_szInfo[_TX_BUFSIZE] = "";
+$   _vsnprintf_s (nid_szInfo, sizeof (nid_szInfo) _TX_TRUNCATE, format, arg);
+$   txOutputDebugPrintf (_TX_VERSION " - Icon notification (NOT displayed): %s: %s\n", title, nid_szInfo);
+$   ok = false;
+
+$   (void)flags; (void)title;
+
+    #endif
+
+$   va_end (arg);
+$   return ok;
     }
 
 //! @}
@@ -7147,20 +7196,19 @@ $   return  old;
 //     v
 bool txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillClose_AndIWillNotBeAskingWhereIsMyPicture()
     {
-$1  MessageBox (txWindow(),
-                "Это запланированная ошибка. Такое бывает. Вы хотели вызвать:" "\n\n"
+$1  txMessageBox ("Это запланированная ошибка. Такое бывает. Вы хотели вызвать:" "\n\n"
 
-                "txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillClose_AndIWillNotBeAskingWhereIsMyPicture()" "\n\n"
+                  "txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillClose_AndIWillNotBeAskingWhereIsMyPicture()" "\n\n"
 
-                "Хоть вы долго [копировали]набирали это имя, на самом деле эта функция не реализована. "
-                "Есть другая функция, которая убирает авто-паузу в конце программы, но в хелпе про нее не написано."  "\n\n"
+                  "Хоть вы долго [копировали]набирали это имя, на самом деле эта функция не реализована. "
+                  "Есть другая функция, которая убирает авто-паузу в конце программы, но в хелпе про нее не написано."  "\n\n"
 
-                "Но не все так плохо. Определение нужной функции есть в исходных текстах TXLib.h, оно лежит рядом "
-                "с определением той функции с длинным названием, которую вы сейчас вызвали." "\n\n"
+                  "Но не все так плохо. Определение нужной функции есть в исходных текстах TXLib.h, оно лежит рядом "
+                  "с определением той функции с длинным названием, которую вы сейчас вызвали." "\n\n"
 
-                "Нажмите в редакторе Ctrl+O, найдите и откройте файл TXLib.h (он лежит в папке, куда вы "
-                "установили TXLib), затем нажмите Ctrl+F и ищите \"txIDontWant\". Удачи!" "\n\n",
-                "Не получилось", MB_ICONSTOP);
+                  "Нажмите в редакторе Ctrl+O, найдите и откройте файл TXLib.h (он лежит в папке, куда вы "
+                  "установили TXLib), затем нажмите Ctrl+F и ищите \"txIDontWant\". Удачи!" "\n\n",
+                  "Не получилось", MB_ICONSTOP);
 
     // The truth is out there...
     //
@@ -7523,14 +7571,14 @@ $   *pw++ = (WORD)(ptrdiff_t) menu;
 
 $   if (caption)
         {
-$       pw  += MultiByteToWideChar (CP_ACP, 0, caption? caption : "", -1, (wchar_t*) pw,
+$       pw  += MultiByteToWideChar (_TX_CP, 0, caption? caption : "", -1, (wchar_t*) pw,
                                    (int) (bufsize? bufsize - ((char*)pw - (char*)globalMem) : 0xFFFF));
         }
 
 $   if (style & DS_SETFONT)
          {
 $        *pw++ = fontsize;
-$         pw  += MultiByteToWideChar (CP_ACP, 0, font?    font    : "", -1, (wchar_t*) pw,
+$         pw  += MultiByteToWideChar (_TX_CP, 0, font?    font    : "", -1, (wchar_t*) pw,
                                      (int) (bufsize? bufsize - ((char*)pw - (char*)globalMem) : 0xFFFF));
          }
 
@@ -7567,7 +7615,7 @@ $       *pw++ = (WORD) (LOWORD ((ptrdiff_t) wclass));
         }
     else if (wclass)
         {
-$       pw  += MultiByteToWideChar (CP_ACP, 0, (char*) wclass, -1, (wchar_t*) pw,
+$       pw  += MultiByteToWideChar (_TX_CP, 0, (char*) wclass, -1, (wchar_t*) pw,
                                    (int) (bufsize? bufsize - ((char*)pw - (char*)dlgTemplatePtr) : 0xFFFF));
         }
     else
@@ -7577,7 +7625,7 @@ $       *pw++ = 0;
 
 $   if (caption)
          {
-$        pw  += MultiByteToWideChar (CP_ACP, 0, caption, -1, (wchar_t*) pw,
+$        pw  += MultiByteToWideChar (_TX_CP, 0, caption, -1, (wchar_t*) pw,
                                     (int) (bufsize? bufsize - ((char*)pw - (char*)dlgTemplatePtr) : 0xFFFF));
          }
     else
@@ -7880,120 +7928,72 @@ struct _txSaveConsoleAttr
 //============================================================================================
 // EOF
 //============================================================================================
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                         
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                                                                                                              
+                            
 
 
