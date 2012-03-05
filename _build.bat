@@ -8,7 +8,7 @@
 :-------------------------------------------------
 @echo off
 
-set .cmd=ci doc rar update push
+set .cmd=ci docs rar update push
 
 set .file=TXLib-$v$.rar.exe
 set .file=%.file:$v: =v%
@@ -16,8 +16,8 @@ set .file=%.file: $=%
 
 set .md5="TXLib Update.md5"
 
-if /i "%1" == ""    (echo %~n0 ci doc rar update push push-doc push-sf | cliptext) & (exit)
-if /i "%1" == "all"       %0   ci doc rar update push push-doc push-sf
+if /i "%1" == ""    (echo %~n0 ci docs rar update push push-docs push-sf | cliptext) & (exit)
+if /i "%1" == "all"       %0   ci docs rar update push push-docs push-sf
 
 :-------------------------------------------------
 
@@ -55,6 +55,8 @@ if errorlevel 1 (echo ERROR: Cannot save TXLib.h) & exit
 %do% for %%1 in (Dev\TXLib-Help.dox Dev\TXLib-Reference.dox Dev\doxygen_*.* Dev\dot_filter.bat) do copy %%1 >> %log% 2>>&1
 %do% set doxygen_=-nointeractive
 
+if /i "%2" == "doc" goto doc-help
+
 :doc-ref
 
 %do% sed32 -e "s/namespace { namespace TX {   /            namespace TX {   /" -e "s/^} } /  } /" ~TXLib.h.sav > TXLib.h
@@ -71,10 +73,14 @@ if errorlevel 1 (echo ERROR: Cannot save TXLib.h) & exit
 %do% echo HTML_FOOTER = doxygen_chm.htm >> TXLib-Help.dox
 %do% call doxygen_ TXLib-Help.dox
 
+if /i "%2" == "doc" goto docs-end
+
 %do% echo GENERATE_TREEVIEW = YES       >> TXLib-Help.dox
 %do% echo GENERATE_HTMLHELP = NO        >> TXLib-Help.dox
 %do% echo HTML_FOOTER = doxygen_htm.htm >> TXLib-Help.dox
 %do% call doxygen_ TXLib-Help.dox
+
+:docs-end
 
 %do% for %%1 in (TXLib-Help.dox TXLib-Reference.dox doxygen_*.* dot_filter.bat) do del %%1 >> %log% 2>>&1
 del %Temp%\~hh*.tmp >> %log% 2>>&1
