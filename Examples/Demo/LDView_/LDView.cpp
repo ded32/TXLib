@@ -8,7 +8,7 @@
 //!             $Version$
 //!             $Date$
 //!             $Copyright$
-//              $Author$
+//              $Copyright$
 //}===========================================================================
 
 #define __MODULE       "LDView"
