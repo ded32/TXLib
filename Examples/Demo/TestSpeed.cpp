@@ -29,7 +29,7 @@ int main()
 
     LARGE_INTEGER f = {};
     QueryPerformanceFrequency (&f);
-    double freq = f.QuadPart / 1E9;
+    double freq = f.QuadPart / 1E6;
 
     double perf = txQueryPerformance();
 

@@ -8,7 +8,7 @@
 //!             $Version$
 //!             $Date$
 //!             $Copyright$
-//              $Author$
+//              $Copyright$
 //}===========================================================================
 
 // Press Alt+Ctrl+Shift+F12 to view this info in About Box

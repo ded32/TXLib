@@ -36,7 +36,7 @@
 //!        - <a href=https://sourceforge.net/tracker/?func=add&group_id=213688&atid=1026713>
 //!          <b>Предложить улучшение</b></a>
 //!
-//           $Author$
+//           $Copyright$
 //--------------------------------------------------------------------------------------------
 //!
 //! @defgroup Drawing   Рисование
@@ -2136,7 +2136,7 @@ inline int txMouseButtons();
 //! @usage
 //! @code
 //!          txSetConsoleAttr (0x1E);
-//!          printf ("А в небе 0x1 есть город 0xE");  // Б. Гребенщиков
+//!          printf ("А в небе 0x1 есть город 0xE");  // (c) Б. Гребенщиков
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
@@ -2307,14 +2307,25 @@ bool txPlaySound (const char filename[] = NULL, DWORD mode = SND_ASYNC);
 //!
 //! @return  Значение, возвращаемое функцией MessageBox.
 //!
-//! @warning Текст не должен превышать _TX_BIGBUFSIZE символов, а заголовок - _TX_BIGBUFSIZE символов,
+//! @warning Текст не должен превышать _TX_BIGBUFSIZE символов, а заголовок @d _TX_BIGBUFSIZE символов,
 //!          иначе они обрезаются.
+//!
+//! @note    Вместо <tt><b>txMessageBox (text, header, flags)</b></tt> можно использовать стандартную
+//!          функцию Win32 <tt><b>MessageBox (txWindow(), text, header, flags)</b></tt>. Отличия
+//!          txMessageBox в том, что она автоматически подставляет окно-родитель, и в том, что при
+//!          выводе в окно строчки переводятся в формат UNICODE. Это важно лишь в том случае, когда
+//!          <i>в региональных настройках контрольной панели Windows неверно установлена кодовая страница
+//!          для программ, не поддерживающих UNICODE.</i> В остальных случаях нужды в @c txMessageBox нет.
 //!
 //! @see     TX_ERROR(), TX_DEBUG_ERROR(), txOutputDebugPrintf(), txNotifyIcon()
 //! @usage
 //! @code
-//!          if (txMessageBox ("Прочитали?", "Пришло сообщение!", MB_YESNO) == IDYES)
-//!              txMessageBox ("Очень хорошо");
+//!          if (txMessageBox ("Получилось?", "Прочти меня", MB_YESNO) == IDYES)
+//!              {
+//!              MessageBox (txWindow(), "Хватит и обычного MessageBox()", "Win32 сообщает", 0);
+//!              }
+//!          else
+//!              txMessageBox ("Спасаем от кракозябл вместо русских букв. Гарантия. Недорого.");
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
@@ -2767,7 +2778,7 @@ template <typename T> inline T zero();
 //! @param   param    Имя параметра автоматически вызываемой функции
 //! @param   func     Тело автоматически вызываемой функции (фигурные скобки не обязательны)
 //!
-//! @par     Макрос @c TX_AUTO_FUNC ( @c param_t, @c param, @c func )
+//! @par     Макрос <tt>TX_AUTO_FUNC (param_t, param, func)</tt>
 //! @note
 //!        - Для автоматически вызываемой функции допускается только @i один параметр.
 //!        - Его тип @c param_t и имя @c param должны соответствовать определению переменной,
@@ -2780,7 +2791,7 @@ template <typename T> inline T zero();
 //!          Можно обходиться макросом @c _TX_AUTO_FUNC, см. его определение в исходном тексте рядом
 //!          с определением @c TX_AUTO_FUNC.
 //!
-//! @par     Макрос @c tx_auto_func ( @c func )
+//! @par     Макрос <tt>tx_auto_func (func)</tt>
 //! @note
 //!        - @i Все переменные вызываемой функции связываются с переменными внешней функции по ссылке.
 //!        - Их названия и типы @i не указываются. Указывается только тело вызываемой функции.
@@ -3651,7 +3662,7 @@ struct _txFuncEntry
 //! @{
 
 #ifdef FOR_DOXYGEN_ONLY
-#define       _TX_TRACE
+#define       TX_TRACE
 #endif
 
 #if !defined (TX_TRACE)
@@ -4764,6 +4775,8 @@ $   _txCanvas_UserDCs.reserve (_TX_BUFSIZE);
 
 $   atexit (_txCleanup);
 
+$   txSetConsoleAttr (0x07);
+
 $   (void) Win32::SetDIBitsToDevice;    // Just for warning "defined but not used" suppression
 $   (void) Win32::GetDIBits;
 $   (void) Win32::RoundRect;
@@ -4937,13 +4950,22 @@ $   bool waitableParent = !externTerm && _txIsParentWaitable (&parent);
 
 $   txSetConsoleAttr (0x07);
 
-$   if (wnd != NULL && !externTerm)
+$   while (wnd != NULL && !externTerm)
         {
 $       static wchar_t title [_TX_BUFSIZE] = L"";
 $       GetWindowTextW (wnd, title, SIZEARR (title));
 $       int len = (int) wcslen (title);
+
 $       MultiByteToWideChar (_TX_CP, 0, " [ЗАВЕРШЕНО]", -1, title + len, SIZEARR (title) - len);
 $       SetWindowTextW (wnd, title);
+
+$       GetWindowTextW (wnd, title, SIZEARR (title));
+$       if (title [len+2] == /* 'З' */ (wchar_t) 0x0417) break;
+
+$       MultiByteToWideChar (_TX_CP, 0, " [FINISHED]",  -1, title + len, SIZEARR (title) - len);
+$       SetWindowTextW (wnd, title);
+
+$       break;
         }
 
 $   if ((canvas || !waitableParent) && isMaster && !_txExit &&
@@ -5021,8 +5043,8 @@ int _txGetInput()
 $1  HANDLE con = GetStdHandle (STD_INPUT_HANDLE);
 
 $   DWORD nchars = 0;
-$   if (!GetConsoleMode (con, &nchars) &&
-        PeekNamedPipe   (con, NULL, 0, NULL, &nchars, NULL))
+$   if (GetConsoleMode (con, &nchars) == 0 &&
+        PeekNamedPipe  (con, NULL, 0, NULL, &nchars, NULL))
         {
 $       return (nchars)? fgetc (stdin) : EOF;
         }
@@ -5237,15 +5259,14 @@ $   if (!wndclass) return TX_DEBUG_ERROR ("RegisterClass (\"%s\") failed"_ class
 $   int centered = false;
 $   if (size->cx < 0 && size->cy < 0) { size->cx *= -1; size->cy *= -1; centered = true; }
 
-$   SIZE  screen  = { GetSystemMetrics (SM_CXSCREEN),     GetSystemMetrics (SM_CYSCREEN)     };
-$   SIZE  frame   = { GetSystemMetrics (SM_CXFIXEDFRAME), GetSystemMetrics (SM_CYFIXEDFRAME) };
-$   SIZE  caption = { 0, GetSystemMetrics (SM_CYCAPTION) };
-$   SIZE  sz      = { size->cx + 2*frame.cx, size->cy + 2*frame.cy + caption.cy };
+$   SIZE scr = { GetSystemMetrics (SM_CXSCREEN), GetSystemMetrics (SM_CYSCREEN) };
+$   RECT r   = { 0, 0, size->cx, size->cy }; AdjustWindowRect (&r, _txWindowStyle, false);
+$   SIZE sz  = { r.right - r.left, r.bottom - r.top };
 
-$   HWND wnd = CreateWindowEx (0, className, txGetModuleFileName (false), _txWindowStyle,
-                               centered? screen.cx/2 - sz.cx/2 : CW_USEDEFAULT,
-                               centered? screen.cy/2 - sz.cy/2 : CW_USEDEFAULT,
-                               sz.cx, sz.cy, NULL, NULL, NULL, NULL);
+$   HWND wnd = CreateWindow (className, txGetModuleFileName (false), _txWindowStyle,
+                             centered? scr.cx/2 - sz.cx/2 : CW_USEDEFAULT,
+                             centered? scr.cy/2 - sz.cy/2 : CW_USEDEFAULT,
+                             sz.cx, sz.cy, NULL, NULL, NULL, NULL);
 
 $   if (!wnd || !txWindow()) return TX_DEBUG_ERROR ("Cannot create canvas: CreateWindowEx (\"%s\") failed"_
                                                      className), (HWND) NULL;
@@ -5775,13 +5796,10 @@ bool _txConsole_Detach (bool activate)
 $1  HWND console = Win32::GetConsoleWindow();
 $   if (!console) return false;
 
-$   if (console && _txIsParentWaitable())
-        {
-$       ShowWindow (console, SW_SHOW);
-        }
-
 $   if (activate)
         {
+$       ShowWindow          (console, SW_SHOW);
+$       EnableWindow        (console, true);
 $       SetForegroundWindow (console);
 $       BringWindowToTop    (console);
         }
@@ -5803,9 +5821,6 @@ $   if (!ok) return false;
 
 $   POINT size = { con.srWindow.Right  - con.srWindow.Left + 1,
                    con.srWindow.Bottom - con.srWindow.Top  + 1 };
-$   RECT r = {0};
-$   GetClientRect (_txCanvas_Window, &r) asserted;
-$   double chrSzY = 1.0 * (r.bottom - r.top) / size.y;
 
 $   SIZE fontSz = { 12, 16 };
 $   Win32::GetTextExtentPoint32 (dc, "W", 1, &fontSz) asserted;
@@ -5831,8 +5846,9 @@ $   for (int y = 0; y < size.y; y++)
 
             for (xEnd = x+1; atr[xEnd] == atr[x] && xEnd < size.x; xEnd++) ;
 
-            Win32::TextOut (dc, fontSz.cx * (x + con.srWindow.Left), ROUND (chrSzY * y),
-                            chr + x, xEnd - x) asserted;
+            Win32::TextOut (dc, ROUND (fontSz.cx * (x + con.srWindow.Left)),
+                                ROUND (fontSz.cy *  y),
+                                chr + x, xEnd - x) asserted;
             }
         }
 
@@ -5845,8 +5861,8 @@ $   if (_txConsole_IsBlinking &&
         GetTickCount() % _txCursorBlinkInterval*2 > _txCursorBlinkInterval &&
         GetForegroundWindow() == txWindow())
         {
-$       Win32::TextOut (dc, fontSz.cx * (con.dwCursorPosition.X - con.srWindow.Left),
-                            ROUND (chrSzY * (con.dwCursorPosition.Y - con.srWindow.Top)) + 1,
+$       Win32::TextOut (dc, ROUND (fontSz.cx * (con.dwCursorPosition.X - con.srWindow.Left)),
+                            ROUND (fontSz.cy * (con.dwCursorPosition.Y - con.srWindow.Top)) + 1,
                             "_", 1) asserted;
         }
 
@@ -6314,7 +6330,7 @@ int txOutputDebugPrintf (const char format[], ...)
     OutputDebugString (str);
 
     if (print)
-        printf ("%s", str);
+        fprintf (stderr, "%s", str);
 
     if (msgbox)
         txMessageBox (str, "Оказывается, что", MB_ICONEXCLAMATION | MB_TOPMOST);
@@ -7700,8 +7716,9 @@ using ::std::string;
 //!                                        (без возврата значения).
 //!          @tr <tt> $$$_(expr) </tt> @td То же, что и <tt>$$$(expr),</tt> но вторая печать идет без новой строки.
 //!          @tbr
-//!          @tr <tt> $$$$ </tt>       @td Печать местоположения в коде.
-//!          @tr <tt> $n   </tt>       @td Перевод строки (печать @c '\\n').
+//!          @tr <tt> $$$$  </tt>      @td Печать местоположения в коде.
+//!          @tr <tt> $$$$_ </tt>      @td Печать местоположения в коде (только имя функции).
+//!          @tr <tt> $n    </tt>      @td Перевод строки (печать @c '\\n').
 //!          @endtable
 //!
 //! @title   Установка атрибутов символов консоли: @table
@@ -7762,24 +7779,29 @@ using ::std::string;
 
 #define $_(var)      _txDump (var)
 
-#define $(var)     ( _txDump ((var),  "[" #var " = ", "]") )
+#define $(var)     ( _txDump ((var),  "[" #var " = ", "] ") )
 
-#define $$(cmd)    (  std::cout <<  "\n[" __TX_FILELINE__ ": " #cmd "]\n",  \
+#define $$(cmd)    (  std::cerr <<  "\n[" __TX_FILELINE__ ": " #cmd "]\n",  \
                      _txDump ((cmd),"\n[" __TX_FILELINE__ ": " #cmd ": ", ", DONE]\n") )
 
-#define $$_(cmd)   (  std::cout <<  "\n[" __TX_FILELINE__ ": " #cmd "]\n",  \
+#define $$_(cmd)   (  std::cerr <<  "\n[" __TX_FILELINE__ ": " #cmd "]\n",  \
                      _txDump ((cmd),  "[" __TX_FILELINE__ ": " #cmd ": ", ", DONE]\n") )
 
-#define $$$(cmd)   {  std::cout <<  "\n[" __TX_FILELINE__ ": " #cmd "]\n";  \
+#define $$$(cmd)   {  std::cerr <<  "\n[" __TX_FILELINE__ ": " #cmd "]\n";  \
                      _txDumpSuffix ("\n[" __TX_FILELINE__ ": " #cmd " DONE]\n"); { cmd; } }
 
-#define $$$_(cmd)  {  std::cout <<  "\n[" __TX_FILELINE__ ": " #cmd "]\n";  \
+#define $$$_(cmd)  {  std::cerr <<  "\n[" __TX_FILELINE__ ": " #cmd "]\n";  \
                      _txDumpSuffix (  "[" __TX_FILELINE__ ": " #cmd " DONE]\n"); { cmd; } }
 
-#define $$$$       {{ $s $l txOutputDebugPrintf ("\f\n" "[%s (%d) %s]", __FILE__, __LINE__, __TX_FUNCTION__); } \
-                            txOutputDebugPrintf ("\f\n"); }
+#define $$$$       {       txOutputDebugPrintf ("\f\n"); \
+                   { $s $l txOutputDebugPrintf ("\f" "[%s (%d) %s]", __FILE__, __LINE__, __TX_FUNCTION__); } \
+                           txOutputDebugPrintf ("\f\n"); }
 
-#define $n            std::cout << "\n";
+#define $$$$_      {       txOutputDebugPrintf ("\f\n"); \
+                   { $s $l txOutputDebugPrintf ("\f" "[%s]", __func__); } \
+                           txOutputDebugPrintf ("\f\n"); }
+
+#define $n            std::cerr << "\n";
 
 #define $s            _txSaveConsoleAttr __txSaveConsoleAttr;
 
@@ -7818,14 +7840,14 @@ using ::std::string;
 template <typename T> inline
 const T& _txDump (const T& value, const char* prefix = "", const char* suffix = "")
     {
-    if (prefix) std::cout << prefix << value << suffix;
+    std::cerr << prefix << value << suffix;
     return value;
     }
 
 template <typename T> inline
       T& _txDump (      T& value, const char* prefix = "", const char* suffix = "")
     {
-    if (prefix) std::cout << prefix << value << suffix;
+    std::cerr << prefix << value << suffix;
     return value;
     }
 
@@ -7834,7 +7856,7 @@ struct _txDumpSuffix
     const char* suffix_;
 
     inline  _txDumpSuffix (const char* suffix = "") : suffix_ (suffix)     {}
-    inline ~_txDumpSuffix()                         { std::cout << suffix_; }
+    inline ~_txDumpSuffix()                         { std::cerr << suffix_; }
 
     _txDumpSuffix             (const _txDumpSuffix&);
     _txDumpSuffix& operator = (const _txDumpSuffix&);
@@ -7928,73 +7950,50 @@ struct _txSaveConsoleAttr
 //============================================================================================
 // EOF
 //============================================================================================
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                                                                                                              
-                            
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+                                                   
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

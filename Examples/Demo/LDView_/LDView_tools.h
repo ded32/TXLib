@@ -8,7 +8,7 @@
 //!             $Version$
 //!             $Date$
 //!             $Copyright$
-//              $Author$
+//              $Copyright$
 //}===========================================================================
 
 #ifndef __LDVIEW_TOOLS_H
