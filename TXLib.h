@@ -158,7 +158,7 @@
     #endif
     #error TXLib.h: Should include "TXLib.h" BEFORE or INSTEAD of <Windows.h> in UNICODE mode.
     #error
-    #error REARRANGE your #include directives.
+    #error REARRANGE your #include directives, or DISABLE the UNICODE mode.
     #error -----------------------------------------------------------------------------------
     #error
 
@@ -183,7 +183,7 @@
     #endif
     #error TXLib.h: Should include "TXLib.h" BEFORE <string.h> or <stdio.h> in Strict ANSI mode.
     #error
-    #error REARRANGE your #include directives.
+    #error REARRANGE your #include directives, or DISABLE ANSI-compliancy.
     #error -----------------------------------------------------------------------------------
     #error
 
@@ -249,12 +249,19 @@
     #pragma warning (disable: 4786)             // identifier was truncated to '255' characters in the debug information
 
     #if !defined (WINVER)
-        #define WINVER              0x0400      // MSVC 6: Defaults to Windows 95
+        #define   WINVER            0x0400      // MSVC 6: Defaults to Windows 95
     #endif
 
 #endif
 
 #if  defined (_MSC_VER) && (_MSC_VER >= 1400)   // MSVC 8 (2005) or greater
+
+    #pragma setlocale               ("russian") // Set source file encoding, see also _TX_CP
+
+    #if !defined (NDEBUG)
+        #pragma check_stack         (on)        // Turn on stack probes at runtime
+        #pragma strict_gs_check     (push, on)  // Detects stack buffer overruns
+    #endif
 
     #define _CRT_SECURE_CPP_OVERLOAD_SECURE_NAMES 1
     #define _TX_TRUNCATE            , _TRUNCATE
@@ -287,16 +294,16 @@
 #endif
 
 #if !defined (WINVER)
-    #define   WINVER         0x0500             // Defaults to Windows 2000
+    #define   WINVER                0x0500      // Defaults to Windows 2000
     #define   WINDOWS_ENABLE_CPLUSPLUS          // Allow use of type-limit macros in <basetsd.h>,
 #endif                                          //   they allowed by default if WINVER >= 0x0600.
 
 #if !defined (_WIN32_WINNT)
-    #define   _WIN32_WINNT   WINVER             // Defaults to the same as WINVER
+    #define   _WIN32_WINNT          WINVER      // Defaults to the same as WINVER
 #endif
 
 #if !defined (_WIN32_IE)
-    #define   _WIN32_IE      WINVER             // Defaults to the same as WINVER
+    #define   _WIN32_IE             WINVER      // Defaults to the same as WINVER
 #endif
 
 #define _USE_MATH_DEFINES                       // math.h's M_PI etc.
@@ -4784,6 +4791,7 @@ $   (void) Win32::CreateRectRgn;
 $   (void) Win32::GetBitmapDimensionEx;
 $   (void) Win32::GetConsoleFontInfo;
 
+$   SetLastError (0);
 $   return 1;
     }
 
@@ -4924,7 +4932,7 @@ inline bool txOK()
 $1  return _txCanvas_OK();
     }
 
-//-----------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------
 
 void _txCleanup()
     {
@@ -4952,19 +4960,25 @@ $   txSetConsoleAttr (0x07);
 
 $   while (wnd != NULL && !externTerm)
         {
-$       static wchar_t title [_TX_BUFSIZE] = L"";
-$       GetWindowTextW (wnd, title, SIZEARR (title));
+$       static wchar_t title [_TX_BUFSIZE] = L"TXLib";
+
+        SendMessageTimeoutW (wnd, WM_GETTEXT, (WPARAM) _TX_BUFSIZE, (LPARAM) title,
+                             SMTO_ABORTIFHUNG | SMTO_ERRORONEXIT, _TX_TIMEOUT, NULL);
+
 $       int len = (int) wcslen (title);
 
 $       MultiByteToWideChar (_TX_CP, 0, " [ЗАВЕРШЕНО]", -1, title + len, SIZEARR (title) - len);
-$       SetWindowTextW (wnd, title);
+
+        SendMessageTimeoutW (wnd, WM_SETTEXT, 0, (LPARAM) title,
+                             SMTO_ABORTIFHUNG | SMTO_ERRORONEXIT, _TX_TIMEOUT, NULL);
 
 $       GetWindowTextW (wnd, title, SIZEARR (title));
 $       if (title [len+2] == /* 'З' */ (wchar_t) 0x0417) break;
 
 $       MultiByteToWideChar (_TX_CP, 0, " [FINISHED]",  -1, title + len, SIZEARR (title) - len);
-$       SetWindowTextW (wnd, title);
 
+        SendMessageTimeoutW (wnd, WM_SETTEXT, 0, (LPARAM) title,
+                             SMTO_ABORTIFHUNG | SMTO_ERRORONEXIT, _TX_TIMEOUT, NULL);
 $       break;
         }
 
@@ -5001,7 +5015,7 @@ $   if (!externTerm)
     #endif
     }
 
-//-----------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------
 
 void _txPauseBeforeTermination (HWND canvas)
     {
@@ -5036,7 +5050,7 @@ $   while (!wine && _kbhit()) (void)_getch();
 $   printf ("\n");
     }
 
-//-----------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------
 
 int _txGetInput()
     {
@@ -5063,7 +5077,7 @@ $       return fgetc (stdin);
 $   return EOF;
     }
 
-//-----------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------
 
 bool _txIsParentWaitable (DWORD* parentPID /*= NULL*/)
     {
@@ -5104,7 +5118,7 @@ $           if (_stricmp (p, parent) == 0)
 $   return false;
     }
 
-//-----------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------
 
 PROCESSENTRY32* _txFindProcess (unsigned pid /*= GetCurrentProcessId()*/)
     {
@@ -5122,7 +5136,7 @@ $   CloseHandle (sshot);
 $   return &info;
     }
 
-//-----------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------
 
 // You are here, little hacker?
 
@@ -5283,7 +5297,7 @@ $   DWORD proc = 0;
 $   GetWindowThreadProcessId (console, &proc);
 
 $   if (console && (proc == GetCurrentProcessId() || _txIsParentWaitable()))
-        { $ ShowWindow (console, _txConsoleMode) asserted; }
+        { $ ShowWindow (console, _txConsoleMode); }
 
 $   CheckMenuItem (menu, _TX_IDM_CONSOLE,
                    console? (IsWindowVisible (console)? MF_CHECKED : 0) : MF_DISABLED);
@@ -6288,7 +6302,7 @@ const char* _txError (const char file[] /*= NULL*/, int line /*= 0*/, const char
             }
         };
 
-    txOutputDebugPrintf ("%s - %s" "\n", _TX_VERSION, tools::compressSpaces (str, what));
+    txOutputDebugPrintf ("%s - %s", _TX_VERSION, tools::compressSpaces (str, what));
 
     if (fmtOnly) return what;
 
@@ -7440,10 +7454,10 @@ inline double random (double left, double right)
 template <typename T>
 inline T zero()
 #ifdef _MSC_VER_6
-    { T z = {0}; return z; }
+    { T __zero = {0}; return __zero; }
 
 #else
-    { T z = { }; return z; }
+    { T __zero = { }; return __zero; }
 
 #endif
 
@@ -7732,18 +7746,18 @@ using ::std::string;
 //!          @tr @c $t @td Белый            цвет @td @td @c $D @td Темно-серый     цвет
 //! @endtable
 //! @title @table
-//!          @tr @c $a @td Assertion        @td Светло-зеленый на зеленом     @td
-//!          @td @c $A @td Assertion bold   @td Желтый на зеленом             @td
-//!          @tr @c $i @td Information      @td Светло-синий на синем         @td
-//!          @td @c $I @td Information bold @td Желтый на синем               @td
-//!          @tr @c $w @td Warning          @td Светло-малиновый на малиновом @td
-//!          @td @c $W @td Warning bold     @td Желтый на малиновом           @td
-//!          @tr @c $e @td Error            @td Светло-красный на красном     @td
-//!          @td @c $E @td Error bold       @td Желтый на красном             @td
-//!          @tr @c $f @td Fatal            @td Черный на светло-красном      @td
-//!          @td @c $F @td Fatal bold       @td Малиновый на светло-красном   @td
-//!          @tr @c $l @td Location         @td Черный на темно-сером         @td
-//!          @td @c $L @td Location bold    @td Светло-серый на темно-сером   @td
+//!          @tr @c $a @td Assertion        @td Светло-зеленый   на зеленом        @td
+//!          @td @c $A @td Assertion bold   @td Желтый           на зеленом        @td
+//!          @tr @c $i @td Information      @td Светло-синий     на синем          @td
+//!          @td @c $I @td Information bold @td Желтый           на синем          @td
+//!          @tr @c $w @td Warning          @td Светло-малиновый на малиновом      @td
+//!          @td @c $W @td Warning bold     @td Желтый           на малиновом      @td
+//!          @tr @c $e @td Error            @td Светло-красный   на красном        @td
+//!          @td @c $E @td Error bold       @td Желтый           на красном        @td
+//!          @tr @c $f @td Fatal            @td Черный           на светло-красном @td
+//!          @td @c $F @td Fatal bold       @td Малиновый        на светло-красном @td
+//!          @tr @c $l @td Location         @td Черный           на темно-сером    @td
+//!          @td @c $L @td Location bold    @td Светло-серый     на темно-сером    @td
 //! @endtable
 //! @title @table
 //!          @tr @c $s @td Запомнить атрибуты. При выходе из блока кода атрибуты восстанавливаются.
@@ -7975,21 +7989,7 @@ struct _txSaveConsoleAttr
                                                                                                                                                                                                         
                                                                                                                                                                                                         
                                                                                                                                                                                                         
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        
-                                                   
-
-
-
-
-
-
-
-
-
+                                                                                                                                                                                      
 
 
 
