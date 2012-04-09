@@ -56,7 +56,7 @@
 //--------------------------------------------------------------------------------------------
 
 //! @cond INTERNAL
-#define _TX_V_FROM_CVS(_1,file,ver,rev,date,auth,_2)  "TXLib [Version " #ver ", Revision " #rev "]"
+#define _TX_V_FROM_CVS(_1,file,ver,rev,date,auth,_2)  "TXLib [Ver. " #ver ", Rev. " #rev "]"
 #define _TX_A_FROM_CVS(_1,file,ver,rev,date,auth,_2)  "Copyright (C) " auth
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver << 16) | 0x##rev)
 //! @endcond
@@ -3116,21 +3116,20 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
 //}-------------------------------------------------------------------------------------------
 
 #if   defined (__GNUC__)
-    #define __TX_COMPILER__   "GNU C++ "            TX_QUOTE (__GNUC__)       "."  \
+    #define __TX_COMPILER__   "GNU g++ "            TX_QUOTE (__GNUC__)       "."  \
                                                     TX_QUOTE (__GNUC_MINOR__) "."  \
                                                     TX_QUOTE (__GNUC_PATCHLEVEL__) \
-                                         ", C++ = " TX_QUOTE (__cplusplus)
+                              ", std="              TX_QUOTE (__cplusplus)
 #elif defined (_MSC_VER)
-    #define __TX_COMPILER__   "Microsoft C++ "      TX_QUOTE (_MSC_VER) \
-                                         ", C++ = " TX_QUOTE (__cplusplus)
+    #define __TX_COMPILER__   "MSVS "               TX_QUOTE (_MSC_VER)            \
+                              ", std="              TX_QUOTE (__cplusplus)
 
 #elif defined (__INTEL_COMPILER)
-    #define __TX_COMPILER__   "Intel C++ Compiler " TX_QUOTE (__INTEL_COMPILER) \
-                                         ", C++ = " TX_QUOTE (__cplusplus)
+    #define __TX_COMPILER__   "Intel C++ "          TX_QUOTE (__INTEL_COMPILER)    \
+                              ", std="              TX_QUOTE (__cplusplus)
 
 #else
-    #define __TX_COMPILER__   "Unknown compiler" \
-                                         ", C++ = " TX_QUOTE (__cplusplus)
+    #define __TX_COMPILER__   "Unknown C++, std="   TX_QUOTE (__cplusplus)
 
 #endif
 
@@ -4053,7 +4052,7 @@ struct txDialog
 //}-------------------------------------------------------------------------------------------
 
     private:
-    static int CALLBACK dialogProc__ (HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam);
+    static ptrdiff_t CALLBACK dialogProc__ (HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 //{-------------------------------------------------------------------------------------------
 //! Текущий макет диалога.
@@ -5068,11 +5067,15 @@ $   if (_kbhit())
 $       return _getch();
 	}
 
+#if defined (_MSC_VER) && (_MSC_VER < 1700) 
+
 $   if (fseek (stdin, 1, SEEK_CUR) != EOF)
         {
 $       (void) fseek (stdin, -1, SEEK_CUR);
-$       return fgetc (stdin);
+$       return fgetc (stdin);                // This causes blocking in MSVC 2011 beta
         }
+
+#endif
 
 $   return EOF;
     }
@@ -5091,7 +5094,7 @@ $   char parent [MAX_PATH] = "";
 $   strncpy_s (parent, info->szExeFile, sizeof (parent) - 1);
 $   if (parentPID) *parentPID = info->th32ProcessID;
 
-$   info = _txFindProcess (info->th32ParentProcessID);  // info: grandparent
+$   info = _txFindProcess (info->th32ParentProcessID);          // info: grandparent
 
 $   char list[_TX_BUFSIZE] = _TX_WAITABLE_PARENTS;
 $   char* ctx = NULL;
@@ -5204,6 +5207,20 @@ $   return title + 1;
 //! @name    Функции окна TXLib                    (_txCanvas...)
 //============================================================================================
 
+//{
+#if defined (_MSC_VER_6) || defined (_GCC_VER) && (_GCC_VER <= 345)
+    
+    #define SetClassLong_  SetClassLong
+    #define GCL_HICON_     GCL_HICON
+    #define GCL_HICONSM_   GCL_HICONSM
+
+#else
+    #define SetClassLong_  SetClassLongPtr
+    #define GCL_HICON_     GCLP_HICON
+    #define GCL_HICONSM_   GCLP_HICONSM
+    #endif
+//}
+
 unsigned WINAPI _txCanvas_ThreadProc (void* data)
     {
 $1  _txCanvas_ThreadId = GetCurrentThreadId();
@@ -5213,8 +5230,8 @@ $   _TX_IF_ARGUMENT_FAILED (data) return false;
 $   _txCanvas_CreateWindow ((SIZE*) data);
 $   if (!txWindow()) return TX_DEBUG_ERROR ("\a" "Cannot create canvas"), 0;
 
-$   HICON icon32 = _txCreateTXIcon (32); SetClassLong (txWindow(), GCL_HICON,   (DWORD)(ptrdiff_t) icon32);
-$   HICON icon16 = _txCreateTXIcon (16); SetClassLong (txWindow(), GCL_HICONSM, (DWORD)(ptrdiff_t) icon16);
+$   HICON icon32 = _txCreateTXIcon (32); SetClassLong_ (txWindow(), GCL_HICON_,   (DWORD)(ptrdiff_t) icon32);
+$   HICON icon16 = _txCreateTXIcon (16); SetClassLong_ (txWindow(), GCL_HICONSM_, (DWORD)(ptrdiff_t) icon16);
 
 $   bool isMaster = !!(GetWindowLong (txWindow(), GWL_STYLE) & WS_SYSMENU);
 
@@ -5247,6 +5264,12 @@ $       exit ((int) msg.wParam);
 $   _txCanvas_ThreadId = 0;
 $   return true;
     }
+
+//{
+#undef SetClassLong
+#undef GCL_HICON_
+#undef GCL_HICONSM_
+//}
 
 //--------------------------------------------------------------------------------------------
 
@@ -5685,19 +5708,20 @@ $   _snprintf_s (text, sizeof (text) - 1 _TX_TRUNCATE,
                      __DESCRIPTION EOL_
                      "Copyright (c) " __AUTHOR EOL_
                  #else
-                     "Здесь могла бы быть Ваша реклама:)" EOL_
+                     "Здесь могла бы быть Ваша реклама :)" EOL_
                      "#define __MODULE to \"your program name\" before including TXLib.h to use this billboard..." EOL_
                  #endif
 
                  "\n" "Developed with:" EOL_ "\n"
                  "The Dumb Artist Library (TX Library) - " _TX_VERSION EOL_
-                 _TX_AUTHOR ", see license on: http://ded32.net.ru/index/0-6" EOL_ "\n"
+                 _TX_AUTHOR EOL_ 
+                 "See license on: http://ded32.net.ru/index/0-6" EOL_ "\n"
 
                  "TXLib file:" "\t" __FILE__ EOL_
-                 "Compiled:"   "\t" __DATE__ " " __TIME__ ", " _TX_BUILDMODE " mode, by " __TX_COMPILER__ EOL_
+                 "Compiled:"   "\t" __DATE__ " " __TIME__ ", " _TX_BUILDMODE ", " __TX_COMPILER__ EOL_
                  "Started:"    "\t" "%.6s %.4s %.8s" EOL_ "\n"
 
-                 "Running:"    "\t" "%s" EOL_
+                 "Run file:"   "\t" "%s" EOL_
                  "Directory:"  "\t" "%s",
 
                  timeS + 4, timeS + 20, timeS + 11,  // These offsets are ANSI standardized
@@ -6270,7 +6294,7 @@ const char* _txError (const char file[] /*= NULL*/, int line /*= 0*/, const char
                 s +=  _snprintf_s  (s, SZARG_(1), ". %s\n",
                                     std::uncaught_exception()? "std::uncaught_exception(): true." : "");
 
-    if (_txInTX > 0 && !(_txLine == line && _stricmp (_txFile, file) == 0))
+    if (_txInTX > 0 && !(_txLine == line && file && _stricmp (_txFile, file) == 0))
                 s +=  _snprintf_s  (s, SZARG_(1), "From: %s (%d) %s.\n", _txFile, _txLine, _txFunc);
 
     #undef SZARG_
@@ -7550,7 +7574,7 @@ $1  return FALSE;
 
 //--------------------------------------------------------------------------------------------
 
-int CALLBACK txDialog::dialogProc__ (HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam)
+ptrdiff_t CALLBACK txDialog::dialogProc__ (HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam)
     {
 $1  static txDialog* this__ = NULL;
 
@@ -7964,36 +7988,12 @@ struct _txSaveConsoleAttr
 //============================================================================================
 // EOF
 //============================================================================================
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        
-                                                                                                                                                                                                        
-                                                                                                                                                                                      
-
-
-
-
-
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
 
