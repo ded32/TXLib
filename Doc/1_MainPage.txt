@@ -37,7 +37,7 @@
              
     @par        Примеры:
 
-             -  @ref Tutor_1st       "Простейшая программа"
+             -  @ref Tutor_1st       "Простейший пример"
              -  @ref Tutor_1st_2     "Слегка улучшенный пример"
              -  @ref Tutor_Funcs     "Пример с функциями"
              -  @ref Tutor_Params    "Пример с функциями с параметрами"
@@ -317,6 +317,9 @@
     - <a href=https://sourceforge.net/tracker/?func=add&group_id=213688&atid=1026713>
       <b>Предложить улучшение</b></a>
 */ 
+
+
+
 
 
 
