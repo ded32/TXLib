@@ -56,7 +56,7 @@
 //--------------------------------------------------------------------------------------------
 
 //! @cond INTERNAL
-#define _TX_V_FROM_CVS(_1,file,ver,rev,date,auth,_2)  "TXLib [Ver. " #ver ", Rev. " #rev "]"
+#define _TX_V_FROM_CVS(_1,file,ver,rev,date,auth,_2)  "TXLib [Ver: " #ver ", Rev: " #rev "]"
 #define _TX_A_FROM_CVS(_1,file,ver,rev,date,auth,_2)  "Copyright (C) " auth
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver << 16) | 0x##rev)
 //! @endcond
@@ -90,8 +90,7 @@
 //!            Эта константа автоматически обновляется при изменении версии.
 //!
 //! @see       txVersion()
-//! @usage
-//! @code
+//! @usage @code
 //!            #if !(defined (_TX_VER) && (_TX_VER >= 0x172a0000))
 //!            #error Must use TXLib.h version >= 1.72 to compile this.
 //!            #endif
@@ -422,8 +421,7 @@ namespace { namespace TX {                       // <<<<<<<<< The main code is h
 //!          движком.
 //!
 //! @see     txOK()
-//! @usage
-//! @code
+//! @usage @code
 //!          txCreateWindow ( 800, 600);         // Окно  800х600, центрировано
 //!          txCreateWindow (1024, 768, false);  // Окно 1024х768, не центрировано
 //! @endcode
@@ -445,8 +443,7 @@ HWND txCreateWindow (double sizeX, double sizeY, bool centered = true);
 //!
 //! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors, RGB()
 //! @see     txSelectFont(), txSetROP2()
-//! @usage
-//! @code
+//! @usage @code
 //!          txSetDefaults();
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -464,8 +461,7 @@ bool txSetDefaults();
 //!          однако могут быть и другие.
 //!
 //! @see     txCreateWindow()
-//! @usage
-//! @code
+//! @usage @code
 //!          txCreateWindow (800, 600);
 //!          if (!txOK())
 //!              {
@@ -484,8 +480,7 @@ inline bool txOK();
 //! @return  Размер окна рисования в виде структуры POINT.
 //!
 //! @see     txGetExtentX(), txGetExtentY()
-//! @usage
-//! @code
+//! @usage @code
 //!          POINT size = txGetExtent();
 //!
 //!          txLine (0, 0,      size.x, size.y);
@@ -502,8 +497,7 @@ POINT txGetExtent();
 //! @return  Ширина окна рисования.
 //!
 //! @see     txGetExtent(), txGetExtentY()
-//! @usage
-//! @code
+//! @usage @code
 //!          txSetTextAlign (TA_CENTER);
 //!          txTextOut (txGetExtentX() / 2, 100, "Oh, oh, you're in the [army]middle now");
 //! @endcode
@@ -518,8 +512,7 @@ int txGetExtentX();
 //! @return  Высота окна рисования.
 //!
 //! @see     txGetExtent(), txGetExtentX()
-//! @usage
-//! @code
+//! @usage @code
 //!          void DrawHouse (int height);
 //!          ...
 //!          DrawHouse (txGetExtentY() / 2);
@@ -541,8 +534,7 @@ int txGetExtentY();
 //!          после подмены разблокировано txUnlock().
 //!
 //! @see     txWindow(), txLock(), txUnlock(), txGDI()
-//! @usage
-//! @code
+//! @usage @code
 //!          txBitBlt (txDC(),   0,   0, 100, 100, txDC(), 0, 0);
 //!          txBitBlt (txDC(), 100,   0, 100, 100, txDC(), 0, 0);
 //!          txBitBlt (txDC(), 0,   100, 100, 100, txDC(), 0, 0);
@@ -559,8 +551,7 @@ inline HDC& txDC();
 //! @return  Дескриптор (системный номер, handler) окна холста
 //!
 //! @see     txDC(), txLock(), txUnlock(), txGDI()
-//! @usage
-//! @code
+//! @usage @code
 //!          SetWindowText (txWindow(), "Новые заголовки - теперь и в ваших окнах!");
 //!          txMessageBox ("Распишитесь", "Получите", MB_ICONINFORMATION);
 //! @endcode
@@ -574,8 +565,7 @@ inline HWND txWindow();
 //!
 //! @return  Строка с информацией о текущей версии библиотеки.
 //!
-//! @usage
-//! @code
+//! @usage @code
 //!          printf ("I personally love %s\n", txVersion());
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -588,8 +578,7 @@ inline const char* txVersion();
 //!
 //! @return  Номер версии библиотеки.
 //!
-//! @usage
-//! @code
+//! @usage @code
 //!          printf ("My magic number is %x\n", txVersionNumber());
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -609,8 +598,7 @@ inline unsigned txVersionNumber();
 //! @note    Возвращается @b статическая строка.
 //!
 //! @see     txWindow(), txVersion(), txVersionNumber()
-//! @usage
-//! @code
+//! @usage @code
 //!          printf ("Смотрите на заголовок окна!");
 //!
 //!          for (int done = 0; done <= 100; done++)
@@ -648,8 +636,7 @@ const char* txGetModuleFileName (bool fileNameOnly = true);
 //!          с помощью RGB(). См. пример ниже.
 //!
 //! @see     txSetColor(), txSetFillColor(), txGetColor(), txGetFillColor(), txGetPixel(), RGB()
-//! @usage
-//! @code
+//! @usage @code
 //!          const int MY_PRECIOUS_BLACK     = RGB (  1,   1,   1),
 //!                    MY_DEEP_ROMANTIC_BLUE = RGB (  0,   0, 129),
 //!                    MY_SHINING_MOONLIGHT  = RGB (128, 255,  64);
@@ -712,8 +699,7 @@ const COLORREF
 //!
 //! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors
 //! @see     RGB(), txExtractColor(), txRGB2HSL(), txHSL2RGB()
-//! @usage
-//! @code
+//! @usage @code
 //!          txSetColor (RGB (255, 128, 0));
 //!
 //!          int red = 20, green = 200, blue = 20;
@@ -736,8 +722,7 @@ COLORREF RGB (int red, int green, int blue);
 //! @return  Если операция была успешна - true, иначе - false.
 //!
 //! @see     txColor(), txGetColor(), txFillColor(), txGetFillColor(), txColors, RGB()
-//! @usage
-//! @code
+//! @usage @code
 //!          txSetColor (TX_RED);
 //!          txSetColor (RGB (255, 128, 0), 5);
 //! @endcode
@@ -756,8 +741,7 @@ bool txSetColor (COLORREF color, double thickness = 1);
 //! @return  Если операция была успешна - true, иначе - false.
 //!
 //! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor()
-//! @usage
-//! @code
+//! @usage @code
 //!          txColor (1.0, 1.0, 0.0);   // Красный + зеленый = желтый
 //!          txColor (1.0, 0.5, 0.25);  // Нечто оранжевое
 //! @endcode
@@ -772,8 +756,7 @@ bool txColor (double red, double green, double blue);
 //! @return  Текущий цвет линий и текста, см. txColors, RGB()
 //!
 //! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors, RGB()
-//! @usage
-//! @code
+//! @usage @code
 //!          COLORREF color = txGetColor();
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -789,8 +772,7 @@ COLORREF txGetColor();
 //! @return  Если операция была успешна - true, иначе - false.
 //!
 //! @see     txFillColor(), txGetFillColor(), txColor(), txGetColor(), txColors, RGB()
-//! @usage
-//! @code
+//! @usage @code
 //!          txSetFillColor (TX_RED);
 //!          txSetFillColor (RGB (255, 128, 0));
 //! @endcode
@@ -809,8 +791,7 @@ bool txSetFillColor (COLORREF color);
 //! @return  Если операция была успешна - true, иначе - false.
 //!
 //! @see     txSetFillColor(), txGetFillColor(), txSetColor(), txGetColor()
-//! @usage
-//! @code
+//! @usage @code
 //!          txFillColor (1.0, 0.5, 0.25);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -824,8 +805,7 @@ bool txFillColor (double red, double green, double blue);
 //! @return  Текущий цвет заполнения фигур, см. txColors, RGB()
 //!
 //! @see     txSetFillColor(), txGetFillColor(), txSetColor(), txGetColor(), txColors, RGB()
-//! @usage
-//! @code
+//! @usage @code
 //!          COLORREF color = txGetFillColor();
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -869,8 +849,7 @@ COLORREF txGetFillColor();
 //!
 //! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors, RGB()
 //!          txLine(), txRectangle(), txPolygon(), txEllipse(), txCircle(), txArc(), txPie(), txChord()
-//! @usage
-//! @code
+//! @usage @code
 //!          txSetColor (TX_WHITE, 5);       // При рисовании белым цветом в режиме
 //!          txSetROP2 (R2_XORPEN);          //   R2_XORPEN цвета на экране инвертируются
 //!
@@ -898,8 +877,7 @@ bool txSetROP2 (int mode = R2_COPYPEN);
 //!
 //! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors
 //! @see     RGB(), txExtractColor(), txRGB2HSL(), txHSL2RGB(), txColors
-//! @usage
-//! @code
+//! @usage @code
 //!          int red       = txExtractColor (color, TX_RED);
 //!          int lightness = txExtractColor (TX_BLUE, TX_LIGHTNESS);
 //!
@@ -931,8 +909,7 @@ int txExtractColor (COLORREF color, COLORREF component);
 //!
 //! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors
 //! @see     RGB(), txExtractColor(), txRGB2HSL(), txHSL2RGB(), txColors
-//! @usage
-//! @code
+//! @usage @code
 //!          COLORREF hslColor = txRGB2HSL (TX_RED);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -961,8 +938,7 @@ COLORREF txRGB2HSL (COLORREF rgbColor);
 //!
 //! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors
 //! @see     RGB(), txExtractColor(), txRGB2HSL(), txHSL2RGB(), txColors
-//! @usage
-//! @code
+//! @usage @code
 //!          int hue = 10, saturation = 128, lightness = 128;
 //!          COLORREF hslColor = RGB (hue, saturation, lightness);
 //!          txSetColor (txHSL2RGB (hslColor));
@@ -987,8 +963,7 @@ COLORREF txHSL2RGB (COLORREF hslColor);
 //! @return  Если операция была успешна - true, иначе - false.
 //!
 //! @see     txSetFillColor(), txFillColor(), txGetFillColor(), txColors, RGB()
-//! @usage
-//! @code
+//! @usage @code
 //!          txClear();
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -1006,8 +981,7 @@ bool txClear();
 //! @return  Если операция была успешна - true, иначе - false.
 //!
 //! @see     txPixel(), txGetPixel(), txColors, RGB()
-//! @usage
-//! @code
+//! @usage @code
 //!          txSetPixel (100, 100, TX_RED);
 //!          txSetPixel (100, 100, RGB (255, 128, 0));
 //! @endcode
@@ -1028,8 +1002,7 @@ inline bool txSetPixel (double x, double y, COLORREF color);
 //! @return  Если операция была успешна - true, иначе - false.
 //!
 //! @see     txSetPixel(), txGetPixel()
-//! @usage
-//! @code
+//! @usage @code
 //!          txSetPixel (100, 100, 1.0, 0.5, 0.25);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -1046,8 +1019,7 @@ inline bool txPixel (double x, double y, double red, double green, double blue);
 //! @return  Текущий цвет пикселя, см. txColors, RGB()
 //!
 //! @see     txSetPixel(), txPixel(), txColors, RGB()
-//! @usage
-//! @code
+//! @usage @code
 //!          COLORREF color = txGetPixel (100, 200);
 //!
 //!          if (txGetPixel (x, y) == TX_RED)
@@ -1072,8 +1044,7 @@ inline COLORREF txGetPixel (double x, double y);
 //!
 //! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors, RGB()
 //!          txLine(), txRectangle(), txPolygon(), txEllipse(), txCircle(), txArc(), txPie(), txChord()
-//! @usage
-//! @code
+//! @usage @code
 //!          txLine (100, 200, 400, 500);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -1095,8 +1066,7 @@ bool txLine (double x0, double y0, double x1, double y1);
 //!
 //! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors, RGB()
 //!          txLine(), txRectangle(), txPolygon(), txEllipse(), txCircle(), txArc(), txPie(), txChord()
-//! @usage
-//! @code
+//! @usage @code
 //!          txRectangle (100, 200, 400, 500);
 //!
 //!          Win32::RoundRect (txDC(), 100, 200, 400, 500, 30, 30); // И такое есть. См. RoundRect в MSDN.com
@@ -1118,8 +1088,7 @@ bool txRectangle (double x0, double y0, double x1, double y1);
 //!
 //! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors, RGB()
 //!          txLine(), txRectangle(), txPolygon(), txEllipse(), txCircle(), txArc(), txPie(), txChord()
-//! @usage
-//! @code
+//! @usage @code
 //!          POINT star[6] = {{150, 300}, {200, 100}, {250, 300}, {100, 200}, {300, 200}, {150, 300}};
 //!          txPolygon (star, 6);
 //! @endcode
@@ -1142,8 +1111,7 @@ bool txPolygon (const POINT points[], int numPoints);
 //!
 //! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors, RGB()
 //!          txLine(), txRectangle(), txPolygon(), txEllipse(), txCircle(), txArc(), txPie(), txChord()
-//! @usage
-//! @code
+//! @usage @code
 //!          txEllipse (100, 100, 300, 200);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -1164,8 +1132,7 @@ bool txEllipse (double x0, double y0, double x1, double y1);
 //!
 //! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors, RGB()
 //!          txLine(), txRectangle(), txPolygon(), txEllipse(), txCircle(), txArc(), txPie(), txChord()
-//! @usage
-//! @code
+//! @usage @code
 //!          txCircle (100, 100, 10);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -1190,8 +1157,7 @@ bool txCircle (double x, double y, double r);
 //!
 //! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors, RGB()
 //!          txLine(), txRectangle(), txPolygon(), txEllipse(), txCircle(), txArc(), txPie(), txChord()
-//! @usage
-//! @code
+//! @usage @code
 //!          txArc (100, 100, 300, 200, 0, 180);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -1216,8 +1182,7 @@ bool txArc (double x0, double y0, double x1, double y1, double startAngle, doubl
 //!
 //! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors, RGB()
 //!          txLine(), txRectangle(), txPolygon(), txEllipse(), txCircle(), txArc(), txPie(), txChord()
-//! @usage
-//! @code
+//! @usage @code
 //!          txPie (100, 100, 300, 200, 0, 180);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -1242,8 +1207,7 @@ bool txPie (double x0, double y0, double x1, double y1, double startAngle, doubl
 //!
 //! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors, RGB()
 //!          txLine(), txRectangle(), txPolygon(), txEllipse(), txCircle(), txArc(), txPie(), txChord()
-//! @usage
-//! @code
+//! @usage @code
 //!          txChord (100, 100, 300, 200, 0, 180);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -1271,8 +1235,7 @@ bool txChord (double x0, double y0, double x1, double y1, double startAngle, dou
 //!
 //! @see     txSetFillColor(), txGetFillColor(), txColors, RGB()
 //!          txLine(), txRectangle(), txPolygon(), txEllipse(), txCircle(), txArc(), txPie(), txChord()
-//! @usage
-//! @code
+//! @usage @code
 //!          txFloodFill (100, 100);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -1302,8 +1265,7 @@ bool txFloodFill (double x, double y, COLORREF color = TX_TRANSPARENT, DWORD mod
 //!
 //! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors, RGB()
 //!          txSelectFont(), txSetTextAign(), txGetTextExtent(), txGetTextExtentX(), txGetTextExtentY()
-//! @usage
-//! @code
+//! @usage @code
 //!          txTextOut (100, 100, "Здесь могла бы быть Ваша реклама.");
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -1335,8 +1297,7 @@ bool txTextOut (double x, double y, const char text[]);
 //!
 //! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors, RGB()
 //!          txTextOut(), txSelectFont(), txGetTextExtent(), txGetTextExtentX(), txGetTextExtentY()
-//! @usage
-//! @code
+//! @usage @code
 //!          txSelectFont ("Arial", 20, 0, FW_BOLD);
 //!          txDrawText (100, 100, 200, 500, "I hate it when I'm studying and a Velociraptor throws bananas on me.\n");
 //! @endcode
@@ -1363,8 +1324,7 @@ bool txDrawText (double x0, double y0, double x1, double y1, const char text[],
 //!          txFontExist.
 //!
 //! @see     txTextOut(), txFontExist()
-//! @usage
-//! @code
+//! @usage @code
 //!          txSelectFont ("Comic Sans MS", 40);
 //!          txTextOut (100, 100, "И здесь могла бы быть Ваша реклама.");
 //!          txSelectFont ("Comic Sans MS", 40, 10, false, true, false, true, 15);
@@ -1389,8 +1349,7 @@ bool txSelectFont (const char name[], double sizeY,
 //! @return  Размеры надписи в структуре SIZE.
 //!
 //! @see     txTextOut(), txSelectFont(), txGetTextExtent(), txGetTextExtentX(), txGetTextExtentY()
-//! @usage
-//! @code
+//! @usage @code
 //!          SIZE size = txGetTextExtent (text);
 //!          txTextOut (100 + size.cx / 2, 200 + size.cy / 2, text);
 //! @endcode
@@ -1407,8 +1366,7 @@ SIZE txGetTextExtent (const char text[]);
 //! @return  Ширина надписи.
 //!
 //! @see     txTextOut(), txSelectFont(), txGetTextExtent(), txGetTextExtentX(), txGetTextExtentY()
-//! @usage
-//! @code
+//! @usage @code
 //!          txTextOut (100 + txGetTextExtentX (text) / 2, 200 + txGetTextExtentY (text) / 2, text);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -1424,8 +1382,7 @@ int txGetTextExtentX (const char text[]);
 //! @return  Высота надписи.
 //!
 //! @see     txTextOut(), txSelectFont(), txGetTextExtent(), txGetTextExtentX(), txGetTextExtentY()
-//! @usage
-//! @code
+//! @usage @code
 //!          txTextOut (100 + txGetTextExtentX (text) / 2, 200 + txGetTextExtentY (text) / 2, text);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -1455,8 +1412,7 @@ int txGetTextExtentY (const char text[]);
 //!          @endtable
 //!
 //! @see     txTextOut(), txSelectFont(), txGetTextExtent(), txGetTextExtentX(), txGetTextExtentY()
-//! @usage
-//! @code
+//! @usage @code
 //!          txSetTextAlign (TA_RIGHT);
 //!
 //!          txSetTextAlign();
@@ -1475,8 +1431,7 @@ unsigned txSetTextAlign (unsigned align = TA_CENTER | TA_BASELINE);
 //!          Если шрифт не найден, возвращает NULL.
 //!
 //! @see     txTextOut(), txSelectFont()
-//! @usage
-//! @code
+//! @usage @code
 //!          if (txFontExist ("Comic Sans MS")) txSelectFont ("Comic Sans MS", 30);
 //!          else                               txSelectFont ("Times", 30);
 //! @endcode
@@ -1509,8 +1464,7 @@ LOGFONT* txFontExist (const char name[]);
 //!
 //! @see     txCreateWindow(), txCreateCompatibleDC(), txLoadImage(), txDeleteDC()
 //!
-//! @usage
-//! @code
+//! @usage @code
 //!          HDC save = txCreateCompatibleDC (100, 100);
 //!
 //!          txBitBlt (save, 0, 0, 100, 100, txDC(), 0, 0);  // Сохраняем фон
@@ -1557,8 +1511,7 @@ HDC txCreateCompatibleDC (double sizeX, double sizeY, HBITMAP bitmap = NULL);
 //!
 //! @see     txCreateWindow(), txCreateCompatibleDC(), txLoadImage(), txDeleteDC(), txBitBlt(), txAlphaBlend(),
 //!          txTransparentBlt()
-//! @usage
-//!          Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
+//! @usage          Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
 //!          HDC background = txLoadImage ("Resources\\Images\\Background.bmp");
 //!          if (!background) txMessageBox ("Cannot load background", "Epic fail", 0);
@@ -1586,8 +1539,7 @@ HDC txLoadImage (const char filename[]);
 //! @return  Если операция была успешна - true, иначе - false.
 //!
 //! @see     txCreateWindow(), txCreateCompatibleDC(), txLoadImage(), txDeleteDC()
-//! @usage
-//!          Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
+//! @usage          Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
 //!          HDC background = txLoadImage ("Resources\\Images\\Background.bmp");
 //!          if (!background) txMessageBox ("Cannot load background", "Oh, not now", 0);
@@ -1653,8 +1605,7 @@ bool txDeleteDC (HDC* dc);
 //!
 //! @see     txAlphaBlend(), txTransparentBlt(), txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(),
 //!          txColors, RGB()
-//! @usage
-//!          Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
+//! @usage          Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
 //!          HDC background = txLoadImage ("Resources\\Images\\Background.bmp");
 //!          if (!background) txMessageBox ("Cannot load background", "Once again :(", 0);
@@ -1702,8 +1653,7 @@ bool txBitBlt (HDC dest, double xDest, double yDest, double width, double height
 //! @note    Если TransparentBlt не работает, используйте функцию AlphaBlend, она вообще лучше.
 //!
 //! @see     txBitBlt(), txTransparentBlt(), txLoadImage(), txCreateCompatibleDC()
-//! @usage
-//!          Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
+//! @usage          Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
 //!          HDC superman = txLoadImage ("Resources\\Images\\Superman.bmp");
 //!          if (!superman) txMessageBox ("Cannot load superman, all the monsters will succeed", "Sorry", 0);
@@ -1783,8 +1733,7 @@ bool txTransparentBlt (HDC dest, double xDest, double yDest, double width, doubl
 //!          tools. (See implementation of txAlphaBlend in TXLib.h).
 //!
 //! @see     txBitBlt(), txTransparentBlt(), txLoadImage(), txCreateCompatibleDC()
-//! @usage
-//!          Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
+//! @usage          Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
 //!          HDC batman = txLoadImage ("Resources\\Images\\Batman.bmp");
 //!          if (!batman) txMessageBox ("Call to Batman failed", "Do save yourself", 0);
@@ -1825,8 +1774,7 @@ bool txAlphaBlend (HDC dest, double xDest, double yDest, double width, double he
 //!          рисование заблокировано через txBegin().
 //!
 //! @see     txBegin(), txEnd(), txUpdateWindow()
-//! @usage
-//! @code
+//! @usage @code
 //!          txSleep (500); // Поспать полсекунды
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -1850,8 +1798,7 @@ bool txSleep (double time);
 //! @return  Значение счетчика блокировки (если 0, то рисование разблокировано).
 //!
 //! @see     txEnd(), txSleep(), txUpdateWindow(), txTextCursor()
-//! @usage
-//! @code
+//! @usage @code
 //!          txBegin();                        // Здесь изображение "замерзнет"
 //!          txSetFillColor (TX_WHITE);
 //!          txClear();                        // Это вызвало бы мигание без txBegin()
@@ -1875,8 +1822,7 @@ inline int txBegin();
 //! @return  Значение счетчика блокировки (если 0, то рисование разблокировано).
 //!
 //! @see     txBegin(), txSleep(), txUpdateWindow(), txTextCursor()
-//! @usage
-//! @code
+//! @usage @code
 //!          txBegin();                        // Здесь изображение "замерзнет"
 //!          txSetFillColor (TX_WHITE);
 //!          txClear();                        // Это вызвало бы мигание без txBegin()
@@ -1904,8 +1850,7 @@ inline int txEnd();
 //!
 //! @see     txBegin(), txEnd(), txSleep(), txUpdateWindow(), txTextCursor(),
 //!          txLock(), txUnlock(), txGDI()
-//! @usage
-//! @code
+//! @usage @code
 //!          txUpdateWindow (false);
 //!          ...
 //!          txUpdateWindow();
@@ -1924,8 +1869,7 @@ inline int txUpdateWindow (int update = true);
 //!
 //! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors, RGB()
 //!          txSelectFont()
-//! @usage
-//! @code
+//! @usage @code
 //!          HPEN pen = CreatePen (PS_DASH, 1, RGB (255, 128, 0));
 //!          txSelectObject (pen);
 //! @endcode
@@ -1944,8 +1888,7 @@ bool txSelectObject (HGDIOBJ obj);
 //!          набрать это километровое имя и посмотреть, что получится.
 //!
 //! @see     txCreateWindow(), txSleep()
-//! @usage
-//! @code
+//! @usage @code
 //!          int main()
 //!              {
 //!              txCreateWindow (800, 600);
@@ -1980,8 +1923,7 @@ bool txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillClose_AndIWillNotBe
 //!          программы, поэтому так делать @b не рекомендуется.
 //!
 //! @see     txCreateWindow()
-//! @usage
-//! @code
+//! @usage @code
 //!          txDestroyWindow();  // Farewell to the world
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -1995,8 +1937,7 @@ bool txDestroyWindow();
 //! @return  Скорость работы (графических операций) в условных единицах.
 //!
 //! @see     txSleep()
-//! @usage
-//! @code
+//! @usage @code
 //!          if (txQueryPerformance() < 1) printf ("Хочется новый компьютер");
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -2018,8 +1959,7 @@ double txQueryPerformance();
 //! @return  Позиция мыши как структура POINT.
 //!
 //! @see     txMouseX(), txMouseY(), txMousePos(), txMouseButtons()
-//! @usage
-//! @code
+//! @usage @code
 //!          RECT area = { 100, 100, 110, 110 };
 //!
 //!          while (txMouseButtons() != 1)
@@ -2039,8 +1979,7 @@ inline POINT txMousePos();
 //! @return  Х-координата мыши.
 //!
 //! @see     txMouseX(), txMouseY(), txMousePos(), txMouseButtons()
-//! @usage
-//! @code
+//! @usage @code
 //!          while (txMouseButtons() != 1)
 //!              {
 //!              txCircle (txMouseX(), txMouseY(), 20);
@@ -2058,8 +1997,7 @@ inline int txMouseX();
 //! @return  Y-координата мыши.
 //!
 //! @see     txMouseX(), txMouseY(), txMousePos(), txMouseButtons()
-//! @usage
-//! @code
+//! @usage @code
 //!          while (txMouseButtons() != 1)
 //!              {
 //!              txCircle (txMouseX(), txMouseY(), 20);
@@ -2082,8 +2020,7 @@ inline int txMouseY();
 //!          средней и левой Кнопок, но не правой Кнопки.
 //!
 //! @see     txMouseX(), txMouseY(), txMousePos(), txMouseButtons()
-//! @usage
-//! @code
+//! @usage @code
 //!          while (txMouseButtons() != 3)
 //!              {
 //!              if (txMouseButtons() & 1) txCircle (txMouseX(), txMouseY(), 20);
@@ -2140,8 +2077,7 @@ inline int txMouseButtons();
 //!
 //! @see     txTextCursor(), txGetConsoleAttr(), txSetConsoleCursorPos(), txGetConsoleCursorPos(),
 //!          txGetConsoleFontSize(), txClearConsole()
-//! @usage
-//! @code
+//! @usage @code
 //!          txSetConsoleAttr (0x1E);
 //!          printf ("А в небе 0x1 есть город 0xE");  // (c) Б. Гребенщиков
 //! @endcode
@@ -2157,8 +2093,7 @@ bool txSetConsoleAttr (WORD colors = 0x07);
 //!
 //! @see     txTextCursor(), txSetConsoleAttr(), txSetConsoleCursorPos(), txGetConsoleCursorPos(),
 //!          txGetConsoleFontSize(), txClearConsole()
-//! @usage
-//! @code
+//! @usage @code
 //!          unsigned attr = txGetConsoleAttr();
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -2175,8 +2110,7 @@ WORD txGetConsoleAttr();
 //!
 //! @see     txTextCursor(), txSetConsoleAttr(), txGetConsoleAttr(), txGetConsoleCursorPos(),
 //!          txGetConsoleFontSize(), txClearConsole()
-//! @usage
-//! @code
+//! @usage @code
 //!          txClearConsole();  // Ну вот и все, дружок
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -2198,8 +2132,7 @@ bool txClearConsole();
 //!
 //! @see     txTextCursor(), txSetConsoleAttr(), txGetConsoleAttr(), txGetConsoleCursorPos(),
 //!          txGetConsoleFontSize(), txClearConsole()
-//! @usage
-//! @code
+//! @usage @code
 //!          txSetConsoleCursorPos (txGetExtentX(), txGetExtentY());  // Центр Вселенной
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -2214,8 +2147,7 @@ POINT txSetConsoleCursorPos (double x, double y);
 //!
 //! @see     txTextCursor(), txSetConsoleAttr(), txGetConsoleAttr(), txSetConsoleCursorPos(),
 //!          txGetConsoleFontSize(), txClearConsole()
-//! @usage
-//! @code
+//! @usage @code
 //!          POINT pos = txGetConsoleCursorPos();
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -2230,8 +2162,7 @@ POINT txGetConsoleCursorPos();
 //!
 //! @see     txTextCursor(), txSetConsoleAttr(), txGetConsoleAttr(), txSetConsoleCursorPos(),
 //!          txGetConsoleFontSize(), txClearConsole()
-//! @usage
-//! @code
+//! @usage @code
 //!          POINT size = txGetConsoleFontSize();
 //!          txSetConsoleCursorPos (5 * size.x, 10 * size.y);  // А теперь мигай там
 //! @endcode
@@ -2249,8 +2180,7 @@ POINT txGetConsoleFontSize();
 //!
 //! @see     txSetConsoleAttr(), txGetConsoleAttr(), txSetConsoleCursorPos(), txGetConsoleCursorPos(),
 //!          txGetConsoleFontSize(), txClearConsole(), txCreateWindow(), txUpdateWindow(), txLock(), txUnlock(), txGDI()
-//! @usage
-//! @code
+//! @usage @code
 //!          txTextCursor (false);
 //!          ...
 //!          txTextCursor();
@@ -2296,8 +2226,7 @@ bool txTextCursor (bool blink = true);
 //! @note    Поддерживаются только файлы в формате WAV. Остальные форматы (MP3 и др.) надо
 //!          перекодировать. Переименование со сменой расширения не поможет, как и в случае
 //!          с форматом картинок в txLoadImage().
-//! @usage
-//! @code
+//! @usage @code
 //!          txPlaySound ("tada.wav"); // So happy that this always exists
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -2325,8 +2254,7 @@ bool txPlaySound (const char filename[] = NULL, DWORD mode = SND_ASYNC);
 //!          для программ, не поддерживающих UNICODE.</i> В остальных случаях нужды в @c txMessageBox нет.
 //!
 //! @see     TX_ERROR(), TX_DEBUG_ERROR(), txOutputDebugPrintf(), txNotifyIcon()
-//! @usage
-//! @code
+//! @usage @code
 //!          if (txMessageBox ("Получилось?", "Прочти меня", MB_YESNO) == IDYES)
 //!              {
 //!              MessageBox (txWindow(), "Хватит и обычного MessageBox()", "Win32 сообщает", 0);
@@ -2367,8 +2295,7 @@ unsigned txMessageBox (const char* text, const char* header = "TXLib сообщает", 
 //!        - Сообщение не должно превышать _TX_BUFSIZE символов, иначе оно обрезается.
 //!
 //! @see     TX_ERROR(), TX_DEBUG_ERROR(), txOutputDebugPrintf(), txMessageBox()
-//! @usage
-//! @code
+//! @usage @code
 //!          int hours = 3, minutes = 10;
 //!          const char station[] = "Юму";
 //!          ...
@@ -2399,8 +2326,7 @@ bool txNotifyIcon (unsigned flags, const char title[], const char format[], ...)
 //! @warning Сообщение не должно превышать _TX_BIGBUFSIZE символов, иначе оно обрезается.
 //!
 //! @see     TX_ERROR(), TX_DEBUG_ERROR(), txNotifyIcon(), txMessageBox()
-//! @usage
-//! @code
+//! @usage @code
 //!          int x = 42;
 //!          ...
 //!          txOutputDebugPrintf ("Никто не узнает, что %d.", x);
@@ -2429,8 +2355,7 @@ int txOutputDebugPrintf (const char format[], ...) _TX_CHECK_FORMAT (1);
 //!
 //! @note    В Microsoft Visual Studio 6 макрос sizearr() недоступен - у ее компилятора недостаточно
 //!          сил, чтобы его скомпилировать :(
-//! @usage
-//! @code
+//! @usage @code
 //!          void test()
 //!              {
 //!              // Размер этого массива, хоть и не указан, но может быть автоматически определен
@@ -2508,8 +2433,7 @@ int txOutputDebugPrintf (const char format[], ...) _TX_CHECK_FORMAT (1);
 //!
 //! @return  Если a <= x && x <= b, то истина, если нет - ложь
 //!
-//! @usage
-//! @code
+//! @usage @code
 //!          while (txMouseButtons() != 1)
 //!              {
 //!              if (In (txMouseX(), 110, 120)) txTextOut (100, 100, "Meet the wall!");
@@ -2532,8 +2456,7 @@ inline bool In (T x, T a, T b);
 //!
 //!          Удобно для реализации кнопок.
 //!
-//! @usage
-//! @code
+//! @usage @code
 //!          RECT button = { 100, 100, 150, 120 };
 //!
 //!          txSetFillColor (TX_LIGHTGRAY);
@@ -2582,8 +2505,7 @@ inline bool In (const COORD& pt, const SMALL_RECT& rect);
 //! @return  Случайное целое число в диапазоне [0; range).
 //!
 //!          Вы еще помните, что означают разные скобочки в обозначении интервалов? :)
-//! @usage
-//! @code
+//! @usage @code
 //!          char message[100] = "Maybe...";
 //!          sprintf ("You SUDDENLY got %d bucks now. But note that tax rate is $%d.", random (100), 100);
 //!          txMessageBox (message, "Lottery", 0);
@@ -2602,8 +2524,7 @@ inline int random (int range);
 //! @return  Случайное целое число в диапазоне [left; right].
 //!
 //!          Вы все еще помните, что означают разные скобочки в обозначении интервалов? :)
-//! @usage
-//! @code
+//! @usage @code
 //!          int money = random (-100, +100);
 //!          if (money < 0)
 //!              {
@@ -2626,8 +2547,7 @@ inline double random (double left, double right);
 //! @return  Максимальное из двух чисел a и b
 //!
 //! @see     MIN()
-//! @usage
-//! @code
+//! @usage @code
 //!          if (MAX (3, 7) != 7) printf ("Your CPU is broken, throw it away.");
 //! @endcode
 //! @hideinitializer
@@ -2645,8 +2565,7 @@ inline double random (double left, double right);
 //! @return  Минимальное из двух чисел a и b
 //!
 //! @see     MAX()
-//! @usage
-//! @code
+//! @usage @code
 //!          if (MIN (3, 7) != 3) printf ("Your CPU is still broken, throw it away twice.");
 //! @endcode
 //! @hideinitializer
@@ -2662,8 +2581,7 @@ inline double random (double left, double right);
 //!
 //! @return  Округленное число, преобразованное в тип @c int
 //!
-//! @usage
-//! @code
+//! @usage @code
 //!          double weight = 5.5;       // 5.5 kilos is the weight of Maru in 2012.
 //!          int Maru = ROUND (weight); // We should use ROUND() because Maru is so round.
 //! @endcode
@@ -2684,8 +2602,7 @@ inline double random (double left, double right);
 //! @ingroup Misc
 //! @brief   Число Пи
 //!
-//! @usage
-//! @code
+//! @usage @code
 //!          if (txPI == 1) txMessageBox ("Вы попали в другую Вселенную.", "Поздравляем", MB_ICONSTOP);
 //! @endcode
 //! @hideinitializer
@@ -2707,8 +2624,7 @@ const double txPI = asin (1.0) * 2;
 //!          тому, кто эту функцию вызывал. Пусть эти люди воспользуются приведенной txSqr() для
 //!          какого-нибудь нужного дела, особенно в цикле. Пример, конечно, несколько преувеличен.
 //!          См. в исходном тексте код этой навязчивой радости.
-//! @usage
-//! @code
+//! @usage @code
 //!          printf ("\n" "Радиус\t\t" "Площадь круга\n\n");
 //!
 //!          for (double r = 100; r > 0; r--)
@@ -2759,8 +2675,7 @@ double txSqr (double x)
 //!
 //! @return  Значение типа @p type, покомпонентно инициализированное по умолчанию
 //!          (для встроенных типов C++ - нулем).
-//! @usage
-//! @code
+//! @usage @code
 //!          void f (POINT p);
 //!          ...
 //!
@@ -2807,8 +2722,7 @@ template <typename T> inline T zero();
 //!        - Синоним: tx_finally
 //!
 //! @see     txAutoLock
-//! @usage
-//! @code
+//! @usage @code
 //!          void f1()
 //!              {
 //!              int x = 1;
@@ -2912,8 +2826,7 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
 //!
 //! @see     asserted, verified, verify(), TX_ERROR(), TX_DEBUG_ERROR(), txOutputDebugPrintf(),
 //!          txMessageBox(), txNotifyIcon(), __TX_FILELINE__, __TX_FUNCTION__
-//! @usage
-//! @code
+//! @usage @code
 //!          assert (0 <= i && i < ARRAY_SIZE);
 //!
 //!          FILE* input = fopen ("a.txt", "r");
@@ -2932,7 +2845,7 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
 #if !defined (NDEBUG)
     #undef  assert
     #define assert( cond )    _txNOP ( !(cond)? (TX_ERROR ("\a" "ВНЕЗАПНО: Логическая ошибка: " \
-                                                           "Неверно, что \"%s\"" TX_COMMA #cond), 0) : 1 )
+                                                           "Неверно, что \"%s\"." TX_COMMA #cond), 0) : 1 )
 #else
     #undef  assert
     #define assert( cond )    ((void) 1)
@@ -2954,8 +2867,7 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
 //!
 //! @see     assert(), verify(), verified, TX_ERROR(), TX_DEBUG_ERROR(), txOutputDebugPrintf(),
 //!          txMessageBox(), txNotifyIcon(), __TX_FILELINE__, __TX_FUNCTION__
-//! @usage
-//! @code
+//! @usage @code
 //!          FILE* input = fopen ("a.txt", "r"); assert (input);
 //!
 //!          // Этот вызов fgets() будет выполнен в любом случае:
@@ -3000,8 +2912,7 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
 //!
 //! @see     verified, assert(), asserted, TX_ERROR(), TX_DEBUG_ERROR(), txOutputDebugPrintf(),
 //!          txMessageBox(), txNotifyIcon(), __TX_FILELINE__, __TX_FUNCTION__
-//! @usage
-//! @code
+//! @usage @code
 //!          FILE* input = verify (fopen ("a.txt", "r"));
 //!
 //!          // Этот вызов fgets() БУДЕТ выполнен в режиме Release:
@@ -3043,8 +2954,7 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
 //!
 //! @see     _, TX_COMMA, assert(), asserted, verify(), verified, TX_DEBUG_ERROR(), txOutputDebugPrintf(),
 //!          txMessageBox(), txNotifyIcon(), __TX_FILELINE__, __TX_FUNCTION__
-//! @usage
-//! @code
+//! @usage @code
 //!          TX_ERROR ("Не смог прочитать 'Войну и мир'. Отмазка %d: не нашел '%s'", reasonNum, fileName);
 //! @endcode
 //! @hideinitializer
@@ -3074,8 +2984,7 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
 //!
 //! @see     _, TX_COMMA, assert(), asserted, verify(), verified, TX_ERROR(), txOutputDebugPrintf(),
 //!          txMessageBox(), txNotifyIcon(), __TX_FILELINE__, __TX_FUNCTION__
-//! @usage
-//! @code
+//! @usage @code
 //!          TX_DEBUG_ERROR ("Так и не смог прочитать 'Войну и мир'. Отмазка %d: потерял '%s'", reasonNum, fileName);
 //! @endcode
 //! @hideinitializer
@@ -3096,8 +3005,7 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
 //! @note    <b>Символ подчеркивания и символ TX_COMMA просто переопределяются в запятую.</b>
 //!
 //! @see     TX_ERROR(), TX_DEBUG_ERROR()
-//! @usage
-//! @code
+//! @usage @code
 //!          TX_ERROR ("Слишком умный абзац: роман 'Война и мир', файл '%s', строка %d" _ fileName _ lineNum);
 //! @endcode
 //! @hideinitializer
@@ -3242,8 +3150,7 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
 //!          (см. MSDN), иначе последствия будут такими же плачевными, как описаны выше.
 //!
 //! @see     txCreateWindow(), txDialog, txInputBox()
-//! @usage
-//! @code
+//! @usage @code
 //!          LRESULT CALLBACK MyWndHandler (HWND window, UINT message, WPARAM wParam, LPARAM lParam);
 //!
 //!          int main()
@@ -3293,8 +3200,7 @@ WNDPROC txSetWindowHandler (WNDPROC handler = NULL);
 //!          приостанавливает поток, а просто отключает операции по обновлению окна.
 //!
 //! @see     txDC(), txLock(), txUnlock(), txGDI()
-//! @usage
-//!          См. исходный текст функций _txCanvas_OnPAINT() и _txConsole_Draw() в TXLib.h.
+//! @usage          См. исходный текст функций _txCanvas_OnPAINT() и _txConsole_Draw() в TXLib.h.
 //}-------------------------------------------------------------------------------------------
 
 bool txLock (bool wait = true);
@@ -3308,8 +3214,7 @@ bool txLock (bool wait = true);
 //!          Более подробно см. в описании txLock().
 //!
 //! @see     txDC(), txLock(), txGDI()
-//! @usage
-//!          См. исходный текст функций _txCanvas_OnPAINT() и _txConsole_Draw() в TXLib.h.
+//! @usage          См. исходный текст функций _txCanvas_OnPAINT() и _txConsole_Draw() в TXLib.h.
 //}-------------------------------------------------------------------------------------------
 //! @{
 
@@ -3337,8 +3242,7 @@ template <typename T> inline T txUnlock (T value);
 //!          скобки, чтобы получился один параметр, так как txGDI() все-таки макрос.
 //!
 //! @see     txDC(), txLock(), txUnlock()
-//! @usage
-//! @code
+//! @usage @code
 //!          txGDI (( Rectangle (txDC(), x1, y1, x2, y2) )); // Не забудьте про две ((ДВЕ)) скобки
 //! @endcode
 //! @hideinitializer
@@ -3381,8 +3285,7 @@ template <typename T> inline T txUnlock (T value);
 //!          Может задаваться перед @b включением TXLib.h в программу.
 //!
 //! @see     txCreateWindow(), _TX_ALLOW_KILL_PARENTS, _TX_WAITABLE_PARENTS, _txConsoleMode
-//! @usage
-//! @code
+//! @usage @code
 //!          #define _TX_NOINIT
 //!          #include "TXLib.h"
 //! @endcode
@@ -3409,8 +3312,7 @@ template <typename T> inline T txUnlock (T value);
 //! @note    Переменная устанавливается @b до открытия окна библиотеки.
 //!
 //! @see     _TX_NOINIT
-//! @usage
-//! @code
+//! @usage @code
 //!          _txConsoleMode = SW_HIDE;  // Всегда скрывать консольное окно
 //!          txCreateWindow (800, 600);
 //!
@@ -3433,8 +3335,7 @@ unsigned       _txConsoleMode             = SW_HIDE;
 //!          Вспомогательные окна могут создаваться по одному на каждый файл многофайлового
 //!          проекта. При их создании @a не надо указывать в стиле WS_SYSMENU. Для закрытия
 //!          вспомогательных окон используется txDestroyWindow().
-//! @usage
-//! @code
+//! @usage @code
 //!          _txWindowStyle &= ~WS_SYSMENU; // Главное окно без системного меню
 //!          txCreateWindow (800, 600);
 //! @endcode
@@ -3536,8 +3437,7 @@ const unsigned _TX_BIGBUFSIZE             = 2048;
 //!          Может задаваться перед включением TXLib.h в программу.
 //!
 //! @see     _TX_WAITABLE_PARENTS, _TX_NOINIT
-//! @usage
-//! @code
+//! @usage @code
 //!          #define _TX_ALLOW_KILL_PARENT false
 //!          #include "TXLib.h"
 //! @endcode
@@ -3573,8 +3473,7 @@ const unsigned _TX_BIGBUFSIZE             = 2048;
 //!          и запускать отлаживаемую программу отдельно, а не из-под отладчика Visual Studio.
 //!
 //!          _TX_ALLOW_TRACE и _TX_TRACE задаются перед включением TXLib.h в программу.
-//! @usage
-//! @code
+//! @usage @code
 //!          #define  _TX_ALLOW_TRACE  // Для просмотра трассы запустить DebugView
 //!          #include "TXLib.h"
 //! @endcode
@@ -3650,8 +3549,7 @@ struct _txFuncEntry
 //!          TX_TRACE можно переопределить в свой код. Тогда, если трассировка библиотеки
 //!          разрешена, он будет вызываться почти перед каждой исполняемой строкой TXLib.
 //!          Может быть, это кому-нибудь будет интересно.
-//! @usage
-//! @code
+//! @usage @code
 //!          int main()
 //!              {
 //!              ...
@@ -3735,8 +3633,7 @@ class txAutoLock
 //! @param   cs         Критическая секция для блокировки
 //! @param   mandatory  Если @c true,  то блокировать обязательно (EnterCriticalSection). @n
 //!                     Если @c false, то только пытаться блокировать (TryEnterCriticalSection).
-//! @usage
-//! @code
+//! @usage @code
 //!          CRITICAL_SECTION cs = {};         // This is not a Counter Strike
 //!
 //!          void foo()
@@ -3768,8 +3665,7 @@ $1      if (!cs_) return;
 //!
 //! @param   mandatory  Если @c true,  то блокировать @b обязательно,     как в @ref txLock (true). @n
 //!                     Если @c false, то только @b пытаться блокировать, как в @ref txLock (false).
-//! @usage
-//! @code
+//! @usage @code
 //!          void foobar()
 //!              {
 //!              txAutoLock lock;      // Здесь вызовется txLock()
@@ -3796,8 +3692,7 @@ $       LeaveCriticalSection (cs_); cs_ = NULL;
 
 //{-------------------------------------------------------------------------------------------
 //! @brief   Позволяет проверить, заблокировалась секция или нет
-//! @usage   См. в txAutoLock::AutoLock (CRITICAL_SECTION&, bool)
-//}-------------------------------------------------------------------------------------------
+//! @usage   См. в txAutoLock::AutoLock (CRITICAL_SECTION&, bool)-------------------------------------------------------------------------------------------
 
     operator bool () const
         {
@@ -3852,8 +3747,7 @@ $1      return (cs_ != NULL);
 //!
 //! @see     txDialog::setLayout(), txDialog::dialogProc(), txDialog::Layout,
 //! @see     TX_BEGIN_MESSAGE_MAP(), TX_END_MESSAGE_MAP, TX_COMMAND_MAP
-//! @usage
-//! @code
+//! @usage @code
 //!          Cм. реализацию функции txInputBox().
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -3869,8 +3763,7 @@ struct txDialog
 //!          преобразованные к типу txDialog::CONTROL.
 //!
 //! @see     txDialog::Layout, txDialog::setLayout()
-//! @usage
-//! @code
+//! @usage @code
 //!          Cм. реализацию функции txInputBox().
 //! @endcode
 //! @hideinitializer
@@ -3902,8 +3795,7 @@ struct txDialog
 //!           - Последний элемент - txDialog::END или {NULL}
 //!
 //! @see     txDialog::setLayout(), txDialog::dialogBox(), txDialog::dialogProc()
-//! @usage
-//! @code
+//! @usage @code
 //!          Cм. реализацию функции txInputBox().
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -3927,8 +3819,7 @@ struct txDialog
 //{-------------------------------------------------------------------------------------------
 //! @brief   Конструктор.
 //! @see     txDialog::txDialog (const txDialog::Layout*)
-//! @usage
-//! @code
+//! @usage @code
 //!          Cм. реализацию функции txInputBox().
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -3942,8 +3833,7 @@ struct txDialog
 //! @param   layout  Макет диалогового окна
 //!
 //! @see     txDialog::Layout, txDialog::setLayout()
-//! @usage
-//! @code
+//! @usage @code
 //!          Cм. реализацию функции txInputBox().
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -3965,8 +3855,7 @@ struct txDialog
 //!
 //! @see     txDialog::Layout, txDialog::txDialog (const txDialog::Layout*)
 //! @see     txDialog::dialogBox()
-//! @usage
-//! @code
+//! @usage @code
 //!          Cм. реализацию функции txInputBox().
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -3990,8 +3879,7 @@ struct txDialog
 //!
 //! @see     txDialog::dialogBox()
 //! @see     TX_BEGIN_MESSAGE_MAP(), TX_END_MESSAGE_MAP, TX_COMMAND_MAP
-//! @usage
-//! @code
+//! @usage @code
 //!          Cм. реализацию функции txInputBox().
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -4012,8 +3900,7 @@ struct txDialog
 //!          запущена txDialog::dialogBox().
 //!
 //! @see     txDialog::dialogProc(), txDialog::setLayout(), txDialog::Layout, txDialog
-//! @usage
-//! @code
+//! @usage @code
 //!          Cм. реализацию функции txInputBox().
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -4030,8 +3917,7 @@ struct txDialog
 //!          запущена txDialog::dialogBox().
 //!
 //! @see     txDialog::dialogProc()
-//! @usage
-//! @code
+//! @usage @code
 //!          Cм. реализацию функции txInputBox().
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -4076,8 +3962,7 @@ struct txDialog
 //! @brief   Заголовок карты сообщений (Message Map).
 //! @see     TX_BEGIN_MESSAGE_MAP(), TX_END_MESSAGE_MAP, TX_HANDLE(), TX_COMMAND_MAP,
 //! @see     txDialog::dialogProc(), txDialog
-//! @usage
-//! @code
+//! @usage @code
 //!          Cм. реализацию функции txInputBox().
 //! @endcode
 //! @hideinitializer
@@ -4100,8 +3985,7 @@ struct txDialog
 //!
 //! @see     TX_BEGIN_MESSAGE_MAP(), TX_END_MESSAGE_MAP, TX_HANDLE(), TX_COMMAND_MAP,
 //! @see     txDialog::dialogProc(), txDialog
-//! @usage
-//! @code
+//! @usage @code
 //!          Cм. реализацию функции txInputBox().
 //! @endcode
 //! @hideinitializer
@@ -4116,8 +4000,7 @@ struct txDialog
 //! @brief   Начало карты команд (Command map) в карте сообщений.
 //! @see     TX_BEGIN_MESSAGE_MAP(), TX_END_MESSAGE_MAP, TX_HANDLE(), TX_COMMAND_MAP,
 //! @see     txDialog::dialogProc(), txDialog
-//! @usage
-//! @code
+//! @usage @code
 //!          Cм. реализацию функции txInputBox().
 //! @endcode
 //! @hideinitializer
@@ -4136,8 +4019,7 @@ struct txDialog
 //! @brief   Завершитель карты сообщений.
 //! @see     TX_BEGIN_MESSAGE_MAP(), TX_END_MESSAGE_MAP, TX_HANDLE(), TX_COMMAND_MAP,
 //! @see     txDialog::dialogProc(), txDialog
-//! @usage
-//! @code
+//! @usage @code
 //!          Cм. реализацию функции txInputBox().
 //! @endcode
 //! @hideinitializer
@@ -4173,8 +4055,7 @@ struct txDialog
 //!          Если txInputBox() будет вызываться несколько раз, то для сохранения строки
 //!          ее необходимо копировать в другую строку при помощи <i>strcpy()</i>.
 //! @see     txDialog, TX_BEGIN_MESSAGE_MAP, TX_BEGIN_COMMAND_MAP, TX_HANDLE, TX_END_MESSAGE_MAP
-//! @usage
-//! @code
+//! @usage @code
 //!          const char* name = txInputBox ("So what's ur name?!?!", "System", "Sorry I'm Vasya Pupkin");
 //!          txMessageBox (name, "Aaand nooowww.. the winner iiis...", 0);
 //! @endcode
@@ -4361,6 +4242,7 @@ bool             _txConsole_Detach (bool activate);
 bool             _txConsole_Draw (HDC dc);
 bool             _txConsole_SetUnicodeFont();
 
+int              _txSetFinishedText (HWND wnd);
 void             _txPauseBeforeTermination (HWND canvas);
 bool             _txIsParentWaitable (DWORD* parentPID = NULL);
 PROCESSENTRY32*  _txFindProcess (unsigned pid = GetCurrentProcessId());
@@ -4957,29 +4839,8 @@ $   bool waitableParent = !externTerm && _txIsParentWaitable (&parent);
 
 $   txSetConsoleAttr (0x07);
 
-$   while (wnd != NULL && !externTerm)
-        {
-$       static wchar_t title [_TX_BUFSIZE] = L"TXLib";
-
-        SendMessageTimeoutW (wnd, WM_GETTEXT, (WPARAM) _TX_BUFSIZE, (LPARAM) title,
-                             SMTO_ABORTIFHUNG | SMTO_ERRORONEXIT, _TX_TIMEOUT, NULL);
-
-$       int len = (int) wcslen (title);
-
-$       MultiByteToWideChar (_TX_CP, 0, " [ЗАВЕРШЕНО]", -1, title + len, SIZEARR (title) - len);
-
-        SendMessageTimeoutW (wnd, WM_SETTEXT, 0, (LPARAM) title,
-                             SMTO_ABORTIFHUNG | SMTO_ERRORONEXIT, _TX_TIMEOUT, NULL);
-
-$       GetWindowTextW (wnd, title, SIZEARR (title));
-$       if (title [len+2] == /* 'З' */ (wchar_t) 0x0417) break;
-
-$       MultiByteToWideChar (_TX_CP, 0, " [FINISHED]",  -1, title + len, SIZEARR (title) - len);
-
-        SendMessageTimeoutW (wnd, WM_SETTEXT, 0, (LPARAM) title,
-                             SMTO_ABORTIFHUNG | SMTO_ERRORONEXIT, _TX_TIMEOUT, NULL);
-$       break;
-        }
+$   if (wnd != NULL && !externTerm)
+        { $ _txSetFinishedText (wnd); }
 
 $   if ((canvas || !waitableParent) && isMaster && !_txExit &&
         thread == _txMainThreadId)
@@ -5004,14 +4865,54 @@ $   if (_txCanvas_Thread)
 $   if (canvas && waitableParent && _txNOP (_TX_ALLOW_KILL_PARENT))
         { $ waitableParent |= !_txKillProcess (parent); }
 
-$   if (!externTerm)
-        { $ _txConsole_Detach (waitableParent); }
+$   _txConsole_Detach (waitableParent && !externTerm);
 
     #ifndef NDEBUG
     OutputDebugString ("\n");
     OutputDebugString (_TX_VERSION " - FINISHED\n");
     OutputDebugString ("\n");
     #endif
+    }
+
+//--------------------------------------------------------------------------------------------
+
+int _txSetFinishedText (HWND wnd)
+    {
+    struct tools
+        {
+        static LRESULT getWindowText (HWND window, wchar_t text[], int size)
+            {
+$1          memset (text, 0, size * sizeof (*text));
+
+$           return SendMessageTimeoutW (window, WM_GETTEXT, (WPARAM) size, (LPARAM) text,
+                                        SMTO_BLOCK | SMTO_ABORTIFHUNG, _TX_TIMEOUT, NULL);
+            }
+
+        static LRESULT setWindowText (HWND window, wchar_t text[])
+            {
+$1          return SendMessageTimeoutW (window, WM_SETTEXT, 0, (LPARAM) text,
+                                        SMTO_BLOCK | SMTO_ABORTIFHUNG, _TX_TIMEOUT, NULL);
+            }
+        };
+
+$1  static wchar_t title [_TX_BUFSIZE] = L"TXLib";
+
+$   tools::getWindowText (wnd, title, _TX_BUFSIZE);
+$   int len = (int) wcslen (title);
+
+$   MultiByteToWideChar (_TX_CP, 0, " [ЗАВЕРШЕНО]", -1, title + len, SIZEARR (title) - len);
+
+$   tools::setWindowText (wnd, title);
+$   tools::getWindowText (wnd, title, _TX_BUFSIZE);
+$   if (title [len+2] == /* 'З' */ (wchar_t) 0x0417) return 0;
+
+$   MultiByteToWideChar (_TX_CP, 0, " [FINISHED]",  -1, title + len, SIZEARR (title) - len);
+
+$   tools::setWindowText (wnd, title);
+$   tools::getWindowText (wnd, title, _TX_BUFSIZE);
+$   if (title [len+2] == /* 'F' */ (wchar_t) 0x0046) return 1;
+
+$   return 2;
     }
 
 //--------------------------------------------------------------------------------------------
@@ -5067,7 +4968,7 @@ $   if (_kbhit())
 $       return _getch();
 	}
 
-#if defined (_MSC_VER) && (_MSC_VER < 1700) 
+#if defined (_MSC_VER) && (_MSC_VER < 1700)
 
 $   if (fseek (stdin, 1, SEEK_CUR) != EOF)
         {
@@ -5209,7 +5110,7 @@ $   return title + 1;
 
 //{
 #if defined (_MSC_VER_6) || defined (_GCC_VER) && (_GCC_VER <= 345)
-    
+
     #define SetClassLong_  SetClassLong
     #define GCL_HICON_     GCL_HICON
     #define GCL_HICONSM_   GCL_HICONSM
@@ -5697,37 +5598,31 @@ $   ctime_s (timeS, sizeof (timeS), &timeT);
 $   static char text[_TX_BUFSIZE] = "";
 $   char cwd [MAX_PATH] = "";
 
-    #define EOL_ "    \n"
-
 $   _snprintf_s (text, sizeof (text) - 1 _TX_TRUNCATE,
 
-                 "Application:" EOL_ "\n"
+                 "Application:" "\n"
 
                  #if defined (__MODULE) || defined (__VERSION) || defined (__DESCRIPTION) || defined (__PROGRAMMER)
-                     __MODULE " version " __VERSION EOL_
-                     __DESCRIPTION EOL_
-                     "Copyright (c) " __AUTHOR EOL_
+                     __MODULE " version " __VERSION "\n" __DESCRIPTION "\n" "Copyright (c) " __AUTHOR "\n"
                  #else
-                     "Здесь могла бы быть Ваша реклама :)" EOL_
-                     "#define __MODULE to \"your program name\" before including TXLib.h to use this billboard..." EOL_
+                     "Здесь могла бы быть Ваша реклама :)" "\n"
+                     "#define __MODULE to \"your program name\" before including TXLib.h to use this billboard..." "\n"
                  #endif
 
-                 "\n" "Developed with:" EOL_ "\n"
-                 "The Dumb Artist Library (TX Library) - " _TX_VERSION EOL_
-                 _TX_AUTHOR EOL_ 
-                 "See license on: http://ded32.net.ru/index/0-6" EOL_ "\n"
+                 "\n" "Developed with:" "\n\n"
+                 "The Dumb Artist Library (TX Library) - " _TX_VERSION "\n" _TX_AUTHOR "\n"
+                 "See license on: http://ded32.net.ru/index/0-6" "\n\n"
 
-                 "TXLib file:" "\t" __FILE__ EOL_
-                 "Compiled:"   "\t" __DATE__ " " __TIME__ ", " _TX_BUILDMODE ", " __TX_COMPILER__ EOL_
-                 "Started:"    "\t" "%.6s %.4s %.8s" EOL_ "\n"
+                 "TXLib file:" "\t" __FILE__ "\n"
+                 "Compiled:"   "\t" __DATE__ " " __TIME__ ", " _TX_BUILDMODE ", " __TX_COMPILER__ "\n"
+                 "Started:"    "\t" "%.6s %.4s %.8s" "\n\n"
 
-                 "Run file:"   "\t" "%s" EOL_
+                 "Run file:"   "\t" "%s" "\n"
                  "Directory:"  "\t" "%s",
 
                  timeS + 4, timeS + 20, timeS + 11,  // These offsets are ANSI standardized
                  txGetModuleFileName(),
                  _getcwd (cwd, sizeof (cwd) - 1));
-    #undef EOL_
 
 $   txMessageBox (text, "About " ABOUT_NAME_, MB_ICONINFORMATION);
 
@@ -5834,10 +5729,11 @@ bool _txConsole_Detach (bool activate)
 $1  HWND console = Win32::GetConsoleWindow();
 $   if (!console) return false;
 
+$   EnableWindow (console, true);
+$   ShowWindow   (console, SW_SHOW);
+
 $   if (activate)
         {
-$       ShowWindow          (console, SW_SHOW);
-$       EnableWindow        (console, true);
 $       SetForegroundWindow (console);
 $       BringWindowToTop    (console);
         }
@@ -6235,7 +6131,7 @@ void _txOnUnexpected()
 void _txOnTerminate()
     {
     _txError (NULL, 0, NULL,
-              "std::terminate(): Программа будет завершена из-за неперехваченного исключения в функции main()\v"
+              "std::terminate(): Программа будет завершена из-за неперехваченного исключения в функции main() "
               "или в деструкторе. Используйте try/catch блоки, перехватывайте catch (...), разбирайтесь, в чем дело.");
     }
 
@@ -6265,9 +6161,10 @@ const char* _txError (const char file[] /*= NULL*/, int line /*= 0*/, const char
                 s +=  _snprintf_s  (s, SZARG_(1), "TXLib сообщает:" "\n\n");
 
                 s +=  _snprintf_s  (s, SZARG_(1), "Программа: %s, ", txGetModuleFileName());
-    if (file)   s +=  _snprintf_s  (s, SZARG_(1), "файл: %s, ",   file);
-    if (line)   s +=  _snprintf_s  (s, SZARG_(1), "строка: %d, ", line);
-    if (func)   s +=  _snprintf_s  (s, SZARG_(1), "функция: %s" "\n\n", func);
+    if (file)   s +=  _snprintf_s  (s, SZARG_(1), "файл: %s, ",      file);
+    if (line)   s +=  _snprintf_s  (s, SZARG_(1), "строка: %d, ",    line);
+    if (func)   s +=  _snprintf_s  (s, SZARG_(1), "функция: %s.",    func);
+                s +=  _snprintf_s  (s, SZARG_(1), "\n\n");
 
     if (msg)    s +=  _snprintf_s  (s, SZARG_(1), "%s: ", (file || line || func)? "Сообщение" : "ВНЕЗАПНО"),
                 s += _vsnprintf_s  (s, SZARG_(1), msg, arg),
@@ -7788,8 +7685,7 @@ using ::std::string;
 //! @endtable
 //!
 //! @see     assert(), asserted, __TX_FILELINE__, __TX_FUNCTION__, TX_ERROR
-//! @usage
-//! @code
+//! @usage @code
 //!          $g  // green
 //!          int x = 5;
 //!          int y = $(x) + 1;
@@ -7988,12 +7884,116 @@ struct _txSaveConsoleAttr
 //============================================================================================
 // EOF
 //============================================================================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+                                                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

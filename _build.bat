@@ -64,7 +64,7 @@ if /i "%2" == "doc" goto doc-help
 
 %do% echo HTML_FOOTER = doxygen_chm.htm >> TXLib-Reference.dox
 %do% call doxygen_ TXLib-Reference.dox
-%do% type TXLib-Reference.log | find /v "error:"
+%do% type TXLib-Reference.log | find /i "error:"
 
 %do% del /q Dev\TXLib-Reference.chm      >> %log% 2>>&1
 %do% move /y    TXLib-Reference.chm Dev\ >> %log% 2>>&1
@@ -73,7 +73,7 @@ if /i "%2" == "doc" goto doc-help
 
 %do% echo HTML_FOOTER = doxygen_chm.htm >> TXLib-Help.dox
 %do% call doxygen_ TXLib-Help.dox
-%do% type TXLib-Help.log | find /v "error:"
+%do% type TXLib-Help.log | find /i "error:"
 
 if /i "%2" == "doc" goto docs-end
 
@@ -81,7 +81,7 @@ if /i "%2" == "doc" goto docs-end
 %do% echo GENERATE_HTMLHELP = NO        >> TXLib-Help.dox
 %do% echo HTML_FOOTER = doxygen_htm.htm >> TXLib-Help.dox
 %do% call doxygen_ TXLib-Help.dox
-%do% type TXLib-Help.log | find /v "error:"
+%do% type TXLib-Help.log | find /i "error:"
 
 :docs-end
 
