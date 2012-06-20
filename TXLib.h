@@ -6594,8 +6594,8 @@ $   double start =  startAngle               * txPI/180,
            end   = (startAngle + totalAngle) * txPI/180;
 
 $   return txGDI (!!(Win32::Arc (txDC(), ROUND (x0), ROUND (y0), ROUND (x1), ROUND (y1),
-                                         ROUND (center.x + cos (start)), ROUND (center.y - sin (start)),
-                                         ROUND (center.x + cos (end)),   ROUND (center.y - sin (end)))));
+                                         ROUND (center.x + 1E3*cos (start)), ROUND (center.y - 1E3*sin (start)),
+                                         ROUND (center.x + 1E3*cos (end)),   ROUND (center.y - 1E3*sin (end)))));
     }
 
 //--------------------------------------------------------------------------------------------
@@ -6610,8 +6610,8 @@ $   double start =  startAngle               * txPI/180,
            end   = (startAngle + totalAngle) * txPI/180;
 
 $   return txGDI (!!(Win32::Pie (txDC(), ROUND (x0), ROUND (y0), ROUND (x1), ROUND (y1),
-                                         ROUND (center.x + cos (start)), ROUND (center.y - sin (start)),
-                                         ROUND (center.x + cos (end)),   ROUND (center.y - sin (end)))));
+                                         ROUND (center.x + 1E3*cos (start)), ROUND (center.y - 1E3*sin (start)),
+                                         ROUND (center.x + 1E3*cos (end)),   ROUND (center.y - 1E3*sin (end)))));
     }
 
 //--------------------------------------------------------------------------------------------
@@ -6626,8 +6626,8 @@ $   double start =  startAngle               * txPI/180,
            end   = (startAngle + totalAngle) * txPI/180;
 
 $   return txGDI (!!(Win32::Chord (txDC(), ROUND (x0), ROUND (y0), ROUND (x1), ROUND (y1),
-                                           ROUND (center.x + cos (start)), ROUND (center.y - sin (start)),
-                                           ROUND (center.x + cos (end)),   ROUND (center.y - sin (end)))));
+                                           ROUND (center.x + 1E3*cos (start)), ROUND (center.y - 1E3*sin (start)),
+                                           ROUND (center.x + 1E3*cos (end)),   ROUND (center.y - 1E3*sin (end)))));
     }
 
 //--------------------------------------------------------------------------------------------
@@ -7884,7 +7884,7 @@ struct _txSaveConsoleAttr
 //============================================================================================
 // EOF
 //============================================================================================
-                                                
+
 
 
 
