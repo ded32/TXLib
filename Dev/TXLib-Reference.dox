@@ -50,7 +50,7 @@ HIDE_UNDOC_RELATIONS   = NO
 
 #---------------------------------------------------------------------------
 
-INPUT                  = 
+INPUT                  =
 RECURSIVE              = YES
 OUTPUT_DIRECTORY       = $(Temp)/Doxygen
 
@@ -61,14 +61,14 @@ OUTPUT_DIRECTORY       = $(Temp)/Doxygen
 #INCLUDE_PATH          = "$(ProgramFiles)/Microsoft Visual Studio 10.0/VC/include"             \
 #                        "$(ProgramFiles)/Microsoft Visual Studio 10.0/VC/atlmfc/include"      \
 #                        "$(ProgramFiles)/Microsoft Visual Studio 10.0/VC/PlatformSDK/Include" \
-#                        "$(ProgramFiles)/Microsoft SDKs/Windows/v7.0A/Include" 
+#                        "$(ProgramFiles)/Microsoft SDKs/Windows/v7.0A/Include"
 
 HHC_LOCATION           = "$(ProgramFiles)/HTML Help Workshop/hhc.exe"
 DOT_PATH               = "$(ProgramFiles)/ATT/Graphviz/bin"
 PERL_PATH              = "$(ProgramFiles)/Cygwin/usr/bin/perl.exe"
 LATEX_CMD_NAME         = "$(ProgramFiles)/MiKTeX/Main/miktex/bin/latex.exe"
 MAKEINDEX_CMD_NAME     = "$(ProgramFiles)/MiKTeX/Main/miktex/bin/makeindex.exe"
-MSCGEN_PATH            = 
+MSCGEN_PATH            =
 
 #---------------------------------------------------------------------------
 
@@ -117,21 +117,21 @@ ALIASES                = "title=<dl><dt>" \
 
 #---------------------------------------------------------------------------
 
-EXCLUDE                = 
+EXCLUDE                =
 
 IMAGE_PATH             = . img images doc
 
 FILE_PATTERNS          = *.c *.cpp *.h *.hpp *.txt
-INCLUDE_FILE_PATTERNS  = 
+INCLUDE_FILE_PATTERNS  =
 
 EXCLUDE_SYMLINKS       = NO
-EXCLUDE_SYMBOLS        = 
+EXCLUDE_SYMBOLS        =
 
 EXAMPLE_PATH           = Examples Doc
 EXAMPLE_RECURSIVE      = YES
 EXAMPLE_PATTERNS       = *.c *.cpp *.h *.hpp *.txt
-INPUT_FILTER           = 
-FILTER_PATTERNS        = 
+INPUT_FILTER           =
+FILTER_PATTERNS        =
 FILTER_SOURCE_FILES    = NO
 
 #---------------------------------------------------------------------------
@@ -140,7 +140,7 @@ ENABLE_PREPROCESSING   = YES
 MACRO_EXPANSION        = YES
 EXPAND_ONLY_PREDEF     = YES
 SEARCH_INCLUDES        = YES
-EXPAND_AS_DEFINED      = 
+EXPAND_AS_DEFINED      =
 SKIP_FUNCTION_MACROS   = YES
 
 PREDEFINED            += FOR_DOXYGEN_ONLY
@@ -180,8 +180,8 @@ SHORT_NAMES            = YES
 STRICT_PROTO_MATCHING  = YES
 TYPEDEF_HIDES_STRUCT   = NO
 
-FILE_VERSION_FILTER    = 
-LAYOUT_FILE            = 
+FILE_VERSION_FILTER    =
+LAYOUT_FILE            =
 
 #---------------------------------------------------------------------------
 
@@ -190,8 +190,8 @@ ABBREVIATE_BRIEF       = "The $name class" "The $name widget" "The $name file" \
                          "Класс $name" "Виджет $name" "Файл $name" является    \
                          обеспечивает определяет contains представляет такой   \
                          такая такое этот эта это данный данная данное
-STRIP_FROM_PATH        = 
-STRIP_FROM_INC_PATH    = 
+STRIP_FROM_PATH        =
+STRIP_FROM_INC_PATH    =
 
 JAVADOC_AUTOBRIEF      = NO
 QT_AUTOBRIEF           = NO
@@ -221,7 +221,7 @@ CREATE_SUBDIRS         = NO
 TAB_SIZE               = 4
 SYMBOL_CACHE_SIZE      = 4
 
-EXTENSION_MAPPING      = 
+EXTENSION_MAPPING      =
 
 #---------------------------------------------------------------------------
 
@@ -253,13 +253,13 @@ FORMULA_FONTSIZE       = 10
 BINARY_TOC             = NO
 GENERATE_CHI           = NO
 
-QCH_FILE               = 
-QHP_NAMESPACE          = 
+QCH_FILE               =
+QHP_NAMESPACE          =
 QHP_VIRTUAL_FOLDER     = doc
-QHP_CUST_FILTER_NAME   = 
-QHP_CUST_FILTER_ATTRS  = 
-QHP_SECT_FILTER_ATTRS  = 
-QHG_LOCATION           = 
+QHP_CUST_FILTER_NAME   =
+QHP_CUST_FILTER_ATTRS  =
+QHP_SECT_FILTER_ATTRS  =
+QHG_LOCATION           =
 
 GENERATE_DOCSET        = NO
 DOCSET_FEEDNAME        = "Doxygen generated docs"
@@ -269,8 +269,8 @@ DOCSET_BUNDLE_ID       = org.doxygen.Project
 
 LATEX_OUTPUT           = LaTeX
 
-EXTRA_PACKAGES         = 
-LATEX_HEADER           = 
+EXTRA_PACKAGES         =
+LATEX_HEADER           =
 
 COMPACT_LATEX          = YES
 PAPER_TYPE             = a4wide
@@ -284,8 +284,8 @@ LATEX_SOURCE_CODE      = NO
 
 RTF_OUTPUT             = RTF
 
-RTF_STYLESHEET_FILE    = 
-RTF_EXTENSIONS_FILE    = 
+RTF_STYLESHEET_FILE    =
+RTF_EXTENSIONS_FILE    =
 
 COMPACT_RTF            = YES
 RTF_HYPERLINKS         = YES
@@ -301,20 +301,20 @@ MAN_LINKS              = NO
 
 XML_OUTPUT             = XML
 
-XML_SCHEMA             = 
-XML_DTD                = 
+XML_SCHEMA             =
+XML_DTD                =
 XML_PROGRAMLISTING     = YES
 
 #---------------------------------------------------------------------------
 
 PERLMOD_LATEX          = NO
 PERLMOD_PRETTY         = YES
-PERLMOD_MAKEVAR_PREFIX = 
+PERLMOD_MAKEVAR_PREFIX =
 
 #---------------------------------------------------------------------------
 
-TAGFILES               = 
-GENERATE_TAGFILE       = 
+TAGFILES               =
+GENERATE_TAGFILE       =
 ALLEXTERNALS           = NO
 EXTERNAL_GROUPS        = YES
 
@@ -322,8 +322,8 @@ EXTERNAL_GROUPS        = YES
 
 HAVE_DOT               = YES
 
-DOTFILE_DIRS           = 
-DOT_FONTPATH           = 
+DOTFILE_DIRS           =
+DOT_FONTPATH           =
 
 CLASS_DIAGRAMS         = YES
 COLLABORATION_GRAPH    = YES
@@ -349,11 +349,7 @@ WARN_IF_UNDOCUMENTED   = YES
 WARN_IF_DOC_ERROR      = YES
 WARN_NO_PARAMDOC       = YES
 WARN_FORMAT            = "$file:$line: $text"
-WARN_LOGFILE           = 
-
-
-
-
+WARN_LOGFILE           =
 
 
 

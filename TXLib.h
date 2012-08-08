@@ -2287,7 +2287,7 @@ unsigned txMessageBox (const char* text, const char* header = "TXLib сообщает", 
 //! @warning
 //!        - Эта функция требует, чтобы при компиляции константа версии Internet Explorer
 //!          @c (_WIN32_IE) была задана не ниже 0x0500. Для этого надо либо <b>включить TXLib.h
-//!          вместо @c windows.h или перед ним.</b> Либо надо самостоятельно определить @c (#define)
+//!          вместо @c windows.h или перед ним.</b> Либо надо самостоятельно определить @c (\#define)
 //!          эту константу.
 //!          <small>С версией Internet Explorer это связано потому, что при его установке в Windows
 //!          обновляются многие компоненты (например, @c shell32.dll и @c comctl32.dll), которые
@@ -2413,14 +2413,17 @@ int txOutputDebugPrintf (const char format[], ...) _TX_CHECK_FORMAT (1);
     #define sizearr( arr )    ( sizeof (get_size_of_an_array_with_unknown_or_nonconst_size_ (arr)) )
 
     //! @cond INTERNAL
+    //  See explanation here: http://blogs.msdn.com/b/the1/archive/2004/05/07/128242.aspx
+
     template <typename T, int N> char (&get_size_of_an_array_with_unknown_or_nonconst_size_ (T (&) [N])) [N]; // ;)
+
     //! @endcond
 
 #endif
 
 //! Замена макросу sizearr() для работы в Microsoft Visual Studio 6
 
-#define SIZEARR( arr )        ( sizeof (arr) / sizeof (arr)[0] )
+#define SIZEARR( arr )        ( sizeof (arr) / sizeof (0[arr]) )
 
 //! @}
 //{-------------------------------------------------------------------------------------------
@@ -2702,7 +2705,7 @@ template <typename T> inline T zero();
 //!
 //! @par     Макрос <tt>TX_AUTO_FUNC (param_t, param, func)</tt>
 //! @note
-//!        - Для автоматически вызываемой функции допускается только @i один параметр.
+//!        - Для автоматически вызываемой функции допускается только @a один параметр.
 //!        - Его тип @c param_t и имя @c param должны соответствовать определению переменной,
 //!          доступной в текущей области видимости. Параметр вызываемой функции будет связан
 //!          с этой переменной через ссылку.
@@ -2715,8 +2718,8 @@ template <typename T> inline T zero();
 //!
 //! @par     Макрос <tt>tx_auto_func (func)</tt>
 //! @note
-//!        - @i Все переменные вызываемой функции связываются с переменными внешней функции по ссылке.
-//!        - Их названия и типы @i не указываются. Указывается только тело вызываемой функции.
+//!        - @a Все переменные вызываемой функции связываются с переменными внешней функции по ссылке.
+//!        - Их названия и типы @a не указываются. Указывается только тело вызываемой функции.
 //!        - Эта форма использует лямбда-функции @c C++0x, поэтому при компиляции требуется <i> MSVS
 //!          2010 </i> или <i> GCC не ниже версии 4.5 с ключом компиляции @c -std=c++0x. </i>
 //!        - Синоним: tx_finally
@@ -2820,9 +2823,16 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
 //!          Если условие оказывается ложно, то выводится диагностическое сообщение и
 //!          программа аварийно завершается.
 //!
-//! @note    <b>При компиляции в режиме Release (или если определен NDEBUG) assert
+//! @warning <b>При компиляции в режиме Release (или если определен NDEBUG) assert
 //!          превращается в пустой оператор.</b> @n
 //!          Не надо помещать в assert() действия, которые важны для работы алгорима.
+//!
+//! @note    Если условие @c cond может быть вычислено уже во время компиляции как ложное,
+//!          компилятор может предупредить об этом (как о делении на 0).
+//! @note    <small>See: <a href=http://lars-lab.jpl.nasa.gov/JPL_Coding_Standard_C.pdf>
+//!          "JPL Institutional Coding Standard for the C Programming Language", Jet Propulsion
+//!          Laboratory, California Institute of Technology, JPL DOCID D-60411, Ver. 1.0,
+//!          March 3, 2009</a>, page 15.</small>
 //!
 //! @see     asserted, verified, verify(), TX_ERROR(), TX_DEBUG_ERROR(), txOutputDebugPrintf(),
 //!          txMessageBox(), txNotifyIcon(), __TX_FILELINE__, __TX_FUNCTION__
@@ -2844,8 +2854,9 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
 
 #if !defined (NDEBUG)
     #undef  assert
-    #define assert( cond )    _txNOP ( !(cond)? (TX_ERROR ("\a" "ВНЕЗАПНО: Логическая ошибка: " \
-                                                           "Неверно, что \"%s\"." TX_COMMA #cond), 0) : 1 )
+    #define assert( cond )    _txNOP ( !(cond)? (TX_ERROR ("\a" "ВНЕЗАПНО: Логическая ошибка: "    \
+                                                           "Неверно, что \"%s\"." TX_COMMA #cond), \
+                                                 0/(int)!!(cond)) : 1 )
 #else
     #undef  assert
     #define assert( cond )    ((void) 1)
@@ -3200,7 +3211,7 @@ WNDPROC txSetWindowHandler (WNDPROC handler = NULL);
 //!          приостанавливает поток, а просто отключает операции по обновлению окна.
 //!
 //! @see     txDC(), txLock(), txUnlock(), txGDI()
-//! @usage          См. исходный текст функций _txCanvas_OnPAINT() и _txConsole_Draw() в TXLib.h.
+//! @usage   См. исходный текст функций _txCanvas_OnPAINT() и _txConsole_Draw() в TXLib.h.
 //}-------------------------------------------------------------------------------------------
 
 bool txLock (bool wait = true);
@@ -3214,7 +3225,7 @@ bool txLock (bool wait = true);
 //!          Более подробно см. в описании txLock().
 //!
 //! @see     txDC(), txLock(), txGDI()
-//! @usage          См. исходный текст функций _txCanvas_OnPAINT() и _txConsole_Draw() в TXLib.h.
+//! @usage   См. исходный текст функций _txCanvas_OnPAINT() и _txConsole_Draw() в TXLib.h.
 //}-------------------------------------------------------------------------------------------
 //! @{
 
@@ -3263,7 +3274,7 @@ template <typename T> inline T txUnlock (T value);
 //! @ingroup Technical
 //! @brief   Запрет ранней инициализации TXLib
 //!
-//!          Если константа определена с помощью #define до включения TXLib.h в программу,
+//!          Если константа определена с помощью \#define до включения TXLib.h в программу,
 //!          ранняя инициализация (до запуска функции @c main) @b не проводится.
 //!
 //! @note    Ранняя инициализация включает:
@@ -5082,11 +5093,8 @@ $   if (fileNameOnly) return name;
 $   static char fullName[MAX_PATH] = "";
 $   strncpy_s (fullName, name, sizeof (fullName) - 1);
 
-$   char* title = strrchr (fullName, '\\');
-$   assert (title); if (!title) title = fullName;
-
-$   char* ext   = strrchr (fullName,  '.');
-$   assert (ext);   if (!ext)   ext   = fullName + strlen (fullName);
+$   char* title = strrchr (fullName, '\\'); if (!title) title = fullName;
+$   char* ext   = strrchr (fullName,  '.'); if (!ext)   ext   = fullName + strlen (fullName);
 
 $   size_t sz = sizeof (fullName) - (ext - fullName) - 1;
 
@@ -7884,20 +7892,12 @@ struct _txSaveConsoleAttr
 //============================================================================================
 // EOF
 //============================================================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                                                                              
+                                       
 
 
 

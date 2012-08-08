@@ -1,12 +1,11 @@
 /*-----------------------------------------------------------------------------
   doxygen_.css
- 
   $Version$
   $Copyright$
   $Date$
  ----------------------------------------------------------------------------*/
 
-body, table, div, p, dl 
+body, table, div, p, dl
     {
     font-family: Lucida Grande, Verdana, Geneva, Arial, sans-serif;
 
@@ -17,16 +16,15 @@ body, table, div, p, dl
     }
 
 table.smalltext
-    { 
+    {
     border-style: outset;
     border-color: gray;
     border-width: 1px;
     border-spacing: 0px;
-    border-collapse: collapse; 
-    } 
-    
-table.smalltext td 
-    { 
+    border-collapse: collapse;
+    }
+table.smalltext td
+    {
     border-style: inset;
     border-color: gray;
     border-width: 1px;
@@ -37,27 +35,27 @@ table.smalltext td
 
 /* @group Heading Levels */
 
-h1 
+h1
     {
     font-size: 150%;
     }
 
-h2 
+h2
     {
     font-size: 120%;
     }
 
-h3 
+h3
     {
     font-size: 100%;
     }
 
-dt 
+dt
     {
     font-weight: bold;
     }
 
-div.multicol 
+div.multicol
     {
     -moz-column-gap: 1em;
     -webkit-column-gap: 1em;
@@ -65,40 +63,40 @@ div.multicol
     -webkit-column-count: 3;
     }
 
-p.startli, p.startdd, p.starttd 
+p.startli, p.startdd, p.starttd
     {
     margin-top: 2px;
     }
 
-p.endli 
+p.endli
     {
     margin-bottom: 0px;
     }
 
-p.enddd 
+p.enddd
     {
     margin-bottom: 4px;
     }
 
-p.endtd 
+p.endtd
     {
     margin-bottom: 2px;
     }
 
 /* @end */
 
-caption 
+caption
     {
     font-weight: bold;
     }
 
-span.legend 
+span.legend
     {
     font-size: 70%;
     text-align: center;
     }
 
-h3.version 
+h3.version
     {
     font-size: 90%;
     text-align: center;
@@ -113,42 +111,42 @@ div.qindex, div.navtab
     padding: 2px;
     }
 
-div.qindex, div.navpath 
+div.qindex, div.navpath
     {
     width: 100%;
     line-height: 140%;
     }
 
-div.navtab 
+div.navtab
     {
     margin-right: 15px;
     }
 
 /* @group Link Styling */
 
-a 
+a
     {
     color: #3D578C;
     font-weight: normal;
     text-decoration: none;
     }
 
-.contents a: visited 
+.contents a: visited
     {
     color: #4665A2;
     }
 
-a: hover 
+a: hover
     {
     text-decoration: underline;
     }
 
-a.qindex 
+a.qindex
     {
     font-weight: bold;
     }
 
-a.qindexHL 
+a.qindexHL
     {
     font-weight: bold;
     background-color: #9CAFD4;
@@ -156,33 +154,33 @@ a.qindexHL
     border: 1px double #869DCA;
     }
 
-.contents a.qindexHL: visited 
+.contents a.qindexHL: visited
     {
     color: #ffffff;
     }
 
-a.el 
+a.el
     {
     font-weight: bold;
     }
 
-a.elRef 
+a.elRef
     {
     }
 
-a.code 
+a.code
     {
     color: #4665A2;
     }
 
-a.codeRef 
+a.codeRef
     {
     color: #4665A2;
     }
 
 /* @end */
 
-dl.el 
+dl.el
     {
     margin-left: -1cm;
     }
@@ -199,7 +197,7 @@ dl.el
 /*  color: #FF00FF */ /* !!! */
     }
 
-pre.fragment 
+pre.fragment
     {
     border: 1px solid #C4CFE5;
     background-color: #FBFCFD;
@@ -215,7 +213,7 @@ pre.fragment
 /*  color: #00FF00 */ /* !!! */
     }
 
-div.ah 
+div.ah
     {
     background-color: black;
     font-weight: bold;
@@ -234,34 +232,34 @@ div.ah
     background-image: -moz-linear-gradient (center top, #eee 0%, #444 40%, #000);
     }
 
-div.groupHeader 
+div.groupHeader
     {
     margin-left: 16px;
     margin-top: 12px;
     font-weight: bold;
     }
 
-div.groupText 
+div.groupText
     {
     margin-left: 16px;
     font-style: italic;
     }
 
-body 
+body
     {
     background: white;
     color: black;
     margin: 0;
     }
 
-div.contents 
+div.contents
     {
     margin-top: 10px;
     margin-left: 10px;
     margin-right: 10px;
     }
 
-td.indexkey 
+td.indexkey
     {
     background-color: #EBEFF6;
     font-weight: bold;
@@ -270,7 +268,7 @@ td.indexkey
     padding: 2px 10px;
     }
 
-td.indexvalue 
+td.indexvalue
     {
     background-color: #EBEFF6;
     border: 1px solid #C4CFE5;
@@ -278,25 +276,25 @@ td.indexvalue
     margin: 2px 0px;
     }
 
-tr.memlist 
+tr.memlist
     {
     background-color: #EEF1F7;
     }
 
-p.formulaDsp 
+p.formulaDsp
     {
     text-align: center;
     }
 
-img.formulaDsp 
-    {}    
+img.formulaDsp
+    {}
 
-img.formulaInl 
+img.formulaInl
     {
     vertical-align: middle;
     }
 
-div.center 
+div.center
     {
     text-align: center;
     margin-top: 0px;
@@ -304,18 +302,18 @@ div.center
     padding: 0px;
     }
 
-div.center img 
+div.center img
     {
     border: 0px;
     }
 
-address.footer 
+address.footer
     {
     text-align: right;
     padding-right: 12px;
     }
 
-img.footer 
+img.footer
     {
     border: 0px;
     vertical-align: middle;
@@ -324,84 +322,84 @@ img.footer
 /* @group Code Colorization */
 
 /*
-span.keyword 
+span.keyword
     {
 /*  color: #008000 */
     color: #000080
     }
 
-span.keywordtype 
+span.keywordtype
     {
 /*  color: #604020 */
     color: #000080
     }
 
-span.keywordflow 
+span.keywordflow
     {
 /*  color: #e08000 */
     color: #000080
     }
 
-span.comment 
+span.comment
     {
 /*  color: #800000 */
     color: #008000
     }
 
-span.preprocessor 
+span.preprocessor
     {
 /*  color: #806020 */
     color: #800080
     }
 
-span.stringliteral 
+span.stringliteral
     {
 /*  color: #002080 */
     color: #0000ff
     }
 
-span.charliteral 
+span.charliteral
     {
 /*  color: #008080 */
     color: #008080
     }
 
-span.vhdldigit 
-    { 
-    color: #ff00ff 
+span.vhdldigit
+    {
+    color: #ff00ff
     }
 
-span.vhdlchar 
-    { 
-    color: #000000 
+span.vhdlchar
+    {
+    color: #000000
     }
 
-span.vhdlkeyword 
-    { 
-    color: #700070 
+span.vhdlkeyword
+    {
+    color: #700070
     }
 
-span.vhdllogic 
-    { 
-    color: #ff0000 
+span.vhdllogic
+    {
+    color: #ff0000
     }
 
 /* @end */
 
 /*
-.search 
+.search
     {
     color: #003399;
     font-weight: bold;
     }
 
-form.search 
+form.search
     {
     margin-bottom: 0px;
     margin-top: 0px;
     }
 
-input.search 
+input.search
     {
     font-size: 75%;
     color: #000080;
@@ -410,47 +408,47 @@ input.search
     }
 */
 
-td.tiny 
+td.tiny
     {
     font-size: 75%;
     }
 
-.dirtab 
+.dirtab
     {
     padding: 4px;
     border-collapse: collapse;
     border: 1px solid #A3B4D7;
     }
 
-th.dirtab 
+th.dirtab
     {
     background: #EBEFF6;
     font-weight: bold;
     }
 
-hr 
+hr
     {
     height: 0px;
     border: none;
     border-top: 1px solid #4A6AAA;
     }
 
-hr.footer 
+hr.footer
     {
     height: 1px;
     }
 
 /* @group Member Descriptions */
 
-table.memberdecls 
+table.memberdecls
     {
     border-spacing: 0px;
     padding: 0px;
     }
 
-.mdescLeft, .mdescRight, 
-.memItemLeft, .memItemRight, 
-.memTemplItemLeft, .memTemplItemRight, .memTemplParams 
+.mdescLeft, .mdescRight,
+.memItemLeft, .memItemRight,
+.memTemplItemLeft, .memTemplItemRight, .memTemplParams
     {
     background-color: #F9FAFC;
     border: none;
@@ -458,23 +456,23 @@ table.memberdecls
     padding: 1px 0 0 8px;
     }
 
-.mdescLeft, .mdescRight 
+.mdescLeft, .mdescRight
     {
     padding: 0px 8px 4px 8px;
     color: #555;
     }
 
-.memItemLeft, .memItemRight, .memTemplParams 
+.memItemLeft, .memItemRight, .memTemplParams
     {
     border-top: 1px solid #C4CFE5;
     }
 
-.memItemLeft, .memTemplItemLeft 
+.memItemLeft, .memTemplItemLeft
     {
     white-space: nowrap;
     }
 
-.memTemplParams 
+.memTemplParams
     {
     color: #4665A2;
     white-space: nowrap;
@@ -486,7 +484,7 @@ table.memberdecls
 
 /* Styles for detailed member documentation */
 
-.memtemplate 
+.memtemplate
     {
     font-size: 80%;
     color: #4665A2;
@@ -494,7 +492,7 @@ table.memberdecls
     margin-left: 9px;
     }
 
-.memnav 
+.memnav
     {
     background-color: #EBEFF6;
     border: 1px solid #A3B4D7;
@@ -504,20 +502,20 @@ table.memberdecls
     padding: 2px;
     }
 
-.memitem 
+.memitem
     {
     padding: 0;
     margin-bottom: 10px;
     }
 
-.memname 
+.memname
     {
     white-space: nowrap;
     font-weight: bold;
     margin-left: 6px;
     }
 
-.memproto 
+.memproto
     {
     border-top: 1px solid #A8B8D9;
     border-left: 1px solid #A8B8D9;
@@ -526,17 +524,14 @@ table.memberdecls
     color: #253555;
     font-weight: bold;
     text-shadow: 0px 1px 1px rgba (255, 255, 255, 0.9);
-    
     /* opera specific markup */
     box-shadow: 5px 5px 5px rgba (0, 0, 0, 0.15);
     border-top-right-radius: 8px;
     border-top-left-radius: 8px;
-    
     /* firefox specific markup */
     -moz-box-shadow: rgba (0, 0, 0, 0.15) 5px 5px 5px;
     -moz-border-radius-topright: 8px;
     -moz-border-radius-topleft: 8px;
-    
     /* webkit specific markup */
     -webkit-box-shadow: 5px 5px 5px rgba (0, 0, 0, 0.15);
     -webkit-border-top-right-radius: 8px;
@@ -546,26 +541,23 @@ table.memberdecls
     background-color: #E2E8F2;
     }
 
-.memdoc 
+.memdoc
     {
-    border-bottom: 1px solid #A8B8D9;      
-    border-left: 1px solid #A8B8D9;      
-    border-right: 1px solid #A8B8D9; 
+    border-bottom: 1px solid #A8B8D9;
+    border-left: 1px solid #A8B8D9;
+    border-right: 1px solid #A8B8D9;
     padding: 2px 5px;
     background-color: #FBFCFD;
     border-top-width: 0;
-    
     /* opera specific markup */
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
     box-shadow: 5px 5px 5px rgba (0, 0, 0, 0.15);
-    
     /* firefox specific markup */
     -moz-border-radius-bottomleft: 8px;
     -moz-border-radius-bottomright: 8px;
     -moz-box-shadow: rgba (0, 0, 0, 0.15) 5px 5px 5px;
     background-image: -moz-linear-gradient (center top, #FFFFFF 0%, #FFFFFF 60%, #F7F8FB 95%, #EEF1F7);
-    
     /* webkit specific markup */
     -webkit-border-bottom-left-radius: 8px;
     -webkit-border-bottom-right-radius: 8px;
@@ -573,44 +565,42 @@ table.memberdecls
     background-image: -webkit-gradient (linear, center top, center bottom, from (#FFFFFF), color-stop (0.6, #FFFFFF), color-stop (0.60, #FFFFFF), color-stop (0.95, #F7F8FB), to (#EEF1F7));
     }
 
-.paramkey 
+.paramkey
     {
     text-align: right;
     }
 
-.paramtype 
+.paramtype
     {
     white-space: nowrap;
     }
 
-.paramname 
+.paramname
     {
     color: #602020;
     white-space: nowrap;
     }
-.paramname em 
+.paramname em
     {
     font-style: normal;
     }
 
-.params, .retval, .exception, .tparams 
+.params, .retval, .exception, .tparams
     {
     border-spacing: 6px 2px;
-    }       
+    }
 
-.params .paramname, .retval .paramname 
+.params .paramname, .retval .paramname
     {
     font-weight: bold;
     vertical-align: top;
     }
-    
-.params .paramtype 
+.params .paramtype
     {
     font-style: italic;
     vertical-align: top;
-    }       
-    
-.params .paramdir 
+    }
+.params .paramdir
     {
     vertical-align: top;
 
@@ -626,7 +616,7 @@ table.memberdecls
 
 /* for the tree view */
 
-.ftvtree 
+.ftvtree
     {
     font-family: sans-serif;
     margin: 0px;
@@ -634,7 +624,7 @@ table.memberdecls
 
 /* these are for tree view when used as main index */
 
-.directory 
+.directory
     {
     font-weight: bold;
     margin: 5px;
@@ -645,7 +635,7 @@ table.memberdecls
 /*  color: #0000FF */ /* !!! */
     }
 
-.directory h3 
+.directory h3
     {
     margin: 0px;
     margin-top: 1em;
@@ -658,56 +648,56 @@ table.memberdecls
 
 /*
 The following two styles can be used to replace the root node title
-with an image of your choice. Simply uncomment the next two styles, 
+with an image of your choice. Simply uncomment the next two styles,
 specify the name of your image and be sure to set 'height' to the
 proper pixel height of your image.
 */
 
 /*
-.directory h3.swap 
+.directory h3.swap
     {
     height: 61px;
     background-repeat: no-repeat;
     background-image: url ("yourimage.gif");
     }
 
-.directory h3.swap span 
+.directory h3.swap span
     {
     display: none;
     }
 */
 
-.directory > h3 
+.directory > h3
     {
     margin-top: 0;
     }
 
-.directory p 
+.directory p
     {
     margin: 0px;
     white-space: nowrap;
     }
 
-.directory div 
+.directory div
     {
     display: none;
     margin: 0px;
     }
 
-.directory img 
+.directory img
     {
     vertical-align: -30%;
     }
 
 /* these are for tree view when not used as main index */
 
-.directory-alt 
+.directory-alt
     {
     font-size: 100%;
     font-weight: bold;
     }
 
-.directory-alt h3 
+.directory-alt h3
     {
     margin: 0px;
     margin-top: 1em;
@@ -718,53 +708,53 @@ proper pixel height of your image.
 /*  color: #FF00FF */ /* !!! */
     }
 
-.directory-alt > h3 
+.directory-alt > h3
     {
     margin-top: 0;
     }
 
-.directory-alt p 
+.directory-alt p
     {
     margin: 0px;
     white-space: nowrap;
     }
 
-.directory-alt div 
+.directory-alt div
     {
     display: none;
     margin: 0px;
     }
 
-.directory-alt img 
+.directory-alt img
     {
     vertical-align: -30%;
     }
 
 /* @end */
 
-div.dynheader 
+div.dynheader
     {
     margin-top: 8px;
     }
 
-address 
+address
     {
     font-style: normal;
     color: #2A3D61;
     }
 
-table.doxtable 
+table.doxtable
     {
     border-collapse: collapse;
     }
 
-table.doxtable td, table.doxtable th 
+table.doxtable td, table.doxtable th
     {
     border: 1px solid #2D4068;
     padding: 3px 7px 2px;
     }
 
-table.doxtable th 
+table.doxtable th
     {
     background-color: #374F7F;
     color: #FFFFFF;
@@ -774,7 +764,7 @@ table.doxtable th
     text-align: left;
     }
 
-.tabsearch 
+.tabsearch
     {
     top: 0px;
     left: 10px;
@@ -842,7 +832,6 @@ table.doxtable th
     background-repeat: no-repeat;
     background-position: right;
     color: #364D7C;
-    
 /*  font-size: 8pt; */
     font-size: 11pt;
 
@@ -860,7 +849,7 @@ div.summary
     font-size: 11pt;
 
 /*  color: #000080 */ /* !!! */
-    }       
+    }
 
 div.summary a
     {
@@ -903,7 +892,7 @@ dl
     padding: 0 0 0 10px;
     }
 
-dl.note, dl.warning, dl.attention, dl.pre, dl.post, 
+dl.note, dl.warning, dl.attention, dl.pre, dl.post,
 dl.invariant, dl.deprecated, dl.todo, dl.test, dl.bug
     {
     border-left: 4px solid;
@@ -951,12 +940,10 @@ dl.bug
     vertical-align: bottom;
     border-collapse: separate;
     }
- 
 #projectlogo img
-    { 
+    {
     border: 0px none;
     }
- 
 #projectname
     {
     margin: 0px;
@@ -968,7 +955,6 @@ dl.bug
     margin-top: 10px;
     font-weight: bold;
     }
-    
 #projectnumber
     {
     margin: 0px;
@@ -1002,7 +988,7 @@ dl.bug
 
 /* tabs.css */
 
-.tabs, .tabs2, .tabs3 
+.tabs, .tabs2, .tabs3
     {
     background-image: url ('tab_b.png');
     width: 100%;
@@ -1016,20 +1002,20 @@ dl.bug
     font-size: 13px;
     }
 
-.tabs3 
+.tabs3
     {
 /*  font-size: 9px; */
     font-size: 13px;
     }
 
-.tablist 
+.tablist
     {
     margin: 0;
     padding: 0;
     display: table;
     }
 
-.tablist li 
+.tablist li
     {
     float: left;
     display: table-cell;
@@ -1038,7 +1024,7 @@ dl.bug
     list-style: none;
     }
 
-.tablist a 
+.tablist a
     {
     display: block;
     padding: 0 20px;
@@ -1052,12 +1038,12 @@ dl.bug
     outline: none;
     }
 
-.tabs3 .tablist a 
+.tabs3 .tablist a
     {
     padding: 0 10px;
     }
 
-.tablist a: hover 
+.tablist a: hover
     {
     background-image: url ('tab_h.png');
     background-repeat: repeat-x;
@@ -1066,7 +1052,7 @@ dl.bug
     text-decoration: none;
     }
 
-.tablist li.current a 
+.tablist li.current a
     {
     background-image: url ('tab_a.png');
     background-repeat: repeat-x;
@@ -1078,4 +1064,3 @@ dl.bug
     {
     text-decoration: line-through
     }
-

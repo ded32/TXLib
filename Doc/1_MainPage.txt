@@ -3,26 +3,25 @@
 //! @brief      Главная страница системы помощи
 //}============================================================================
 
-/*! @mainpage                         
+/*! @mainpage
     @section    MainPage              Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib)
-   
                 $Version$
                 $Date$
                 $Copyright$
 
     @section    Description           Назначение
 
-    		TX Library - компактная графическая библиотека для Win32 на С++. 
-    		Это небольшая "песочница" для начинающих реализована с целью 
-    		помочь им в изучении простейших принципов программирования. 
+    		TX Library - компактная графическая библиотека для Win32 на С++.
+    		Это небольшая "песочница" для начинающих реализована с целью
+    		помочь им в изучении простейших принципов программирования.
     		Документация на русском языке.
 
     		Философия TX Library - облегчить первые шаги в программировании
     		и подтолкнуть к творчеству и самостоятельности.
 
-		TX Library is a tiny graphics library for Win32 written in C++. 
-		It is a small sandbox for the very beginners to help them to 
-		learn basic programming principles. The documentation is 
+		TX Library is a tiny graphics library for Win32 written in C++.
+		It is a small sandbox for the very beginners to help them to
+		learn basic programming principles. The documentation is
 		currently in Russian.
 
     @section    Contents              Разделы системы помощи
@@ -34,7 +33,7 @@
              -  @ref Dialogs         "Диалоговые окна"
              -  @ref Service         "Служебное"
              -  @ref Technical       "Технические детали"
-             
+
     @par        Примеры:
 
              -  @ref Tutor_1st       "Простейший пример"
@@ -59,15 +58,14 @@
     @par        Ссылки:
            -    <a href="http://dl.dropbox.com/u/1557330/TXLib/TXLib-v0172a.rar.exe"><b>Скачать TX Library</b></a>
                 <a href="http://sourceforge.net/project/platformdownload.php?group_id=213688">(Зеркало)</a>
-           -    <a href="http://storage.ded32.net.ru/Lib/TX/TXUpdate/Doc/HTML.ru">Русская документация</a> 
-              - <a href="http://dl.dropbox.com/u/1557330/TXLib/TXUpdate/TXLib%20Help.chm">Она же в chm</a> 
+           -    <a href="http://storage.ded32.net.ru/Lib/TX/TXUpdate/Doc/HTML.ru">Русская документация</a>
+              - <a href="http://dl.dropbox.com/u/1557330/TXLib/TXUpdate/TXLib%20Help.chm">Она же в chm</a>
                 <a href="http://sourceforge.net/projects/txlib/files/TXLib/TXLib%20Help.chm/download">(Зеркало)</a>
            -    <a href="http://dl.dropbox.com/u/1557330/TXLib/TXUpdate/TXLib.h">Исходный текст</a>
                 <a href="http://sourceforge.net/projects/txlib/files/TXLib/TXLib.h/download">(Зеркало)</a>
               - <a href="http://code.google.com/p/txlib/source/browse">Трекер VCS</a>
            -    <a href="http://dl.dropbox.com/u/1557330/TXLib/TXLib-Update.rar.exe">Автообновление</a>
                 <a href="http://sourceforge.net/projects/txlib/files/TXLib/TXLib-Update.rar.exe/download">(Зеркало)</a>
- 
     @section    UsageWarning          Предупреждение, или TXLib @d это всего лишь инструмент
 
                 Библиотека TXLib @d это всего лишь инструмент для того, чтобы облегчить первые шаги
@@ -78,14 +76,13 @@
                 Сама по себе любая библиотека или язык программирования не научит начинающего писать
                 программы грамотно. Научит этому разработка своих, достаточно больших проектов, в сочетании
                 с тесным общением профессионалов, желающих помочь начинающим. Такие профессионалы должны
-                обладать и опытом разработки больших программ, и педагогическими навыками, чтобы передать 
-                свой опыт начинающим. К сожалению, не всегда это совпадает. Профессионалы-программисты зачастую 
-                не хотят лезть в обучение, где хватает своих проблем. С другой стороны, недобросовестные 
+                обладать и опытом разработки больших программ, и педагогическими навыками, чтобы передать
+                свой опыт начинающим. К сожалению, не всегда это совпадает. Профессионалы-программисты зачастую
+                не хотят лезть в обучение, где хватает своих проблем. С другой стороны, недобросовестные
                 учителя, иногда даже в сильных школах и курсах, хватаются за удобные инструменты обучения (чужие
-                или свои библиотеки, среды и языки программирования), не удосуживаясь следить за 
+                или свои библиотеки, среды и языки программирования), не удосуживаясь следить за
                 <a href="http://www.google.ru/search?q=literate+programming">качеством кода обучаемых, за стилем
                 и направлением их мышления,</a> ограничиваясь лишь видимостью обучения.
-                
                 Такие образовательные иллюзии очень вредны. Заметны они становятся достаточно  поздно, когда
                 выясняется, что ученик, легко пишущий небольшие программы (пусть даже логически насыщенные,
                 олимпиадные), принципиально не способен написать что-то большее, путается в коде, а другие,
@@ -95,7 +92,7 @@
                 переучиваться @d иногда будучи уже студентом или аспирантом. Либо смириться и "носить кофе
                 программистам".
 
-                Искусство программирования @d это искусство мышления, не надо это забывать, <i>дорогие преподаватели 
+                Искусство программирования @d это искусство мышления, не надо это забывать, <i>дорогие преподаватели
                 и учащиеся.</i>
 
     @par        Принципы, заложенные в TXLib для повышения качества обучения:
@@ -106,7 +103,7 @@
 
               - <b>Загляни в <a href="http://storage.ded32.net.ru/Lib/TX/TXUpdate/Doc/HTML.ru"><b>Help.</b></a></b>
                 (Слово неспроста выбрано английским, потому что большинство информации в современном программировании
-                @d на английском языке. Учите его.) Под системой помощи понимается не только TXLib Help, но и весь 
+                @d на английском языке. Учите его.) Под системой помощи понимается не только TXLib Help, но и весь
                 <a href="http://google.com">Internet</a>.
 
               - <b>Посмотри, как сделано. Загляни в @ref TXLib.h "код (см. \"Исходные тексты\")."</b> Он создавался
@@ -124,26 +121,27 @@
 
               - <b>Выйди за пределы "песочницы".</b> Это усиление принципа "сделай сам". Собери вместе свои мысли про
                 хорошую библиотеку, посмотри, как устроен TXLib и <a href="http://www.google.ru/search?q=простая+графическая+библиотека">
-                его аналоги,</a> сделай свою библиотеку, лучше TXLib'а. Это нетрудно. :) Примеры таких библиотек можно найти на 
+                его аналоги,</a> сделай свою библиотеку, лучше TXLib'а. Это нетрудно. :) Примеры таких библиотек можно найти на
                 <a href="http://ded32.net.ru">сайте TXLib</a> и в <a href="http://www.google.ru/search?q=удобная+графическая+библиотека">
                 Интернете,</a> и некоторые из них сделаны как раз начинающими.
 
                 Удачи, и May the Source be with you! :)
 
     @section    PlatformsSupported    Поддерживаемые платформы
-   
            -    Среды программирования и компиляторы
              -# CodeBlocks 10.05  + MinGW GCC 4.6.1 (TDM-GCC)
              -# CodeBlocks 10.05  + MinGW GCC 4.4.1
              -# CodeBlocks 8.02   + MinGW GCC 3.4.5
              -# CodeBlocks 1.0rc2 + MinGW GCC 3.4.4
              -# Dev-CPP 4.9.9.2   + MinGW GCC 3.4.2
+             -# Microsoft Visual Studio 11.0 (2011) DP
              -# Microsoft Visual Studio 10.0 (2010)
              -# Microsoft Visual Studio  9.0 (2008)
              -# Microsoft Visual Studio  8.0 (2005)
              -# Microsoft Visual Studio  7.1 (2003)
              -# Microsoft Visual Studio  6.0 (1998)
            -    Операционные системы
+             -# Windows 8 DP           ru/en
              -# Windows 7              ru/en
              -# Windows Vista          ru/en
              -# Windows 2003 SP1 R1/R2 ru/en
@@ -172,13 +170,10 @@
 
                 @tr Microsoft Visual C @td Visual Studio 2003          @td Debug, Release  @td <i>Не требуются</i> @td
                 @tr Intel Compiler 9.0 @td Visual Studio 2003          @td Debug, Release  @td <i>Не требуются</i> @td
-                
                 @tr Microsoft Visual C @td Visual Studio 2005          @td Debug           @td @c msvcp80d.dll,    @c msvcr80d.dll  @td
                 @tr Microsoft Visual C @td Visual Studio 2005          @td Release         @td @c msvcp80.dll, @ss @c msvcr80.dll   @td
-                                       
                 @tr Microsoft Visual C @td Visual Studio 2008          @td Debug           @td @c msvcp90d.dll,    @c msvcr90d.dll  @td
                 @tr Microsoft Visual C @td Visual Studio 2008          @td Release         @td @c msvcp90.dll, @ss @c msvcr90.dll   @td
-                                       
                 @tr Microsoft Visual C @td Visual Studio 2010          @td Debug           @td @c msvcp100d.dll,   @c msvcr100d.dll @td
                 @tr Microsoft Visual C @td Visual Studio 2010          @td Release         @td @c msvcp100.dll,@s  @c msvcr100.dll  @td
     @endtable
@@ -186,14 +181,13 @@
 
     @section    UsageNotes            Особенности использования
 
-    @note    Файл @c TXLib.h должен быть включен <tt>(#include)</tt> в программу:
-             -  @b До или вместо файла @c @b windows.h. Либо надо задать @c (#define) константы @c WINVER и
-                @c _WIN32_IE не ниже @c 0x0500 и отменить @c (#undef) макросы @c UNICODE и @c _UNICODE.
+    @note    Файл @c TXLib.h должен быть включен <tt>(\#include)</tt> в программу:
+             -  @b До или вместо файла @c @b windows.h. Либо надо задать @c (\#define) константы @c WINVER и
+                @c _WIN32_IE не ниже @c 0x0500 и отменить @c (\#undef) макросы @c UNICODE и @c _UNICODE.
              -  @b До или вместо файлов @c @b string.h или @c @b stdio.h, если используется режим строгого
                 соответствия стандарту @b ANSI. Имейте в виду, что эти файлы могут включаться в @c windows.h.
              -  @b После включения библиотек <a href=http://boost.org><tt>boost</tt></a>, использующих модуль
                 @c @b boost::preprocessor.
-                
     @title      Опции командной строки: </dt><dd>
 
     <table class=smalltext>
@@ -224,11 +218,9 @@
                 <tr valign=middle>                                                     <td> Release </td><td> /D&nbsp;NDEBUG /O2 /Gm- /GS /GR /GL /Gd /Gy /Oi /Oy- /EHsc             /MP /WX-  /TP /Zi     /MD      /W4 /analyze            /fp:precise /Zc:wchar_t /Zc:forScope /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_UNICODE /D&nbsp;UNICODE /D&nbsp;CODE_ANALYSIS </td></tr>
     </table>
                 Эти ключи могут вызывать появление предупреждений для файла @c TXLib.h о символе @c $, использующемся для
-                отладки, и о директиве @c #warning. Они настолько суровы, что могут вызвать <small>@strike Чака Норриса @endstrike</small>
+                отладки, и о директиве @c \#warning. Они настолько суровы, что могут вызвать <small>@strike Чака Норриса @endstrike</small>
                 предупреждения даже для файлов стандартных библиотек C++ (вне зависимости от того, используется TXLib.h или нет).
-    
     @section    VersionHistory        История изменений
-   
     - <b>Версия 0.172</b>
            -#   <b>API</b>
              -# Добавлена cовместимость с MS Visual Studio 2010.
@@ -242,7 +234,7 @@
              -# Добавлены новые функции служебного характера.
              -# Макрос @ref TX_THROW переименован в @ref TX_ERROR, макрос @ref TX_NEEDED @d в @ref asserted.
                 Добавлены макросы @ref verify, @ref verified. Обеспечена обратная совместимость.
-             -# @ref _TX_IMPORT переименован @ref _TX_DLLIMPORT, так больше похоже на __declspec (dllimport).
+             -# Макрос @c _TX_IMPORT переименован @ref _TX_DLLIMPORT, так больше похоже на __declspec (dllimport).
              -# Убрана облегченная поддержка регионов отсечения (теперь @d только средствами Win32).
              -# Добавлена системная клавиша @c Alt+Ctrl+Shift+PrintScreen, временно отменяющая блокировку
                 обновления окна, см. txBegin().
@@ -316,11 +308,7 @@
       <b>Сообщить об ошибке</b></a>
     - <a href=https://sourceforge.net/tracker/?func=add&group_id=213688&atid=1026713>
       <b>Предложить улучшение</b></a>
-*/ 
-
-
-
-
+*/
 
 
 
