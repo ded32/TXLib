@@ -47,12 +47,14 @@ goto end
 :docs
 echo Making docs...
 
-%do% del /q ~TXLib.h.sav          >> %log% 2>>&1
-%do% copy    TXLib.h ~TXLib.h.sav >> %log% 2>>&1
-%do% attrib ~TXLib.h.sav +r +h +s >> %log% 2>>&1
+set attrib=%windir%\system32\attrib
+
+%do% del /q            ~TXLib.h.sav >> %log% 2>>&1
+%do% copy     TXLib.h  ~TXLib.h.sav >> %log% 2>>&1
+%do% %attrib% +r +h +s ~TXLib.h.sav >> %log% 2>>&1
 if errorlevel 1 (echo ERROR: Cannot save TXLib.h) & exit
 
-%do% for %%1 in (Dev\TXLib-Help.dox Dev\TXLib-Reference.dox Dev\doxygen_*.* Dev\dot_filter.bat) do copy %%1 >> %log% 2>>&1
+%do% for %%1 in (Dev\TXLib-Help.dox Dev\TXLib-Reference.dox Dev\doxygen_*.*) do copy %%1 >> %log% 2>>&1
 %do% set doxygen_=-nointeractive
 
 if /i "%2" == "doc" goto doc-help
@@ -64,7 +66,11 @@ if /i "%2" == "doc" goto doc-help
 
 %do% echo HTML_FOOTER = doxygen_chm.htm >> TXLib-Reference.dox
 %do% call doxygen_ TXLib-Reference.dox
+
 %do% type TXLib-Reference.log | find /i "error:"
+%do% find /i /v "inside <dl> block" TXLib-Reference.log >  TXLib-Reference.log.1
+%do% move /y TXLib-Reference.log.1  TXLib-Reference.log >> %log% 2>>&1
+%do% %attrib% +h                    TXLib-Reference.log
 
 %do% del /q Dev\TXLib-Reference.chm      >> %log% 2>>&1
 %do% move /y    TXLib-Reference.chm Dev\ >> %log% 2>>&1
@@ -73,7 +79,11 @@ if /i "%2" == "doc" goto doc-help
 
 %do% echo HTML_FOOTER = doxygen_chm.htm >> TXLib-Help.dox
 %do% call doxygen_ TXLib-Help.dox
+
 %do% type TXLib-Help.log | find /i "error:"
+%do% find /i /v "inside <dl> block" TXLib-Help.log >  TXLib-Help.log.1
+%do% move /y TXLib-Help.log.1       TXLib-Help.log >> %log% 2>>&1
+%do% %attrib% +h                    TXLib-Help.log
 
 if /i "%2" == "doc" goto docs-end
 
@@ -81,15 +91,19 @@ if /i "%2" == "doc" goto docs-end
 %do% echo GENERATE_HTMLHELP = NO        >> TXLib-Help.dox
 %do% echo HTML_FOOTER = doxygen_htm.htm >> TXLib-Help.dox
 %do% call doxygen_ TXLib-Help.dox
+
 %do% type TXLib-Help.log | find /i "error:"
+%do% find /i /v "inside <dl> block" TXLib-Help.log >  TXLib-Help.log.1
+%do% move /y TXLib-Help.log.1       TXLib-Help.log >> %log% 2>>&1
+%do% %attrib% +h                    TXLib-Help.log
 
 :docs-end
 
-%do% for %%1 in (TXLib-Help.dox TXLib-Reference.dox doxygen_*.* dot_filter.bat) do del %%1 >> %log% 2>>&1
+%do% for %%1 in (TXLib-Help.dox TXLib-Reference.dox doxygen_*.*) do del %%1 >> %log% 2>>&1
 del %Temp%\~hh*.tmp >> %log% 2>>&1
 
-%do% attrib  ~TXLib.h.sav -r -h -s >> %log% 2>>&1
-%do% move /y ~TXLib.h.sav TXLib.h  >> %log% 2>>&1
+%do% %attrib% -r -h -s ~TXLib.h.sav         >> %log% 2>>&1
+%do% move /y           ~TXLib.h.sav TXLib.h >> %log% 2>>&1
 
 goto end
 
