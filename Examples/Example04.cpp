@@ -118,3 +118,7 @@ void DrawFrame (int sizeX, int sizeY, int size, COLORREF color)
     txRectangle (size, size, sizeX-size, sizeY-size);
     }
 
+
+
+
+

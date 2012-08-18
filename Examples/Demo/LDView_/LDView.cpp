@@ -32,21 +32,21 @@ void DrawTree (vec2d pos, double length, double angle);
 int main()
     {
     txCreateWindow (800, 600);
-    
-  	txSetFillColor (TX_RED);
-   	txClear();
+
+    txSetFillColor (TX_RED);
+    txClear();
     OnscreenHelp (-1);
-   	txUpdateWindow();
+    txUpdateWindow();
 
     GraphView_t g = {};
 
     txBegin();
     for (;;)
-    	{
-    	txSetFillColor (TX_RED);
-    	txClear();
+        {
+        txSetFillColor (TX_RED);
+        txClear();
 
-    	DrawBackground();
+        DrawBackground();
         OnscreenHelp (g.graph.size_);
 
         switch (UpdateMouse())
@@ -80,14 +80,14 @@ int main()
         if (GetAsyncKeyState (VK_F1)) system ("start LDView.chm") == 0 ||
                                       system ("start doc/index.htm");
 
-    	g.draw (GraphView_t::ViewEdges);
+        g.draw (GraphView_t::ViewEdges);
 
         if (DoDragging()) g.connectTo();
 
-    	g.draw (GraphView_t::ViewVertices);
+        g.draw (GraphView_t::ViewVertices);
 
         txSleep (10);
-    	}
+        }
 
     txEnd();
     _txExit = true;
@@ -206,5 +206,7 @@ void DrawTree (vec2d pos, double length, double angle)
 
     if (rand() % 5) DrawTree (p, -length * random (0.8, 0.9), angle + random (-0.5, +0.5) + shift.x/50);
     }
+
+
 
 
