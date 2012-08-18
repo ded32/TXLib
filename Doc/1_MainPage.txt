@@ -11,18 +11,18 @@
 
     @section    Description           Назначение
 
-    		TX Library - компактная графическая библиотека для Win32 на С++.
-    		Это небольшая "песочница" для начинающих реализована с целью
-    		помочь им в изучении простейших принципов программирования.
-    		Документация на русском языке.
+                TX Library - компактная графическая библиотека для Win32 на С++.
+                Это небольшая "песочница" для начинающих реализована с целью
+                помочь им в изучении простейших принципов программирования.
+                Документация на русском языке.
 
-    		Философия TX Library - облегчить первые шаги в программировании
-    		и подтолкнуть к творчеству и самостоятельности.
+                Философия TX Library - облегчить первые шаги в программировании
+                и подтолкнуть к творчеству и самостоятельности.
 
-		TX Library is a tiny graphics library for Win32 written in C++.
-		It is a small sandbox for the very beginners to help them to
-		learn basic programming principles. The documentation is
-		currently in Russian.
+                TX Library is a tiny graphics library for Win32 written in C++.
+                It is a small sandbox for the very beginners to help them to
+                learn basic programming principles. The documentation is
+                currently in Russian.
 
     @section    Contents              Разделы системы помощи
 
@@ -309,6 +309,7 @@
     - <a href=https://sourceforge.net/tracker/?func=add&group_id=213688&atid=1026713>
       <b>Предложить улучшение</b></a>
 */
+
 
 
 

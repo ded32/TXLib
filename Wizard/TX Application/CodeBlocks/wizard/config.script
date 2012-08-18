@@ -92,3 +92,6 @@ function RegisterWizard(type, folder, title, category)
                      folder + _T("/wizard.png"),
                      folder + _T("/wizard.xrc"));
 }
+
+
+

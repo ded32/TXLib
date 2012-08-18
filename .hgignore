@@ -1,0 +1,25 @@
+syntax: glob
+
+.hg
+.git*
+_OFF
+Doc/HTML.*
+
+*.chm
+*.log
+*.bak
+*.tmp
+*~
+
+*.obj
+*.o
+*.lo
+*.slo
+
+*.dll
+*.so
+
+*.lib
+*.a
+*.la
+*.lai

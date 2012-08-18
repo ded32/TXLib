@@ -274,3 +274,7 @@ vec PhongLightning (const vec& p, const vec& N, const vec& V,
            specular * lightColor +
            ambientColor;
     }
+
+
+
+

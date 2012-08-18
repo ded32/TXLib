@@ -11,7 +11,7 @@
 set .cmd=ci docs rar update push
 
 set .file=TXLib-$v$.rar.exe
-set .file=%.file:$v: =v%
+set .file=%.file:$v: 0=v%
 set .file=%.file: $=%
 
 set .md5="TXLib Update.md5"
@@ -120,7 +120,7 @@ echo Preparing RAR info...
 %do% echo Text=>>                                                                                %Temp%\~log
 %do% echo Text=     TX Library Setup>>                                                           %Temp%\~log
 %do% echo Text=>>                                                                                %Temp%\~log
-%do% call hg parents --template "Text=     [Version: {branches|nonempty}, Revision: {rev}]" >>   %Temp%\~log
+%do% call hg parents --template "Text=     [Version: {latesttag|nonempty}, Revision: {rev}]" >>  %Temp%\~log
 %do% echo.>>                                                                                     %Temp%\~log
 %do% echo Text=>>                                                                                %Temp%\~log
 %do% echo Text=     $Copyright$| sed32 s/\$//g >> %Temp%\~log
@@ -230,3 +230,7 @@ goto end
 
 :-------------------------------------------------
 :end
+
+
+
+
