@@ -38,12 +38,9 @@ function main (argc, argv)
         if (argv (i) == "/uninstall") Action    = "uninstall";
         }
 
-    var src = FS.GetAbsolutePathName (FS.FolderExists ("Wizard")? "Wizard" : ".");
-    if (src == null || src == "") src = ".";
-
-    var txFolder = FS.GetAbsolutePathName (src + "\\..");
+    var txFolder = FS.GetAbsolutePathName (FS.GetParentFolderName (WScript.ScriptFullName) + "\\..");
     
-    src += "\\" + FilesPath;
+    var src = txFolder + "\\Wizard\\" + FilesPath;
     Debug ("main(): src = " + src);
 
     try { ProcessRegAndLnk (txFolder, src); } catch (e) {}
@@ -51,18 +48,19 @@ function main (argc, argv)
     if (!FS.FolderExists (src)) return Error ("Cannot find Wizard folder " + src);
 
     var ok = 0;
-    ok += VS_Setup  ("10.0", src + "\\VS");
-    ok += VS_Setup  ("9.0",  src + "\\VS");
-    ok += VS_Setup  ("8.0",  src + "\\VS");
-    ok += VS_Setup  ("7.1",  src + "\\VS");
-    ok += VS_Setup  ("7.0",  src + "\\VS");
-    ok += VS6_Setup ("6.0",  src + "\\VS6");
+    ok += VS_Setup  ("11.0", "HKCU", "11.0_Config", src + "\\VS");
+    ok += VS_Setup  ("10.0", "HKCU", "10.0_Config", src + "\\VS");
+    ok += VS_Setup  ("9.0",  "HKLM", "9.0",         src + "\\VS");
+    ok += VS_Setup  ("8.0",  "HKLM", "8.0",         src + "\\VS");
+    ok += VS_Setup  ("7.1",  "HKLM", "7.1",         src + "\\VS");
+    ok += VS_Setup  ("7.0",  "HKLM", "7.0",         src + "\\VS");
+    ok += VS6_Setup ("6.0",  "HKLM", "6.0",         src + "\\VS6");
 
 //  ok && VS_HelpSetup      (src + "\\VS\\Help");
 
     ok += DevCPP_Setup      (src + "\\DevCPP");
     ok += CodeBlocks_Setup  (src + "\\CodeBlocks");
-
+    
     if (!ok) return Error ("Cannot find compiler(s) or errors occured.");
 
     if (Action == "install" && !DebugMode) Shell.Run (txFolder);
@@ -76,10 +74,11 @@ function ProcessRegAndLnk (txFolder, src)
     {                              
     if (Action == "install")
         {
-        Shell.RegWrite ("HKCU\\Software\\TX Library\\ProductDir", txFolder);
-
         CreateShortcut (Desktop + "\\Ярлык для TX.lnk", txFolder, "", "", 
                         "Папка TX Library", src + "\\VS\\TX Application.ico");
+
+        Shell.RegWrite ("HKCU\\Software\\TX Library\\ProductDir", txFolder);
+        Shell.RegWrite ("HKLM\\SOFTWARE\\TX Library\\ProductDir", txFolder);
         }
 
     if (Action == "uninstall")
@@ -88,6 +87,7 @@ function ProcessRegAndLnk (txFolder, src)
         DeleteFile (Startup + "\\TXUpdate.lnk",     DebugMode);
 
         Shell.RegDelete ("HKCU\\Software\\TX Library\\");
+        Shell.RegDelete ("HKLM\\SOFTWARE\\TX Library\\");
         }
     }
 
@@ -95,9 +95,9 @@ function ProcessRegAndLnk (txFolder, src)
 // VS Setup
 //=============================================================================
 
-function VS_Setup (version, src)
+function VS_Setup (version, hive, key, src)
     {
-    var dest = VS_GetRootDir (version, "VC");
+    var dest = VS_GetRootDir (hive, key, "VC");
     Debug ("VS_Setup (" + version + "): dest = " + dest);
 
     if (dest == null) return 0;
@@ -120,15 +120,15 @@ function VS_Setup (version, src)
 
 //-----------------------------------------------------------------------------
 
-function VS_GetRootDir (version, name)
+function VS_GetRootDir (hive, version, name)
     {
     try
         {
-        return Shell.RegRead ("HKLM\\Software\\Microsoft\\VisualStudio\\" + version + "\\Setup\\" + name + "\\ProductDir");
-        }
-
-    catch (e) 
-        {
+        return Shell.RegRead (hive + "\\Software\\Microsoft\\VisualStudio\\" + version + "\\Setup\\" + name + "\\ProductDir");
+        }                       
+                                
+    catch (e)                   
+        {                       
         return null;
         }
     }
@@ -219,9 +219,9 @@ function VS_HelpSetup (src)
 // VS6 Setup
 //=============================================================================
 
-function VS6_Setup (version, src)
+function VS6_Setup (hive, version, src)
     {
-    var dest = VS_GetRootDir (version, "Microsoft Visual C++");
+    var dest = VS_GetRootDir (hive, version, "Microsoft Visual C++");
     Debug ("VS6_Setup (" + version + "): dest = " + dest);
 
     if (dest == null) return 0;
@@ -295,7 +295,7 @@ function DevCPP_GetRootDir()
         {
         var iniFile = FS.GetAbsolutePathName (Shell.SpecialFolders ("Desktop") + 
                                               "\\..\\Application Data\\Dev-Cpp\\DevCPP.ini");
-    	Debug ("DevCPP_GetRootDir(): iniFile = " + iniFile);
+        Debug ("DevCPP_GetRootDir(): iniFile = " + iniFile);
 
         var ini = OpenTextFile (iniFile, "r", false); if (ini == null) return null;
 
@@ -483,7 +483,7 @@ function OpenTextFile (file, mode, required)
     catch (e)
         {
         if (required) throw Error (e, "Cannot open " + file);
-	return null;
+        return null;
         }
     }
 

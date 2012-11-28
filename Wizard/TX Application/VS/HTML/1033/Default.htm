@@ -46,7 +46,7 @@ var Wizard = window.external;
 <!-- ---------------------------------------------------------------------- -->
 
 <body topmargin=30 leftmargin=30 marginheight=30 marginwidth=30
-      bgcolor=#ffaf00 link=#993300 vlink=#993300 alink=#000000
+      background="default.gif" bgcolor=#e7c397 link=#993300 vlink=#993300 alink=#000000
       OnLoad ="OnLoad()" OnKeyDown="OnKey()" OnKeyPress="OnPress()">
 
 <style type='text/css'>
@@ -82,7 +82,7 @@ input { size:  100;  }
 <tr><td></td><td>                     <P><input  id="PROJECT_EMPTY"       type=checkbox> Пустой  проект (я создам и добавлю файлы сам)</P><td>
 <tr><td height=20px></td></tr>
 <tr><td></td>                        <td align=right>
-                                         <button id="HelpBtn"             onClick="OnBtnHelp()">                  &nbsp;Помощь     </button>&nbsp;&nbsp;	
+                                         <button id="HelpBtn"             onClick="OnBtnHelp()">                  &nbsp;Помощь     </button>&nbsp;&nbsp;
                                          <button id="FinishBtn"           onClick="OnWizFinish   (document)">        <b>Создать</b></button>&nbsp;&nbsp;
                                          <button id="CancelBtn"           onClick="Wizard.Finish (document, 'cancel')"> Отменить   </button></td></tr>
 </table>

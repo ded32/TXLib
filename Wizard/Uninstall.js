@@ -31,3 +31,4 @@ function Ask (msg)
     return Shell.Popup (msg + "    ", 60, "Предупреждение", 
                         YesNo + Stop) == Yes;
     }
+
