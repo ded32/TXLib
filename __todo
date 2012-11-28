@@ -1,4 +1,6 @@
 
+merge with: N:\__Mirror\Dev\TX.72\TX\TXLib.h 
+
 
 CHG? InvalidateRect to all drawing funcs
 
@@ -13,7 +15,6 @@ ADD  doc: Fun texts from Fun\Ded to help
 ADD  doc: GCC 3.x debug: 1) missing initializers -- is normal; release: 1) missing initializers; 2) will never be executed -- are normal
 ADD  doc: warning level & disablings explained in help
 ADD  doc: "Ошибка в библиотеке"
-FIX  doc: russify help
 ADD  doc: многофайловый проект, многооконность, anon namespace
 
 Если твоя программа не работает - проверь, включена ли машина.
@@ -53,6 +54,8 @@ ADD  nanoTX
 
 ---
 
+FIX+ txCreateWindow with window stype ~WS_CAPTION
+FIX+ doc: russify help
 CHG+ _txNotifyIcon to public
 ADD+ doc: link to storage.ded32.net.ru in help mainpage to log help reads: pic-chm, pic-chm-ref, pic-htm
 FIX+ TX_ macro breaks TXLIB #include guard

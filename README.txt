@@ -17,15 +17,15 @@ TX Library - компактная библиотека двумерной гра
 Исходный текст библиотеки может использоваться для иллюстрации элементарных приемов работы с окнами Windows,
 механизмом сообщений Win32, графикой, работой с меню, растровыми образами, простейшей многопоточностью. 
 
-Author: Ded (Ilya Dedinsky, http://ded32.net.ru)
+Author: Ded (Ilya Dedinsky, http://txlib.ru)
 
-Официальный сайт библиотеки: http://ded32.net.ru.
+Официальный сайт библиотеки: http://txlib.ru.
 
 См. также страницу проекта на SourceForge: http://txlib.sourceforge.net
 и на Google Code: http://code.google.com/p/txlib
 
 Это альфа-версия. Для использования требуется согласование с автором библиотеки.
-Правила использования материалов библиотеки и сайта см. на официальном сайте: http://ded32.net.ru/index/0-6.
+Правила использования материалов библиотеки и сайта см. на официальном сайте: http://txlib.ru/index/0-6.
 
 Трекеры на SourceForge:
 Сообщить об ошибке:   https://sourceforge.net/tracker/?func=add&group_id=213688&atid=1026710
@@ -110,4 +110,3 @@ Author: Ded (Ilya Dedinsky, http://ded32.net.ru)
     - Ubuntu 10.04, 11.04 + Wine 1.2.2+
   - MacOS X + Wine
     - Snow Leopard 10.6.8 + Wine 1.4-rc2
-

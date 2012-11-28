@@ -21,14 +21,14 @@
 //!          sandbox for the very beginners to help them to learn basic programming principles.
 //!          The documentation is currently in Russian.
 //!
-//!          Официальный сайт библиотеки: <a href=http://ded32.net.ru>ded32.net.ru.</a>
+//!          Официальный сайт библиотеки: <a href=http://txlib.ru>txlib.ru.</a>
 //!
 //!          См. также <a href=http://txlib.sourceforge.net>страницу проекта на SourceForge.</a>
 //!
 //! @warning <b>Это альфа-версия.
 //!          Для использования требуется согласование с автором библиотеки.</b><br><br>
 //!          Правила использования материалов библиотеки и сайта см. на
-//!          <a href=http://ded32.net.ru/index/0-6> официальном сайте.</a>
+//!          <a href=http://txlib.ru/index/0-6> официальном сайте.</a>
 //!
 //! @par     Трекеры на SourceForge:
 //!        - <a href=https://sourceforge.net/tracker/?func=add&group_id=213688&atid=1026710>
@@ -67,7 +67,7 @@
 //!
 //! @code
 //!            #define _TX_VERSION "TXLib [Version: 1.72a, Revision 50]" (пример)
-//!            #define _TX_AUTHOR  "Copyright (C) Ded (Ilya Dedinsky, http://ded32.net.ru)"
+//!            #define _TX_AUTHOR  "Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru)"
 //! @endcode
 //!            Эти константы автоматически обновляются при изменении версии.
 //!
@@ -76,8 +76,8 @@
 //}-------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VERSION           _TX_V_FROM_CVS ($versioninfo$)
-#define _TX_AUTHOR            _TX_A_FROM_CVS ($versioninfo$)
+#define _TX_VERSION           _TX_V_FROM_CVS ($VersionInfo$)
+#define _TX_AUTHOR            _TX_A_FROM_CVS ($VersionInfo$)
 
 //! @}
 //{-------------------------------------------------------------------------------------------
@@ -98,7 +98,7 @@
 //! @hideinitializer
 //}-------------------------------------------------------------------------------------------
 
-#define _TX_VER               _TX_v_FROM_CVS ($versioninfo$)
+#define _TX_VER               _TX_v_FROM_CVS ($VersionInfo$)
 
 //}
 //--------------------------------------------------------------------------------------------
@@ -254,6 +254,10 @@
 #endif
 
 #if  defined (_MSC_VER) && (_MSC_VER >= 1400)   // MSVC 8 (2005) or greater
+
+    #pragma warning (disable: 26135)            // missing locking annotation
+    #pragma warning (disable: 28125)            // the function must be called from within a try/except block
+    #pragma warning (disable: 28159)            // consider using another function instead
 
     #pragma setlocale               ("russian") // Set source file encoding, see also _TX_CP
 
@@ -1414,7 +1418,8 @@ int txGetTextExtentY (const char text[]);
 //! @see     txTextOut(), txSelectFont(), txGetTextExtent(), txGetTextExtentX(), txGetTextExtentY()
 //! @usage @code
 //!          txSetTextAlign (TA_RIGHT);
-//!
+//!          txTextOut (700, 100, "Чтобы доступ был легок и быстр,");
+//!          txTextOut (700, 150, "Переменную клади в регистр.");
 //!          txSetTextAlign();
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -1434,6 +1439,8 @@ unsigned txSetTextAlign (unsigned align = TA_CENTER | TA_BASELINE);
 //! @usage @code
 //!          if (txFontExist ("Comic Sans MS")) txSelectFont ("Comic Sans MS", 30);
 //!          else                               txSelectFont ("Times", 30);
+//!
+//!          txTextOut (100, 100, "Комик ли Санс?");
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
@@ -2316,7 +2323,7 @@ bool txNotifyIcon (unsigned flags, const char title[], const char format[], ...)
 //!
 //!          Функция формирует сообщение по правилам printf() и передает его в OutputDebugString().
 //!          Ее вывод можно перехватить отладчиком или утилитами-логгерами, например,
-//!          <a href=http://technet.microsoft.com/ru-ru/sysinternals/bb896647%28en-us%29.aspx>DebugView</a>.
+//!          <a href=http://technet.microsoft.com/ru-ru/sysinternals/bb896647%28en-us%29.aspx>DbgView</a>.
 //!          Если этого не сделать, и не задать первый символ @c '\\a' (см. ниже), то о сообщении никто
 //!          не узнает.
 //! @note
@@ -3127,33 +3134,34 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
 //! @{
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Service
-//! @brief   Устанавливает дополнительный обработчик оконных сообщений Windows.
+//! @brief   Устанавливает альтернативную функцию обработки оконных сообщений Windows (оконную
+//!          функцию) для окна TXLib.
 //!
-//! @param   handler  Новый дополнительный обработчик событий окна. @n
-//!                   Если NULL, то дополнительный обработчик удаляется.
+//! @param   wndProc  Новая оконная функция окна TXLib. @n
+//!                   Если NULL, то текущая оконная функция удаляется и устанавливается стандартная.
 //!
-//! @return  Адрес предыдущего дополнительного обработчика сообщений окна.
+//! @return  Адрес предыдущей оконной функции для окна TXLib.
 //!
-//!          Обработчик будет вызываться @b до обработки события средствами TXLib.
-//!          Он должен быть функцией со следующим прототипом:
+//!          Заданная оконная функция будет вызываться @b до обработки события средствами TXLib.
+//!          Она должна быть функцией со следующим прототипом:
 //! @code
 //!          LRESULT CALLBACK NewWndProc (HWND window, UINT message, WPARAM wParam, LPARAM lParam);
 //! @endcode
 //!
-//! @warning Обработчик вызывается из вспомогательного (второго) потока, создаваемого
+//! @warning Оконная функция будет вызываться из вспомогательного (второго) потока, создаваемого
 //!          @ref txCreateWindow(). Это @b не тот же самый поток, в котором выполняется
 //!          main(). В связи с этим будьте внимательны при работе с глобальными переменными
 //!          или их аналогами, т.к. может возникнуть "гонка за данными" (race condition).
 //!
-//! @warning Если обработчик вернет значение, не равное 0, стандартная обработка
-//!          сообщений средствами TXLib не произведется. Возможно, оно даже не
-//!          сможет нормально закрыться. Придется завершать программу с помощью
+//! @warning Если оконная функция вернет значение, не равное 0, то стандартная обработка
+//!          сообщений средствами TXLib @b не будет произведена. Из-за этого, возможно,
+//!          окно даже не сможет нормально закрыться. Придется завершать программу с помощью
 //!          Alt-Ctrl-Del из диспетчера задач, или из более продвинутого диспетчера
 //!          <a href=http://technet.microsoft.com/en-us/sysinternals/bb896653.aspx>
-//!          Process Explorer</a>. Если Вы берете на себя обработку оконного сообщения,
+//!          Process Explorer</a>. Если Вы берете на себя обработку оконных сообщений,
 //!          делайте ее по правилам Win32 (см. MSDN), включая вызов DefWindowProc().
 //!
-//! @note    Совсем поменять оконную функцию можно с помощью SetWindowLong() или SetWindowLongPtr():
+//! @note    Полностью поменять оконную функцию можно с помощью SetWindowLong() или SetWindowLongPtr():
 //! @code
 //!          WNDPROC OldWndProc = (WNDPROC) SetWindowLongPtr (txWindow(), GWL_WNDPROC, (LONG_PTR) NewWndProc);
 //! @endcode
@@ -3162,29 +3170,29 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
 //!
 //! @see     txCreateWindow(), txDialog, txInputBox()
 //! @usage @code
-//!          LRESULT CALLBACK MyWndHandler (HWND window, UINT message, WPARAM wParam, LPARAM lParam);
+//!          LRESULT CALLBACK MyWndProc (HWND window, UINT message, WPARAM wParam, LPARAM lParam);
 //!
 //!          int main()
 //!              {
 //!              txCreateWindow (800, 600);
 //!
-//!              txSetWindowProc (MyWndHandler);
+//!              txSetWindowsHook (MyWndProc);
 //!
 //!              txCircle (txGetExtentX()/2, txGetExtentY()/2, 100);
 //!
 //!              printf ("\n" "Still working ");
 //!              }
 //!
-//!          LRESULT CALLBACK MyWndHandler (HWND window, UINT message, WPARAM wParam, LPARAM lParam)
+//!          LRESULT CALLBACK MyWndProc (HWND window, UINT message, WPARAM wParam, LPARAM lParam)
 //!              {
 //!              static int i = 0;
 //!              if (i++ % 10 == 0) printf ("\b" "%c", "-\\|/" [i/10 % 4]);  // Прропппеллллерррр
-//!              return 0;
+//!              return 0; // Продолжить обработку сообщения средствами TXLib
 //!              }
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
-WNDPROC txSetWindowHandler (WNDPROC handler = NULL);
+WNDPROC txSetWindowsHook (WNDPROC wndProc = NULL);
 
 //{-------------------------------------------------------------------------------------------
 //! @ingroup Service
@@ -3347,8 +3355,10 @@ unsigned       _txConsoleMode             = SW_HIDE;
 //!          проекта. При их создании @a не надо указывать в стиле WS_SYSMENU. Для закрытия
 //!          вспомогательных окон используется txDestroyWindow().
 //! @usage @code
-//!          _txWindowStyle &= ~WS_SYSMENU; // Главное окно без системного меню
-//!          txCreateWindow (800, 600);
+//!          _txWindowStyle &= ~WS_CAPTION; // FullScreen: окно без заголовка, размером с экран
+//!          txCreateWindow (GetSystemMetrics (SM_CXSCREEN), GetSystemMetrics (SM_CYSCREEN));
+//!
+//!          printf ("Закройте меня через Alt+F4\n");
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
@@ -3477,15 +3487,15 @@ const unsigned _TX_BIGBUFSIZE             = 2048;
 //!          По умолчанию трассировка ведется через функцию OutputDebugString(),
 //!          ее вывод можно перехватить утилитами-логгерами, например,
 //!          <a href=http://technet.microsoft.com/ru-ru/sysinternals/bb896647%28en-us%29.aspx>
-//!          DebugView</a>. Это можно изменить, переопределив макрос _TX_TRACE.
+//!          DbgView</a>. Это можно изменить, переопределив макрос _TX_TRACE.
 //!
 //! @warning Трассировка @b очень тормозит выполнение программы, особенно при отладке в
-//!          Microsoft Visual Studio. В этом случае лучше пользоваться DebugView (см. выше)
+//!          Microsoft Visual Studio. В этом случае лучше пользоваться DbgView (см. выше)
 //!          и запускать отлаживаемую программу отдельно, а не из-под отладчика Visual Studio.
 //!
 //!          _TX_ALLOW_TRACE и _TX_TRACE задаются перед включением TXLib.h в программу.
 //! @usage @code
-//!          #define  _TX_ALLOW_TRACE  // Для просмотра трассы запустить DebugView
+//!          #define  _TX_ALLOW_TRACE  // Для просмотра трассы запустить DbgView
 //!          #include "TXLib.h"
 //! @endcode
 //! @hideinitializer
@@ -3564,7 +3574,7 @@ struct _txFuncEntry
 //!          int main()
 //!              {
 //!              ...
-//!              TX_TRACE  // Через DebugView увидим имя файла и номер выполняемой строки
+//!              TX_TRACE  // Через DbgView увидим имя файла и номер выполняемой строки
 //!              ...
 //!              }
 //! @endcode
@@ -3703,7 +3713,8 @@ $       LeaveCriticalSection (cs_); cs_ = NULL;
 
 //{-------------------------------------------------------------------------------------------
 //! @brief   Позволяет проверить, заблокировалась секция или нет
-//! @usage   См. в txAutoLock::AutoLock (CRITICAL_SECTION&, bool)-------------------------------------------------------------------------------------------
+//! @usage   См. в txAutoLock::AutoLock (CRITICAL_SECTION&, bool)
+//}-------------------------------------------------------------------------------------------
 
     operator bool () const
         {
@@ -4334,7 +4345,7 @@ FARPROC _txDllImport (const char dllFileName[], const char funcName[], bool requ
     if (!dll) return NULL;
 
     FARPROC addr = GetProcAddress (dll, funcName);
-    if (!addr && required) TX_ERROR ("\a" "Cannot import \"%s\" from library \"%s\""_ funcName _ dllFileName);
+    if (!addr && required) TX_ERROR ("\a" "Cannot import \"%s\" from library \"%s\"" _ funcName _ dllFileName);
 
     return addr;
     }
@@ -4570,6 +4581,7 @@ DECLARE_INTERFACE_ (IShellLinkDataList, IUnknown)
     virtual ~IShellLinkDataList();
     };
 
+const GUID IID_IShellLink         = {0x000214ee, 0x0000, 0x0000, {0xc0,0x00,0x00,0x00,0x00,0x00,0x00,0x46}};
 const GUID IID_IShellLinkDataList = {0x45e2b4ae, 0xb1c3, 0x11d0, {0xb9,0x2f,0x00,0xa0,0xc9,0x03,0x12,0xe1}};
 const GUID IID_IPersistFile       = {0x0000010b, 0x0000, 0x0000, {0xc0,0x00,0x00,0x00,0x00,0x00,0x00,0x46}};
 
@@ -4623,7 +4635,7 @@ bool             _txExit                = false;  // Indicate that exit() is act
 POINT            _txMousePos            = {0};    // Ask Captn Obviouos about it. See txCanvas_OnMOUSE()
 int              _txMouseButtons        =  0;
 
-WNDPROC          _txAltWndProc          = NULL;   // Альтернативная оконная функция. См. txSetWindowHandler().
+WNDPROC          _txAltWndProc          = NULL;   // Альтернативная оконная функция. См. txSetWindowsHook().
 
 const char*      _txFile                = NULL;   // Current execution point tracking, see $ macro
 int              _txLine                = 0;
@@ -4717,7 +4729,8 @@ $   _txCanvas_Thread =          CreateThread   (NULL, 0, (PTHREAD_START_ROUTINE)
 
 $   if (!_txCanvas_Thread) return TX_DEBUG_ERROR ("\a" "Cannot start canvas thread."), (HWND)NULL;
 
-$   _txWaitFor (_txRunning);
+$   for (int i = 0; i < 10; i++) _txWaitFor (_txRunning);
+
 $   if (!_txRunning)       return TX_DEBUG_ERROR ("\a" "Cannot create canvas window."),(HWND)NULL;
 
 $   if (!txOK())           return TX_DEBUG_ERROR ("\a" "Canvas window is not OK."),    (HWND)NULL;
@@ -4911,13 +4924,13 @@ $1  static wchar_t title [_TX_BUFSIZE] = L"TXLib";
 $   tools::getWindowText (wnd, title, _TX_BUFSIZE);
 $   int len = (int) wcslen (title);
 
-$   MultiByteToWideChar (_TX_CP, 0, " [ЗАВЕРШЕНО]", -1, title + len, SIZEARR (title) - len);
+$   MultiByteToWideChar (_TX_CP, 0, " [ЗАВЕРШЕНО]", -1, title + len, (int) SIZEARR (title) - len);
 
 $   tools::setWindowText (wnd, title);
 $   tools::getWindowText (wnd, title, _TX_BUFSIZE);
 $   if (title [len+2] == /* 'З' */ (wchar_t) 0x0417) return 0;
 
-$   MultiByteToWideChar (_TX_CP, 0, " [FINISHED]",  -1, title + len, SIZEARR (title) - len);
+$   MultiByteToWideChar (_TX_CP, 0, " [FINISHED]",  -1, title + len, (int) SIZEARR (title) - len);
 
 $   tools::setWindowText (wnd, title);
 $   tools::getWindowText (wnd, title, _TX_BUFSIZE);
@@ -5098,7 +5111,7 @@ $   char* ext   = strrchr (fullName,  '.'); if (!ext)   ext   = fullName + strle
 
 $   size_t sz = sizeof (fullName) - (ext - fullName) - 1;
 
-    #ifdef _CRT_SECURE_CPP_OVERLOAD_SECURE_NAMES
+    #if defined (_CRT_SECURE_CPP_OVERLOAD_SECURE_NAMES) && _CRT_SECURE_CPP_OVERLOAD_SECURE_NAMES
 $   strncpy_s (ext, sz, " - TXLib", sz);
     #else
 $   strncpy   (ext,     " - TXLib", sz);
@@ -5150,6 +5163,10 @@ $   bool isMaster = !!(GetWindowLong (txWindow(), GWL_STYLE) & WS_SYSMENU);
 
 $   _txRunning = true;
 
+$   ShowWindow          (txWindow(), SW_SHOW);
+$   SetForegroundWindow (txWindow());
+$   UpdateWindow        (txWindow());
+
 $   MSG msg = {0};
 $   while (GetMessage (&msg, NULL, 0, 0))
         {
@@ -5200,7 +5217,7 @@ $   wc.hbrBackground = (HBRUSH) Win32::GetStockObject (HOLLOW_BRUSH);
 $   wc.lpszClassName = className;
 
 $   ATOM wndclass = RegisterClassEx (&wc);
-$   if (!wndclass) return TX_DEBUG_ERROR ("RegisterClass (\"%s\") failed"_ className), (HWND) NULL;
+$   if (!wndclass) return TX_DEBUG_ERROR ("RegisterClass (\"%s\") failed" _ className), (HWND) NULL;
 
 $   int centered = false;
 $   if (size->cx < 0 && size->cy < 0) { size->cx *= -1; size->cy *= -1; centered = true; }
@@ -5214,7 +5231,7 @@ $   HWND wnd = CreateWindow (className, txGetModuleFileName (false), _txWindowSt
                              centered? scr.cy/2 - sz.cy/2 : CW_USEDEFAULT,
                              sz.cx, sz.cy, NULL, NULL, NULL, NULL);
 
-$   if (!wnd || !txWindow()) return TX_DEBUG_ERROR ("Cannot create canvas: CreateWindowEx (\"%s\") failed"_
+$   if (!wnd || !txWindow()) return TX_DEBUG_ERROR ("Cannot create canvas: CreateWindowEx (\"%s\") failed" _
                                                      className), (HWND) NULL;
 $   HMENU menu = GetSystemMenu (txWindow(), false);
 $   if (!menu) return txWindow();
@@ -5233,10 +5250,6 @@ $   if (console && (proc == GetCurrentProcessId() || _txIsParentWaitable()))
 
 $   CheckMenuItem (menu, _TX_IDM_CONSOLE,
                    console? (IsWindowVisible (console)? MF_CHECKED : 0) : MF_DISABLED);
-
-$   ShowWindow          (txWindow(), SW_SHOW);
-$   SetForegroundWindow (txWindow());
-$   UpdateWindow        (txWindow());
 
 $   return txWindow();
     }
@@ -5420,7 +5433,7 @@ $   if (!locked) TX_DEBUG_ERROR ("Cannot lock GDI to free resources");
     // Освобождаем пользовательские ресурсы
 
 $   std::vector <HDC>& dcs = _txCanvas_UserDCs;
-$   if (dcs.size()) txNotifyIcon (NIIF_ERROR, NULL, "Вы забыли освободить %d HDC.", dcs.size());
+$   if (dcs.size()) txNotifyIcon (NIIF_ERROR, NULL, "Вы забыли освободить %d HDC.", (int) dcs.size());
 
 $   struct _txBuffer_Delete_Wrapper { static bool func (HDC dc)
         {
@@ -5619,7 +5632,7 @@ $   _snprintf_s (text, sizeof (text) - 1 _TX_TRUNCATE,
 
                  "\n" "Developed with:" "\n\n"
                  "The Dumb Artist Library (TX Library) - " _TX_VERSION "\n" _TX_AUTHOR "\n"
-                 "See license on: http://ded32.net.ru/index/0-6" "\n\n"
+                 "See license on: http://txlib.ru/index/0-6" "\n\n"
 
                  "TXLib file:" "\t" __FILE__ "\n"
                  "Compiled:"   "\t" __DATE__ " " __TIME__ ", " _TX_BUILDMODE ", " __TX_COMPILER__ "\n"
@@ -5637,7 +5650,7 @@ $   txMessageBox (text, "About " ABOUT_NAME_, MB_ICONINFORMATION);
     // And a bit of HTTP-code in C++ function:
 
     goto http;
-    http://ded32.net.ru                               // See valuable refs here :)
+    http://txlib.ru                                  // See valuable refs here :)
 
 $   return true;
 
@@ -5827,8 +5840,8 @@ $       HANDLE out = GetStdHandle (STD_OUTPUT_HANDLE);
 $       Win32::CONSOLE_FONT_INFOEX info = { sizeof (info) };
 $       if (!Win32::GetCurrentConsoleFontEx (out, false, &info)) return false;
 
-$       info.FontFamily = 0x36;                       // Unicode fixed-pitch
-$       if (!*info.FaceName) info.dwFontSize.Y += 2;  // Terminal font is too small
+$       info.FontFamily = 0x36;                                                    // Unicode fixed-pitch
+$       if (!*info.FaceName) info.dwFontSize.Y = (SHORT) (info.dwFontSize.Y + 2);  // Terminal font is too small
 $       wcsncpy_s (info.FaceName, L"Lucida Console", SIZEARR (info.FaceName));
 
 $       return !!Win32::SetCurrentConsoleFontEx (out, false, &info);
@@ -5918,7 +5931,7 @@ $   HRESULT init = Win32::CoInitialize (NULL);
 
     _TX_TRY
         {
-$       _TX_CHECKED (Win32::CoCreateInstance (CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, (void**) &shellLink));
+$       _TX_CHECKED (Win32::CoCreateInstance (CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, Win32::IID_IShellLink, (void**) &shellLink));
 $       if (!shellLink) _TX_FAIL;
 
 $       shellLink->SetPath (fileToLink);
@@ -6116,9 +6129,9 @@ $       return;
     #undef GET_DESCR_
 
     if (sig == SIGFPE && fpe)
-        _txError (NULL, 0, NULL, "signal (%d, 0x%02X): %s, %s."_ sig _ fpe _ sSig _ sFPE);
+        _txError (NULL, 0, NULL, "signal (%d, 0x%02X): %s, %s." _ sig _ fpe _ sSig _ sFPE);
     else
-        _txError (NULL, 0, NULL, "signal (%d): %s"             _ sig       _ sSig);
+        _txError (NULL, 0, NULL, "signal (%d): %s"              _ sig       _ sSig);
 
     _txExit = true;
 
@@ -6249,10 +6262,10 @@ const char* _txError (const char file[] /*= NULL*/, int line /*= 0*/, const char
     if (!IsDebuggerPresent()) exit (EXIT_FAILURE);
 
 //  vvvvvvvvvvvvvvvvvv
-    DebugBreak();   //>>> Вы в отладчике, есть шанс посмотреть переменные и разобраться.
+    DebugBreak();   //>>> Вы в отладчике. Есть шанс посмотреть переменные и разобраться.
 //  ^^^^^^^^^^^^^^^^^^
 
-    return what;       // Выходите из функции пошаговой отладкой. Смотрите на стек вызовов.
+    return what;    //>>> Выходите из функции пошаговой отладкой. Смотрите на стек вызовов.
     }
 
 //--------------------------------------------------------------------------------------------
@@ -6806,7 +6819,7 @@ $   txAutoLock _lock;
 $   dcs.push_back (dc);
 
 $   if (dcs.size() >= _TX_BUFSIZE)
-        { $ txNotifyIcon (NIIF_WARNING, NULL, "Вы загрузили уже %d HDC, системе может стать плохо.", dcs.size()); }
+        { $ txNotifyIcon (NIIF_WARNING, NULL, "Вы загрузили уже %d HDC, системе может стать плохо.", (int) dcs.size()); }
 
 $   return dc;
     }
@@ -7141,9 +7154,9 @@ $   return !!Win32::PlaySound (filename, NULL, mode);
 // +--<<< Это вряд ли имеет отношение к тому, что вы ищете :)
 // V      Смотрите не только вверх, но и вниз
 
-WNDPROC txSetWindowHandler (WNDPROC handler /*= NULL*/)
+WNDPROC txSetWindowsHook (WNDPROC wndProc /*= NULL*/)
     {
-$1  WNDPROC old = _txAltWndProc; _txAltWndProc = handler;
+$1  WNDPROC old = _txAltWndProc; _txAltWndProc = wndProc;
 $   return  old;
     }
 
@@ -7211,7 +7224,7 @@ $   while (samples++ < maxSamples)
 $       LARGE_INTEGER cur = {{0}};
 $       QueryPerformanceCounter (&cur) asserted;
 
-$       double t = 1000.0 * (cur.QuadPart - start.QuadPart) / freq.QuadPart;
+$       double t = 1000.0 * (double) (cur.QuadPart - start.QuadPart) / (double) freq.QuadPart;
 $       if (t > maxTime) break;
 
         // Draw test scene
@@ -7574,7 +7587,7 @@ $       *pw++ = (WORD) (LOWORD ((ptrdiff_t) wclass));
         }
     else if (wclass)
         {
-$       pw  += MultiByteToWideChar (_TX_CP, 0, (char*) wclass, -1, (wchar_t*) pw,
+$       pw  += MultiByteToWideChar (_TX_CP, 0, const_cast <char*> (wclass), -1, (wchar_t*) pw,
                                    (int) (bufsize? bufsize - ((char*)pw - (char*)dlgTemplatePtr) : 0xFFFF));
         }
     else
@@ -7865,6 +7878,12 @@ struct _txSaveConsoleAttr
     #pragma warning (default: 4663)             // C++ language change: to explicitly specialize class template
     #pragma warning (default: 4702)             // unreachable code
 
+    #if (_MSC_VER >= 1400)                      // MSVC 8 (2005) or greater
+    #pragma warning (default: 26135)            // missing locking annotation
+    #pragma warning (default: 28125)            // the function must be called from within a try/except block
+    #pragma warning (default: 28159)            // consider using another function instead
+    #endif
+
     // This warning really occur at end of compilation, so still block it.
 
     #pragma warning (disable: 4514)             // unreferenced inline function has been removed
@@ -7906,33 +7925,14 @@ struct _txSaveConsoleAttr
                                                                                               
                                                                                               
                                                                                               
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                   
+                                              
+
+
+
+
+
+
+
 
 
 

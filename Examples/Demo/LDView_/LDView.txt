@@ -15,7 +15,7 @@
 /*! @mainpage
     @brief   LDView application
     @version [Version 1.0]
-    @author  Copyright (C) Ded, 2010 (Ilya Dedinsky, http://ded32.net.ru)
+    @author  Copyright (C) Ded, 2010 (Ilya Dedinsky, http://txlib.ru)
     @date    2010
 
     @section GeneralInfo LDDraw Application
@@ -68,6 +68,4 @@
     @image html LDView_professor.jpg "The Professor"
 
 */
-
-
 

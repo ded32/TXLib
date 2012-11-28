@@ -18,6 +18,7 @@ PREDEFINED             = _TX_CHECK_RESULT= \
                          _TX_CHECK_FORMAT(n)=
 
 EXCLUDE_PATTERNS       = */_OFF/* */.hg/* */Wizard/*
+EXCLUDE                = README.txt
 
 EXTRACT_ALL            = YES
 INTERNAL_DOCS          = YES
@@ -116,8 +117,6 @@ ALIASES                = "title=<dl><dt>" \
                          "ss=&nbsp;&nbsp;"
 
 #---------------------------------------------------------------------------
-
-EXCLUDE                =
 
 IMAGE_PATH             = . img images doc
 
@@ -350,7 +349,4 @@ WARN_IF_DOC_ERROR      = YES
 WARN_NO_PARAMDOC       = YES
 WARN_FORMAT            = "$file:$line: $text"
 WARN_LOGFILE           =
-
-
-
 
