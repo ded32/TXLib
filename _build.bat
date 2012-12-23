@@ -10,9 +10,7 @@
 
 set .cmd=ci docs rar update push
 
-set .file=TXLib-$v$.rar.exe
-set .file=%.file:$v: 0=v%
-set .file=%.file: $=%
+set .file=TXLib-v0172a.rar.exe
 
 set .md5="TXLib Update.md5"
 
@@ -111,10 +109,11 @@ goto end
 :rar
 echo Preparing RAR info...
 
+:@echo on
 %do% echo Title=Установка TX Library>                                                            %Temp%\~log
-%do% echo Path=.\TX>>                                                                            %Temp%\~log
-%do% echo Overwrite=1>>                                                                          %Temp%\~log
-%do% echo Setup=WScript Wizard\Setup.js>>                                                        %Temp%\~log
+%do% echo Path=.\.>>                                                                             %Temp%\~log
+%do% echo Overwrite=1 >>                                                                         %Temp%\~log
+%do% echo Setup=WScript TX\Wizard\Setup.js>>                                                     %Temp%\~log
 %do% echo.>>                                                                                     %Temp%\~log
 %do% echo Text=     Установка TX Library>>                                                       %Temp%\~log
 %do% echo Text=>>                                                                                %Temp%\~log
@@ -123,7 +122,7 @@ echo Preparing RAR info...
 %do% call hg parents --template "Text=     [Version: {latesttag|nonempty}, Revision: {rev}]" >>  %Temp%\~log
 %do% echo.>>                                                                                     %Temp%\~log
 %do% echo Text=>>                                                                                %Temp%\~log
-%do% echo Text=     $Copyright$| sed32 s/\$//g >> %Temp%\~log
+%do% echo Text=     Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) mail@txlib.ru>>          %Temp%\~log
 %do% echo Text=>>                                                                                %Temp%\~log
 %do% echo Text=     Внимание! Это альфа-версия.>>                                                %Temp%\~log
 %do% echo Text=     Для использования требуется согласование>>                                   %Temp%\~log
@@ -132,24 +131,28 @@ echo Preparing RAR info...
 %do% echo Text=>>                                                                                %Temp%\~log
 %do% echo Text=     Revisions log:>>                                                             %Temp%\~log
 %do% echo Text=>>                                                                                %Temp%\~log
+:@echo off
 
 %do% call hg log | sed32 "s/^^/Text\=     /" >> %Temp%\~log
 
 echo Exporting the archive...
-%do% call hg archive __archive
+%do% call hg archive __archive\TX
 
 echo Making RAR (%.file%)...
 
-%do% cd __archive
+%do% cd __archive\TX
 
 %do% del _* >> %log% 2>>&1
-%do% attrib +h  .hg_*.*
+%do% attrib +h .hg*.*
+%do% attrib +h .hg*
 
-%do% ren         "TXLib-*.*"   "TXLib *.*"       >> %log% 2>>&1
-%do% copy     "..\TXLib-*.chm" "TXLib *.chm"     >> %log% 2>>&1
-%do% copy "..\Dev\TXLib-*.chm" "Dev\TXLib *.chm" >> %log% 2>>&1
+%do% ren            "TXLib-*.*"   "TXLib *.*"       >> %log% 2>>&1
+%do% copy     "..\..\TXLib-*.chm" "TXLib *.chm"     >> %log% 2>>&1
+%do% copy "..\..\Dev\TXLib-*.chm" "Dev\TXLib *.chm" >> %log% 2>>&1
 
 %do% xcopy/s %Temp%\Doxygen\HTML Doc\HTML.ru /i  >> %log% 2>>&1
+
+%do% cd..
 
 %do% del                           ..\%.file%               >> %log% 2>>&1
 %do% rar a -r -s -sfx -rr5p -av -k ..\%.file% -z%Temp%\~log >> %log% 2>>&1
@@ -179,6 +182,8 @@ echo Copying files for TXUpdate...
 %do% for /r %%1 in (*.*) do (set .f=%%~1) & (set .f=!.f:%cd%\=!) & (set .f=!.f:\=/!) & (%do% md5sum "!.f!" >> %.md5%)
 %do% attrib +h %.md5%
 
+call ..\..\..\_OFF\Bin\ftp-push-update >> %log% 2>>&1
+
 %do% popd
 
 goto end
@@ -187,7 +192,7 @@ goto end
 :push
 echo Pushing to Google Code...
 
-%do% call _OFF\Bin\hg-push
+call _OFF\Bin\hg-push
 
 goto end
 
@@ -195,6 +200,9 @@ goto end
 :push-doc
 :push-docs
 echo Pushing docs to Masterhost...
+
+%do% rd/s/q                      Doc\HTML.ru     >> %log% 2>>&1
+%do% xcopy/s %Temp%\Doxygen\HTML Doc\HTML.ru /i  >> %log% 2>>&1
 
 call _OFF\Bin\ftp-push-docs >> %log% 2>>&1
 
@@ -220,8 +228,8 @@ echo Making AutoUpdate pack...
 %do% echo Setup=WScript UpdateSetup.js>>                                           %Temp%\~log
 
 %do% pushd Wizard\_OFF\TXUpdate
-%do% del              ..\..\..\%.file%               >> %log% 2>>&1
-%do% rar a -r -s -sfx ..\..\..\%.file% -z%Temp%\~log >> %log% 2>>&1
+%do% del                         ..\..\..\%.file%               >> %log% 2>>&1
+%do% rar a -r -s -sfx -av -rr10p ..\..\..\%.file% -z%Temp%\~log >> %log% 2>>&1
 %do% popd
 
 %do% move /y %.file% _OFF\Public
@@ -230,7 +238,3 @@ goto end
 
 :-------------------------------------------------
 :end
-
-
-
-

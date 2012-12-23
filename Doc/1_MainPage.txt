@@ -4,7 +4,9 @@
 //}============================================================================
 
 /*! @mainpage
+
     @section    MainPage              Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib)
+
                 $Version$
                 $Date$
                 $Copyright$
@@ -66,6 +68,18 @@
               - <a href="http://code.google.com/p/txlib/source/browse">Трекер VCS</a>
            -    <a href="http://dl.dropbox.com/u/1557330/TXLib/TXLib-Update.rar.exe">Автообновление</a>
                 <a href="http://sourceforge.net/projects/txlib/files/TXLib/TXLib-Update.rar.exe/download">(Зеркало)</a>
+
+    @section    Screenshots           Скриншоты
+
+    @table
+    @tr @image html Example03.png    "Example03.cpp: Простейшая программа"
+    @td @image html Movie.png        "Movie.cpp: Мультфильм"
+    @tr @image html Shaker.png       "Shaker.cpp: Простая физическая модель движения"
+    @td @image html Phong.jpg        "Phong.cpp: Модель освещения сферы"
+    @tr @image html Tree.png         "Tree.cpp: Простая рекурсия: Дерево"
+    @td @image html Tennis.jpg       "Tennis.cpp: Использование картинок"
+    @endtable
+
     @section    UsageWarning          Предупреждение, или TXLib @d это всего лишь инструмент
 
                 Библиотека TXLib @d это всего лишь инструмент для того, чтобы облегчить первые шаги
@@ -128,7 +142,9 @@
                 Удачи, и May the Source be with you! :)
 
     @section    PlatformsSupported    Поддерживаемые платформы
+
            -    Среды программирования и компиляторы
+             -# CodeBlocks 12.11  + MinGW GCC 4.7.1
              -# CodeBlocks 10.05  + MinGW GCC 4.7.1 (TDM-GCC), 32-bit и 64-bit
              -# CodeBlocks 10.05  + MinGW GCC 4.6.1 (TDM-GCC)
              -# CodeBlocks 10.05  + MinGW GCC 4.4.1
@@ -193,6 +209,7 @@
                 соответствия стандарту @b ANSI. Имейте в виду, что эти файлы могут включаться в @c windows.h.
              -  @b После включения библиотек <a href=http://boost.org><tt>boost</tt></a>, использующих модуль
                 @c @b boost::preprocessor.
+
     @title      Опции командной строки: </dt><dd>
 
     <table class=smalltext>
@@ -203,12 +220,12 @@
                 <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O2 <i> -ansi -std=c++98 </i> -pedantic -Wall         -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings </td></tr>
                 <tr valign=middle><td rowspan=2> CodeBlocks  8.02, GCC&nbsp;3.4.5 </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  <i> -ansi -std=c++98 </i> -pedantic -Wall         -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings </td></tr>
                 <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O2 <i> -ansi -std=c++98 </i> -pedantic -Wall         -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings </td></tr>
-                <tr valign=middle><td rowspan=2> CodeBlocks 10.05, GCC&nbsp;4.4.1 </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  <i> -ansi -std=c++0x </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wstrict-overflow=5 -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel </td></tr>
-                <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O2 <i> -ansi -std=c++0x </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wstrict-overflow=5 -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel </td></tr>
-                <tr valign=middle><td rowspan=2> TDM-GCC,          GCC&nbsp;4.6.1 </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  <i> -ansi -std=c++0x </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wstrict-overflow=5 -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel </td></tr>
-                <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O2 <i> -ansi -std=c++0x </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wstrict-overflow=5 -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel </td></tr>
-                <tr valign=middle><td rowspan=2> TDM-GCC,          GCC&nbsp;4.7.1 </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  <i> -ansi -std=c++11 </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wstrict-overflow=5 -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel -Wstack-usage=8192 </td></tr>
-                <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O2 <i> -ansi -std=c++11 </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wstrict-overflow=5 -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel -Wstack-usage=8192 </td></tr>
+                <tr valign=middle><td rowspan=2> CodeBlocks 10.05, GCC&nbsp;4.4.1 </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  <i> -ansi -std=c++0x </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel </td></tr>
+                <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O2 <i> -ansi -std=c++0x </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel </td></tr>
+                <tr valign=middle><td rowspan=2> TDM-GCC,          GCC&nbsp;4.6.1 </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  <i> -ansi -std=c++0x </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel </td></tr>
+                <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O2 <i> -ansi -std=c++0x </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel </td></tr>
+                <tr valign=middle><td rowspan=2> CodeBlocks 12.11, GCC&nbsp;4.7.1 </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  <i> -ansi -std=c++11 </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel -Wstack-usage=8192 </td></tr>
+                <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O2 <i> -ansi -std=c++11 </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel -Wstack-usage=8192 </td></tr>
                 <tr valign=middle><td rowspan=2> MSVS&nbsp;6                      </td><td> Debug   </td><td> /D&nbsp;_DEBUG /Od /Gm  /GX /GR /GZ <a href="http://support.microsoft.com/kb/199057">/Zi</a>              /MTd /FD /W4                                                                              /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_MBCS </td></tr>
                 <tr valign=middle>                                                     <td> Release </td><td> /D&nbsp;NDEBUG /O2      /GX /GR                                                                           /MT  /FD /W4                                                                              /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_MBCS </td></tr>
                 <tr valign=middle><td rowspan=2> Intel C++ 9 (MSVS&nbsp;6)        </td><td> Debug   </td><td> /D&nbsp;_DEBUG /Od /Gm  /GX /GR /GZ <a href="http://support.microsoft.com/kb/199057">/Zi</a>              /MTd /FD /W4 /Wall /Wcheck /Wport                                                         /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_MBCS </td></tr>
@@ -229,12 +246,14 @@
                 Эти ключи могут вызывать появление предупреждений для файла @c TXLib.h о символе @c $, использующемся для
                 отладки, и о директиве @c \#warning. Они настолько суровы, что могут вызвать <small>@strike Чака Норриса @endstrike</small>
                 предупреждения даже для файлов стандартных библиотек C++ (вне зависимости от того, используется TXLib.h или нет).
+
     @section    VersionHistory        История изменений
+
     - <b>Версия 0.172</b>
            -#   <b>API</b>
-             -# Добавлена cовместимость с MS Visual Studio 2010.
-             -# Соответствие стандарту @c C++0x в MSVS 2010 и GCC 4.6 в режиме
-                компиляции @c -Wall @c -Wextra @c -Weffc++.
+             -# Добавлена cовместимость с MS Visual Studio 2010 и 2012.
+             -# Соответствие стандарту @c C++0x для MSVS 2010, MSVS 2012, GCC 4.6.1 и @c C++11 для GCC 4.7.1
+                в режиме компиляции @c -Wall @c -Wextra @c -Weffc++ (см. таблицу опций компиляторов).
              -# Убраны лишние предупреждения о неинициализированнях полях структур при
                 инициализации вида <tt>= {}</tt> (только для компиляторов MS и GCC версии 4).
              -# Изменен диалог About, заголовки окна и окон сообщений.
@@ -250,11 +269,10 @@
              -# Добавлена многооконность (experimental and not fully documented).
              -# Файл @c Graphics.h больше не поддерживается @d не нужен он никому.
            -#   <b>Документация</b>
-             -# Дополнен текст примеров использования, добавлены демонстрационные программы
+             -# Дополнен текст документации, примеров использования, добавлены демонстрационные программы
                 и дополнения от разных авторов (в папке TX/Examples/Demo). Подробно документирован исходный
                 текст функции txInputBox() для иллюстрации работы с диалогами Win32.
              -# Документация по примерам вынесена в отдельный файл.
-             -# Дополнена документация по отдельным функциям, добавлены примеры.
              -# TXLib теперь упоминает <a href="http://sisinmaru.blog17.fc2.com">кота Мару (Maru the cat)</a>
                 в одной из своих функций. TXLib is now referencing <a href="http://sisinmaru.blog17.fc2.com">
                 Maru the cat</a> in one of its functions.
@@ -318,4 +336,5 @@
     - <a href=https://sourceforge.net/tracker/?func=add&group_id=213688&atid=1026713>
       <b>Предложить улучшение</b></a>
 */
+
 

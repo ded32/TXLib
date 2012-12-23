@@ -20,8 +20,8 @@ int main()
 
     // Загружаем изображения один раз, в начале программы
     
-    HDC table  = txLoadImage ("Resources\\Images\\Table.bmp");
-    HDC racket = txLoadImage ("Resources\\Images\\Racket.bmp");
+    HDC table  = txLoadImage ("Resources\\Images\\Table.bmp");  // Пример загрузки картинки
+    HDC racket = txLoadImage ("Resources\\Images\\Racket.bmp"); // Пример загрузки картинки
 
     txSetFillColor (TX_RED);
 
@@ -47,9 +47,9 @@ int main()
 
         switch (mode)
             {
-            case 1: txBitBlt         (txDC(), x-200/2, y-150/2, 200, 150, racket, 0, 0);        break;
-            case 2: txTransparentBlt (txDC(), x-200/2, y-150/2, 200, 150, racket, 0, 0);        break;
-            case 3: txAlphaBlend     (txDC(), x-200/2, y-150/2, 200, 150, racket, 0, 0, alpha); break;
+            case 1: txBitBlt         (txDC(), x-200/2, y-150/2, 200, 150, racket, 0, 0);        break; // Пример копирования
+            case 2: txTransparentBlt (txDC(), x-200/2, y-150/2, 200, 150, racket, 0, 0);        break; // Пример копирования с прозрачным цветом
+            case 3: txAlphaBlend     (txDC(), x-200/2, y-150/2, 200, 150, racket, 0, 0, alpha); break; // Пример копирования с полупрозрачностью
             default: break;
             }
 

@@ -13,7 +13,7 @@
  * \date     2009
  */
 
-#include "DirectTX.cpp"
+#include "..\DirectTX.cpp"
 
 const int SizeX = 600,
           SizeY = 600;
