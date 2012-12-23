@@ -26,7 +26,7 @@
 //!          См. также <a href=http://txlib.sourceforge.net>страницу проекта на SourceForge.</a>
 //!
 //! @warning <b>Это альфа-версия.
-//!          Для использования требуется согласование с автором библиотеки.</b><br><br>
+//!          Для использования требуется согласование с автором библиотеки.</b> @nn
 //!          Правила использования материалов библиотеки и сайта см. на
 //!          <a href=http://txlib.ru/index/0-6> официальном сайте.</a>
 //!
@@ -439,11 +439,11 @@ HWND txCreateWindow (double sizeX, double sizeY, bool centered = true);
 //!
 //! @return  Если операция была успешна - true, иначе - false.
 //!
-//!          Параметры по умолчанию:@n
-//!          - Линии - цвет белый (TX_WHITE), толщина 1
-//!          - Заливка - цвет белый (TX_WHITE)
-//!          - Шрифт - Системный шрифт, цвет белый (TX_WHITE)
-//!          - Растровая операция - копирование цвета (R2_COPYPEN)
+//! @par     Параметры по умолчанию:
+//!        - Линии - цвет белый (TX_WHITE), толщина 1
+//!        - Заливка - цвет белый (TX_WHITE)
+//!        - Шрифт - Системный шрифт, цвет белый (TX_WHITE)
+//!        - Растровая операция - копирование цвета (R2_COPYPEN)
 //!
 //! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors, RGB()
 //! @see     txSelectFont(), txSetROP2()
@@ -615,7 +615,7 @@ inline unsigned txVersionNumber();
 //!              txSleep (50);
 //!              }
 //!
-//!          txMessageBox ("Вот такой вот progress bar", "TXLib forever)", 0);
+//!          txMessageBox ("Вот такой вот progress bar", "TXLib forever)");
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
@@ -641,9 +641,11 @@ const char* txGetModuleFileName (bool fileNameOnly = true);
 //!
 //! @see     txSetColor(), txSetFillColor(), txGetColor(), txGetFillColor(), txGetPixel(), RGB()
 //! @usage @code
-//!          const int MY_PRECIOUS_BLACK     = RGB (  1,   1,   1),
-//!                    MY_DEEP_ROMANTIC_BLUE = RGB (  0,   0, 129),
-//!                    MY_SHINING_MOONLIGHT  = RGB (128, 255,  64);
+//!          #include "TXLib.h"
+//!
+//!          const COLORREF MY_DEEP_ROMANTIC_BLUE = RGB (  0,   0, 129),
+//!                         MY_SHINING_MOONLIGHT  = RGB (128, 255,  64);
+//!          ...
 //!
 //!          txSetColor     (TX_RED);
 //!          txSetFillColor (TX_NULL);
@@ -709,6 +711,11 @@ const COLORREF
 //!          int red = 20, green = 200, blue = 20;
 //!          COLORREF color = RGB (red, green, blue);
 //!          txSetFillColor (color);
+//!
+//!          const COLORREF SKY_COLOR = RGB (0, 128, 255);  // Создаем константу для нового цвета
+//!
+//!          ...
+//!          txSetFillColor (SKY_COLOR);                    // Используем ее
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
@@ -1093,8 +1100,8 @@ bool txRectangle (double x0, double y0, double x1, double y1);
 //! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors, RGB()
 //!          txLine(), txRectangle(), txPolygon(), txEllipse(), txCircle(), txArc(), txPie(), txChord()
 //! @usage @code
-//!          POINT star[6] = {{150, 300}, {200, 100}, {250, 300}, {100, 200}, {300, 200}, {150, 300}};
-//!          txPolygon (star, 6);
+//!          POINT star[5] = {{150, 300}, {200, 100}, {250, 300}, {100, 200}, {300, 200}};
+//!          txPolygon (star, 5);
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
@@ -1246,6 +1253,37 @@ bool txChord (double x0, double y0, double x1, double y1, double startAngle, dou
 
 bool txFloodFill (double x, double y, COLORREF color = TX_TRANSPARENT, DWORD mode = FLOODFILLSURFACE);
 
+//{-------------------------------------------------------------------------------------------
+//! @ingroup Drawing
+//! @brief   Функция, которая должна рисовать треугольник.
+//!
+//! @param   x1     Х-координата 1 точки
+//! @param   y1     Y-координата 1 точки
+//! @param   x2     Х-координата 2 точки
+//! @param   y2     Y-координата 2 точки
+//! @param   x3     Х-координата 3 точки
+//! @param   y3     Y-координата 3 точки
+//!
+//! @return  Если операция была успешна - true, иначе - false.
+//!
+//! @see     txSetFillColor(), txGetFillColor(), txColors, RGB()
+//!          txLine(), txRectangle(), txPolygon(), txEllipse(), txCircle(), txArc(), txPie(), txChord()
+//! @par См. также:
+//!          @ref Tutor_Params "Пример с функциями с параметрами"
+//}-------------------------------------------------------------------------------------------
+
+bool txTriangle (double x1, double y1, double x2, double y2, double x3, double y3)
+    {
+    (void)x1; (void)y1; (void)x2; (void)y2; (void)x3; (void)y3;
+
+    MessageBox (txWindow(),
+               "Эта функция не реализована в библиотеке, потому что вы сами легко можете реализовать ее\n"
+               "как функцию с параметрами, используя txPolygon(). См. \"Пример с функциями с параметрами\".    ",
+               "TXLib сообщает", MB_ICONINFORMATION);
+
+    return false;
+    }
+
 //! @}
 //}
 //============================================================================================
@@ -1291,19 +1329,21 @@ bool txTextOut (double x, double y, const char text[]);
 //!
 //!          Цвет текста задается функцией txSetColor(), выравнивание - txSetTextAlign().
 //!
-//! @note    Не выводит ничего, если координаты идут в неверном порядке (x0 > x1 или y0 > y1).
+//! @note    Не выводит ничего, если координаты идут в неверном порядке (если x0 > x1 или y0 > y1).
 //!
 //!          Флаги форматирования текста см. в MSDN (http://msdn.com), искать "DrawText Function
 //!          (Windows)": http://msdn.microsoft.com/en-us/library/dd162498%28VS.85%29.aspx.
 //!
 //!          Автоматический перенос текста на несколько строк включается, если текст
-//!          состоит из нескольких строк (есть хотя бы один символ новой строки @c @n).
+//!          состоит из нескольких строк (есть хотя бы один символ новой строки @c \\n).
 //!
 //! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors, RGB()
 //!          txTextOut(), txSelectFont(), txGetTextExtent(), txGetTextExtentX(), txGetTextExtentY()
 //! @usage @code
 //!          txSelectFont ("Arial", 20, 0, FW_BOLD);
-//!          txDrawText (100, 100, 200, 500, "I hate it when I'm studying and a Velociraptor throws bananas on me.\n");
+//!          txSetColor (TX_YELLOW); txRectangle (100, 100, 200, 500);
+//!          txSetColor (TX_WHITE);  txDrawText  (100, 100, 200, 500, "I hate it when I'm studying "
+//!                                               "and a Velociraptor throws bananas on me.\n");
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
@@ -1403,15 +1443,15 @@ int txGetTextExtentY (const char text[]);
 //!
 //! @title   Флаги выравнивания: @table
 //!          @tr TA_BASELINE @td Точка (X,Y) определяет базовую линию текста.
-//!          @tr TA_BOTTOM   @td Точка (X,Y) определяет нижнюю сторону описанного прямоугольника @n
+//!          @tr TA_BOTTOM   @td Точка (X,Y) определяет нижнюю сторону описанного прямоугольника
 //!                              (текст лежит выше этой точки).
-//!          @tr TA_TOP      @td Точка (X,Y) определяет верхнюю сторону описанного прямоугольника @n
+//!          @tr TA_TOP      @td Точка (X,Y) определяет верхнюю сторону описанного прямоугольника
 //!                              (текст лежит ниже этой точки).
 //!          @tbr
 //!          @tr TA_CENTER   @td Текст будет выровнен по горизонтали относительно точки (X,Y).
-//!          @tr TA_LEFT     @td Точка (X,Y) определяет левую сторону описанного прямоугольника @n
+//!          @tr TA_LEFT     @td Точка (X,Y) определяет левую сторону описанного прямоугольника
 //!                              (текст лежит правее этой точки).
-//!          @tr TA_RIGHT    @td Точка (X,Y) определяет правую сторону описанного прямоугольника @n
+//!          @tr TA_RIGHT    @td Точка (X,Y) определяет правую сторону описанного прямоугольника
 //!                              (текст лежит левее этой точки).
 //!          @endtable
 //!
@@ -1513,15 +1553,16 @@ HDC txCreateCompatibleDC (double sizeX, double sizeY, HBITMAP bitmap = NULL);
 //!
 //! @note    <b>Не надо часто загружать</b> одно и то же изображение, особенно в цикле.
 //!          От этого программа начинает тормозить!
-//! @note    Загрузите один раз <b>перед<>/b циклом, потом используйте много раз. Посмотрите, как это
+//! @note    Загрузите один раз @a перед циклом, потом используйте много раз. Посмотрите, как это
 //!          сделано в примере TX\Examples\Tennis\Tennis.cpp.
 //!
 //! @see     txCreateWindow(), txCreateCompatibleDC(), txLoadImage(), txDeleteDC(), txBitBlt(), txAlphaBlend(),
 //!          txTransparentBlt()
-//! @usage          Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
+//!
+//! @usage   Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
 //!          HDC background = txLoadImage ("Resources\\Images\\Background.bmp");
-//!          if (!background) txMessageBox ("Cannot load background", "Epic fail", 0);
+//!          if (!background) txMessageBox ("Не могу загрузить Background.bmp", "Я скопировал это из примера");
 //!
 //!          // НЕ НАДО часто загружать одно и то же изображение, особенно в цикле - программа будет тормозить!
 //!          // Загрузите один раз перед циклом, потом используйте много раз.
@@ -1546,10 +1587,11 @@ HDC txLoadImage (const char filename[]);
 //! @return  Если операция была успешна - true, иначе - false.
 //!
 //! @see     txCreateWindow(), txCreateCompatibleDC(), txLoadImage(), txDeleteDC()
-//! @usage          Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
+//!
+//! @usage   Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
 //!          HDC background = txLoadImage ("Resources\\Images\\Background.bmp");
-//!          if (!background) txMessageBox ("Cannot load background", "Oh, not now", 0);
+//!          if (!background) txMessageBox ("Не могу загрузить Background.bmp, и я скопировал это из примера.", "Oh, not now");
 //!
 //!          // НЕ НАДО часто загружать одно и то же изображение, особенно в цикле - программа будет тормозить!
 //!          // Загрузите один раз перед циклом, потом используйте много раз.
@@ -1612,10 +1654,11 @@ bool txDeleteDC (HDC* dc);
 //!
 //! @see     txAlphaBlend(), txTransparentBlt(), txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(),
 //!          txColors, RGB()
-//! @usage          Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
+//!
+//! @usage   Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
 //!          HDC background = txLoadImage ("Resources\\Images\\Background.bmp");
-//!          if (!background) txMessageBox ("Cannot load background", "Once again :(", 0);
+//!          if (!background) txMessageBox ("Не могу загрузить Background.bmp, и да, я взял этот код из примера.", "Once again :(");
 //!
 //!          // НЕ НАДО часто загружать одно и то же изображение, особенно в цикле - программа будет тормозить!
 //!          // Загрузите один раз перед циклом, потом используйте много раз.
@@ -1660,10 +1703,11 @@ bool txBitBlt (HDC dest, double xDest, double yDest, double width, double height
 //! @note    Если TransparentBlt не работает, используйте функцию AlphaBlend, она вообще лучше.
 //!
 //! @see     txBitBlt(), txTransparentBlt(), txLoadImage(), txCreateCompatibleDC()
-//! @usage          Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
+//!
+//! @usage   Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
 //!          HDC superman = txLoadImage ("Resources\\Images\\Superman.bmp");
-//!          if (!superman) txMessageBox ("Cannot load superman, all the monsters will succeed", "Sorry", 0);
+//!          if (!superman) txMessageBox ("Cannot load superman, all the monsters will succeed (I copied them from TXLib Help)", "Sorry");
 //!
 //!          // НЕ НАДО часто загружать одно и то же изображение, особенно в цикле - программа будет тормозить!
 //!          // Загрузите один раз перед циклом, потом используйте много раз.
@@ -1695,8 +1739,8 @@ bool txTransparentBlt (HDC dest, double xDest, double yDest, double width, doubl
 //!                    должна быть в пределах размера источника.
 //! @param   ySrc    Y-координата верхнего левого угла изображения-источника,
 //!                    должна быть в пределах размера источника.
-//! @param   alpha   Общая прозрачность изображения, в дополнение к альфа-каналу. @n
-//!                    (0 - все прозрачно, 1 - использовать только альфа-канал)
+//! @param   alpha   Общая прозрачность изображения, в дополнение к альфа-каналу
+//!                    (0 - все прозрачно, 1 - использовать только альфа-канал).
 //!
 //! @return  Если операция была успешна - true, иначе - false.
 //!
@@ -1740,10 +1784,11 @@ bool txTransparentBlt (HDC dest, double xDest, double yDest, double width, doubl
 //!          tools. (See implementation of txAlphaBlend in TXLib.h).
 //!
 //! @see     txBitBlt(), txTransparentBlt(), txLoadImage(), txCreateCompatibleDC()
-//! @usage          Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
+//!
+//! @usage   Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
 //!          HDC batman = txLoadImage ("Resources\\Images\\Batman.bmp");
-//!          if (!batman) txMessageBox ("Call to Batman failed", "Do save yourself", 0);
+//!          if (!batman) txMessageBox ("Call to Batman failed because I copied it from TXLib Help", "Do save yourself");
 //!
 //!          // НЕ НАДО часто загружать одно и то же изображение, особенно в цикле - программа будет тормозить!
 //!          // Загрузите один раз перед циклом, потом используйте много раз.
@@ -2057,10 +2102,10 @@ inline int txMouseButtons();
 //! @return  Если операция была успешна - true, иначе - false.
 //!
 //!          @b Атрибуты - это цвет текста (colorText) и цвет фона (colorBackground),
-//!          объединенные вместе: @n
-//!          <tt>colors = colorText + colorBackground * 16</tt> @n
-//!          либо @n
-//!          <tt>colors = colorText | (colorBackground \<\< 4)</tt> @n
+//!          объединенные вместе: @nn
+//!          <tt>colors = colorText + colorBackground * 16</tt> @nn
+//!          либо @nn
+//!          <tt>colors = colorText | (colorBackground \<\< 4)</tt> @nn
 //!          Цвета атрибутов @b не имеют никакого отношения к цветам рисования,
 //!          задаваемыми @ref txColors "TX_..." константами, RGB(), txSetColor(), txColor(),
 //!          txSetFillColor(), txFillColor() и т.д. Значения цветов см. ниже.
@@ -2518,7 +2563,7 @@ inline bool In (const COORD& pt, const SMALL_RECT& rect);
 //! @usage @code
 //!          char message[100] = "Maybe...";
 //!          sprintf ("You SUDDENLY got %d bucks now. But note that tax rate is $%d.", random (100), 100);
-//!          txMessageBox (message, "Lottery", 0);
+//!          txMessageBox (message, "Lottery");
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
@@ -2528,7 +2573,7 @@ inline int random (int range);
 //! @ingroup Misc
 //! @brief   Генератор случайных чисел
 //!
-//! @param   left   Правая граница диапазона (@b включая саму границу).
+//! @param   left   Левая  граница диапазона (@b включая саму границу).
 //! @param   right  Правая граница диапазона (@b включая саму границу).
 //!
 //! @return  Случайное целое число в диапазоне [left; right].
@@ -2540,7 +2585,7 @@ inline int random (int range);
 //!              {
 //!              char message[100] = "Maybe...";
 //!              sprintf ("Проиграли в лотерею? Отдайте долг в %d рублей", -money);
-//!              txMessageBox (message, "Быстро!", 0);
+//!              txMessageBox (message, "Быстро!");
 //!              }
 //! @endcode
 //}-------------------------------------------------------------------------------------------
@@ -3350,7 +3395,7 @@ unsigned       _txConsoleMode             = SW_HIDE;
 //!        - Переменная устанавливается @b до открытия окна библиотеки.
 //!        - Если стиль окна содержит @c WS_SYSMENU (значение по умолчанию), окно считается главным.
 //!        - Главное окно должно быть только одно и создаваться первым. При закрытии главного
-//!          окна программа завершается.<br>
+//!          окна программа завершается. @n
 //!          Вспомогательные окна могут создаваться по одному на каждый файл многофайлового
 //!          проекта. При их создании @a не надо указывать в стиле WS_SYSMENU. Для закрытия
 //!          вспомогательных окон используется txDestroyWindow().
@@ -3626,8 +3671,8 @@ void _txTrace (const char file[], int line, const char func[])
 //! @brief   Класс для автоматической блокировки и разблокировки критической секции.
 //!
 //!          Начиная с <a href=http://progbook.ru/2008/08/03/sovremennoe-proektirovanie-na-c-andrejj.html>
-//!          Александреску,</a> его пишут все и он прост как пробка: в конструкторе @d
-//!          EnterCriticalSection(), в деструкторе @d LeaveCriticalSection(). @c RAII в чистом
+//!          Александреску,</a> его пишут все и он прост, как пробка: в конструкторе @d
+//!          EnterCriticalSection(), в деструкторе @d LeaveCriticalSection(). Это @c RAII в чистом
 //!          виде: вы никогда не забудете разблочить секцию and your thread show will always go on.
 //!
 //!          Некоторые добавления: есть возожность вызвать TryEnterCriticalSection(), и, если она
@@ -4079,7 +4124,7 @@ struct txDialog
 //! @see     txDialog, TX_BEGIN_MESSAGE_MAP, TX_BEGIN_COMMAND_MAP, TX_HANDLE, TX_END_MESSAGE_MAP
 //! @usage @code
 //!          const char* name = txInputBox ("So what's ur name?!?!", "System", "Sorry I'm Vasya Pupkin");
-//!          txMessageBox (name, "Aaand nooowww.. the winner iiis...", 0);
+//!          txMessageBox (name, "Aaand nooowww.. the winner iiis...");
 //! @endcode
 //}-------------------------------------------------------------------------------------------
 
@@ -4704,7 +4749,16 @@ $   return 1;
 
 HWND txCreateWindow (double sizeX, double sizeY, bool centered /*= true*/)
     {
-$1  if (txOK()) return 0;
+$1  if (txOK())
+        {
+$       SetLastErrorEx (ERROR_INVALID_DATA, 0);
+
+        #ifndef NDEBUG
+$       TX_ERROR ("\a" "Окно рисования уже создано");
+        #endif
+
+$       return txWindow();
+        }
 
 $   if (!_txInitialized) _txInitialized = _txInitialize();
 
@@ -4869,8 +4923,15 @@ $   if (wnd != NULL && !externTerm)
 $   if ((canvas || !waitableParent) && isMaster && !_txExit &&
         thread == _txMainThreadId)
         {
-$       if (wnd) SetForegroundWindow (wnd);
-$       if (wnd) BringWindowToTop    (wnd);
+$       if (wnd)
+            {
+$           SetForegroundWindow (wnd);
+$           BringWindowToTop    (wnd);
+$           EnableWindow        (wnd, true);
+            }
+
+$       if (console)
+            EnableWindow (console, true);
 
 $       _txPauseBeforeTermination (canvas);
         }
@@ -6304,7 +6365,8 @@ unsigned txMessageBox (const char* text, const char* header, unsigned flags)
     if (text)   MultiByteToWideChar (_TX_CP, 0, text,   -1, textW,   SIZEARR (textW));
     if (header) MultiByteToWideChar (_TX_CP, 0, header, -1, headerW, SIZEARR (headerW));
 
-    return MessageBoxW ((txWindow()? txWindow() : Win32::GetConsoleWindow()), textW, headerW, flags);
+    return MessageBoxW ((txWindow()? txWindow() : Win32::GetConsoleWindow()),
+                        textW, headerW, flags | MB_SETFOREGROUND | MB_TOPMOST);
     }
 
 //--------------------------------------------------------------------------------------------
@@ -6419,10 +6481,14 @@ bool txDestroyWindow()
     {
 $1  if (!txWindow()) return false;
 
-$   if (SendNotifyMessage (txWindow(), WM_DESTROY, 0, 0) == 0) return false;
+$   int master = GetWindowLong (txWindow(), GWL_STYLE) & WS_SYSMENU;        
+
+$   if (SendNotifyMessage (txWindow(), (master)? WM_CLOSE : WM_DESTROY, 0, 0) == 0) return false;
 
 $   _txWaitFor (!_txCanvas_Window);
 
+$   if (master) txNotifyIcon (NIIF_WARNING, NULL, "\n" "Очень, очень плохо завершать программу через txDestroyWindow().\n\n"
+                                                  "Возвращайтесь через main(), там вам будут рады.");
 $   return _txCanvas_Window == NULL;
     }
 
@@ -7663,7 +7729,7 @@ using ::std::string;
 //!          @tr <tt> $ (x) </tt>      @td Печать имени и значения переменной @c x внутри выражения.
 //!          @tr <tt> $_(x) </tt>      @td Печать только  значения переменной @c x внутри выражения.
 //!          @tbr
-//!          @tr <tt> $$ (expr)  </tt> @td Печать выражения, его вычисление, печать и возврат значения.<br>
+//!          @tr <tt> $$ (expr)  </tt> @td Печать выражения, его вычисление, печать и возврат значения. @n
 //!                                        Если выражение содержит оператор "запятая", не взятый
 //!                                        в скобки, необходимо окружать expr еще одной парой скобок.
 //!          @tr <tt> $$_(expr)  </tt> @td То же, что и <tt>$$(expr),</tt> но вторая печать идет без новой строки.
@@ -7911,73 +7977,7 @@ struct _txSaveConsoleAttr
 //============================================================================================
 // EOF
 //============================================================================================
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                                                                              
-                                              
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                        
 
 
 

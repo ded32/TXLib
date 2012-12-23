@@ -31,8 +31,8 @@
 #include "TXLib.h"
 #endif
 
-#if !defined (_TX_VER) || (_TX_VER < 0x172a0193)
-#error Must use TXLib.h version >= 1.72 build >= 193 to compile this. -- Ded
+#if !defined (_TX_VER) || (_TX_VER < 0x172a0093)
+#error Must use TXLib.h version >= 1.72 build >= 93 to compile this. -- Ded
 #endif
 
 enum DirectTXInfo
@@ -791,5 +791,4 @@ void DirectTXTextOut (int x, int y, const char* stringTemplate, ...)
 
     txTextOut (x, y, text);
     }
-
 
