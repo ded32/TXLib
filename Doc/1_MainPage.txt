@@ -144,6 +144,7 @@
     @section    PlatformsSupported    Поддерживаемые платформы
 
            -    Среды программирования и компиляторы
+             -# CodeBlocks 12.11  + MinGW GCC 4.7.2
              -# CodeBlocks 12.11  + MinGW GCC 4.7.1
              -# CodeBlocks 10.05  + MinGW GCC 4.7.1 (TDM-GCC), 32-bit и 64-bit
              -# CodeBlocks 10.05  + MinGW GCC 4.6.1 (TDM-GCC)
@@ -223,9 +224,9 @@
                 <tr valign=middle><td rowspan=2> CodeBlocks 10.05, GCC&nbsp;4.4.1 </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  <i> -ansi -std=c++0x </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel </td></tr>
                 <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O2 <i> -ansi -std=c++0x </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel </td></tr>
                 <tr valign=middle><td rowspan=2> TDM-GCC,          GCC&nbsp;4.6.1 </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  <i> -ansi -std=c++0x </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel </td></tr>
-                <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O2 <i> -ansi -std=c++0x </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel </td></tr>
-                <tr valign=middle><td rowspan=2> CodeBlocks 12.11, GCC&nbsp;4.7.1 </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  <i> -ansi -std=c++11 </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel -Wstack-usage=8192 </td></tr>
-                <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O2 <i> -ansi -std=c++11 </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel -Wstack-usage=8192 </td></tr>
+                <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O3 <i> -ansi -std=c++0x </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel </td></tr>
+                <tr valign=middle><td rowspan=2> CodeBlocks 12.11, GCC&nbsp;4.7.2 </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  <i> -ansi -std=c++11 </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel -Wstack-usage=8192 </td></tr>
+                <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O3 <i> -ansi -std=c++11 </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel -Wstack-usage=8192 </td></tr>
                 <tr valign=middle><td rowspan=2> MSVS&nbsp;6                      </td><td> Debug   </td><td> /D&nbsp;_DEBUG /Od /Gm  /GX /GR /GZ <a href="http://support.microsoft.com/kb/199057">/Zi</a>              /MTd /FD /W4                                                                              /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_MBCS </td></tr>
                 <tr valign=middle>                                                     <td> Release </td><td> /D&nbsp;NDEBUG /O2      /GX /GR                                                                           /MT  /FD /W4                                                                              /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_MBCS </td></tr>
                 <tr valign=middle><td rowspan=2> Intel C++ 9 (MSVS&nbsp;6)        </td><td> Debug   </td><td> /D&nbsp;_DEBUG /Od /Gm  /GX /GR /GZ <a href="http://support.microsoft.com/kb/199057">/Zi</a>              /MTd /FD /W4 /Wall /Wcheck /Wport                                                         /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_MBCS </td></tr>
@@ -266,7 +267,7 @@
              -# Убрана облегченная поддержка регионов отсечения (теперь @d только средствами Win32).
              -# Добавлена системная клавиша @c Alt+Ctrl+Shift+PrintScreen, временно отменяющая блокировку
                 обновления окна, см. txBegin().
-             -# Добавлена многооконность (experimental and not fully documented).
+             -# Добавлена многооконность и работа в DLL (experimental and not fully documented).
              -# Файл @c Graphics.h больше не поддерживается @d не нужен он никому.
            -#   <b>Документация</b>
              -# Дополнен текст документации, примеров использования, добавлены демонстрационные программы
@@ -291,8 +292,9 @@
              -# Поддержка среды Eclipse с ее <i>альтернативно талантливой</i> идеей эмулировать консоль
                 в эклипсовском окне и использованием каналов (pipes) для ввода-вывода.
              -# Код библиотеки верифицирован в статических анализаторах кода
-                <a href="http://cppcheck.sourceforge.net">Cppcheck v1.53</a> и
-                <a href="http://www.viva64.com/ru/pvs-studio">PVS-Studio v4.54</a> и в динамическом анализаторе
+                <a href="http://cppcheck.sourceforge.net">Cppcheck v1.53</a>,
+                <a href="http://www.viva64.com/ru/pvs-studio">PVS-Studio v4.54</a> и
+                <a href="http://coverity.com">Coverity Scan</a>, и в динамическом анализаторе
                 <a href="http://www.microfocus.com/products/micro-focus-developer/devpartner/index.aspx">
                 MicroFocus DevPartner v10.5</a>.
            -#   <b>Установка</b>
@@ -336,5 +338,4 @@
     - <a href=https://sourceforge.net/tracker/?func=add&group_id=213688&atid=1026713>
       <b>Предложить улучшение</b></a>
 */
-
 

@@ -153,6 +153,7 @@ int main()
 
     txCreateWindow (800, 600);
     txTextCursor (false);
+    txBegin();
 
     HDC wndDC = GetDC (txWindow());
     bool useTxPixel = true, useTxDC = true;
@@ -203,6 +204,7 @@ int main()
 
     ReleaseDC (txWindow(), wndDC);
 
+    txEnd();
     return 0;
     }
 

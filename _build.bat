@@ -31,7 +31,7 @@ echo Committing...
 %do% for %%1 in (TXLib.h Dev\*.dox Doc\1_MainPage.txt) do echo.>> %%1
 del %%1 >> %log% 2>>&1
 
- %do% call hg ci
+ %do% call hg ci %*
 :%do% call hg ci -m "%*"
 :%do% call hg kwshrink
 :%do% call hg kwexpand

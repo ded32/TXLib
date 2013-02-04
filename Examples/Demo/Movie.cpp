@@ -227,18 +227,17 @@ int main()
 
     txCreateWindow (800, 600);
     SetWindowText (txWindow(), title);
+    txBegin();
 
     printf ("\nStarting: %s...\n", title);
     Sleep (500);
     doSleep (0);
 
-    txBegin();
     calculateTables();
     doHDCPreparations();
 
     txSetFillColor (TX_BLACK);
     txClear();
-    txEnd();
 
     for (int i = 0; i < 50; i++) printf ("\n");
     txTextCursor (false);
@@ -246,6 +245,7 @@ int main()
     fromLogoToCPP();
     fromAssemblerAndUpToTheVeryEnd();
 
+    txEnd();
     return 0;
     }
 
@@ -261,7 +261,7 @@ void doSleep (int time)
 
     double delay = (GetAsyncKeyState (VK_RIGHT)? 0 : DELAY);
 
-    txSleep (time * delay);
+    txSleep ((int) (time * delay + 0.5));
 
     while (GetAsyncKeyState (VK_DOWN)) txSleep (10);
 
@@ -291,25 +291,17 @@ void drawGradientLine (int x, int y, int x2, int y2, int thickness, COLORREF bor
 
 void electraSplash()
     {
-    txBegin();
-
     txSetFillColor (TX_BLACK);
     txClear();
 
     drawElectra (0, 0, 126, 50, 20, 45, 5, TX_YELLOW, TX_WHITE, 50);
     doSleep (20);
-
-    txEnd();
     }
 
 void slideClouds (int space, int y)
     {
-    txBegin();
-
     txTransparentBlt (txDC(), - (space / 2 + 400), y, 800, 600, leftCloudlySlide,  0, 0, TX_BLACK);
     txTransparentBlt (txDC(),    space / 2 + 400,  y, 800, 600, rightCloudlySlide, 0, 0, TX_BLACK);
-
-    txEnd();
     }
 
 void drawStyledTurtleShell (int x, int y, int xStart, int yStart, int xFinal, int yFinal, int numberOfPies, int pieRadius, int offsetAngle, COLORREF color, COLORREF special, COLORREF border, int thickness)
@@ -425,14 +417,10 @@ bool needToDraw (RECT what)
 
 void drawScene (int cameraX, int cameraY)
     {
-    txBegin();
-
     txBitBlt (txDC(),     - (cameraX % 800),     - (cameraY % 600), 800, 600, scene[cameraX / 800]    [cameraY / 600],     0, 0);
     txBitBlt (txDC(), 800 - (cameraX % 800),     - (cameraY % 600), 800, 600, scene[cameraX / 800 + 1][cameraY / 600],     0, 0);
     txBitBlt (txDC(),     - (cameraX % 800), 600 - (cameraY % 600), 800, 600, scene[cameraX / 800]    [cameraY / 600 + 1], 0, 0);
     txBitBlt (txDC(), 800 - (cameraX % 800), 600 - (cameraY % 600), 800, 600, scene[cameraX / 800 + 1][cameraY / 600 + 1], 0, 0);
-
-    txEnd();
     }
 
 int getTurtleWalkPosition (int rawPosition)
@@ -539,8 +527,6 @@ void drawElectra (int x, int y, int angle, int nOfSteps, int stepLenght, int ran
 
 void prepareMountains (COLORREF skyUp, COLORREF skyDown, COLORREF grassUp, COLORREF grassDown)
     {
-    txBegin();
-
     txSetFillColor (TX_BLACK);
     txClear();
 
@@ -560,8 +546,6 @@ void prepareMountains (COLORREF skyUp, COLORREF skyDown, COLORREF grassUp, COLOR
     scene[3][1] = mountains_1;
     scene[4][1] = mountains_1;
     scene[5][1] = mountains_1;
-
-    txEnd();
     }
 
 void walkLine (int x, int y, int x2, int y2, int step, int manSize)
@@ -572,8 +556,6 @@ void walkLine (int x, int y, int x2, int y2, int step, int manSize)
 
     int cameraX, cameraY;
     int bodyRotNormal = 90 - (lineAngle > 90 ? 90 : lineAngle);
-
-    txBegin();
 
     for (int stepIndex = 0; stepIndex < stepNumber; stepIndex += SPEED)
         {
@@ -596,8 +578,6 @@ void walkLine (int x, int y, int x2, int y2, int step, int manSize)
 
         doSleep (4);
         }
-
-    txEnd();
     }
 
 void walkMountains (POINT* mountains, int elems, int manHeight)
@@ -619,8 +599,6 @@ void fromLogoToCPP()
     int cameraX = 0,
         cameraY = 600,
         t       = 0;
-
-    txBegin();
 
     for (; cameraX < 1600; cameraX += SPEED, doSleep (2))
         {
@@ -715,8 +693,6 @@ void fromLogoToCPP()
     for (; t < 200; t += 1, doSleep (20))
         drawRain (15, 15, 30, t % 10, 1, getRandom (1, 2) == 1 ? TX_BLUE : TX_LIGHTBLUE);
 
-    txEnd();
-
     txSleep (200);
 
     txSetFillColor (TX_BLACK);
@@ -754,8 +730,6 @@ void deleteDCs()
 
 void doHDCPreparations()
     {
-    txBegin();
-
     // ==================================================
 
     drawGradientCircle (15,15,10, LIGHT_ORANGE, TX_ORANGE);
@@ -896,8 +870,6 @@ void doHDCPreparations()
     scene[4][1] = mountains_1;
     scene[5][1] = sunnyBackground_3;
     scene[6][1] = sunnyBackground_3;
-
-    txEnd();
     }
 
 void drawGradientRectangle (int x, int y, int x2, int y2, COLORREF topColor, COLORREF downColor)
@@ -965,13 +937,13 @@ void drawLeafPart (int x, int y, int size)
     txSetColor (TX_TRANSPARENT);
 
     txSetFillColor (GREEN_DARK);
-    txCircle (x-0.3*size, y+0.7*size, size);
+    txCircle ((int) (x-0.3*size), (int) (y+0.7*size), size);
 
     txSetFillColor (GREEN_MEDIUM);
-    txCircle (x-0.5*size, y-0.5*size, size);
+    txCircle ((int) (x-0.5*size), (int) (y-0.5*size), size);
 
     txSetFillColor (GREEN_LIGHT);
-    txCircle (x+0.7*size, y-0.3*size, size);
+    txCircle ((int) (x+0.7*size), (int) (y-0.3*size), size);
     }
 
 void drawLeafRow (int x, int y, int leafNumber, int leafSize)
@@ -988,12 +960,8 @@ void drawFruitRow (int x, int y, int leafNumber, int leafsize, HDC fruit)
     int space     =  leafsize * 2/3;
     int totalsize = (leafsize * 2) * leafNumber + space * leafNumber;
 
-    txBegin();
-
     for (int i = 0; i < leafNumber-1; i++)
-        txTransparentBlt (txDC(), x - totalsize/2 + i * (leafsize*2 + space) + leafsize*1.8, y-15, 30, 30, fruit, 0, 0, TX_BLACK);
-
-    txEnd();
+        txTransparentBlt (txDC(), (int) (x - totalsize/2 + i * (leafsize*2 + space) + leafsize*1.8), y-15, 30, 30, fruit, 0, 0, TX_BLACK);
     }
 
 void drawTree (int x, int y, int trunkWidth, int trunkHeight, int leafRowNumber, int leafSize, COLORREF borderColor, COLORREF fillColor, HDC fruit)
@@ -1068,10 +1036,8 @@ void prepareTurtleShell (int width, int height, COLORREF baseColor, COLORREF spe
     drawStyledTurtleShell (width/2, height/2, height *5/2, width, height/5, width/10,
                            7, 20, width/25, baseColor, specials, border, thickness);
 
-    txBegin();
     txTransparentBlt (txDC(), 0, height/2, width, height, mask,      0, 0, TX_WHITE);
     txTransparentBlt (txDC(), 0, height/2, width, height, mask_down, 0, 0, TX_WHITE);
-    txEnd();
 
     txDeleteDC (mask);
     txDeleteDC (mask_down);
@@ -1092,30 +1058,28 @@ void drawTurtleBody (int x, int y, int width, int height, int walkingPos, COLORR
     txPolygon (polygon, 5);
 
     txEllipse (x - walkingPos/3, y + height *3/4, x + width, y + height);
-    txEllipse (x + width, y + walkingPos/2, x + width*1.3, y + height*0.4 + walkingPos/2);
+    txEllipse (x + width, y + walkingPos/2, (int) (x + width*1.3), (int) (y + height*0.4 + walkingPos/2));
 
     txSetColor (TX_TRANSPARENT);
     txPolygon (polygon, 5);
 
     txSetFillColor (eye);
     txSetColor (eyeBorder);
-    txEllipse (x + width * 1.1, y + height * 0.05 + walkingPos/2 + walkingPos/5,
-               x + width * 1.2, y + height * 0.3  + walkingPos/2 - walkingPos/3);
+    txEllipse ((int) (x + width * 1.1), (int) (y + height * 0.05 + walkingPos/2 + walkingPos/5),
+               (int) (x + width * 1.2), (int) (y + height * 0.3  + walkingPos/2 - walkingPos/3));
 
     txSetFillColor (eyeBorder);
-    txCircle (x + width * 1.15, y + height * 0.15 + walkingPos / 2, 2);
+    txCircle ((int) (x + width * 1.15), (int) (y + height * 0.15 + walkingPos / 2), 2);
 
     txSetFillColor (body);
     txSetColor (border, 2);
-    txCircle (x + width * 0.9 - walkingPos, y + height, width / 16);
-    txCircle (x + width * 0.8 + walkingPos, y + height, width / 16);
-    txCircle (x + width * 0.3 - walkingPos, y + height, width / 16);
-    txCircle (x + width * 0.2 + walkingPos, y + height, width / 16);
+    txCircle ((int) (x + width * 0.9 - walkingPos), y + height, width / 16);
+    txCircle ((int) (x + width * 0.8 + walkingPos), y + height, width / 16);
+    txCircle ((int) (x + width * 0.3 - walkingPos), y + height, width / 16);
+    txCircle ((int) (x + width * 0.2 + walkingPos), y + height, width / 16);
 
-    txBegin();
     txTransparentBlt (txDC(), x + width/20, y + height/10 + walkingPos/3, width-1, height,
                       shell, 0, 0, TX_BLACK);
-    txEnd();
     }
 
 
@@ -1151,8 +1115,8 @@ void drawBaloon (int x, int y, int radius, int sizeOfStripe, COLORREF centerStri
     for (number = 0; number < radius / sizeOfStripe; number++)
         {
         txSetColor (border, 1);
-        txLine (x - radius + number * sizeOfStripe,     y, x - radius/2 + number * sizeOfStripe / 2, y + radius * 1.5);
-        txLine (x + radius - number * sizeOfStripe - 1, y, x + radius/2 - number * sizeOfStripe / 2, y + radius * 1.5);
+        txLine (x - radius + number * sizeOfStripe,     y, x - radius/2 + number * sizeOfStripe / 2, (int) (y + radius * 1.5));
+        txLine (x + radius - number * sizeOfStripe - 1, y, x + radius/2 - number * sizeOfStripe / 2, (int) (y + radius * 1.5));
 
         txSetColor (TX_BLACK, 1);
         txSetFillColor ((number % 2 == 0)? centerStripe : secondStripe);
@@ -1164,7 +1128,7 @@ void drawBaloon (int x, int y, int radius, int sizeOfStripe, COLORREF centerStri
     txEllipse (x - sizeOfStripe / 2, y - radius, x + sizeOfStripe / 2, y + radius);
 
     txSetColor (border);
-    txLine (x, y + radius, x, y + radius * 1.5);
+    txLine (x, y + radius, x, (int) (y + radius * 1.5));
     }
 
 void calculateTables()
@@ -1582,9 +1546,9 @@ void initIO()
 
 void readCodePro()
     {
+    txSetDefaults();
     txBegin();
 
-    txSetDefaults();
     txSetFillColor (TX_BLACK);
     txSetColor (RGB (0, 150, 0));
     txClear();
@@ -1642,8 +1606,6 @@ void readCodePro()
                 lastStringLength++;
             }
 
-        txEnd();
-
         fclose (sourceFile);
         }
 
@@ -1657,17 +1619,13 @@ void printEffect (int x, int y, const char* text, int lenght, int delay)
     {
     doSleep (delay);
 
-    txBegin();
-
     for (int i = 0; i < lenght; i++)
         {
         char buf[2] = { text[i] };
-        txTextOut (x + txGetTextExtentX (text) * i / lenght * 1.2, y, buf);
+        txTextOut ((int) (x + txGetTextExtentX (text) * i / lenght * 1.2), y, buf);
 
         doSleep (delay);
         }
-
-    txEnd();
     }
 
 void releaseScrollingSource()
@@ -1690,8 +1648,6 @@ void fromAssemblerAndUpToTheVeryEnd()
     int greenCooficient = 150;
 
     COLORREF stickColor = RGB (200, 255, 200);
-
-    txBegin();
 
     for (int t = 0; t < 210; t += SPEED)
         {
@@ -1724,8 +1680,6 @@ void fromAssemblerAndUpToTheVeryEnd()
             }
         }
 
-    txEnd();
-
     destroyBinaryStairsAndMatrix();
 
     txSetFillColor (TX_BLACK);
@@ -1738,14 +1692,12 @@ void fromAssemblerAndUpToTheVeryEnd()
     setTextSpeed (10 - SPEED);
     double sourceCodeYScrolled = 0;
 
-    txBegin();
-
     for (; sourceCodeYScrolled < partsAmount * 600; sourceCodeYScrolled += SPEED)
         {
         txSetFillColor (TX_BLACK);
         txClear();
 
-        int roundY = (int) sourceCodeYScrolled;
+        int roundY = (int)sourceCodeYScrolled;
 
         HDC hDC = txDC();
         txBitBlt (hDC, 0,     - (roundY % 600), 800, 600, sourceCodeParts[roundY / 600    ], 0, 0);
@@ -1755,8 +1707,6 @@ void fromAssemblerAndUpToTheVeryEnd()
 
         doSleep (4);
         }
-
-    txEnd();
 
     releaseScrollingSource();
     }
