@@ -79,7 +79,9 @@ int main()
     txSleep (150);
     JumpMan (centerX - sizeX/50, centerY - sizeY/4, sizeX/40, sizeY/15, 0.25,                  TX_YELLOW, TX_BLACK,        10, 100);
 
-    txPlaySound ("tada.wav");
+    txPlaySound ("tada.wav");                        // Windows <  7
+    txPlaySound ("C:\\Windows\\Media\\tada.wav");    // Windows >= 7
+
     UnwindFlag (centerX, centerY - sizeY/4, 0, sizeX/20, sizeY/10,                             TX_YELLOW, TX_BLACK,       500, 100);
 
     DanceMan   (centerX - sizeX/50, centerY - sizeY/4, sizeX/40, sizeY/15, 0.25,               TX_YELLOW, TX_BLACK,       200);

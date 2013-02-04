@@ -3,8 +3,8 @@
  * http://www.gnu.org/licenses/gpl-3.0.html
  *
  * $Revision$
- * $Id$
- * $HeadURL$
+ * $Id: config.script 7635 2011-12-13 21:58:19Z danselmi $
+ * $HeadURL: https://svn.berlios.de/svnroot/repos/codeblocks/branches/release-12.11/src/plugins/scriptedwizard/resources/config.script $
  */
 
 //
@@ -35,8 +35,7 @@ function RegisterWizards()
     RegisterWizard(wizProject,     _T("gtk"),          _T("GTK+ project"),          _T("GUI"));
     RegisterWizard(wizProject,     _T("irrlicht"),     _T("Irrlicht project"),      _T("2D/3D Graphics"));
     RegisterWizard(wizProject,     _T("lf"),           _T("Lightfeather project"),  _T("2D/3D Graphics"));
-    if (PLATFORM == PLATFORM_MSW)
-        RegisterWizard(wizProject, _T("matlab_csf"),   _T("Matlab project"),        _T("Console"));
+    RegisterWizard(wizProject,     _T("matlab_csf"),   _T("Matlab project"),        _T("Console"));
     RegisterWizard(wizProject,     _T("opengl"),       _T("OpenGL project"),        _T("2D/3D Graphics"));
     RegisterWizard(wizProject,     _T("ogre"),         _T("Ogre project"),          _T("2D/3D Graphics"));
     RegisterWizard(wizProject,     _T("plugins"),      _T("Code::Blocks plugin"),   _T("Code::Blocks"));
@@ -66,6 +65,7 @@ function RegisterWizards()
     RegisterWizard(wizProject,     _T("avr"),          _T("AVR Project"),           _T("Embedded Systems"));
     RegisterWizard(wizProject,     _T("tricore"),      _T("TriCore Project"),       _T("Embedded Systems"));
     RegisterWizard(wizProject,     _T("ppc"),          _T("PowerPC Project"),       _T("Embedded Systems"));
+    RegisterWizard(wizProject,     _T("mcs51"),        _T("MCS51 Project"),         _T("Embedded Systems"));
     //
     // file wizards
     //
@@ -92,6 +92,3 @@ function RegisterWizard(type, folder, title, category)
                      folder + _T("/wizard.png"),
                      folder + _T("/wizard.xrc"));
 }
-
-
-
