@@ -8,14 +8,12 @@
 :-------------------------------------------------
 @echo off
 
-set .cmd=ci docs rar update push
-
 set .file=TXLib-v0172a.rar.exe
 
 set .md5="TXLib Update.md5"
 
-if /i "%1" == ""    (echo %~n0 ci docs rar update push push-docs push-sf | cliptext) & (exit)
-if /i "%1" == "all"       %0   ci docs rar update push push-docs push-sf
+if /i "%1" == ""    (echo %~n0 ci docs  rar update push-docs push-sf    push | cliptext) & (exit)
+if /i "%1" == "all"       %0   ci docs  rar update push-docs push-sf    push 
 
 :-------------------------------------------------
 
@@ -31,12 +29,18 @@ echo Committing...
 %do% for %%1 in (TXLib.h Dev\*.dox Doc\1_MainPage.txt) do echo.>> %%1
 del %%1 >> %log% 2>>&1
 
- %do% call hg ci %*
-:%do% call hg ci -m "%*"
-:%do% call hg kwshrink
-:%do% call hg kwexpand
+%do% call hg ci %4 %5 %6 %7 %8 %9
 
- %do% attrib +h %~nx0
+%do% call hg kwshrink
+%do% call hg kwexpand
+
+%do% attrib +h %~nx0
+
+echo.
+%do% call hg parents
+%do% for %%1 in (TXLib.h Dev\*.dox Doc\1_MainPage.txt) do type %%1 | find ", Revision: "
+
+if /i "%4" == "--amend" pause & exit
 
 goto end
 
@@ -110,23 +114,23 @@ goto end
 echo Preparing RAR info...
 
 :@echo on
-%do% echo Title=Установка TX Library>                                                            %Temp%\~log
+%do% echo Title=TX Library Setup>                                                                %Temp%\~log
 %do% echo Path=.\.>>                                                                             %Temp%\~log
 %do% echo Overwrite=1 >>                                                                         %Temp%\~log
 %do% echo Setup=WScript TX\Wizard\Setup.js>>                                                     %Temp%\~log
 %do% echo.>>                                                                                     %Temp%\~log
-%do% echo Text=     Установка TX Library>>                                                       %Temp%\~log
-%do% echo Text=>>                                                                                %Temp%\~log
-%do% echo Text=     TX Library Setup>>                                                           %Temp%\~log
+%do% echo Text=     TX Library Setup - Установка TX Library>>                                    %Temp%\~log
 %do% echo Text=>>                                                                                %Temp%\~log
 %do% call hg parents --template "Text=     [Version: {latesttag|nonempty}, Revision: {rev}]" >>  %Temp%\~log
 %do% echo.>>                                                                                     %Temp%\~log
 %do% echo Text=>>                                                                                %Temp%\~log
 %do% echo Text=     Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) mail@txlib.ru>>          %Temp%\~log
 %do% echo Text=>>                                                                                %Temp%\~log
-%do% echo Text=     Внимание! Это альфа-версия.>>                                                %Temp%\~log
-%do% echo Text=     Для использования требуется согласование>>                                   %Temp%\~log
-%do% echo Text=     с автором библиотеки.>>                                                      %Temp%\~log
+%do% echo Text=     Внимание: Это альфа-версия. Для использования>>                              %Temp%\~log
+%do% echo Text=     требуется согласование с автором библиотеки.>>                               %Temp%\~log
+%do% echo Text=>>                                                                                %Temp%\~log
+%do% echo Text=     Warning: This is alpha version. To use it, you must>>                        %Temp%\~log
+%do% echo Text=     have permission from the author of this library.>>                           %Temp%\~log
 %do% echo Text=>>                                                                                %Temp%\~log
 %do% echo Text=>>                                                                                %Temp%\~log
 %do% echo Text=     Revisions log:>>                                                             %Temp%\~log
@@ -154,13 +158,17 @@ echo Making RAR (%.file%)...
 
 %do% cd..
 
-%do% del                           ..\%.file%               >> %log% 2>>&1
-%do% rar a -r -s -sfx -rr5p -av -k ..\%.file% -z%Temp%\~log >> %log% 2>>&1
+%do% del          ..\%.file% >> %log% 2>>&1
+%do% winrar.exe a ..\%.file% -r -s -sfx -rr5p -av -k ^
+                             -iicon"%CD%\TX\Wizard\TX Application\VS\TX Application.ico" ^
+                              -iimg"%CD%\TX\Wizard\TX Application\CodeBlocks\wizard\tx\wizard.bmp" ^
+                             -z%Temp%\~log >> %log% 2>>&1
 
 %do% rd/s/q ..\Doc\HTML.ru         >> %log% 2>>&1
 %do% move      Doc\HTML.ru ..\Doc\ >> %log% 2>>&1
 
 %do% cd ..
+
 %do% rd/s/q __archive
 
 %do% move /y %.file% _OFF\Public >> %log% 2>>&1

@@ -221,7 +221,7 @@ HDC scene[9][2] = {{0}};
 
 int main()
     {
-    const char* title  = "Programmer's Way - Путь Программиста";
+    const char* title  = "Programmer's Way";
 
     srand ((unsigned) time (NULL));
 
