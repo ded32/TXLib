@@ -34,7 +34,7 @@ int main()
     txLine    (200, 300, 600, 300);
 
     txSetColor (TX_LIGHTGREEN);
-    txSelectFont ("Times", 60);
+    txSelectFont ("Times New Roman", 60);
     txSetTextAlign (TA_CENTER);
     txTextOut (400, 480, "Hello, world!");
 
@@ -50,7 +50,7 @@ int main()
     txSetFillColor (TX_TRANSPARENT);
     txLine (400, 75, 400, 150);
     txRectangle (400, 75, 450, 115);
-    txSelectFont ("Times", 20);
+    txSelectFont ("Times New Roman", 20);
     txTextOut (425, 85, "C++");
 
     txTextCursor (false);

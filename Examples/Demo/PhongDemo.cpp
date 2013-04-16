@@ -10,6 +10,8 @@
 //          (C) Стас Артюхин, 9 класс, 2006
 //}===========================================================================
 
+#define _CRT_SECURE_NO_WARNINGS 1
+
 #include "TXLib.h"
 
 #if !defined (_TX_VER) || (_TX_VER < 0x172a0000)
@@ -51,9 +53,24 @@ inline Vector<T>::Vector (T x0, T y0, T z0) :
 // Normalization
 
 template <typename T>
+inline double len (const Vector<T>& v)
+    {
+    return sqrt (v.x*v.x + v.y*v.y + v.z*v.z);
+    }
+
+template <typename T>
 inline Vector<T> operator ! (const Vector<T>& v)
     {
-    return v / sqrt (v.x*v.x + v.y*v.y + v.z*v.z);
+    return v / len (v);
+    }
+
+//----------------------------------------------------------------------------
+
+template <typename T>
+inline Vector<T>& operator += (Vector<T>& a, const Vector<T>& b)
+    {
+    a.x += b.x; a.y += b.y; a.z += b.z;
+    return a;
     }
 
 //----------------------------------------------------------------------------
@@ -112,6 +129,15 @@ inline Vector<T> operator / (const Vector<T>& v, T val)
     return Vector<T> (v.x/val, v.y/val, v.z/val);
     }
 
+//----------------------------------------------------------------------------
+
+template <typename T>
+inline std::ostream& operator << (std::ostream& o, const Vector<T>& v)
+    {
+    o << "Vector (" << v.x << ", " << v.y << ", " << v.z << ")";
+    return o;
+    }
+
 //============================================================================
 
 template <typename T>
@@ -119,16 +145,16 @@ inline void DrawPixel (T x, T y, Vector<T> color, bool useTxPixel = true, HDC dc
     {
     static POINT scr = txGetExtent();
 
-    POINT p = { (int) (x + scr.x/2 + 0.5),
-                (int) (y + scr.y/2 + 0.5) };
+    POINT p = { ROUND (x + scr.x/2),
+                ROUND (y + scr.y/2) };
 
     if (color.x > +1) color.x = +1; if (color.x < 0) color.x = 0;
     if (color.y > +1) color.y = +1; if (color.y < 0) color.y = 0;
     if (color.z > +1) color.z = +1; if (color.z < 0) color.z = 0;
 
-    COLORREF rgb = RGB ((int) (color.x * 255 + 0.5),
-                        (int) (color.y * 255 + 0.5),
-                        (int) (color.z * 255 + 0.5));
+    COLORREF rgb = RGB (ROUND (color.x * 255),
+                        ROUND (color.y * 255),
+                        ROUND (color.z * 255));
     if (useTxPixel)
              txSetPixel (    p.x, p.y, rgb);
     else
@@ -145,6 +171,8 @@ vec PhongLightning (const vec& p, const vec& N, const vec& V,
                     const vec& materialColor,
                     const vec& ambientColor = vec (0, 0, 0));
 
+const vec Bump (const vec& p = vec (0, 0, 0));
+
 //----------------------------------------------------------------------------
 
 int main()
@@ -159,6 +187,11 @@ int main()
     bool useTxPixel = true, useTxDC = true;
 
     txUpdateWindow (false);
+
+    txSetTextAlign (TA_CENTER);
+    txSetColor (TX_DARKGRAY);
+    txSelectFont ("Lucida Console", 15, 0);
+    txTextOut (txGetExtentX()/2, txGetExtentY()*19/20, "Alt, Ctrl, Shift, Space to bump");
 
     for (double t = txPI/2; ; t += 0.1)
         {
@@ -212,22 +245,23 @@ int main()
 
 unsigned DrawScene (const vec& lightPos, double R, bool tx /*= true*/, HDC dc /*= txDC()*/)
     {
-    vec viewPos       (   0,    0, +5*R);
-//  vec lightPos      (-2*R, +2*R, +2*R);
+    const vec viewPos       (   0,    0, +5*R);
+//  const vec lightPos      (-2*R, +2*R, +2*R);
 
-    vec materialColor (0.0, 1.0, 0.0);
-    vec lightColor    (1.0, 0.7, 0.0);
-    vec ambientColor  (0.2, 0.2, 0.2);
+    const vec materialColor (0.0, 1.0, 0.0);
+    const vec lightColor    (1.0, 0.7, 0.0);
+    const vec ambientColor  (0.2, 0.2, 0.2);
 
     unsigned time = GetTickCount();  // For FPS testing only
+    srand (0);                       // Reset random sequence in Bump()
 
     for (double y = -R; y <= R; y++)
         for (double x = -R; x <= R; x++)
             {
             if (x*x + y*y > R*R) continue;
 
-            vec p (x, y, sqrt (R*R - x*x - y*y));
-            vec N = !p;
+            vec p = vec (x, y, sqrt (R*R - x*x - y*y));
+            vec N = !p + Bump (p);
 
             vec V = !(viewPos  - p);
             vec L = !(lightPos - p);
@@ -276,6 +310,18 @@ vec PhongLightning (const vec& p, const vec& N, const vec& V,
            ambientColor;
     }
 
+//----------------------------------------------------------------------------
 
+const vec Bump (const vec& p)
+    {
+    vec bump = vec (0, 0, 0);
+
+    if (GetAsyncKeyState (VK_MENU))    bump += p * ( sin (p.z*p.z / 500)        / 2 + 1.5)          / 5000.0;
+    if (GetAsyncKeyState (VK_CONTROL)) bump += p * ((sin (p.x/4) + cos (p.y/4)) / 4 + 1.5)          / 5000.0;
+    if (GetAsyncKeyState (VK_SHIFT))   bump += p * ((cos (p.x/4) + sin (p.y/4)) / 2 + 1.0)          / 1000.0;
+    if (GetAsyncKeyState (VK_SPACE))   bump += vec (random (-1,+1), random (-1,+1), random (-1,+1)) /  100.0;
+
+    return bump;
+    }
 
 

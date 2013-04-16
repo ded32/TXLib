@@ -52,7 +52,7 @@ int main()
 
     DrawFrame (800, 600, 10, TX_WHITE);
 
-    txSelectFont ("Times", 60);
+    txSelectFont ("Times New Roman", 60);
     txSetTextAlign (TA_CENTER);
 
     AppearText  (400, 480, "Hello, world!", TX_BLACK, TX_LIGHTGREEN, 5000, 100);
@@ -242,7 +242,7 @@ void DrawFlag (int x, int y, int sizeX, int sizeY, COLORREF color, COLORREF bkCo
     txLine (x, y, x, y - sizeY);
     txRectangle (x, y - sizeY/2, x + sizeX, y - sizeY);
     
-    txSelectFont ("Times", sizeX/2 + 1);
+    txSelectFont ("Times New Roman", sizeX/2 + 1);
     txTextOut (x + sizeX/2, y - sizeY*7/8, "C++");
     }
 
@@ -252,7 +252,7 @@ void DrawHello (int x, int y, const char* text, int size, COLORREF color)
     {
     txSetColor (color);
     
-    txSelectFont ("Times", size);
+    txSelectFont ("Times New Roman", size);
     txSetTextAlign (TA_CENTER);
     
     txTextOut (x, y, text);
