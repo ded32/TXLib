@@ -26,7 +26,7 @@
 //!          См. также <a href=http://txlib.sourceforge.net>страницу проекта на SourceForge.</a>
 //!
 //! @warning <b>Это альфа-версия. Для использования требуется согласование с автором библиотеки.</b> @nn
-//!          Правила использования материалов библиотеки и сайта см. на <a href=http://txlib.ru/index/0-6>
+//!          Правила использования материалов библиотеки и сайта см. на <a href=http://txlib.ru>
 //!          официальном сайте.</a>
 //!
 //! @par     Трекеры на SourceForge:
@@ -354,10 +354,6 @@
 #include <shellapi.h>
 #include <shlobj.h>
 
-#if defined (_GCC_VER) && (_GCC_VER >= 400)
-#include <cxxabi.h>
-#endif
-
 //-----------------------------------------------------------------------------------------------------------------
 
 #ifdef _MSC_VER_6
@@ -626,8 +622,7 @@ inline unsigned txVersionNumber();
 //!          for (int done = 0; done <= 100; done++)
 //!              {
 //!              char title [1024] = "";
-//!              sprintf (title, "%s - [%-10.*s] %d%%", txGetModuleFileName (false),
-//!                       done/10, "||||||||||", done);
+//!              sprintf (title, "%s - [%-10.*s] %d%%", txGetModuleFileName (false), done/10, "||||||||||", done);
 //!
 //!              SetWindowText (txWindow(), title);
 //!              txSleep (50);
@@ -1147,7 +1142,7 @@ bool txRectangle (double x0, double y0, double x1, double y1);
 //!
 //! @usage @code
 //!          POINT star[5] = {{150, 300}, {200, 100}, {250, 300}, {100, 200}, {300, 200}};
-//!          txPolygon (star, 5);
+//!          txPolygon (star, 5);  // Я кривая звездочка
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
@@ -1217,7 +1212,7 @@ bool txCircle (double x, double y, double r);
 //!          txLine(), txRectangle(), txPolygon(), txEllipse(), txCircle(), txArc(), txPie(), txChord()
 //!
 //! @usage @code
-//!          txArc (100, 100, 300, 200, 0, 180);
+//!          txArc (100, 100, 300, 200, 45, 270);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
@@ -1242,7 +1237,7 @@ bool txArc (double x0, double y0, double x1, double y1, double startAngle, doubl
 //!          txLine(), txRectangle(), txPolygon(), txEllipse(), txCircle(), txArc(), txPie(), txChord()
 //!
 //! @usage @code
-//!          txPie (100, 100, 300, 200, 0, 180);
+//!          txPie (100, 100, 300, 200, 0, 180);  // Enter Pacman
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
@@ -1267,7 +1262,7 @@ bool txPie (double x0, double y0, double x1, double y1, double startAngle, doubl
 //!          txLine(), txRectangle(), txPolygon(), txEllipse(), txCircle(), txArc(), txPie(), txChord()
 //!
 //! @usage @code
-//!          txChord (100, 100, 300, 200, 0, 180);
+//!          txChord (100, 100, 300, 200, 45, 270);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
@@ -1296,7 +1291,11 @@ bool txChord (double x0, double y0, double x1, double y1, double startAngle, dou
 //!          txLine(), txRectangle(), txPolygon(), txEllipse(), txCircle(), txArc(), txPie(), txChord()
 //!
 //! @usage @code
-//!          txFloodFill (100, 100);
+//!          txSetFillColor (TX_PINK);
+//!          txLine (100, 200, 150, 100);
+//!          txLine (150, 100, 200, 200);
+//!          txLine (200, 200, 100, 200);
+//!          txFloodFill (150, 150);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
@@ -1634,7 +1633,9 @@ HDC txCreateCompatibleDC (double sizeX, double sizeY, HBITMAP bitmap = NULL);
 //! @ingroup Drawing
 //! @brief   Загружает из файла изображение в формате BMP. Делает это довольно медленно.
 //!
-//! @param   filename  Имя файла с изображением в формате BMP
+//! @param   filename    Имя файла с изображением в формате BMP
+//! @param   imageFlags  Тип загружаемого изображения, см. ниже
+//! @param   loadFlags   Флаги загрузки изображения, см. ниже
 //!
 //! @return  Дескриптор созданного контекста рисования в памяти, с загруженным изображением.
 //!          Если изображение не загружено (не найден файл, неверный формат файла и т.д.), то NULL.
@@ -1659,6 +1660,18 @@ HDC txCreateCompatibleDC (double sizeX, double sizeY, HBITMAP bitmap = NULL);
 //! @note    Загрузите один раз @a перед циклом, потом используйте много раз. Посмотрите, как это сделано в примере
 //!          TX\Examples\Tennis\Tennis.cpp.
 //!
+//! @title   Типы изображений:
+//! @table   @tr IMAGE_BITMAP @td Загружает рисунок в формате BMP
+//!          @tr IMAGE_CURSOR @td Загружает курсор
+//!          @tr IMAGE_ICON   @td Загружает иконку
+//!          @endtable
+//!
+//! @title   Флаги загрузки:
+//! @table   @tr LR_CREATEDIBSECTION @td Создает DIB (device-indepandent bitmap), удобную для прямого доступа к данным
+//!          @tr LR_LOADFROMFILE     @td Загружает из файла (если этот флаг не указан, то загружает из ресурса)
+//!          @tr Остальные флаги загрузки @td см. на MSDN.com, поиск "LoadImage function".
+//!          @endtable
+//!
 //! @see     txCreateWindow(), txCreateCompatibleDC(), txLoadImage(), txDeleteDC(), txBitBlt(), txAlphaBlend(), txTransparentBlt()
 //!
 //! @usage   Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
@@ -1677,7 +1690,7 @@ HDC txCreateCompatibleDC (double sizeX, double sizeY, HBITMAP bitmap = NULL);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-HDC txLoadImage (const char filename[]);
+HDC txLoadImage (const char filename[], unsigned imageFlags = IMAGE_BITMAP, unsigned loadFlags = LR_LOADFROMFILE);
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1773,7 +1786,7 @@ bool txDeleteDC (HDC* dc);
 //}----------------------------------------------------------------------------------------------------------------
 
 bool txBitBlt (HDC dest, double xDest, double yDest, double width, double height,
-               HDC src,  double xSrc,  double ySrc,  DWORD rOp = SRCCOPY);
+               HDC src,  double xSrc = 0, double ySrc = 0, DWORD rOp = SRCCOPY);
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1816,13 +1829,17 @@ bool txBitBlt (HDC dest, double xDest, double yDest, double width, double height
 //!
 //!          txTransparentBlt (txDC(), 0, 0, 800, 600, superman, 0, 0);
 //!
+//!          // А можно и так:
+//!          Win32::TransparentBlt (txDC(), 0, 0, 800, 600, superman, 0, 0, 80, 60, -1); // 10-кратное увеличение
+//!          // Познай мощь Win32 GDI, отказавшись от TXLib'а! :)                           см. TransparentBlt в MSDN.com
+//!
 //!          ...
 //!          txDeleteDC (superman);  // So pity :(
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
 bool txTransparentBlt (HDC dest, double xDest, double yDest, double width, double height,
-                       HDC src,  double xSrc,  double ySrc,  COLORREF transColor = TX_BLACK);
+                       HDC src,  double xSrc = 0, double ySrc = 0, COLORREF transColor = TX_BLACK);
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1899,7 +1916,7 @@ bool txTransparentBlt (HDC dest, double xDest, double yDest, double width, doubl
 //}----------------------------------------------------------------------------------------------------------------
 
 bool txAlphaBlend (HDC dest, double xDest, double yDest, double width, double height,
-                   HDC src,  double xSrc,  double ySrc,  double alpha = 1.0);
+                   HDC src,  double xSrc = 0, double ySrc = 0, double alpha = 1.0);
 //! @}
 //}
 
@@ -2046,7 +2063,7 @@ bool txSelectObject (HGDIOBJ obj);
 //!              txTextOut (txGetExtentX()/2, txGetExtentY()/2, "Press any key to exit!");
 //! @endcode
 //
-//                 +--<<< Это текст помощи, который вы читали. Ищите дальше! Жмите [F3] или "Найти далее"
+//                 +--<<< Это текст помощи, который вы уже читали. Ищите дальше! Жмите [F3] или "Найти далее"
 //                 |
 //                 v
 //               txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillClose_AndIWillNotBeAskingWhereIsMyPicture();
@@ -2056,7 +2073,7 @@ bool txSelectObject (HGDIOBJ obj);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-//     +--<<< Это прототип функции, а надо найти ее определение. Ищите дальше! Жмите [F3] или "Найти далее"
+//     +--<<< Это _прототип_ функции, а надо найти ее _определение_. Ищите дальше! Жмите [F3] или "Найти далее"
 //     |
 //     v
 bool txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillClose_AndIWillNotBeAskingWhereIsMyPicture();
@@ -2382,7 +2399,7 @@ bool txTextCursor (bool blink = true);
 //!          Переименование со сменой расширения не поможет, как и в случае с форматом картинок в txLoadImage().
 //!
 //! @usage @code
-//!          txPlaySound ("tada.wav"); // So happy that this always exists
+//!          txPlaySound ("tada.wav");  // So happy that this always exists
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
@@ -3734,13 +3751,19 @@ const unsigned _TX_BIGBUFSIZE             = 2048;
 
 //! @cond _OFF
 
-extern const char* _txFile;
-extern int         _txLine;
-extern const char* _txFunc;
-extern int         _txInTX;
+extern const char* volatile _txFile;
+extern int         volatile _txLine;
+extern const char* volatile _txFunc;
+extern int         volatile _txInTX;
 
-extern unsigned    _txMainThreadId;
-extern unsigned    _txCanvas_ThreadId;
+extern unsigned    volatile _txMainThreadId;
+extern unsigned    volatile _txCanvas_ThreadId;
+extern bool                 _txConsole;
+extern bool                 _txMain;
+extern bool                 _txIsDll;
+extern bool        volatile _txRunning;
+extern bool        volatile _txExit;
+extern int                  _txInitialized;
 
 //! @endcond
 
@@ -3807,13 +3830,14 @@ void _txTrace (const char file[], int line, const char func[])
     {
     unsigned id = GetCurrentThreadId();
 
-    const char marks[2][2][3] = {{"Uu", "Cc"}, {"Mm", "??"}};
+    const char marks[2][2][3] = {{"uU", "cC"}, {"mM", "??"}};
 
     char mark = marks [id == _txMainThreadId] [id == _txCanvas_ThreadId] [_txInTX > 0];
 
-    txOutputDebugPrintf ("%s - [%c] %s (%d) %s\n",
-                         _TX_VERSION, mark,
-                         (file? file : "(NULL file)"), line, (func? func : ""));
+    txOutputDebugPrintf ("%s - %p %c%c%c%c%c [%c] - %s (%d) %s\n",
+                         _TX_VERSION, (void*) &_txInitialized,
+                         "cC"[_txConsole], "mM"[_txMain], "dD"[_txIsDll], "rR"[_txRunning], "eE"[_txExit],
+                         mark, (file? file : "(NULL file)"), line, (func? func : ""));
     }
 
 //! @endcond
@@ -4505,8 +4529,6 @@ HICON            _txCreateTXIcon (int size);
 void             _txOnSignal (int signal = 0, int fpe = 0);
 void             _txOnTerminate();
 void             _txOnUnexpected();
-void             _txOnPureCall();
-void             _txOnInvalidParameter (const wchar_t* expr, const wchar_t* func, const wchar_t* file, unsigned line, uintptr_t);
 
 FARPROC          _txDllImport (const char dllFileName[], const char funcName[], bool required = true);
 
@@ -4834,40 +4856,40 @@ using namespace Win32;
 //=================================================================================================================
 //! @{
 
-unsigned         _txMainThreadId        = 0;      // ID потока, где выполняется main()
+int                  _txInitialized         = _TX_NOINIT || _txInitialize();
 
-unsigned         _txCanvas_ThreadId     = 0;      // ID потока, владеющего окном холста TXLib
-HANDLE           _txCanvas_Thread       = NULL;   // Дексриптор этого потока
-HWND             _txCanvas_Window       = NULL;   // Дескриптор окна холста TXLib
+unsigned    volatile _txMainThreadId        = 0;      // ID потока, где выполняется main()
 
-UINT             _txCanvas_RefreshTimer = 0;      // Timer to redraw TXLib window
-int              _txCanvas_RefreshLock  = 0;      // Blocks auto on-timer canvas update, see txBegin/txEnd
+unsigned    volatile _txCanvas_ThreadId     = 0;      // ID потока, владеющего окном холста TXLib
+HANDLE      volatile _txCanvas_Thread       = NULL;   // Дексриптор этого потока
+HWND        volatile _txCanvas_Window       = NULL;   // Дескриптор окна холста TXLib
 
-HDC              _txCanvas_BackBuf[2]   = {NULL,  // [0] Main working TXLib memory DC, where user picture lies
-                                           NULL}; // [1] Image ready for auto-refresh, see txCanvas_OnPAINT()
-CRITICAL_SECTION _txCanvas_LockBackBuf  = {0,-1}; // Prevent simultaneous access to back buffer, see txLock()
+UINT                 _txCanvas_RefreshTimer = 0;      // Timer to redraw TXLib window
+int         volatile _txCanvas_RefreshLock  = 0;      // Blocks auto on-timer canvas update, see txBegin/txEnd
 
-std::vector<HDC> _txCanvas_UserDCs;               // List of DCs allocated, for auto-free
+HDC                  _txCanvas_BackBuf[2]   = {NULL,  // [0] Main working TXLib memory DC, where user picture lies
+                                               NULL}; // [1] Image ready for auto-refresh, see txCanvas_OnPAINT()
+CRITICAL_SECTION     _txCanvas_LockBackBuf  = {0,-1}; // Prevent simultaneous access to back buffer, see txLock()
 
-bool             _txConsole_IsBlinking  = true;   // To blink or not to blink, that is the question.
+std::vector<HDC>     _txCanvas_UserDCs;               // List of DCs allocated, for auto-free
 
-bool             _txRunning             = false;  // main() is still running
-bool             _txExit                = false;  // exit() is active
-bool             _txMain                = false;  // First TXLib window opened (closing it terminates the process)
-bool             _txConsole             = false;  // Only first TXLib module in app owns it
-bool             _txIsDll               = false;  // TXLib module is in DLL
+bool        volatile _txConsole_IsBlinking  = true;   // To blink or not to blink, that is the question.
 
-POINT            _txMousePos            = {0};    // Ask Captn Obviouos about it. See txCanvas_OnMOUSE()
-int              _txMouseButtons        =  0;
+bool                 _txConsole             = false;  // Only first TXLib module in app owns it
+bool                 _txMain                = false;  // First TXLib window opened (closing it terminates the process)
+bool                 _txIsDll               = false;  // TXLib module is in DLL
+bool        volatile _txRunning             = false;  // main() is still running
+bool        volatile _txExit                = false;  // exit() is active
 
-WNDPROC          _txAltWndProc          = NULL;   // Альтернативная оконная функция. См. txSetWindowsHook().
+POINT                _txMousePos            = {0};    // Ask Captn Obviouos about it. See txCanvas_OnMOUSE()
+int                  _txMouseButtons        =  0;
 
-const char*      _txFile                = NULL;   // Current execution point tracking, see $ macro
-int              _txLine                = 0;
-const char*      _txFunc                = NULL;
-int              _txInTX                = 0;      // We are inside one of TXLib's functions
+WNDPROC     volatile _txAltWndProc          = NULL;   // Альтернативная оконная функция. См. txSetWindowsHook().
 
-int              _txInitialized         = _TX_NOINIT || _txInitialize();
+const char* volatile _txFile                = NULL;   // Current execution point tracking, see $ macro
+int         volatile _txLine                = 0;
+const char* volatile _txFunc                = NULL;
+int         volatile _txInTX                = 0;      // We are inside one of TXLib's functions
 
 //! @}
 //}
@@ -4887,7 +4909,7 @@ int _txInitialize()
     {
     _TX_ON_DEBUG (OutputDebugString ("\n");
                   OutputDebugString (_TX_VERSION " - The Dumb Artist Library, " _TX_AUTHOR ": \"" __FILE__ "\" "
-                                     "compiled " __DATE__ " " __TIME__ ", " _TX_BUILDMODE " mode: " _TX_MODULE "\n");
+                                     "compiled " __DATE__ " " __TIME__ ", " _TX_BUILDMODE " mode, module: " _TX_MODULE "\n");
                   OutputDebugString ("\n"));
 
     _txMainThreadId = GetCurrentThreadId();
@@ -4908,11 +4930,6 @@ $       SetErrorMode (SEM_FAILCRITICALERRORS | SEM_NOGPFAULTERRORBOX);
         #ifndef _MSC_VER_6
 $       std::set_unexpected (_txOnUnexpected);
 $       std::set_terminate  (_txOnTerminate);
-        #endif
-
-        #if defined (_MSC_VER) && (_MSC_VER >= 1500)  // MSVC 9 (2008) or greater
-$       _set_purecall_handler          (_txOnPureCall);
-$       _set_invalid_parameter_handler (_txOnInvalidParameter);
         #endif
 
 $       HWND console = _txConsole_Attach();
@@ -5109,25 +5126,28 @@ $   bool externTerm = (thread != _txMainThreadId &&
 $   DWORD parent = 0;
 $   bool waitableParent = !externTerm && _txIsParentWaitable (&parent);
 
-$   if (_txMain && _txConsole) txSetConsoleAttr (0x07);
+$   if (_txConsole)
+        {
+$       if (_txMain) txSetConsoleAttr (0x07);
+$       if (console) EnableWindow (console, true);
+        }
 
 $   if (_txMain && !externTerm && wnd != NULL)
         { $ _txSetFinishedText (wnd); }
 
-$   if (((canvas && _txMain) || (!canvas && _txConsole && !waitableParent)) && !_txExit &&
+$   if ((canvas? _txMain : _txConsole && !waitableParent) && !_txExit &&
         thread == _txMainThreadId)
         {
 $       if (wnd)
             {
+$           ShowWindow          (wnd, SW_SHOW);
+$           EnableWindow        (wnd, true);
 $           SetForegroundWindow (wnd);
 $           BringWindowToTop    (wnd);
-$           EnableWindow        (wnd, true);
             }
 
 $       if (console)
-            { $ EnableWindow (console, true); }
-
-$       _txPauseBeforeTermination (canvas);
+            { $ _txPauseBeforeTermination (canvas); }
         }
 
 $   if (txWindow())
@@ -5216,6 +5236,8 @@ $       Sleep (_txWindowUpdateInterval);
         if (!wine && _txGetInput() != EOF)   { $ break; }  // Somebody hit something.
 
         if (canvas && !_txCanvas_ThreadId)   { $ break; }  // There was a window, and now there is not.
+
+        if (!Win32::GetConsoleWindow())      { $ break; }  // Console was destroyed
 
         if (!wine && !(i % 100500))
             printf ("\r" "[Так нажмите же какую-нибудь клавишу для моего завершения]");
@@ -5614,16 +5636,16 @@ $       if (res) return res;
 
     switch (msg)
         {
-        case WM_CREATE:  $      _txCanvas_OnCREATE     (wnd);             break;
+        case WM_CREATE:  $      _txCanvas_OnCREATE     (wnd);             return 0;
 
-        case WM_CLOSE:   $ if (!_txCanvas_OnCLOSE      (wnd)) return 0;   break;
-        case WM_DESTROY: $      _txCanvas_OnDESTROY    (wnd);             break;
+        case WM_CLOSE:   $  if (_txCanvas_OnCLOSE      (wnd)) break; else return 0;
+        case WM_DESTROY: $      _txCanvas_OnDESTROY    (wnd);             return 0;
 
-        case WM_PAINT:   $      _txCanvas_OnPAINT      (wnd);             break;
-        case WM_TIMER:   $      _txCanvas_OnTIMER      (wnd, wpar);       break;
+        case WM_PAINT:   $      _txCanvas_OnPAINT      (wnd);             return 0;
+        case WM_TIMER:   $      _txCanvas_OnTIMER      (wnd, wpar);       return 0;
 
-        case WM_KEYDOWN: $      _txCanvas_OnKEYDOWN    (wnd, wpar, lpar); break;
-        case WM_CHAR:    $      _txCanvas_OnCHAR       (wnd, wpar, lpar); break;
+        case WM_KEYDOWN: $      _txCanvas_OnKEYDOWN    (wnd, wpar, lpar); return 0;
+        case WM_CHAR:    $      _txCanvas_OnCHAR       (wnd, wpar, lpar); return 0;
 
         case WM_LBUTTONUP:
         case WM_LBUTTONDOWN:
@@ -5631,14 +5653,16 @@ $       if (res) return res;
         case WM_RBUTTONDOWN:
         case WM_MBUTTONUP:
         case WM_MBUTTONDOWN:
-        case WM_MOUSEMOVE:    $ _txCanvas_OnMOUSEMOVE  (wnd, wpar, lpar); break;
+        case WM_MOUSEMOVE:    $ _txCanvas_OnMOUSEMOVE  (wnd, wpar, lpar); return 0;
+
         default:                break;
         }
 
     if (msg == WM_SYSCOMMAND) switch (wpar)
         {
-        case _TX_IDM_ABOUT:   $ _txCanvas_OnCmdABOUT   (wnd, wpar);       break;
-        case _TX_IDM_CONSOLE: $ _txCanvas_OnCmdCONSOLE (wnd, wpar);       break;
+        case _TX_IDM_ABOUT:   $ _txCanvas_OnCmdABOUT   (wnd, wpar);       return 0;
+        case _TX_IDM_CONSOLE: $ _txCanvas_OnCmdCONSOLE (wnd, wpar);       return 0;
+
         default:                break;
         }
 
@@ -5692,15 +5716,10 @@ $   if (dcs.size())
         {
 $       txNotifyIcon (NIIF_ERROR, NULL, "Вы забыли освободить %d HDC.", (int) dcs.size());
 $       Sleep (_TX_TIMEOUT);
+
+$       for (size_t i = 0; i < dcs.size(); i++) _txBuffer_Delete (&dcs[i]);
+$       dcs.clear();
         }
-
-$   struct _txBuffer_Delete_Wrapper { static bool func (HDC dc)
-        {
-$       return _txBuffer_Delete (&dc);
-        }};
-
-$   std::for_each (dcs.begin(), dcs.end(), _txBuffer_Delete_Wrapper::func);
-$   dcs.clear();
 
     // Освобождаем ресурсы, связанные с окном
 
@@ -5737,7 +5756,7 @@ bool _txCanvas_OnTIMER (HWND wnd, WPARAM)
     {
 $1  _TX_IF_ARGUMENT_FAILED (wnd) return false;
 
-$   if (_txCanvas_RefreshLock > 0) return false;
+$   if (_txCanvas_RefreshLock > 0 || !_txRunning) return false;
 
 $   InvalidateRect (wnd, NULL, false) asserted;
 $   UpdateWindow   (wnd)              asserted;
@@ -5913,7 +5932,7 @@ $   _snprintf_s (text, sizeof (text) - 1 _TX_TRUNCATE,
 
                  "\n" "Developed with:\n\n"
                  "The Dumb Artist Library (TX Library) - " _TX_VERSION "\n" _TX_AUTHOR "\n"
-                 "See license on: http://txlib.ru/index/0-6\n\n"
+                 "See license on: http://txlib.ru\n\n"
 
                  "TXLib file:" "\t" __FILE__ "\n"
                  "Compiled:"   "\t" __DATE__ " " __TIME__ ", " _TX_BUILDMODE ", " __TX_COMPILER__ "\n"
@@ -6425,37 +6444,9 @@ void _txOnUnexpected()
 
 void _txOnTerminate()
     {
-    static int called = 0;
-    if (called++) return;
-
     _txError (NULL, 0, NULL,
               "std::terminate(): Программа будет завершена из-за неперехваченного исключения в функции main() или в деструкторе.    \n\n"
               "Используйте try/catch блоки, перехватывайте catch (...), разбирайтесь, в чем дело.");
-    }
-
-//-----------------------------------------------------------------------------------------------------------------
-
-void _txOnPureCall()
-    {
-    _txError (NULL, 0, NULL,
-              "Поздравляем, вам удалось вызвать чисто виртуальную функцию, скорее всего в конструкторе или деструкторе.    \n\n"
-              "Программа будет завершена.");
-    }
-
-//-----------------------------------------------------------------------------------------------------------------
-
-void _txOnInvalidParameter (const wchar_t* exprW, const wchar_t* funcW, const wchar_t* fileW, unsigned line, uintptr_t)
-    {
-    static char expr [_TX_BUFSIZE] = "";
-    static char func [_TX_BUFSIZE] = "";
-    static char file [_TX_BUFSIZE] = "";
-
-    if (exprW) WideCharToMultiByte (_TX_CP, 0, exprW, -1, expr, SIZEARR (expr), NULL, NULL);
-    if (funcW) WideCharToMultiByte (_TX_CP, 0, funcW, -1, func, SIZEARR (func), NULL, NULL);
-    if (fileW) WideCharToMultiByte (_TX_CP, 0, fileW, -1, file, SIZEARR (file), NULL, NULL);
-
-    _txError ((fileW? file : NULL), line, (funcW? func : NULL),
-              (exprW? "Неверный параметр функции. Проверьте, что %s." : "Неверный параметр функции"), expr);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -6467,28 +6458,10 @@ const char* _txError (const char file[] /*= NULL*/, int line /*= 0*/, const char
 
     static int nCalls = 0; nCalls++;
 
+    DWORD    winerr   = GetLastError();
     int      crterr   = errno;
     int      doserr   = _doserrno;
-    bool     except   = std::uncaught_exception();
-    char*    excStr   = NULL;
-    char*    excWTF   = NULL;                     // What a Terrible Failure
-    DWORD    winerr   = GetLastError();
     unsigned threadId = GetCurrentThreadId();
-
-    #if defined (_GCC_VER) && (_GCC_VER >= 400)
-
-    if (std::type_info* exception_type = abi::__cxa_current_exception_type())
-        {
-        int err = 0;
-        excStr  = abi::__cxa_demangle (exception_type->name(), NULL, NULL, &err);
-        if (!excStr) excStr = _strdup (exception_type->name());
-
-        try   { throw; }
-        catch (std::exception& exc) { excWTF = _strdup (exc.what());   }
-        catch (...)                 { excWTF = _strdup ("неизвестна"); }
-        }
-
-    #endif
 
     bool isFatal = (msg && *msg == '\a')? (msg++, true) : false;
     bool fmtOnly = (msg && *msg == '\f')? (msg++, true) : false;
@@ -6511,8 +6484,10 @@ const char* _txError (const char file[] /*= NULL*/, int line /*= 0*/, const char
                 s += _vsnprintf_s  (s, SZARG_(1), msg, arg),
                 s +=  _snprintf_s  (s, SZARG_(1), "\n\n");
 
-                s +=  _snprintf_s  (s, SZARG_(1), "#%d: %s: Thread: 0x%08X%s",
-                                                  nCalls, _TX_VERSION, threadId,
+                s +=  _snprintf_s  (s, SZARG_(1), "#%d: %s, Instance: 0x%p, Flags: %c%c%c%c%c, Thread: 0x%08X%s",
+                                                  nCalls, _TX_VERSION, (void*) &_txInitialized,
+                                                  "cC"[_txConsole], "mM"[_txMain], "dD"[_txIsDll], "rR"[_txRunning], "eE"[_txExit],
+                                                  threadId,
                                                   (threadId == _txMainThreadId)?    " (Main)"   :
                                                   (threadId == _txCanvas_ThreadId)? " (Canvas)" : "");
 
@@ -6527,21 +6502,13 @@ const char* _txError (const char file[] /*= NULL*/, int line /*= 0*/, const char
 
     if (doserr) s +=  _snprintf_s  (s, SZARG_(1), ", _doserrno: %d (%s)", doserr, (strerror_s (str, doserr), str));
 
-    if (except) s +=  _snprintf_s  (s, SZARG_(1), ", исключение не перехвачено");
-
-    if (excStr) s +=  _snprintf_s  (s, SZARG_(1), ", исключение: %s", excStr);
-    if (excWTF) s +=  _snprintf_s  (s, SZARG_(1), ", причина: %s",    excWTF);
-
-                s +=  _snprintf_s  (s, SZARG_(1), ".\n");
+                s +=  _snprintf_s  (s, SZARG_(1), ". %s\n", std::uncaught_exception()? "std::uncaught_exception(): true." : "");
 
     if (_txInTX > 0 && !(_txLine == line && file && _stricmp (_txFile, file) == 0))
                 s +=  _snprintf_s  (s, SZARG_(1), "From: %s (%d) %s.\n", _txFile, _txLine, _txFunc);
 
     #undef SZARG_
     va_end (arg);
-
-    free (excStr); excStr = NULL;
-    free (excWTF); excWTF = NULL;
 
     struct tools
         {
@@ -6569,7 +6536,7 @@ const char* _txError (const char file[] /*= NULL*/, int line /*= 0*/, const char
             }
         };
 
-    txOutputDebugPrintf ("%s - %s", _TX_VERSION, tools::compressSpaces (str, what));
+$   txOutputDebugPrintf ("%s - %s", _TX_VERSION, tools::compressSpaces (str, what));
 
     if (fmtOnly) return what;
 
@@ -6625,18 +6592,10 @@ unsigned txMessageBox (const char* text, const char* header, unsigned flags /*= 
     static wchar_t textW   [_TX_BIGBUFSIZE * sizeof (wchar_t)] = L"[NULL text]";
     static wchar_t headerW [_TX_BUFSIZE    * sizeof (wchar_t)] = L"[NULL header]";
 
-    int   crterr = errno;
-    DWORD winerr = GetLastError();
-
     if (text)   MultiByteToWideChar (_TX_CP, 0, text,   -1, textW,   SIZEARR (textW));
     if (header) MultiByteToWideChar (_TX_CP, 0, header, -1, headerW, SIZEARR (headerW));
 
-    int ret = MessageBoxW ((txWindow()? txWindow() : Win32::GetConsoleWindow()), textW, headerW, flags | MB_SETFOREGROUND | MB_TOPMOST);
-
-    errno = crterr;
-    SetLastError (winerr);
-
-    return ret;
+    return MessageBoxW ((txWindow()? txWindow() : Win32::GetConsoleWindow()), textW, headerW, flags | MB_SETFOREGROUND | MB_TOPMOST);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -7191,15 +7150,18 @@ $   return dc;
 
 //-----------------------------------------------------------------------------------------------------------------
 
-HDC txLoadImage (const char filename[])
+HDC txLoadImage (const char filename[], unsigned imageFlags /*= IMAGE_BITMAP*/, unsigned loadFlags /*= LR_LOADFROMFILE*/)
     {
 $1  _TX_IF_TXWINDOW_FAILED                         return NULL;
 $   _TX_IF_ARGUMENT_FAILED (filename && *filename) return NULL;
 
-$   HBITMAP image = (HBITMAP) Win32::LoadImage (NULL, filename, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+$   HBITMAP image = (HBITMAP) Win32::LoadImage ((loadFlags & LR_LOADFROMFILE)? NULL : GetModuleHandle (NULL),
+                                                 filename, imageFlags, 0, 0, loadFlags);
 $   if (!image) return NULL;
 
 $   HDC dc = txCreateCompatibleDC (0, 0, image);
+
+$   if (!(loadFlags & LR_LOADFROMFILE)) return dc;
 
 $   static std::map <std::string, unsigned> loadTimes;
 $   std::string file = filename;
@@ -7244,7 +7206,7 @@ $   return txDeleteDC (&dc);
 //-----------------------------------------------------------------------------------------------------------------
 
 bool txBitBlt (HDC dest, double xDest, double yDest, double width, double height,
-               HDC src,  double xSrc,  double ySrc,  DWORD rOp /*= SRCCOPY*/)
+               HDC src,  double xSrc /*= 0*/, double ySrc /*= 0*/, DWORD rOp /*= SRCCOPY*/)
     {
 $1  _TX_IF_TXWINDOW_FAILED        return false;
 $   _TX_IF_ARGUMENT_FAILED (dest) return false;
@@ -7257,7 +7219,7 @@ $   return txGDI (!!(Win32::BitBlt (dest, ROUND (xDest), ROUND (yDest), ROUND (w
 //-----------------------------------------------------------------------------------------------------------------
 
 bool txTransparentBlt (HDC dest, double xDest, double yDest, double width, double height,
-                       HDC src,  double xSrc,  double ySrc,  COLORREF transColor /*= TX_BLACK*/)
+                       HDC src,  double xSrc /*= 0*/, double ySrc /*= 0*/, COLORREF transColor /*= TX_BLACK*/)
     {
 $1  _TX_IF_TXWINDOW_FAILED        return false;
 $   _TX_IF_ARGUMENT_FAILED (dest) return false;
@@ -7274,7 +7236,7 @@ $   return (Win32::TransparentBlt)?
 //-----------------------------------------------------------------------------------------------------------------
 
 bool txAlphaBlend (HDC dest, double xDest, double yDest, double width, double height,
-                   HDC src,  double xSrc,  double ySrc,  double alpha /*= 1.0*/)
+                   HDC src,  double xSrc /*= 0*/, double ySrc /*= 0*/, double alpha /*= 1.0*/)
     {
 $1  _TX_IF_TXWINDOW_FAILED        return false;
 $   _TX_IF_ARGUMENT_FAILED (dest) return false;
@@ -8224,16 +8186,12 @@ const T& _txDump (const T& value, const char* prefix = "", const char* suffix = 
     return value;
     }
 
-#if !defined (_MSC_VER_6)
-
 template <typename T> inline
       T& _txDump (      T& value, const char* prefix = "", const char* suffix = "")
     {
     std::cerr << prefix << value << suffix;
     return value;
     }
-
-#endif
 
 struct _txDumpSuffix
     {
@@ -8278,7 +8236,6 @@ struct _txSaveConsoleAttr
     #else
     #pragma GCC diagnostic warning "-Wstrict-aliasing"
     #pragma GCC diagnostic warning "-Wshadow"
-
     #endif
 
     // Still block this warnings to avoid reporting about "= {0}" or "= {}" init style,
@@ -8323,60 +8280,20 @@ struct _txSaveConsoleAttr
 
 #if defined (__INTEL_COMPILER)
 
-    #pragma warning (default:  174)             // remark: expression has no effect
-    #pragma warning (default:  304)             // remark: access control not specified ("public" by default)
-    #pragma warning (default:  522)             // remark: function redeclared "inline" after being called
-    #pragma warning (default:  981)             // remark: operands are evaluated in unspecified order
+    #pragma warning (default:  174)             // remark: expression has no effect                         
+    #pragma warning (default:  304)             // remark: access control not specified ("public" by default)      
+    #pragma warning (default:  522)             // remark: function redeclared "inline" after being called         
+    #pragma warning (default:  981)             // remark: operands are evaluated in unspecified order             
     #pragma warning (default: 1684)             // conversion from pointer to same-sized integral type (potential portability problem)
-
-#endif
-
-//! @endcond
-//}
+                                                                                                                   
+#endif                                                                                                             
+                                                                                                                   
+//! @endcond                                                                                                       
+//}                                                                                                                
 //-----------------------------------------------------------------------------------------------------------------
-
-#endif // __TXLIB_H_INCLUDED
-
+                                                                                                                   
+#endif // __TXLIB_H_INCLUDED                                                                                       
+                                                                                                                   
 //=================================================================================================================
-// EOF
+// EOF                                                                                                             
 //=================================================================================================================
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

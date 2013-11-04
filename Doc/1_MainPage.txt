@@ -55,7 +55,7 @@
     @warning    <b>Это альфа-версия.
                 Для использования требуется согласование с автором библиотеки.</b> @n
                 Правила использования материалов библиотеки и сайта см. на
-                <a href=http://txlib.ru/index/0-6> официальном сайте.</a>
+                <a href=http://txlib.ru> официальном сайте.</a>
 
     @par        Ссылки:
            -    <a href="http://dl.dropbox.com/u/1557330/TXLib/TXLib-v0172a.rar.exe"><b>Скачать TX Library</b></a>
@@ -162,15 +162,15 @@
              -# Intel C++ Compiler 13.0 (2013)
              -# Intel C++ Compiler 9.0
            -    Операционные системы
-             -# Windows 8              ru/en
+             -# Windows 8, 8.1         ru/en
              -# Windows 7              ru/en
              -# Windows Vista          ru/en
              -# Windows 2003 SP1 R1/R2 ru/en
              -# Windows XP   SP2/SP3   ru/en
              -# Windows 2000 SP4       ru/en
              -# Linux + Wine
-                - Ubuntu 10.04, 11.04, 13.04 + Wine 1.2.2+, 1.4.1
-             -# Mac OS X + Wine
+                - Ubuntu 10.04, 11.04 + Wine 1.2.2+
+             -# MacOS X + Wine
                 - Snow Leopard 10.6.8 + Wine 1.4-rc2
 
     @note
@@ -228,7 +228,7 @@
                 <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O3 <i> -ansi -std=c++0x </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel </td></tr>
                 <tr valign=middle><td rowspan=2> CodeBlocks 12.11, GCC&nbsp;4.7.2 </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  <i> -ansi -std=c++11 </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel -Wstack-usage=8192 </td></tr>
                 <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O3 <i> -ansi -std=c++11 </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel -Wstack-usage=8192 </td></tr>
-                <tr valign=middle><td rowspan=2> CodeBlocks 12.11, GCC&nbsp;4.8.1 </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  <i> -ansi -std=c++11 </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel -Wstack-usage=8192 </td></tr>
+                <tr valign=middle><td rowspan=2> CodeBlocks 12.11, GCC&nbsp;4.8.0 </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  <i> -ansi -std=c++11 </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel -Wstack-usage=8192 </td></tr>
                 <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O3 <i> -ansi -std=c++11 </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel -Wstack-usage=8192 </td></tr>
                 <tr valign=middle><td rowspan=2> MSVS&nbsp;6                      </td><td> Debug   </td><td> /D&nbsp;_DEBUG /Od /Gm  /GX /GR /GZ <a href="http://support.microsoft.com/kb/199057">/Zi</a>              /MTd /FD /W4                                                                              /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_MBCS </td></tr>
                 <tr valign=middle>                                                     <td> Release </td><td> /D&nbsp;NDEBUG /O2      /GX /GR                                                                           /MT  /FD /W4                                                                              /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_MBCS </td></tr>
@@ -341,14 +341,5 @@
     - <a href=https://sourceforge.net/tracker/?func=add&group_id=213688&atid=1026713>
       <b>Предложить улучшение</b></a>
 */
-
-
-
-
-
-
-
-
-
 
 
