@@ -179,10 +179,17 @@ goto end
 :update
 echo Copying files for TXUpdate...
 
+%do% pushd _OFF\Public\CodeBlocks
+
+%do% copy ..\..\..\TXLib.h        "MinGW\include\TXLib.h" >> %log% 2>>&1
+%do% copy ..\..\..\TXLib-Help.chm "Doc\TXLib Help.chm"    >> %log% 2>>&1
+
+%do% popd
+
 %do% pushd _OFF\Public\TXUpdate
 
-%do% copy ..\..\..\TXLib.h        "TXLib.h"        >> %log% 2>>&1
-%do% copy ..\..\..\TXLib-Help.chm "TXLib Help.chm" >> %log% 2>>&1
+%do% copy ..\..\..\TXLib.h        "TXLib.h"               >> %log% 2>>&1
+%do% copy ..\..\..\TXLib-Help.chm "TXLib Help.chm"        >> %log% 2>>&1
 
 %do% attrib -h %.md5%
 %do% del %.md5% >> %log% 2>>&1
