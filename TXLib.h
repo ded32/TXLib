@@ -291,11 +291,12 @@
 
 #else
 
-    #define  strncpy_s              strncpy     // MSVC prior to 8 (2005) versions and GCC
-    #define  strncat_s              strncat     //   do NOT have secure variants of these
-    #define  wcsncpy_s              wcsncpy     //   functions, so use insecure ones.
-    #define _snprintf_s            _snprintf    //   ...
-    #define _vsnprintf_s           _vsnprintf
+    #define  strcpy_s               strcpy      // MSVC prior to 8 (2005) versions and GCC
+    #define  strncpy_s              strncpy     //   do NOT have secure variants of these
+    #define  strncat_s              strncat     //   functions, so use insecure ones.
+    #define  wcsncpy_s              wcsncpy     //   ...
+    #define _snprintf_s            _snprintf    //
+    #define _vsnprintf_s           _vsnprintf   //
 
     #define  strerror_s(   buf,             code )  (              strncpy  ((buf), strerror (code), sizeof(buf)-1) )
     #define  ctime_s(      buf, sizeof_buf, time )  (              strncpy  ((buf), ctime (time),   (sizeof_buf)-1) )
@@ -3424,20 +3425,23 @@ void txDump (const void* address, const char name[] = "txDump()");
 //!
 //!          int main()
 //!              {
-//!              txCreateWindow (800, 600);
+//!              txCreateWindow (GetSystemMetrics (SM_CXSCREEN) / 4, GetSystemMetrics (SM_CYSCREEN) / 4);
 //!
 //!              txSetWindowsHook (MyWndProc);
 //!
-//!              txCircle (txGetExtentX()/2, txGetExtentY()/2, 100);
+//!              txDrawText (0, 0, txGetExtentX(), txGetExtentY(), "MOV txWindow, eax [please]");
 //!
-//!              printf ("\n" "Still working ");
+//!              return 0;
 //!              }
 //!
 //!          LRESULT CALLBACK MyWndProc (HWND window, UINT message, WPARAM wParam, LPARAM lParam)
 //!              {
+//!              if (message == WM_MOVE) txMessageBox ("  I like to MOVe it, MOVe it", "TXLib 2 Real", MB_ICONINFORMATION);
+//!
 //!              static int i = 0;
-//!              if (i++ % 10 == 0) printf ("\b" "%c", "-\\|/" [i/10 % 4]);  // Прропппеллллерррр!
-//!              return 0; // Продолжить обработку сообщения средствами TXLib
+//!              if (i++ % 10 == 0) printf ("\b" "%c", "-\\|/" [i/10 % 4]);  // Прропппеллллерррр
+//!
+//!              return 0;  // Продолжить обработку сообщения средствами TXLib
 //!              }
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
@@ -3867,7 +3871,7 @@ void _txTrace (const char file[], int line, const char func[], const char msg[] 
 
     const char marks[2][2][3] = {{"uU", "cC"}, {"mM", "??"}};
 
-    char mark = marks [id == _txMainThreadId] [id == _txCanvas_ThreadId] [_txInTX > 0];
+    char mark = marks [id == _txMainThreadId] [id == _txCanvas_ThreadId] [(_txInTX > 0)];
 
     char msgStr[_TX_BUFSIZE] = "";
     if (msg)
@@ -4547,8 +4551,10 @@ void             _txPauseBeforeTermination (HWND canvas);
 bool             _txIsParentWaitable (DWORD* parentPID = NULL);
 PROCESSENTRY32*  _txFindProcess (unsigned pid = GetCurrentProcessId());
 bool             _txKillProcess (DWORD pid);
+PROC             _txSetProcAddress (HMODULE module, const char* dllName, const char* funcName, PROC newFunc);
 bool             _txInDll();
 int              _txGetInput();
+void             _tx_cexit();
 
 bool             _txCreateShortcut (const char shortcutName[],
                                     const char fileToLink[], const char args[] = NULL, const char workDir[] = NULL,
@@ -4969,7 +4975,7 @@ $1  _txIsDll = _txInDll();
 $   if (!_txIsDll)
         {
 $       _txConsole = ! FindAtom ("_txConsole");  // Not a thread-safe
-$       AddAtom                 ("_txConsole");
+$       (void)          AddAtom ("_txConsole");
         }
 
 $   if (_txConsole)
@@ -4998,7 +5004,11 @@ $       SetWindowTextA (console, txGetModuleFileName (false));
 
 $   InitializeCriticalSection (&_txCanvas_LockBackBuf);
 
-$   _txCanvas_UserDCs = new std::vector <HDC>; assert (_txCanvas_UserDCs);
+$   _txCanvas_UserDCs = new std::vector <HDC>;
+
+#if defined (_GCC_VER)
+$   _txSetProcAddress (GetModuleHandle (NULL), "MSVCRT.DLL", "_cexit", (PROC) _tx_cexit);  // See _tx_cexit()
+#endif
 
 $   atexit (_txCleanup);
 
@@ -5039,7 +5049,7 @@ $       return txWindow();
 $   if (!_txIsDll)
         {
 $       _txMain = ! FindAtom ("_txMain");  // Not a thread-safe
-$       AddAtom              ("_txMain");
+$       (void)       AddAtom ("_txMain");
         }
 
 $   if (_txWindowUpdateInterval < 10) { $ _txWindowUpdateInterval = 10; }
@@ -5169,9 +5179,13 @@ $1  return _txCanvas_OK();
 
 //-----------------------------------------------------------------------------------------------------------------
 
+// In GCC, implicit std(MSVCRT.dll)::_cexit() call before _txCleanup leads to hands in _cexit handlers chain.
+// So redefining std::_cexit(). Do it dynamically via PE Import Table hook to avoid duplicate symbols in linking
+// serveral modules including TXLib.h. See _txSetProcAddress() call in _txInitialize().
+
 #if defined (_GCC_VER)
 
-extern "C" void _cexit()
+void _tx_cexit()
     {
 $1  _txCleanup();
 
@@ -5485,6 +5499,57 @@ $   bool ok = !!TerminateProcess (proc, 0);
 $   CloseHandle (proc);
 
 $   return ok;
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+// TXLib continues to hack the reality to make your life better, sweeter and easier
+
+PROC _txSetProcAddress (HMODULE module, const char* dllName, const char* funcName, PROC newFunc)
+    {
+$1  _TX_IF_ARGUMENT_FAILED (module)  return NULL;
+$   _TX_IF_ARGUMENT_FAILED (dllName) return NULL;
+$   _TX_IF_ARGUMENT_FAILED (newFunc) return NULL;
+
+$   HMODULE dll = GetModuleHandle (dllName);
+$   if (!dll) return NULL;
+
+$   PROC oldFunc = GetProcAddress (dll, funcName);
+$   if (!oldFunc) return NULL;
+
+    #define RVA_( type, addr )  ( (type) ((ptrdiff_t) module + (ptrdiff_t) (addr)) )
+
+$   IMAGE_DOS_HEADER* dosHdr = RVA_ (IMAGE_DOS_HEADER*, 0);
+$   IMAGE_NT_HEADERS* ntHdr  = RVA_ (IMAGE_NT_HEADERS*, dosHdr->e_lfanew);
+
+$   if (dosHdr->e_magic   != IMAGE_DOS_SIGNATURE ||
+        ntHdr ->Signature != IMAGE_NT_SIGNATURE) return NULL;
+
+$   DWORD impOffset = ntHdr->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress;
+$   IMAGE_IMPORT_DESCRIPTOR* desc = RVA_ (IMAGE_IMPORT_DESCRIPTOR*, impOffset);
+
+$   if (desc == (IMAGE_IMPORT_DESCRIPTOR*) ntHdr) return NULL;
+
+$   IMAGE_THUNK_DATA* thunk = NULL;
+$   bool found = false;
+
+    for (; desc->Name; desc++)
+        {
+$       if (_stricmp (RVA_ (const char*, desc->Name), dllName) != 0) continue;
+
+$       for (thunk = RVA_ (IMAGE_THUNK_DATA*, desc->FirstThunk); thunk->u1.Function; thunk++)
+            if ((ptrdiff_t) thunk->u1.Function == (ptrdiff_t) oldFunc) { found = true; break; }
+
+$       if (found) break;
+        }
+
+$   if (!found) return NULL;
+
+$   *(PROC*)& thunk->u1.Function = newFunc;  // In different MS-SDKs this field has different types (DWORD/DWORD*/etc)
+
+$   return oldFunc;
+
+    #undef RVA_
     }
 
 //! @}
@@ -6273,7 +6338,7 @@ $       (void) _unlink (link);
 
 $       _txCreateShortcut (link, comspec, "/c exit", NULL, NULL, SW_SHOWMINNOACTIVE, NULL, 0, uniSize) asserted;
 
-$       ok = (Win32::ShellExecuteA (NULL, NULL, link, NULL, NULL, SW_SHOWMINNOACTIVE) > (void*)32);
+$       ok = (Win32::ShellExecuteA (NULL, NULL, link, NULL, NULL, SW_SHOWMINNOACTIVE) > (void*)32);  // Sic!
         if (ok) { $ _txWaitFor (FindWindow (NULL, "~txLink"), _TX_TIMEOUT); }
 
 $       (void) _unlink (link);
@@ -6368,7 +6433,7 @@ $       _TX_CHECKED (shellLink->QueryInterface (Win32::IID_IPersistFile, (void**
 $       if (!file) _TX_FAIL;
 
 $       wchar_t wName[MAX_PATH] = L"";
-$       MultiByteToWideChar (_TX_CP, 0, shortcutName, -1, wName, MAX_PATH);
+$       MultiByteToWideChar (_TX_CP, 0, shortcutName, -1, wName, MAX_PATH) || ZeroMemory (wName, sizeof (wName));
 
 $       _TX_CHECKED (file->Save (wName, true));
         }
@@ -6632,7 +6697,7 @@ const char* _txError (const char file[] /*= NULL*/, int line /*= 0*/, const char
 
         static char* replace (char* dest, const char* src, char find, char repl)
             {
-            int i = 0;
+            size_t i = 0;
             for (; src[i]; i++) dest[i] = (src[i] == find)? repl : src[i];
             dest[i] = 0;
 
@@ -6696,8 +6761,8 @@ unsigned txMessageBox (const char* text, const char* header, unsigned flags /*= 
     static wchar_t textW   [_TX_BIGBUFSIZE * sizeof (wchar_t)] = L"[NULL text]";
     static wchar_t headerW [_TX_BUFSIZE    * sizeof (wchar_t)] = L"[NULL header]";
 
-    if (text)   MultiByteToWideChar (_TX_CP, 0, text,   -1, textW,   SIZEARR (textW));
-    if (header) MultiByteToWideChar (_TX_CP, 0, header, -1, headerW, SIZEARR (headerW));
+    if (text)   MultiByteToWideChar (_TX_CP, 0, text,   -1, textW,   SIZEARR (textW))   || memset (textW,   0, sizeof (textW));
+    if (header) MultiByteToWideChar (_TX_CP, 0, header, -1, headerW, SIZEARR (headerW)) || memset (headerW, 0, sizeof (headerW));
 
     HWND wnd = _txCanvas_Window;
     return MessageBoxW ((wnd? wnd : Win32::GetConsoleWindow()), textW, headerW, flags | MB_SETFOREGROUND | MB_TOPMOST);
@@ -6709,7 +6774,9 @@ const char* txGetModuleFileName (bool fileNameOnly /*= true*/)
     {
     static char name[MAX_PATH] = "";
 
-    if (!*name) GetModuleFileName (NULL, name, sizeof (name) - 1) asserted;
+    if (!*name) GetModuleFileName (NULL, name, sizeof (name) - 1) || strcpy_s (name, "");
+    assert (*name);
+
     if (fileNameOnly) return name;
 
     static char fullName[MAX_PATH] = "";
@@ -7979,7 +8046,7 @@ $       const Layout* item = &layout[i];
 
 $       ptr = _tx_DLGTEMPLATE_Add (ptr, bufsize - ((char*)ptr - (char*)tmpl),
                                    item->style | WS_VISIBLE, 0, item->x, item->y, item->sx, item->sy,
-                                   item->id, (const char*)item->wndclass, item->caption);
+                                   item->id, (const char*) item->wndclass, item->caption);
         }
 
 $   tmpl->cdit = (unsigned short) (i-1);
@@ -8420,75 +8487,8 @@ struct _txSaveConsoleAttr
 //=================================================================================================================
                                                                                                                    
                                                                                                                    
-                                                                                     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                                                                                                   
+              
 
 
 

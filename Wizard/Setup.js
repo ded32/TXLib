@@ -48,6 +48,7 @@ function main (argc, argv)
     if (!FS.FolderExists (src)) return Error ("Cannot find Wizard folder " + src);
 
     var ok = 0;
+    ok += VS_Setup  ("12.0", "HKCU", "12.0_Config", src + "\\VS");
     ok += VS_Setup  ("11.0", "HKCU", "11.0_Config", src + "\\VS");
     ok += VS_Setup  ("10.0", "HKCU", "10.0_Config", src + "\\VS");
     ok += VS_Setup  ("9.0",  "HKLM", "9.0",         src + "\\VS");
