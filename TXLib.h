@@ -6,9 +6,9 @@
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 106 $
+//!          $Version: 00173a, Revision: 107 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2016-04-16 02:18:02 +0400 $
+//!          $Date: 2016-04-19 11:34:10 +0400 $
 //!
 //!          TX Library - компактная библиотека двумерной графики для Win32 на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -79,8 +79,8 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VERSION           _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 106, 2016-04-16 02:18:02 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR            _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 106, 2016-04-16 02:18:02 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION           _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 107, 2016-04-19 11:34:10 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR            _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 107, 2016-04-19 11:34:10 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @}
 //{----------------------------------------------------------------------------------------------------------------
@@ -102,7 +102,7 @@
 //! @hideinitializer
 //}----------------------------------------------------------------------------------------------------------------
 
-#define _TX_VER               _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 106, 2016-04-16 02:18:02 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER               _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 107, 2016-04-19 11:34:10 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //}
 //-----------------------------------------------------------------------------------------------------------------
@@ -218,7 +218,7 @@
         #pragma GCC diagnostic warning "-Wpointer-arith"
         #pragma GCC diagnostic warning "-Wredundant-decls"
         #pragma GCC diagnostic warning "-Wshadow"
-        #pragma GCC diagnostic warning "-Wsign-conversion"
+//      #pragma GCC diagnostic warning "-Wsign-conversion"
         #pragma GCC diagnostic warning "-Wsign-promo"
         #pragma GCC diagnostic warning "-Wstrict-aliasing"
         #pragma GCC diagnostic warning "-Wstrict-null-sentinel"
@@ -364,6 +364,8 @@
             #define _CRTDBG_MAP_ALLOC 1         // Set debug mode heap allocation
         #endif
 
+        #define AC_SRC_ALPHA          0x01      // Copied from Windows SDK 7.0a.
+
     #endif
 
     #if (_MSC_VER >= 1400)                      // MSVC 8 (2005) or greater
@@ -403,9 +405,10 @@
     #define _snprintf_s            _snprintf    //
     #define _vsnprintf_s           _vsnprintf   //
 
-    #define  strerror_s(   buf,             code )  (              strncpy  ((buf), strerror ((int)(code)), sizeof(buf)-1) )
+    #define  strerror_s(   buf, code )              (              strncpy  ((buf), strerror ((int)(code)), sizeof(buf)-1) )
     #define  getenv_s( sz, buf, sizeof_buf, name )  ( (void)(sz),  strncpy  ((buf), getenv (name),         (sizeof_buf)-1) )
     #define  strtok_s(     buf, delim, ctx )        ( (void)(ctx), strtok   ((buf), (delim)) )
+    #define  fopen_s(  file, name, mode )           ( *(file) = fopen ((name), (mode)) )
 
     #if !( defined (_GCC_VER) && (_GCC_VER >= 510) &&  defined (__x86_64__) )  // At least GCC 5.1.0 x64 already has it
     #define  ctime_s( buf, sizeof_buf, time )       ( strncpy ((buf), ctime (time), (sizeof_buf)-1) )
@@ -423,6 +426,7 @@
 
     #pragma warning (disable:  174)             // remark: expression has no effect
     #pragma warning (disable:  304)             // remark: access control not specified ("public" by default)
+    #pragma warning (disable:  444)             // remark: destructor for base class "..." is not virtual
     #pragma warning (disable:  522)             // remark: function "..." redeclared "inline" after being called
     #pragma warning (disable:  981)             // remark: operands are evaluated in unspecified order
     #pragma warning (disable: 1684)             // conversion from pointer to same-sized integral type (potential portability problem)
@@ -443,6 +447,8 @@
 #endif
 
 #define _USE_MATH_DEFINES                       // math.h's M_PI etc.
+
+namespace std { enum nomeow_t { nomeow }; }     // Vital additions to C++ standard. Should contact C++ std committee.
 
 //! @} @endcond
 //}
@@ -1801,7 +1807,7 @@ LOGFONT* txFontExist (const char name[]);
 //!          <small>When the program will be shutting down, TXLib will try to delete DCs which were not deleted,
 //!          but this is not guaranteed.</small>
 //!
-//! @see     txCreateWindow(), txCreateCompatibleDC(), txLoadImage(), txDeleteDC()
+//! @see     txCreateWindow(), txCreateCompatibleDC(), txLoadImage(), txDeleteDC(), txSaveImage(), txGetExtent()
 //!
 //! @usage @code
 //!          HDC save = txCreateCompatibleDC (100, 100);
@@ -1862,7 +1868,8 @@ HDC txCreateCompatibleDC (double sizeX, double sizeY, HBITMAP bitmap = NULL);
 //!          @tr Остальные флаги загрузки @td см. на MSDN.com, поиск "LoadImage function".
 //!          @endtable
 //!
-//! @see     txCreateWindow(), txCreateCompatibleDC(), txLoadImage(), txDeleteDC(), txBitBlt(), txAlphaBlend(), txTransparentBlt()
+//! @see     txCreateWindow(), txCreateCompatibleDC(), txLoadImage(), txDeleteDC(), txBitBlt(), txAlphaBlend(),
+//!          txTransparentBlt(), txSaveImage(), txGetExtent()
 //!
 //! @usage   Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
@@ -1893,7 +1900,7 @@ HDC txLoadImage (const char filename[], unsigned imageFlags = IMAGE_BITMAP, unsi
 //!
 //! @return  Если операция была успешна - true, иначе - false.
 //!
-//! @see     txCreateWindow(), txCreateCompatibleDC(), txLoadImage(), txDeleteDC()
+//! @see     txCreateWindow(), txCreateCompatibleDC(), txLoadImage(), txDeleteDC(), txSaveImage(), txGetExtent()
 //!
 //! @usage   Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
@@ -1923,11 +1930,11 @@ bool txDeleteDC (HDC* dc);
 //! @ingroup Drawing
 //! @brief   Копирует изображение с одного холста (контекста рисования, DC) на другой.
 //!
-//! @param   dest    Контекст назначения (куда копировать)
+//! @param   dest    Контекст назначения (куда копировать). Если NULL, то копирует в окно TXLib
 //! @param   xDest   Х-координата верхнего левого угла изображения-приемника
 //! @param   yDest   Y-координата верхнего левого угла изображения-приемника
-//! @param   width   Ширина копируемого изображения
-//! @param   height  Высота копируемого изображения
+//! @param   width   Ширина копируемого изображения. Если <= 0, то автоматически берется из размера источника
+//! @param   height  Высота копируемого изображения. Если <= 0, то автоматически берется из размера источника
 //! @param   src     Контекст источника (откуда копировать)
 //! @param   xSrc    Х-координата верхнего левого угла изображения-источника
 //! @param   ySrc    Y-координата верхнего левого угла изображения-источника
@@ -1935,7 +1942,7 @@ bool txDeleteDC (HDC* dc);
 //!
 //! @return  Если операция была успешна - true, иначе - false.
 //!
-//! @warning Если контексты назначения или источника равны NULL, то они не существуют и копирование вызовет ошибку.
+//! @warning Если контексты источника равен NULL, то он не существует и копирование вызовет ошибку.
 //!          Наиболее частая причина - ошибка при загрузке файла изображения и отсутствие проверки на эту ошибку.
 //!          Пример с проверкой на правильность загрузки см. ниже.
 //!
@@ -1959,7 +1966,8 @@ bool txDeleteDC (HDC* dc);
 //!          @tr SRCPAINT    @td Приемник =  приемник | источник
 //!          @endtable
 //!
-//! @see     txAlphaBlend(), txTransparentBlt(), txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors, RGB()
+//! @see     txAlphaBlend(), txTransparentBlt(), txSaveImage(), txGetExtent(), txSetColor(), txGetColor(),
+//!          txSetFillColor(), txGetFillColor(), txColors, RGB()
 //!
 //! @usage   Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
@@ -1970,7 +1978,7 @@ bool txDeleteDC (HDC* dc);
 //!
 //!          // См. важный комментарий в примере к функции txLoadImage!
 //!
-//!          txBitBlt (txDC(), 0, 0, 800, 600, background_FromTXLibHelp, 0, 0);
+//!          txBitBlt (txDC(), 0, 0, 800, 600, background_FromTXLibHelp);
 //!
 //!          ...
 //!          txDeleteDC (background_FromTXLibHelp);
@@ -1979,17 +1987,19 @@ bool txDeleteDC (HDC* dc);
 
 bool txBitBlt (HDC dest, double xDest, double yDest, double width, double height,
                HDC src,  double xSrc = 0, double ySrc = 0, DWORD rOp = SRCCOPY);
+inline
+bool txBitBlt (HDC dest, double xDest, double yDest, HDC src,
+               double xSrc = 0, double ySrc = 0, double width = 0, double height = 0, DWORD rOp = SRCCOPY);
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
-//! @brief   Копирует изображение с одного холста (контекста рисования, DC) на другой
-//!          с учетом прозрачности.
+//! @brief   Копирует изображение с одного холста (контекста рисования, DC) на другой с учетом прозрачности.
 //!
-//! @param   dest        Контекст назначения (куда копировать)
+//! @param   dest        Контекст назначения (куда копировать). Если NULL, то копирует в окно TXLib
 //! @param   xDest       Х-координата верхнего левого угла изображения-приемника
 //! @param   yDest       Y-координата верхнего левого угла изображения-приемника
-//! @param   width       Ширина копируемого изображения, неотрицательная
-//! @param   height      Высота копируемого изображения, неотрицательная
+//! @param   width       Ширина копируемого изображения. Если <= 0, то автоматически берется из размера источника
+//! @param   height      Высота копируемого изображения. Если <= 0, то автоматически берется из размера источника
 //! @param   src         Контекст источника (откуда копировать)
 //! @param   xSrc        Х-координата верхнего левого угла изображения-источника, должна быть в пределах размера источника.
 //! @param   ySrc        Y-координата верхнего левого угла изображения-источника, должна быть в пределах размера источника.
@@ -1997,20 +2007,20 @@ bool txBitBlt (HDC dest, double xDest, double yDest, double width, double height
 //!
 //! @return  Если операция была успешна - true, иначе - false.
 //!
-//! @warning Если контексты назначения или источника равны NULL, то они не существуют и копирование вызовет ошибку.
+//! @warning Если контекст источника равен NULL, то он не существует и копирование вызовет ошибку.
 //!          Наиболее частая причина - ошибка при загрузке файла изображения и отсутствие проверки на эту ошибку.
 //!          Пример с проверкой на правильность загрузки см. ниже. @nn
 //!          Изображение-источник и изображение-приемник не могут налагаться друг на друга. @nn
-//!          Если прямоугольник копируемой области не полностью лежит в полном прямоугольнике источника, то функция работать не будет.
+//!          Если прямоугольник копируемой области не полностью лежит в полном прямоугольнике источника, то функция
+//!          работать не будет.
 //!
 //!          Стандартная функция TransparentBlt из Win32 API может масштабировать изображение. В txTransparentBlt
 //!          это убрано для упрощения использования. If you need image scaling, use original function
-//!          TransparentBlt and don't mess with stupid TX-based tools. (See implementation of txTransparentBlt
-//!          in TXLib.h).
+//!          TransparentBlt and don't mess with stupid TX-based tools. (See implementation of txTransparentBlt in TXLib.h).
 //!
 //! @note    Если TransparentBlt не работает, используйте функцию AlphaBlend, она вообще лучше.
 //!
-//! @see     txBitBlt(), txTransparentBlt(), txLoadImage(), txCreateCompatibleDC()
+//! @see     txBitBlt(), txTransparentBlt(), txLoadImage(), txCreateCompatibleDC(), txSaveImage(), txGetExtent()
 //!
 //! @usage   Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
@@ -2021,7 +2031,7 @@ bool txBitBlt (HDC dest, double xDest, double yDest, double width, double height
 //!
 //!          // См. важный комментарий в примере к функции txLoadImage!
 //!
-//!          txTransparentBlt (txDC(), 0, 0, 800, 600, superman_FromTXLibHelp, 0, 0);
+//!          txTransparentBlt (txDC(), 0, 0, 800, 600, superman_FromTXLibHelp);
 //!
 //!          // А можно и так:
 //!          Win32::TransparentBlt (txDC(), 0, 0, 800, 600, superman_FromTXLibHelp, 0, 0, 80, 60, -1); // 10-кратное увеличение
@@ -2034,33 +2044,41 @@ bool txBitBlt (HDC dest, double xDest, double yDest, double width, double height
 
 bool txTransparentBlt (HDC dest, double xDest, double yDest, double width, double height,
                        HDC src,  double xSrc = 0, double ySrc = 0, COLORREF transColor = TX_BLACK);
+inline
+bool txTransparentBlt (HDC dest, double xDest, double yDest, HDC src,
+                       double xSrc = 0, double ySrc = 0, double width = 0, double height = 0, COLORREF transColor = TX_BLACK);
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
-//! @brief   Копирует изображение с одного холста (контекста рисования, DC) на другой
-//!          с учетом прозрачности.
+//! @brief   Копирует изображение с одного холста (контекста рисования, DC) на другой с учетом полупрозрачности.
 //!
-//! @param   dest    Контекст назначения (куда копировать)
+//! @param   dest    Контекст назначения (куда копировать). Если NULL, то копирует в окно TXLib
 //! @param   xDest   Х-координата верхнего левого угла изображения-приемника
 //! @param   yDest   Y-координата верхнего левого угла изображения-приемника
-//! @param   width   Ширина копируемого изображения, неотрицательная
-//! @param   height  Высота копируемого изображения, неотрицательная
+//! @param   width   Ширина копируемого изображения. Если <= 0, то автоматически берется из размера источника
+//! @param   height  Высота копируемого изображения. Если <= 0, то автоматически берется из размера источника
 //! @param   src     Контекст источника (откуда копировать). Должен иметь 32-битовый формат и альфа-канал (см. ниже).
-//! @param   xSrc    Х-координата верхнего левого угла изображения-источника, должна быть в пределах размера источника.
-//! @param   ySrc    Y-координата верхнего левого угла изображения-источника, должна быть в пределах размера источника.
-//! @param   alpha   Общая прозрачность изображения, в дополнение к альфа-каналу (0 - все прозрачно, 1 - использовать только альфа-канал).
+//! @param   xSrc    Х-координата верхнего левого угла изображения-источника
+//! @param   ySrc    Y-координата верхнего левого угла изображения-источника
+//! @param   alpha   Общая прозрачность изображения, в дополнение к альфа-каналу (0 - все прозрачно, 1 - использовать
+//!                  только альфа-канал)
+//! @param   format  Если нужно учитывать альфа-канал источника (например, в картинках), то AC_SRC_ALPHA,
+//!                  иначе 0 (например, если холст источника создан с помощью txCreateCompatibleDC, см. ниже)
 //!
 //! @return  Если операция была успешна - true, иначе - false.
 //!
-//! @warning Если контексты назначения или источника равны NULL, то они не существуют и копирование вызовет ошибку.
+//! @warning Если контекст источника равен NULL, то он не существует и копирование вызовет ошибку.
 //!          Наиболее частая причина - ошибка при загрузке файла изображения и отсутствие проверки на эту ошибку.
-//!          Пример с проверкой на правильность загрузки см. ниже. @nn
-//!          Изображение-источник и изображение-приемник не могут налагаться друг на друга. @nn
-//!          Если прямоугольник копируемой области не полностью лежит в полном прямоугольнике источника, то функция работать не будет.
+//!          Пример с проверкой на правильность загрузки см. ниже.
 //!
-//! @note    Изображение должно быть загружено с помощью txLoadImage() и иметь <b>32-битовый RGBA-формат.</b>
+//! @warning Изображение-источник и изображение-приемник не могут налагаться друг на друга. @nn
+//!          Если прямоугольник копируемой области не полностью лежит в прямоугольнике источника, то функция
+//!          работать не будет.
+//!
+//! @note    Изображение-источник должно быть загружено с помощью txLoadImage() и иметь <b>32-битовый RGBA-формат.</b>
 //!          Дополнительный канал <b>(A, альфа-канал)</b> этого формата отвечает за прозрачность участков
-//!          изображения. 24-битовый формат (TrueColor RGB) функция txAlphaBlend не поддерживает.
+//!          изображения. 24-битовый формат файлов (TrueColor RGB) функция txAlphaBlend поддерживает только если
+//!          установить параметр @p format равным 0.
 //!
 //!          Альфа-канал можно сделать, например, в Adobe Photoshop, командой "Новый канал (New Channel)" в палитре
 //!          каналов (Channels). Черный цвет в альфа-канале соответствует полной прозрачности, белый - полной
@@ -2084,11 +2102,18 @@ bool txTransparentBlt (HDC dest, double xDest, double yDest, double width, doubl
 //!          @tr Opacity:    @td 100%
 //! @endtable
 //!
-//! @note    Стандартная функция AlphaBlend из Win32 API может масштабировать изображение. В txAlphaBlend это
-//!          убрано для упрощения использования. If you still need image scaling, use original function AlphaBlend
+//! @note    Изображение-источник также может быть создано с помощью txCreateCompatibleDC(), если видеорежим дисплея
+//!          32-битовый (TrueColor). @nn
+//!          В этом случае альфа-канал созданного холста будет содержать нули, т.е. изображение на нем будет всегда
+//!          трактоваться как полностью прозрачное и при копировании с помощью txAlphaBlend результата не будет.
+//!          Чтобы игнорировать такой нулевой альфа-канал, параметр @p format надо установить в 0, и прозрачность
+//!          регулировать параметром @p alpha. См. пример к функции txSaveImage().
+//!
+//! @note    Стандартная функция AlphaBlend из Win32 API @b может масштабировать изображение. В txAlphaBlend это
+//!          @b убрано для упрощения использования. If you still need image scaling, use original function AlphaBlend
 //!          and don't mess with stupid TX-based tools. (See implementation of txAlphaBlend in TXLib.h).
 //!
-//! @see     txBitBlt(), txTransparentBlt(), txLoadImage(), txCreateCompatibleDC()
+//! @see     txBitBlt(), txTransparentBlt(), txLoadImage(), txCreateCompatibleDC(), txSaveImage(), txGetExtent()
 //!
 //! @usage   Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
@@ -2099,7 +2124,7 @@ bool txTransparentBlt (HDC dest, double xDest, double yDest, double width, doubl
 //!
 //!          // См. важный комментарий в примере к функции txLoadImage!
 //!
-//!          txAlphaBlend (txDC(), 0, 0, 800, 600, batman_FromTXLibHelp, 0, 0);
+//!          txAlphaBlend (txDC(), 0, 0, 800, 600, batman_FromTXLibHelp);
 //!
 //!          ...
 //!          txDeleteDC (batman_FromTXLibHelp);  // Don't worry, batman will return in "Batman returns" movie, later...
@@ -2110,7 +2135,42 @@ bool txTransparentBlt (HDC dest, double xDest, double yDest, double width, doubl
 //}----------------------------------------------------------------------------------------------------------------
 
 bool txAlphaBlend (HDC dest, double xDest, double yDest, double width, double height,
-                   HDC src,  double xSrc = 0, double ySrc = 0, double alpha = 1.0);
+                   HDC src,  double xSrc = 0, double ySrc = 0, double alpha = 1.0, unsigned format = AC_SRC_ALPHA);
+inline
+bool txAlphaBlend (HDC dest, double xDest, double yDest, HDC src,
+                   double xSrc = 0, double ySrc = 0, double width = 0, double height = 0, double alpha = 1.0,
+                   unsigned format = AC_SRC_ALPHA);
+
+//{----------------------------------------------------------------------------------------------------------------
+//! @ingroup Drawing
+//! @brief   Сохраняет в файл изображение в формате BMP.
+//!
+//! @param   filename    Имя файла с расширением "BMP", куда будет записано изображение в формате BMP
+//! @param   dc          Декскриптор холста, изображение которого сохраняется в файл. Если NULL, сохраняется изображение
+//!                      окна TXLib.
+//!
+//! @return  Если операция была успешна - true, иначе - false.
+//!
+//! @see     txCreateCompatibleDC(), txLoadImage(), txDeleteDC(), txBitBlt(), txAlphaBlend(), txTransparentBlt()
+//!
+//! @usage   @code
+//!          txDrawMan (50, 110, 100, 100, TX_YELLOW, 0.3, -0.5, -0.4, 0, 0.8, 1, -1, 0.5, 1, 1);
+//!
+//!          HDC dc = txCreateCompatibleDC (100, 110);
+//!          txBitBlt (dc, 0, 0, 100, 110, txDC());
+//!          txSaveImage ("TXLibMan.bmp", dc);
+//!
+//!          txBitBlt     (dc,       0,   0, 100, 110, txDC());
+//!          txBitBlt     (txDC(), 200, 200,   0,   0, dc);
+//!          txAlphaBlend (txDC(), 100, 100,   0,   0, dc, 0, 0, 0.25, 0);
+//!          txDeleteDC (dc);
+//!
+//!          txSaveImage ("ScreenShot.bmp");
+//! @endcode
+//}----------------------------------------------------------------------------------------------------------------
+
+bool txSaveImage (const char* filename, HDC dc = txDC());
+
 //! @}
 //}
 
@@ -2397,7 +2457,7 @@ inline int txMouseY();
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-inline int txMouseButtons();
+inline unsigned txMouseButtons();
 
 //! @}
 //}
@@ -2804,6 +2864,55 @@ int txOutputDebugPrintf (const char format[], ...) _TX_CHECK_FORMAT (1);
 //! @}
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
+//! @brief   Генератор случайных чисел
+//!
+//! @param   range  Правая граница диапазона (@b не включая саму границу).
+//!
+//! @return  Случайное целое число в диапазоне [0; range).
+//!
+//!          Вы еще помните, что означают разные скобочки в обозначении интервалов? :)
+//!
+//! @warning Эта функция может мяукать.
+//!          @strike Just because it can. @endstrike Потому что вы можете написать ее сами, если это вам не нужно.
+//!
+//! @usage @code
+//!          char message[100] = "Maybe...";
+//!          sprintf (message, "You SUDDENLY got %d bucks now. But note that tax rate is $%d.", random (100), 100);
+//!          txMessageBox (message, "Lottery");
+//! @endcode
+//}----------------------------------------------------------------------------------------------------------------
+
+inline int random (int range);
+
+//{----------------------------------------------------------------------------------------------------------------
+//! @ingroup Misc
+//! @brief   Генератор случайных чисел
+//!
+//! @param   left   Левая  граница диапазона (@b включая саму границу).
+//! @param   right  Правая граница диапазона (@b включая саму границу).
+//!
+//! @return  Случайное целое число в диапазоне [left; right].
+//!
+//!          Вы все еще помните, что означают разные скобочки в обозначении интервалов? :)
+//!
+//! @warning Эта функция может мяукать.
+//!          @strike Just in case. @endstrike Потому что вы можете написать ее сами, если это вам не нужно.
+//!
+//! @usage @code
+//!          int money = random (-100, +100);
+//!          if (money < 0)
+//!              {
+//!              char message[100] = "Maybe...";
+//!              sprintf ("Проиграли в лотерею? Отдайте долг в %d рублей", -money);
+//!              txMessageBox (message, "Быстро!");
+//!              }
+//! @endcode
+//}----------------------------------------------------------------------------------------------------------------
+
+inline double random (double left, double right);
+
+//{----------------------------------------------------------------------------------------------------------------
+//! @ingroup Misc
 //! @brief   Проверка, находится ли параметр х внутри замкнутого интервала [a; b]
 //!
 //! @param   x  Проверяемый параметр
@@ -2811,6 +2920,9 @@ int txOutputDebugPrintf (const char format[], ...) _TX_CHECK_FORMAT (1);
 //! @param   b  Правая граница (включительно)
 //!
 //! @return  Если a <= x && x <= b, то истина, если нет - ложь
+//!
+//! @warning Эта функция может мяукать.
+//!          @strike Because cats are power! @endstrike Потому что вы можете написать ее сами, если это вам не нужно.
 //!
 //! @usage @code
 //!          while (txMouseButtons() != 1)
@@ -2821,8 +2933,11 @@ int txOutputDebugPrintf (const char format[], ...) _TX_CHECK_FORMAT (1);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-template <typename T>
-inline bool In (T x, T a, T b);
+template <typename Tx, typename Ta, typename Tb>
+inline bool In (Tx x, Ta a, Tb b);
+
+template <typename Tx, typename Ta, typename Tb>
+inline bool In (std::nomeow_t, Tx x, Ta a, Tb b);
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
@@ -2834,6 +2949,9 @@ inline bool In (T x, T a, T b);
 //! @return  Результат проверки
 //!
 //!          Удобно для реализации экранных кнопок, нажимаемых курсором мыши.
+//!
+//! @warning Эта функция может мяукать.
+//!          @strike Because cats are always right. @endstrike Потому что вы можете написать ее сами, если это вам не нужно.
 //!
 //! @usage @code
 //!          RECT button = { 100, 100, 150, 120 };
@@ -2877,55 +2995,15 @@ inline bool In (const COORD& pt, const SMALL_RECT& rect);
 //! @}
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
-//! @brief   Генератор случайных чисел
-//!
-//! @param   range  Правая граница диапазона (@b не включая саму границу).
-//!
-//! @return  Случайное целое число в диапазоне [0; range).
-//!
-//!          Вы еще помните, что означают разные скобочки в обозначении интервалов? :)
-//!
-//! @usage @code
-//!          char message[100] = "Maybe...";
-//!          sprintf (message, "You SUDDENLY got %d bucks now. But note that tax rate is $%d.", random (100), 100);
-//!          txMessageBox (message, "Lottery");
-//! @endcode
-//}----------------------------------------------------------------------------------------------------------------
-
-inline int random (int range);
-
-//{----------------------------------------------------------------------------------------------------------------
-//! @ingroup Misc
-//! @brief   Генератор случайных чисел
-//!
-//! @param   left   Левая  граница диапазона (@b включая саму границу).
-//! @param   right  Правая граница диапазона (@b включая саму границу).
-//!
-//! @return  Случайное целое число в диапазоне [left; right].
-//!
-//!          Вы все еще помните, что означают разные скобочки в обозначении интервалов? :)
-//!
-//! @usage @code
-//!          int money = random (-100, +100);
-//!          if (money < 0)
-//!              {
-//!              char message[100] = "Maybe...";
-//!              sprintf ("Проиграли в лотерею? Отдайте долг в %d рублей", -money);
-//!              txMessageBox (message, "Быстро!");
-//!              }
-//! @endcode
-//}----------------------------------------------------------------------------------------------------------------
-
-inline double random (double left, double right);
-
-//{----------------------------------------------------------------------------------------------------------------
-//! @ingroup Misc
 //! @brief   Возвращает максимальное из двух чисел
 //!
 //! @param   a  Одно   из чисел :)
 //! @param   b  Другое из чисел :)
 //!
 //! @return  Максимальное из двух чисел a и b
+//!
+//! @warning Это @b макрос, и аргументы @c a и @c b могут вычисляться в нем два раза. Поэтому не используйте в нем
+//!          побочных действий @c ++, @c --, @c += и т.п. Например, @b не пишите так: <tt>int m = MAX (++x, y += 2);</tt>
 //!
 //! @see     MIN()
 //!
@@ -2946,6 +3024,9 @@ inline double random (double left, double right);
 //! @param   b  Другое из чисел :)
 //!
 //! @return  Минимальное из двух чисел a и b
+//!
+//! @warning Это @b макрос, и аргументы @c a и @c b могут вычисляться в нем два раза. Поэтому не используйте в нем
+//!          побочных действий @c ++, @c --, @c += и т.п. Например, @b не пишите так: <tt>int m = MIN (x--, y /= 2);</tt>
 //!
 //! @see     MAX()
 //!
@@ -2997,8 +3078,8 @@ inline double random (double left, double right);
 //! на достоверность хотя бы с помощью std::isfinite (x).
 //!
 //! @note    Поведение TXLib по умолчанию - @b генерация этих исключений и их @b перехват TXLib'ом в виде @b ошибки.@nn
-//!          См. <a href=http://books.google.ru/books?id=uwgNv8VlNPgC&pg=PA343>пример работы с этими исключениями,</a>
-//!          <a href=http://www.gamasutra.com/view/news/169203/Exceptional_floating_point.php>статью о них.</a>
+//!          См. [1] <a href=http://books.google.ru/books?id=uwgNv8VlNPgC&pg=PA343>пример работы с этими исключениями,</a>
+//!              [2] <a href=http://www.gamasutra.com/view/news/169203/Exceptional_floating_point.php>статью о них.</a>
 //!
 //! @usage @code
 //!          tx_fpreset();
@@ -3082,17 +3163,17 @@ double txSqr (double x)
 //!          <tt> #define z 0 </tt> @nn
 //!          Замечательный макрос! Теперь на одну переменную в программе стало меньше. :((
 //!
+//! @note    (Используйте @c #undef. С @c <http://www.google.ru/search?q=%23undef>#undef</a> ваша программа станет
+//!          мягкой и шелковистой.)
+//!
 //! @usage @code
 //!          #define _TX_DESTROY_3D
 //!          #include "TXLib.h"
 //!
-//!          // А теперь попробуйте объявить переменную @p z для расчета 3-D координат @p x, @p y, @p z:
+//!          // А теперь попробуйте объявить переменную z для расчета 3-D координат x, y, z:
 //!
-//!          int z = 0;  // Да! TXLib уничтожает трехмерность! <s>Очень круто.</s>
+//!          int z = 0;  // Да! TXLib уничтожает трехмерность! Очень круто. =/
 //! @endcode
-//!
-//! @note    Используйте @p #undef. С @p <http://www.google.ru/search?q=%23undef>#undef</a> ваша программа станет
-//!          мягкой и шелковистой.
 //!
 //! @hideinitializer
 //}----------------------------------------------------------------------------------------------------------------
@@ -3838,7 +3919,7 @@ int            _txConsoleMode             = SW_HIDE;
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-unsigned       _txWindowStyle             = WS_POPUP | WS_BORDER | WS_CAPTION | WS_SYSMENU;
+int            _txWindowStyle             = WS_POPUP | WS_BORDER | WS_CAPTION | WS_SYSMENU;
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Technical
@@ -4788,10 +4869,6 @@ bool             _txInDll();
 int              _txGetInput();
 PROC             _txSetProcAddress (const char* funcName, PROC newFunc, const char* dllName = NULL, HMODULE module = NULL,
                                     bool debug = false);
-void             _tx_cexit();
-void             _tx_exit (int retcode);
-void             _tx_ExitProcess (unsigned retcode);
-bool             _tx_TerminateProcess (HANDLE process, unsigned retcode);
 
 bool             _txCreateShortcut (const char shortcutName[],
                                     const char fileToLink[], const char args[] = NULL, const char workDir[] = NULL,
@@ -4814,8 +4891,13 @@ const char*      _txError        (const char file[] = NULL, int line = 0, const 
 HICON            _txCreateTXIcon (int size);
 
 void             _txOnSignal (int signal = 0, int fpe = 0);
+BOOL WINAPI      _txOnConsoleCtrlEvent (DWORD type);
 void             _txOnTerminate();
 void             _txOnUnexpected();
+void             _txOnCExit();
+void             _txOnExit (int retcode);
+void             _txOnExitProcess (unsigned retcode);
+bool             _txOnTerminateProcess (HANDLE process, unsigned retcode);
 
 FARPROC          _txDllImport (const char dllFileName[], const char funcName[], bool required = true);
 
@@ -4948,7 +5030,7 @@ _TX_DLLIMPORT     ("GDI32",    int,      GetDIBits,                (HDC hdc, HBI
                                                                     void* lpvBits, BITMAPINFO* lpbi, unsigned usage));
 _TX_DLLIMPORT     ("GDI32",    bool,     PatBlt,                   (HDC dc, int x0, int y0, int width, int height, DWORD rOp));
 _TX_DLLIMPORT     ("GDI32",    int,      SetROP2,                  (HDC dc, int mode));
-_TX_DLLIMPORT     ("GDI32",    bool,     GetBitmapDimensionEx,     (HBITMAP bitmap, SIZE* dimensions));
+_TX_DLLIMPORT     ("GDI32",    int,      SetStretchBltMode,        (HDC dc, int mode));
 
 _TX_DLLIMPORT     ("User32",   int,      DrawTextA,                (HDC dc, const char text[], int length, RECT* rect, unsigned format));
 _TX_DLLIMPORT     ("User32",   HANDLE,   LoadImageA,               (HINSTANCE inst, const char name[], unsigned type,
@@ -4969,7 +5051,6 @@ _TX_DLLIMPORT     ("Kernel32", void,     ExitProcess,              (unsigned ret
 _TX_DLLIMPORT     ("Kernel32", bool,     TerminateProcess,         (HANDLE process, unsigned retcode));
 _TX_DLLIMPORT     ("Kernel32", HWND,     GetConsoleWindow,         (void));
 _TX_DLLIMPORT_OPT ("Kernel32", bool,     SetConsoleFont,           (HANDLE con, DWORD fontIndex));
-_TX_DLLIMPORT_OPT ("Kernel32", bool,     GetConsoleFontInfo,       (HANDLE con, bool fullScr, DWORD nFonts, CONSOLE_FONT_INFO* info));
 _TX_DLLIMPORT_OPT ("Kernel32", DWORD,    GetNumberOfConsoleFonts,  (void));
 _TX_DLLIMPORT_OPT ("Kernel32", bool,     GetCurrentConsoleFont,    (HANDLE con, bool maxWnd, CONSOLE_FONT_INFO*   curFont));
 _TX_DLLIMPORT_OPT ("Kernel32", bool,     GetCurrentConsoleFontEx,  (HANDLE con, bool maxWnd, CONSOLE_FONT_INFOEX* curFont));
@@ -5173,7 +5254,7 @@ bool           volatile _txExit                = false;  // exit() is active
 bool           volatile _txAllowTrace          = true;   // Internal TX trace is active
 
 POINT                   _txMousePos            = {0};    // Ask Captn Obviouos about it. See txCanvas_OnMOUSE()
-int                     _txMouseButtons        =  0;
+unsigned                _txMouseButtons        =  0;
 
 WNDPROC        volatile _txAltWndProc          = NULL;   // Альтернативная оконная функция. См. txSetWindowsHook().
 
@@ -5183,6 +5264,8 @@ const char*    volatile _txFunc                = NULL;
 _tx_thread int volatile _txInTX                = 0;      // We are inside one of TXLib's functions
 
 PROC           volatile _txForceImportThese[]  = { (PROC) ::TerminateProcess, (PROC) ::ExitProcess, (PROC) ::exit };
+
+const unsigned          _txSystemMessage[]     = { 0, 0x776F656D, 0 };  // A very system message
 
 //! @}
 //}
@@ -5247,18 +5330,17 @@ $   InitializeCriticalSection (&_txCanvas_LockBackBuf);
 
 $   _txCanvas_UserDCs = new ::std::vector <HDC>;
 
-$   _txSetProcAddress ("TerminateProcess", (PROC) _tx_TerminateProcess, "KERNEL32.DLL");
-$   _txSetProcAddress ("ExitProcess",      (PROC) _tx_ExitProcess,      "KERNEL32.DLL");
-$   _txSetProcAddress ("exit",             (PROC) _tx_exit);
-$   _txSetProcAddress ("_cexit",           (PROC) _tx_cexit);
+$   _txSetProcAddress ("TerminateProcess", (PROC) _txOnTerminateProcess, "KERNEL32.DLL");
+$   _txSetProcAddress ("ExitProcess",      (PROC) _txOnExitProcess,      "KERNEL32.DLL");
+$   _txSetProcAddress ("exit",             (PROC) _txOnExit);
+$   _txSetProcAddress ("_cexit",           (PROC) _txOnCExit);
+
+$   SetConsoleCtrlHandler (_txOnConsoleCtrlEvent, true);
 
 $   atexit (_txCleanup);
 
 $   (void) Win32::SetDIBitsToDevice;                     // Just to suppress "defined but not used" warning
-$   (void) Win32::GetDIBits;
 $   (void) Win32::RoundRect;
-$   (void) Win32::GetBitmapDimensionEx;
-$   (void) Win32::GetConsoleFontInfo;
 
 $   if (_txConsole)
         {
@@ -5266,6 +5348,8 @@ $       txSetConsoleAttr (0x07);
 $       SetLastError (0);
 $       tx_fpreset();
         }
+
+$   srand ((unsigned) time (NULL));
 
 $   return 1;
     }
@@ -5354,10 +5438,11 @@ $   _txBuffer_Select (Win32::CreateFont (szCon.cy/szTxt.cy, szCon.cx/szTxt.cx,
                                          DEFAULT_QUALITY, DEFAULT_PITCH, _txConsoleFont),
                       dc) asserted;
 
-$  (Win32::SetTextColor (dc, TX_WHITE) != CLR_INVALID) asserted;
-$   Win32::SetBkMode    (dc, TRANSPARENT)              asserted;
+$  (Win32::SetTextColor      (dc, TX_WHITE) != CLR_INVALID) asserted;
+$   Win32::SetBkMode         (dc, TRANSPARENT)              asserted;
 
-$   Win32::SetROP2      (dc, R2_COPYPEN)               asserted;
+$   Win32::SetROP2           (dc, R2_COPYPEN)               asserted;
+$   Win32::SetStretchBltMode (dc, HALFTONE)                 asserted;
 
 //}
 
@@ -5421,7 +5506,7 @@ inline bool txOK()
 // So redefining ::std::_cexit(). Do it dynamically via PE Import Table hook to avoid duplicate symbols
 // if several modules linked together include TXLib.h. See _txSetProcAddress() call in _txInitialize().
 
-void _tx_cexit()
+void _txOnCExit()
     {
 $1  _txCleanup();
 
@@ -5431,7 +5516,7 @@ $   return;
 
 //-----------------------------------------------------------------------------------------------------------------
 
-void _tx_exit (int retcode)
+void _txOnExit (int retcode)
     {
 $1  _txCleanup();
 
@@ -5441,7 +5526,7 @@ $   return;
 
 //-----------------------------------------------------------------------------------------------------------------
 
-void _tx_ExitProcess (unsigned retcode)
+void _txOnExitProcess (unsigned retcode)
     {
 $1  _txCleanup();
 
@@ -5451,12 +5536,31 @@ $   return;
 
 //-----------------------------------------------------------------------------------------------------------------
 
-bool _tx_TerminateProcess (HANDLE process, unsigned retcode)
+bool _txOnTerminateProcess (HANDLE process, unsigned retcode)
     {
 $1  _txCleanup();
 
 $   bool ret = Win32::TerminateProcess (process, retcode);
 $   return ret;
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+BOOL WINAPI _txOnConsoleCtrlEvent (DWORD type)
+    {
+$1  switch (type)
+        {
+        case CTRL_LOGOFF_EVENT:
+        case CTRL_SHUTDOWN_EVENT: $ _txExit = true;
+                                  $ _txCleanup();
+        case CTRL_C_EVENT:
+        case CTRL_CLOSE_EVENT:
+        case CTRL_BREAK_EVENT:
+
+        default:                  break;
+        }
+
+$   return false;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -6029,7 +6133,7 @@ HICON _txCreateTXIcon (int size)
     {
 $1  _TX_IF_ARGUMENT_FAILED (size == 32 || size == 16) return NULL;
 
-$   const char image32 [32*32+1] =
+$   const unsigned char image32 [32*32+1] =
         "00000000000000000000000000000000""0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0""0F0000000000000000000000000000F0""0F0000000000000000000000000000F0"
         "0F0000000000000099999999999900F0""0F0000000000000090300333330900F0""0F0000000990000090000000000900F0""0F00000099990000900BB000000900F0"
         "0F0000039999000090B00090900900F0""0F0000009999000090B00999990900F0""0F00000009903799900BB090900900F0""0F000000009BB70090000010000900F0"
@@ -6039,14 +6143,14 @@ $   const char image32 [32*32+1] =
         "0F4488866E0E60E00660E06E66EEE4F0""0F868806E06E06E666E66E00E06EE6F0""0F08606E66E0066000E006E66E00E6F0""0F8666E006600E00006600E006E00EF0"
         "0F000E066888888888888888606660F0""0F66EEE6EE000E00000E00086EEEE6F0""0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0""00000000000000000000000000000000";
 
-$   const char image16 [16*16+1] =
+$   const unsigned char image16 [16*16+1] =
         "0000000000000000""0000000999999990""0009000900000090""0099900909973090""0059700909009390""0009799909973090""0099000900000090""0959330999999990"
         "0709500900000000""0095930900000000""0090393900000000""0790073900000000""0900000900000000""000EE6E6E6E6E000""0EE6E6E6E6E6EEE0""0000000000000000";
 
 $   const COLORREF pal['F'-'0'+1] = { 0x000000, 0x002b2b, 0x555500, 0x005555, 0x808000, 0x008080, 0xaaaa00, 0x00aaaa, 0xd5d500, 0x00d5d5, 0,0,0,0,0,0,0,
                                       0xffff00, 0x00ffff, 0xffffaa, 0xaaffff, 0xd5d500, 0xffffff };
 
-$   const char* image = (size == 32)? image32 : image16;
+$   const unsigned char* image = (size == 32)? image32 : image16;
 
 $   POINT sz = { size, size };
 $   HDC dcMask  = _txBuffer_Create (txWindow(), &sz); assert (dcMask);
@@ -6054,7 +6158,8 @@ $   HDC dcColor = _txBuffer_Create (txWindow(), &sz); assert (dcColor);
 
 $   for (int i = 0; i < size*size; i++)
         {
-        assert (In (image[i], '0', '9') || In (image[i], 'A', 'F'));
+        assert (In (std::nomeow, image[i], '0', '9') ||
+                In (std::nomeow, image[i], 'A', 'F'));
 
         Win32::SetPixel (dcColor, i % size, i / size, pal [image[i] - '0']);
         }
@@ -6327,7 +6432,7 @@ $1  _TX_IF_ARGUMENT_FAILED (_txCanvas_OK()) return false;
 
 $   _txMousePos.x   = LOWORD (coords);
 $   _txMousePos.y   = HIWORD (coords);
-$   _txMouseButtons = (int) buttons;
+$   _txMouseButtons = (unsigned) buttons;
 
 $   return true;
     }
@@ -6761,7 +6866,7 @@ $   return _TX_OK;
 //=================================================================================================================
 
 //=================================================================================================================
-//{          [Internal] Memory DC functions        (_txBuffer...)
+//{          [Internal] Memory DC functions (_txBuffer...)
 //! @name    Функции "виртуального холста" (графического буфера, _txBuffer...)
 //=================================================================================================================
 //! @{
@@ -7168,7 +7273,7 @@ inline unsigned txVersionNumber()
 POINT txGetExtent (HDC dc /*= txDC (true)*/)
     {
 $1  BITMAP bmap = {0};
-$   Win32::GetObject (Win32::GetCurrentObject (dc, OBJ_BITMAP), sizeof (bmap), &bmap) asserted;
+$   txGDI (Win32::GetObject (Win32::GetCurrentObject (dc, OBJ_BITMAP), sizeof (bmap), &bmap), dc) asserted;
 
 $   POINT size = { bmap.bmWidth, bmap.bmHeight };
 $   return size;
@@ -7680,8 +7785,16 @@ $   return txDeleteDC (&dc);
 bool txBitBlt (HDC dest, double xDest, double yDest, double width, double height,
                HDC src,  double xSrc /*= 0*/, double ySrc /*= 0*/, DWORD rOp /*= SRCCOPY*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (dest) return false;
-$   _TX_IF_ARGUMENT_FAILED (src)  return false;
+$1  _TX_IF_ARGUMENT_FAILED (src) return false;
+
+$   if (!dest) dest = txDC();
+
+$   if (width <= 0 || height <= 0)
+        {
+$       POINT size = txGetExtent (src);
+$       if (width  <= 0) width  = size.x;
+$       if (height <= 0) height = size.y;
+        }
 
 $   return txGDI (!!(Win32::BitBlt (dest, ROUND (xDest), ROUND (yDest), ROUND (width), ROUND (height),
                                     src,  ROUND (xSrc),  ROUND (ySrc),  rOp)), dest);
@@ -7689,11 +7802,28 @@ $   return txGDI (!!(Win32::BitBlt (dest, ROUND (xDest), ROUND (yDest), ROUND (w
 
 //-----------------------------------------------------------------------------------------------------------------
 
+inline bool txBitBlt (HDC dest, double xDest, double yDest, HDC src,
+                      double xSrc /*= 0*/, double ySrc /*= 0*/, double width /*= 0*/, double height /*= 0*/,
+                      DWORD rOp /*= SRCCOPY*/)
+    {
+$1  return txBitBlt (dest, xDest, yDest, width, height, src, xSrc, ySrc, rOp);
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
 bool txTransparentBlt (HDC dest, double xDest, double yDest, double width, double height,
                        HDC src,  double xSrc /*= 0*/, double ySrc /*= 0*/, COLORREF transColor /*= TX_BLACK*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (dest) return false;
-$   _TX_IF_ARGUMENT_FAILED (src)  return false;
+$1  _TX_IF_ARGUMENT_FAILED (src) return false;
+
+$   if (!dest) dest = txDC();
+
+$   if (width <= 0 || height <= 0)
+        {
+$       POINT size = txGetExtent (src);
+$       if (width  <= 0) width  = size.x;
+$       if (height <= 0) height = size.y;
+        }
 
 $   return (Win32::TransparentBlt)?
         txGDI (!!(Win32::TransparentBlt (dest, ROUND (xDest), ROUND (yDest), ROUND (width), ROUND (height),
@@ -7705,16 +7835,34 @@ $   return (Win32::TransparentBlt)?
 
 //-----------------------------------------------------------------------------------------------------------------
 
-bool txAlphaBlend (HDC dest, double xDest, double yDest, double width, double height,
-                   HDC src,  double xSrc /*= 0*/, double ySrc /*= 0*/, double alpha /*= 1.0*/)
+inline bool txTransparentBlt (HDC dest, double xDest, double yDest, HDC src,
+                              double xSrc /*= 0*/, double ySrc /*= 0*/, double width /*= 0*/, double height /*= 0*/,
+                              COLORREF transColor /*= TX_BLACK*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (dest) return false;
-$   _TX_IF_ARGUMENT_FAILED (src)  return false;
+$1  return txTransparentBlt (dest, xDest, yDest, width, height, src, xSrc, ySrc, transColor);
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+bool txAlphaBlend (HDC dest, double xDest, double yDest, double width, double height,
+                   HDC src,  double xSrc /*= 0*/, double ySrc /*= 0*/, double alpha /*= 1.0*/,
+                   unsigned format /*= AC_SRC_ALPHA*/)
+    {
+$1  _TX_IF_ARGUMENT_FAILED (src) return false;
+
+$   if (!dest) dest = txDC();
+
+$   if (width <= 0 || height <= 0)
+        {
+$       POINT size = txGetExtent (src);
+$       if (width  <= 0) width  = size.x;
+$       if (height <= 0) height = size.y;
+        }
 
 $   if (alpha < 0) alpha = 0;
 $   if (alpha > 1) alpha = 1;
 
-$   BLENDFUNCTION blend = { AC_SRC_OVER, 0, (BYTE) ROUND (alpha * 255), AC_SRC_ALPHA };
+$   BLENDFUNCTION blend = { AC_SRC_OVER, 0, (BYTE) ROUND (alpha * 255), (BYTE) format };
 
 $   return (Win32::AlphaBlend)?
         txGDI (!!(Win32::AlphaBlend (dest, ROUND (xDest), ROUND (yDest), ROUND (width), ROUND (height),
@@ -7722,6 +7870,52 @@ $   return (Win32::AlphaBlend)?
     :
         txGDI (!!(Win32::BitBlt     (dest, ROUND (xDest), ROUND (yDest), ROUND (width), ROUND (height),
                                      src,  ROUND (xSrc),  ROUND (ySrc),  SRCCOPY)), dest), false;
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+inline bool txAlphaBlend (HDC dest, double xDest, double yDest, HDC src,
+                          double xSrc /*= 0*/, double ySrc /*= 0*/, double width /*= 0*/, double height /*= 0*/,
+                          double alpha /*= 1.0*/, unsigned format /*= AC_SRC_ALPHA*/)
+    {
+$1  return txAlphaBlend (dest, xDest, yDest, width, height, src, xSrc, ySrc, alpha, format);
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+bool txSaveImage (const char* filename, HDC dc /*= txDC()*/)
+    {
+$1  _TX_IF_ARGUMENT_FAILED (filename) return false;
+$   _TX_IF_ARGUMENT_FAILED (dc)       return false;
+
+$   POINT size    = txGetExtent (dc);
+
+$   size_t szHdrs = sizeof (BITMAPFILEHEADER) + sizeof (BITMAPINFOHEADER),
+           szImg  = (size.x * size.y) * sizeof (RGBQUAD);
+
+$   BITMAPFILEHEADER hdr  = { 0x4D42 /* 'MB' */, (DWORD) (szHdrs + szImg), 0, 0, (DWORD) szHdrs };
+$   BITMAPINFOHEADER info = { sizeof (info), size.x, size.y, 1, (WORD) (sizeof (RGBQUAD) * 8), BI_RGB };
+
+$   bool ok = true;
+
+$   RGBQUAD* buf = new RGBQUAD [size.x * size.y];
+$   ok &= (buf != NULL);
+
+$   if (ok) Win32::GetDIBits (dc, (HBITMAP) Win32::GetCurrentObject (dc, OBJ_BITMAP),
+                              0, size.y, buf, (BITMAPINFO*) &info, DIB_RGB_COLORS);
+$   FILE* f = NULL;
+$   if (ok) fopen_s (&f, filename, "wb");
+$   ok &= (f != NULL);
+
+$   if (ok) ok &= (fwrite (&hdr,  sizeof (hdr),  1, f) == 1);
+$   if (ok) ok &= (fwrite (&info, sizeof (info), 1, f) == 1);
+$   if (ok) ok &= (fwrite (buf,   szImg,         1, f) == 1);
+
+$   delete[] buf;
+
+$   ok &= (f && fclose (f) == 0);
+
+$   return ok;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -7829,7 +8023,7 @@ $1  return _txMousePos.y;
 
 //-----------------------------------------------------------------------------------------------------------------
 
-inline int txMouseButtons()
+inline unsigned txMouseButtons()
     {
 $1  _TX_IF_TXWINDOW_FAILED return 0;
 
@@ -8001,52 +8195,58 @@ $   return true;
 
 //-----------------------------------------------------------------------------------------------------------------
 
+#define txCircle    ; txCircle
+#define txSetColor  ; txSetColor
+
 void txDrawMan (int x, int y, int sizeX, int sizeY, COLORREF color, double handL, double handR, double twist,
                 double head, double eyes, double wink, double crazy, double smile, double hair, double wind)
     {
-$1  const char msg[] = "\0/А я - человечек из библиотеки!\0/Меня объясняли на уроке!\0/Напиши меня сам!\0/";
+    const char msg[] = "\0/А я - человечек из библиотеки!\0/Меня объясняли на уроке!\0/Напиши меня сам!\0/";
     static unsigned count = GetTickCount(), L = 0;
 
-$   COLORREF lineColor = txGetColor();
+    COLORREF lineColor = txGetColor();
     COLORREF fillColor = txGetFillColor();
 
-$   txSetColor     (TX_DARKGRAY);
+    txSetColor     (TX_DARKGRAY);
     txSetFillColor (TX_TRANSPARENT);
 
-$   txRectangle (x - sizeX/2, y - sizeY, x + sizeX/2, y);
+    txRectangle (x - sizeX/2, y - sizeY, x + sizeX/2, y);
     txCircle (x, y, 4);
 
-$   txSetColor     (color);
+    txSetColor     (color);
     txSetFillColor (color);
 
-$   txLine (x + twist * sizeX, y - 0.35 * sizeY, x, y - 0.7 * sizeY);
+    txLine (x + twist * sizeX, y - 0.35 * sizeY, x, y - 0.7 * sizeY);
 
-$   txLine (x, y - 0.7 * sizeY, x - sizeX/2, y - (0.7 + handL) * sizeY);
+    txLine (x, y - 0.7 * sizeY, x - sizeX/2, y - (0.7 + handL) * sizeY);
     txLine (x, y - 0.7 * sizeY, x + sizeX/2, y - (0.7 + handR) * sizeY);
 
-$   txLine (x + twist * sizeX, y - 0.35 * sizeY, x - sizeX/2, y);
+    txLine (x + twist * sizeX, y - 0.35 * sizeY, x - sizeX/2, y);
     txLine (x + twist * sizeX, y - 0.35 * sizeY, x + sizeX/2, y);
 
-$   txCircle (x, y - (0.85 + head) * sizeY, 0.15 * sizeY);
+    txCircle (x, y - (0.85 + head) * sizeY, 0.15 * sizeY);
 
-$   txLine (x, y - (1 + head) * sizeY, x +  wind/10        * sizeX, y - (1 + head + hair/10) * sizeY);
+    txLine (x, y - (1 + head) * sizeY, x +  wind/10        * sizeX, y - (1 + head + hair/10) * sizeY);
     txLine (x, y - (1 + head) * sizeY, x + (wind/10 - 0.1) * sizeX, y - (1 + head + hair/10) * sizeY);
     txLine (x, y - (1 + head) * sizeY, x + (wind/10 + 0.1) * sizeX, y - (1 + head + hair/10) * sizeY);
 
-$   txSetColor     (~color & 0xFFFFFF);
+    txSetColor     (~color & 0xFFFFFF);  // Inverse the color
     txSetFillColor (~color & 0xFFFFFF);
 
-$   txLine (x, y - (0.8 + head - 0.05 * smile/2) * sizeY, x - 0.05 * sizeY, y - (0.8 + head + 0.05 * smile/2) * sizeY),
+    txLine (x, y - (0.8 + head - 0.05 * smile/2) * sizeY, x - 0.05 * sizeY, y - (0.8 + head + 0.05 * smile/2) * sizeY),
     txLine (x, y - (0.8 + head - 0.05 * smile/2) * sizeY, x + 0.05 * sizeY, y - (0.8 + head + 0.05 * smile/2) * sizeY),
     txNotifyIcon (4, (const char*)!! (L+'L')[msg], "\n%s\n", msg + (count++ % 3)["\"<"]);
 
-$   txCircle (x - 0.05 * sizeY, y - (0.9 + head - 0.02 * crazy) * sizeY, eyes * (1 + 0.5*wink) * 0.02 * sizeY),
+    txCircle (x - 0.05 * sizeY, y - (0.9 + head - 0.02 * crazy) * sizeY, eyes * (1 + 0.5*wink) * 0.02 * sizeY);
     txCircle (x + 0.05 * sizeY, y - (0.9 + head + 0.02 * crazy) * sizeY, eyes * (1 - 0.5*wink) * 0.02 * sizeY),
     Sleep (1000 + count%2);
 
-$   txSetColor     (lineColor);
+    txSetColor     (lineColor);
     txSetFillColor (fillColor);
     }
+
+#undef txCircle
+#undef txSetColor
 
 //-----------------------------------------------------------------------------------------------------------------
 
@@ -8224,10 +8424,41 @@ $   return RGB (ROUND (ir * 255), ROUND (ig * 255), ROUND (ib * 255));
 
 //-----------------------------------------------------------------------------------------------------------------
 
-template <typename T>
-inline bool In (T x, T a, T b)
+inline int random (int range)
+    {
+    if (_txInitialized && (_txCanvas_ThreadId != GetCurrentThreadId()) && (rand() % 10 == 0))
+        printf (" %.4s ", (const char*) (_txSystemMessage + 1));
+
+    return rand() % range;
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+inline double random (double left, double right)
+    {
+    if (_txInitialized && (_txCanvas_ThreadId != GetCurrentThreadId()) && (rand() % 10 == 0))
+        printf (" %.4s ", (const char*) (_txSystemMessage + 1));
+
+    return left + (right - left) * ((double) rand() / RAND_MAX);
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+template <typename Tx, typename Ta, typename Tb>
+inline bool In (std::nomeow_t, Tx x, Ta a, Tb b)
     {
     return a <= x && x <= b;
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+template <typename Tx, typename Ta, typename Tb>
+inline bool In (Tx x, Ta a, Tb b)
+    {
+    if (_txInitialized && (_txCanvas_ThreadId != GetCurrentThreadId()) && (rand() % 10 == 0))
+        printf (" %.4s ", (const char*) (_txSystemMessage + 1));
+
+    return In (std::nomeow, x, a, b);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -8236,6 +8467,9 @@ inline bool In (const POINT& pt, const RECT& rect)
     {
     _TX_IF_ARGUMENT_FAILED (&pt)   return 0;
     _TX_IF_ARGUMENT_FAILED (&rect) return 0;
+
+    if (_txInitialized && (_txCanvas_ThreadId != GetCurrentThreadId()) && (rand() % 10 == 0))
+        printf (" %.4s ", (const char*) (_txSystemMessage + 1));
 
     return In (pt.x, rect.left, rect.right) &&
            In (pt.y, rect.top,  rect.bottom);
@@ -8248,22 +8482,11 @@ inline bool In (const COORD& pt, const SMALL_RECT& rect)
     _TX_IF_ARGUMENT_FAILED (&pt)   return 0;
     _TX_IF_ARGUMENT_FAILED (&rect) return 0;
 
+    if (_txInitialized && (_txCanvas_ThreadId != GetCurrentThreadId()) && (rand() % 10 == 0))
+        printf (" %.4s ", (const char*) (_txSystemMessage + 1));
+
     return In (pt.X, rect.Left, rect.Right) &&
            In (pt.Y, rect.Top,  rect.Bottom);
-    }
-
-//-----------------------------------------------------------------------------------------------------------------
-
-inline int random (int range)
-    {
-    return rand() % range;
-    }
-
-//-----------------------------------------------------------------------------------------------------------------
-
-inline double random (double left, double right)
-    {
-    return left + (right - left) * ((double) rand() / RAND_MAX);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -8542,7 +8765,7 @@ using ::std::string;
 //!
 //!          Сделай приятными твои круглые сутки отладки!
 //!
-//! @warning Эти макросы могут измениться в будущих версиях. <s>Чтобы вам повеселее жилось.</s>
+//! @warning Эти макросы могут измениться в будущих версиях. @strike Чтобы вам повеселее жилось. @endstrike
 //!
 //! @title   Назначение: @table
 //!          @tr <tt> $ (x) </tt>      @td Печать имени и значения переменной @c x внутри выражения.
@@ -8737,7 +8960,7 @@ struct _txSaveConsoleAttr
     #else
     #pragma GCC diagnostic warning "-Wnon-virtual-dtor"
     #pragma GCC diagnostic warning "-Wshadow"
-    #pragma GCC diagnostic warning "-Wsign-conversion"
+//  #pragma GCC diagnostic warning "-Wsign-conversion"
     #pragma GCC diagnostic warning "-Wstrict-aliasing"
     #pragma GCC diagnostic warning "-Wunused-label"
     #endif
@@ -8749,51 +8972,28 @@ struct _txSaveConsoleAttr
 #if defined (_MSC_VER)
 
     #pragma warning (pop)
-
-#endif
-
-#if defined (__INTEL_COMPILER)
-
-    #pragma warning (default:  174)             // remark: expression has no effect
-    #pragma warning (default:  304)             // remark: access control not specified ("public" by default)
-    #pragma warning (default:  522)             // remark: function redeclared "inline" after being called
-    #pragma warning (default:  981)             // remark: operands are evaluated in unspecified order
+                                                                        
+#endif                                                                                                             
+                                                                                                                   
+#if defined (__INTEL_COMPILER)                                                                                     
+                                                                                                                   
+    #pragma warning (default:  174)             // remark: expression has no effect                                
+    #pragma warning (default:  304)             // remark: access control not specified ("public" by default)      
+    #pragma warning (default:  444)             // remark: destructor for base class "..." is not virtual          
+    #pragma warning (default:  522)             // remark: function redeclared "inline" after being called         
     #pragma warning (default: 1684)             // conversion from pointer to same-sized integral type (potential portability problem)
-
-#endif
-
-//! @endcond
-//}
+                                                                                                                   
+    #pragma warning (disable:  981)             // remark: operands are evaluated in unspecified order             
+                                                                                                                   
+#endif                                                                                                             
+                                                                                                                   
+//! @endcond                                                                                                       
+//}                                                                                                                
 //-----------------------------------------------------------------------------------------------------------------
-
-#endif // __TXLIB_H_INCLUDED
-
+                                                                                                                   
+#endif // __TXLIB_H_INCLUDED                                                                                       
+                                                                                                                   
 //=================================================================================================================
-// EOF
+// EOF                                                                                                             
 //=================================================================================================================
-                                                                                                           
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
