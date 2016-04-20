@@ -6,9 +6,9 @@
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 107 $
+//!          $Version: 00173a, Revision: 108 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2016-04-19 11:34:10 +0400 $
+//!          $Date: 2016-04-20 22:39:52 +0400 $
 //!
 //!          TX Library - компактная библиотека двумерной графики для Win32 на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -79,8 +79,8 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VERSION           _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 107, 2016-04-19 11:34:10 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR            _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 107, 2016-04-19 11:34:10 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION           _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 108, 2016-04-20 22:39:52 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR            _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 108, 2016-04-20 22:39:52 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @}
 //{----------------------------------------------------------------------------------------------------------------
@@ -102,7 +102,7 @@
 //! @hideinitializer
 //}----------------------------------------------------------------------------------------------------------------
 
-#define _TX_VER               _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 107, 2016-04-19 11:34:10 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER               _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 108, 2016-04-20 22:39:52 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //}
 //-----------------------------------------------------------------------------------------------------------------
@@ -218,7 +218,6 @@
         #pragma GCC diagnostic warning "-Wpointer-arith"
         #pragma GCC diagnostic warning "-Wredundant-decls"
         #pragma GCC diagnostic warning "-Wshadow"
-//      #pragma GCC diagnostic warning "-Wsign-conversion"
         #pragma GCC diagnostic warning "-Wsign-promo"
         #pragma GCC diagnostic warning "-Wstrict-aliasing"
         #pragma GCC diagnostic warning "-Wstrict-null-sentinel"
@@ -936,10 +935,11 @@ bool txSetColor (COLORREF color, double thickness = 1, HDC dc = txDC (true));
 //! @ingroup Drawing
 //! @brief   Устанавливает текущий цвет линий и текста.
 //!
-//! @param   red    Количество красного цвета в интервале [0; 1]
-//! @param   green  Количество зеленого цвета в интервале [0; 1]
-//! @param   blue   Количество синего   цвета в интервале [0; 1]
-//! @param   dc     Дескриптор контекста рисования (холста) для установки цвета
+//! @param   red        Количество красного цвета в интервале [0; 1]
+//! @param   green      Количество зеленого цвета в интервале [0; 1]
+//! @param   blue       Количество синего   цвета в интервале [0; 1]
+//! @param   thickness  Толщина линий
+//! @param   dc         Дескриптор контекста рисования (холста) для установки цвета
 //!
 //! @return  Если операция была успешна - true, иначе - false.
 //!
@@ -951,7 +951,7 @@ bool txSetColor (COLORREF color, double thickness = 1, HDC dc = txDC (true));
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-bool txColor (double red, double green, double blue, HDC dc = txDC (true));
+bool txColor (double red, double green, double blue, double thickness = 1, HDC dc = txDC (true));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1512,6 +1512,7 @@ bool txFloodFill (double x, double y, COLORREF color = TX_TRANSPARENT, DWORD mod
 //!          @ref Tutor_Params "Пример с функциями с параметрами"
 //}----------------------------------------------------------------------------------------------------------------
 
+bool txTriangle (double x1, double y1, double x2, double y2, double x3, double y3);
 bool txTriangle (double x1, double y1, double x2, double y2, double x3, double y3)
     {
     (void)x1; (void)y1; (void)x2; (void)y2; (void)x3; (void)y3;
@@ -2872,8 +2873,8 @@ int txOutputDebugPrintf (const char format[], ...) _TX_CHECK_FORMAT (1);
 //!
 //!          Вы еще помните, что означают разные скобочки в обозначении интервалов? :)
 //!
-//! @warning Эта функция может мяукать.
-//!          @strike Just because it can. @endstrike Потому что вы можете написать ее сами, если это вам не нужно.
+//! @warning Эта функция может мяукать. @strike Just because it can. @endstrike Потому что она не часть стандарта С++
+//!          или Windows, а зависит от TXLib'а. Если это вам не нравится, вы можете написать ее сами.
 //!
 //! @usage @code
 //!          char message[100] = "Maybe...";
@@ -2895,8 +2896,8 @@ inline int random (int range);
 //!
 //!          Вы все еще помните, что означают разные скобочки в обозначении интервалов? :)
 //!
-//! @warning Эта функция может мяукать.
-//!          @strike Just in case. @endstrike Потому что вы можете написать ее сами, если это вам не нужно.
+//! @warning Эта функция может мяукать. @strike Just in case. @endstrike Потому что она не часть стандарта С++
+//!          или Windows, а зависит от TXLib'а. Если это вам не нравится, вы можете написать ее сами.
 //!
 //! @usage @code
 //!          int money = random (-100, +100);
@@ -2921,8 +2922,8 @@ inline double random (double left, double right);
 //!
 //! @return  Если a <= x && x <= b, то истина, если нет - ложь
 //!
-//! @warning Эта функция может мяукать.
-//!          @strike Because cats are power! @endstrike Потому что вы можете написать ее сами, если это вам не нужно.
+//! @warning Эта функция может мяукать. @strike Because cats are power! @endstrike Потому что она не часть стандарта С++
+//!          или Windows, а зависит от TXLib'а. Если это вам не нравится, вы можете написать ее сами.
 //!
 //! @usage @code
 //!          while (txMouseButtons() != 1)
@@ -2950,8 +2951,8 @@ inline bool In (std::nomeow_t, Tx x, Ta a, Tb b);
 //!
 //!          Удобно для реализации экранных кнопок, нажимаемых курсором мыши.
 //!
-//! @warning Эта функция может мяукать.
-//!          @strike Because cats are always right. @endstrike Потому что вы можете написать ее сами, если это вам не нужно.
+//! @warning Эта функция может мяукать. @strike Because cats are always right. @endstrike Потому что она не часть стандарта С++
+//!          или Windows, а зависит от TXLib'а. Если это вам не нравится, вы можете написать ее сами.
 //!
 //! @usage @code
 //!          RECT button = { 100, 100, 150, 120 };
@@ -5265,7 +5266,7 @@ _tx_thread int volatile _txInTX                = 0;      // We are inside one of
 
 PROC           volatile _txForceImportThese[]  = { (PROC) ::TerminateProcess, (PROC) ::ExitProcess, (PROC) ::exit };
 
-const unsigned          _txSystemMessage[]     = { 0, 0x776F656D, 0 };  // A very system message
+const unsigned          _txSystemMessage[]     = { 0x776F656D, 0x5E2E2E5E };  // A very system messages
 
 //! @}
 //}
@@ -7888,7 +7889,7 @@ bool txSaveImage (const char* filename, HDC dc /*= txDC()*/)
 $1  _TX_IF_ARGUMENT_FAILED (filename) return false;
 $   _TX_IF_ARGUMENT_FAILED (dc)       return false;
 
-$   POINT size    = txGetExtent (dc);
+$   POINT size = txGetExtent (dc);
 
 $   size_t szHdrs = sizeof (BITMAPFILEHEADER) + sizeof (BITMAPINFOHEADER),
            szImg  = (size.x * size.y) * sizeof (RGBQUAD);
@@ -7911,9 +7912,9 @@ $   if (ok) ok &= (fwrite (&hdr,  sizeof (hdr),  1, f) == 1);
 $   if (ok) ok &= (fwrite (&info, sizeof (info), 1, f) == 1);
 $   if (ok) ok &= (fwrite (buf,   szImg,         1, f) == 1);
 
-$   delete[] buf;
-
 $   ok &= (f && fclose (f) == 0);
+
+$   delete[] buf;
 
 $   return ok;
     }
@@ -8426,8 +8427,8 @@ $   return RGB (ROUND (ir * 255), ROUND (ig * 255), ROUND (ib * 255));
 
 inline int random (int range)
     {
-    if (_txInitialized && (_txCanvas_ThreadId != GetCurrentThreadId()) && (rand() % 10 == 0))
-        printf (" %.4s ", (const char*) (_txSystemMessage + 1));
+    if (_txInitialized && (_txCanvas_ThreadId != GetCurrentThreadId()) && (rand() % 100 == 0))
+        printf (" %.4s ", (const char*) (_txSystemMessage + !(rand() & 0x0F)));
 
     return rand() % range;
     }
@@ -8436,8 +8437,8 @@ inline int random (int range)
 
 inline double random (double left, double right)
     {
-    if (_txInitialized && (_txCanvas_ThreadId != GetCurrentThreadId()) && (rand() % 10 == 0))
-        printf (" %.4s ", (const char*) (_txSystemMessage + 1));
+    if (_txInitialized && (_txCanvas_ThreadId != GetCurrentThreadId()) && (rand() % 100 == 0))
+        printf (" %.4s ", (const char*) (_txSystemMessage + !(rand() & 0x0F)));
 
     return left + (right - left) * ((double) rand() / RAND_MAX);
     }
@@ -8455,8 +8456,8 @@ inline bool In (std::nomeow_t, Tx x, Ta a, Tb b)
 template <typename Tx, typename Ta, typename Tb>
 inline bool In (Tx x, Ta a, Tb b)
     {
-    if (_txInitialized && (_txCanvas_ThreadId != GetCurrentThreadId()) && (rand() % 10 == 0))
-        printf (" %.4s ", (const char*) (_txSystemMessage + 1));
+    if (_txInitialized && (_txCanvas_ThreadId != GetCurrentThreadId()) && (rand() % 100 == 0))
+        printf (" %.4s ", (const char*) (_txSystemMessage + !(rand() & 0x0F)));
 
     return In (std::nomeow, x, a, b);
     }
@@ -8468,8 +8469,8 @@ inline bool In (const POINT& pt, const RECT& rect)
     _TX_IF_ARGUMENT_FAILED (&pt)   return 0;
     _TX_IF_ARGUMENT_FAILED (&rect) return 0;
 
-    if (_txInitialized && (_txCanvas_ThreadId != GetCurrentThreadId()) && (rand() % 10 == 0))
-        printf (" %.4s ", (const char*) (_txSystemMessage + 1));
+    if (_txInitialized && (_txCanvas_ThreadId != GetCurrentThreadId()) && (rand() % 100 == 0))
+        printf (" %.4s ", (const char*) (_txSystemMessage + !(rand() & 0x0F)));
 
     return In (pt.x, rect.left, rect.right) &&
            In (pt.y, rect.top,  rect.bottom);
@@ -8483,7 +8484,7 @@ inline bool In (const COORD& pt, const SMALL_RECT& rect)
     _TX_IF_ARGUMENT_FAILED (&rect) return 0;
 
     if (_txInitialized && (_txCanvas_ThreadId != GetCurrentThreadId()) && (rand() % 10 == 0))
-        printf (" %.4s ", (const char*) (_txSystemMessage + 1));
+        printf (" %.4s ", (const char*) (_txSystemMessage + !(rand() & 0x0F)));
 
     return In (pt.X, rect.Left, rect.Right) &&
            In (pt.Y, rect.Top,  rect.Bottom);
@@ -8960,7 +8961,6 @@ struct _txSaveConsoleAttr
     #else
     #pragma GCC diagnostic warning "-Wnon-virtual-dtor"
     #pragma GCC diagnostic warning "-Wshadow"
-//  #pragma GCC diagnostic warning "-Wsign-conversion"
     #pragma GCC diagnostic warning "-Wstrict-aliasing"
     #pragma GCC diagnostic warning "-Wunused-label"
     #endif
@@ -8972,11 +8972,11 @@ struct _txSaveConsoleAttr
 #if defined (_MSC_VER)
 
     #pragma warning (pop)
-                                                                        
-#endif                                                                                                             
-                                                                                                                   
-#if defined (__INTEL_COMPILER)                                                                                     
-                                                                                                                   
+
+#endif
+
+#if defined (__INTEL_COMPILER)
+                                                                                                           
     #pragma warning (default:  174)             // remark: expression has no effect                                
     #pragma warning (default:  304)             // remark: access control not specified ("public" by default)      
     #pragma warning (default:  444)             // remark: destructor for base class "..." is not virtual          
