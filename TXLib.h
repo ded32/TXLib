@@ -6,16 +6,16 @@
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 108 $
+//!          $Version: 00173a, Revision: 109 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2016-04-20 22:39:52 +0400 $
+//!          $Date: 2016-04-23 02:04:59 +0400 $
 //!
 //!          TX Library - компактная библиотека двумерной графики для Win32 на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
 //!          простейших принципов программирования. Документация на русском языке.
 //!
-//!          Философия<sup><a href=#Refs><small>1</small></a></sup> TX Library - облегчить первые шаги
-//!          в программировании и подтолкнуть к творчеству и самостоятельности.
+//!          Философия TX Library - облегчить первые шаги в программировании и подтолкнуть
+//!          к творчеству и самостоятельности.
 //!
 //!          TX Library is a tiny 2D graphics library for Win32 written in C++. This is a small
 //!          sandbox for the very beginners to help them to learn basic programming principles.
@@ -32,7 +32,7 @@
 //! @par     Баг-трекер на SourceForge:
 //!       -  <a href=http://sourceforge.net/p/txlib/bugs/new> <b>Сообщить об ошибке</b></a>
 //!
-//! @par     Литература <a name=Refs>
+//! @par     Литература :)
 //!       -# <a href=http://storage.ded32.net.ru/Materials/ConferencePseudoScientific-2003.pdf>
 //!          Сальников В.Н., Шарко Ф.С., Митина Н.В., Белая И.В., Индукаев А.К., Дединский И.Р.
 //!          Структура и динамика поведенческих реакций в условиях информационной перегрузки.
@@ -79,8 +79,8 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VERSION           _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 108, 2016-04-20 22:39:52 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR            _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 108, 2016-04-20 22:39:52 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION           _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 109, 2016-04-23 02:04:59 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR            _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 109, 2016-04-23 02:04:59 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @}
 //{----------------------------------------------------------------------------------------------------------------
@@ -102,7 +102,7 @@
 //! @hideinitializer
 //}----------------------------------------------------------------------------------------------------------------
 
-#define _TX_VER               _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 108, 2016-04-20 22:39:52 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER               _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 109, 2016-04-23 02:04:59 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //}
 //-----------------------------------------------------------------------------------------------------------------
@@ -580,9 +580,9 @@ namespace { namespace TX {                       // <<<<<<<<< The main code is h
 //! @warning Одновременное создание нескольких окон не потокобезопасно (not thread-safe). @nn
 //!          Многооконная програма на TXLib тормозит, да и однооконная тоже не отличается высокой скоростью. Чтобы
 //!          избавиться от этого, бросьте TXLib и используйте другие оконные библиотеки (<a href=http://qt-project.org>Qt</a>,
-//!          <a href=http://wxwidgets.org>wxWidgets</a>, <a href=http://gtk.org>GTK+</a> и т.д., см. также <a href=http://libsdl.org>
-//!          SDL</a>, <a href=http://opengl.org>OpenGL</a> и т.п.) или напишите свою. Помните, что цель TXLib -
-//!          облегчить первые шаги, но потом стать ненужной.
+//!          <a href=http://wxwidgets.org>wxWidgets</a>, <a href=http://gtk.org>GTK+</a> и т.д., см. также
+//!          <a href=http://libsdl.org>SDL</a>, <a href=http://opengl.org>OpenGL</a> и т.п.) или напишите свою.
+//!          Помните, что цель TXLib - облегчить первые шаги, но потом стать ненужной.
 //!
 //! @see     txOK(), txWindow(), txDC(), _txWindowStyle, _txConsoleMode, _txConsoleFont, _txCursorBlinkInterval,
 //!          _txWindowUpdateInterval, _TX_NOINIT, _TX_ALLOW_TRACE, TX_TRACE
@@ -1470,8 +1470,8 @@ bool txChord (double x0, double y0, double x1, double y1, double startAngle, dou
 //!
 //! @return  Если операция была успешна - true, иначе - false.
 //!
-//!          Цвет заполнения задается функцией txSetFillColor(). Не рекомендуется для применения - работает
-//!          довольно медленно.
+//!          Цвет заполнения задается функцией txSetFillColor(). Не рекомендуется для применения, так как работает
+//!          довольно медленно. Лучше Используйте txPolygon().
 //!
 //! @title   Режимы заливки: @table
 //!          @tr FLOODFILLSURFACE @td - Заливать область,    указанную цветом color.
@@ -2264,7 +2264,7 @@ inline int txEnd();
 //!
 //!          В отличие от txBegin() и txEnd(), которые поддерживают вложенные вызовы и работают как "скобки для
 //!          замерзания картинки", txUpdateWindow() позволяет явно установить или снять блокировку автоматического
-//!          обновления.
+//!          обновления экрана.
 //!
 //!          Более полную информацию о блокировке см. в функциях txBegin(), txEnd() и txSleep().
 //!
@@ -2482,8 +2482,7 @@ inline unsigned txMouseButtons();
 //!          либо @nn
 //!          <tt>colors = colorText | (colorBackground \<\< 4)</tt> @nn
 //!          Цвета атрибутов @b не имеют никакого отношения к цветам рисования, задаваемыми @ref txColors "TX_..."
-//!          константами, RGB(), txSetColor(), txColor(), txSetFillColor(), txFillColor() и т.д. Значения цветов
-//!          см. ниже.
+//!          константами, RGB(), txSetColor(), txColor(), txSetFillColor() и т.д. Значения цветов см. ниже.
 //!
 //! @title   Значения цветов атрибутов
 //! @table   @tr  Dec @td @c Hex @td                 @td Dec  @td @c Hex @td
@@ -2560,8 +2559,7 @@ bool txClearConsole();
 //!          которой зависит от размеров шрифта консоли. Устанавливаемая позиция округляется, чтобы курсор попал
 //!          в ячейку сетки. См. пример к функции txGetConsoleFontSize().
 //!
-//! @see     txTextCursor(), txSetConsoleAttr(), txGetConsoleAttr(), txGetConsoleCursorPos(),
-//!          txGetConsoleFontSize(), txClearConsole()
+//! @see     txTextCursor(), txSetConsoleAttr(), txGetConsoleAttr(), txGetConsoleCursorPos(), txClearConsole()
 //!
 //! @usage @code
 //!          txSetConsoleCursorPos (txGetExtentX(), txGetExtentY());  // Центр Вселенной
@@ -2576,8 +2574,7 @@ POINT txSetConsoleCursorPos (double x, double y);
 //!
 //! @return  Положение мигающего курсора в структуре POINT.
 //!
-//! @see     txTextCursor(), txSetConsoleAttr(), txGetConsoleAttr(), txSetConsoleCursorPos(),
-//!          txGetConsoleFontSize(), txClearConsole()
+//! @see     txTextCursor(), txSetConsoleAttr(), txGetConsoleAttr(), txSetConsoleCursorPos(), txClearConsole()
 //!
 //! @usage @code
 //!          POINT pos = txGetConsoleCursorPos();
@@ -2597,7 +2594,7 @@ POINT txGetConsoleCursorPos();
 //!
 //! @usage @code
 //!          POINT size = txGetConsoleFontSize();
-//!          txSetConsoleCursorPos (5 * size.x, 10 * size.y);  // А теперь мигай там
+//!          txSetConsoleCursorPos (5 * size.x, 10 * size.y);  // А теперь мигай вот там
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
@@ -2718,7 +2715,7 @@ int txMessageBox (const char* text, const char* header = "TXLib сообщает", unsig
 //! @warning
 //!        - Эта функция требует, чтобы при компиляции константа версии Internet Explorer @c (_WIN32_IE) была
 //!          задана не ниже 0x0500. Для этого надо либо <b>включить TXLib.h вместо @c windows.h или перед ним.</b>
-//!          Либо надо самостоятельно определить @c (\#define) эту константу.
+//!          Либо надо самостоятельно определить @c (\#define) эту константу. @n
 //!          <small>С версией Internet Explorer это связано потому, что при его установке в Windows обновляются
 //!          многие компоненты (например, @c shell32.dll и @c comctl32.dll), которые влияют на функциональность
 //!          системы независимо от использования браузера). Сам Internet Explorer в отображении сообщения
@@ -2874,7 +2871,8 @@ int txOutputDebugPrintf (const char format[], ...) _TX_CHECK_FORMAT (1);
 //!          Вы еще помните, что означают разные скобочки в обозначении интервалов? :)
 //!
 //! @warning Эта функция может мяукать. @strike Just because it can. @endstrike Потому что она не часть стандарта С++
-//!          или Windows, а зависит от TXLib'а. Если это вам не нравится, вы можете написать ее сами.
+//!          или Windows, а зависит от TXLib'а. Если это вам не нравится, вы можете написать ее сами, с помощью
+//!          стандартной функции rand() и операции остатка от деления %. Подсказка: rand() % rande.
 //!
 //! @usage @code
 //!          char message[100] = "Maybe...";
@@ -2897,7 +2895,9 @@ inline int random (int range);
 //!          Вы все еще помните, что означают разные скобочки в обозначении интервалов? :)
 //!
 //! @warning Эта функция может мяукать. @strike Just in case. @endstrike Потому что она не часть стандарта С++
-//!          или Windows, а зависит от TXLib'а. Если это вам не нравится, вы можете написать ее сами.
+//!          или Windows, а зависит от TXLib'а. Если это вам не нравится, вы можете написать ее сами, с помощью
+//!          стандартной функции rand() и небольшой @strike уличной @endstrike магии с делением на RAND_MAX и
+//!          @strike таинственной @endstrike операцией вычитания.
 //!
 //! @usage @code
 //!          int money = random (-100, +100);
@@ -2922,8 +2922,9 @@ inline double random (double left, double right);
 //!
 //! @return  Если a <= x && x <= b, то истина, если нет - ложь
 //!
-//! @warning Эта функция может мяукать. @strike Because cats are power! @endstrike Потому что она не часть стандарта С++
-//!          или Windows, а зависит от TXLib'а. Если это вам не нравится, вы можете написать ее сами.
+//! @warning Эта функция может мяукать. @strike Because cats are power! @endstrike Потому что она не часть стандарта
+//!          С++ или Windows, а зависит от TXLib'а. Если это вам не нравится, вы можете написать ее сами, используя
+//!          неравенства.
 //!
 //! @usage @code
 //!          while (txMouseButtons() != 1)
@@ -2951,8 +2952,8 @@ inline bool In (std::nomeow_t, Tx x, Ta a, Tb b);
 //!
 //!          Удобно для реализации экранных кнопок, нажимаемых курсором мыши.
 //!
-//! @warning Эта функция может мяукать. @strike Because cats are always right. @endstrike Потому что она не часть стандарта С++
-//!          или Windows, а зависит от TXLib'а. Если это вам не нравится, вы можете написать ее сами.
+//! @warning Эта функция может мяукать. @strike Because cats are always right. @endstrike Потому что она не часть
+//!          стандарта С++ или Windows, а зависит от TXLib'а. Если это вам не нравится, вы можете написать ее сами.
 //!
 //! @usage @code
 //!          RECT button = { 100, 100, 150, 120 };
@@ -3078,7 +3079,7 @@ inline bool In (const COORD& pt, const SMALL_RECT& rect);
 //! Если вы хотите замаскировать эти исключения, вызывайте обычный _fpreset(), и затем проверяйте результат вычислений
 //! на достоверность хотя бы с помощью std::isfinite (x).
 //!
-//! @note    Поведение TXLib по умолчанию - @b генерация этих исключений и их @b перехват TXLib'ом в виде @b ошибки.@nn
+//! @note    Поведение TXLib по умолчанию - @b генерация этих исключений и их @b перехват TXLib'ом в виде @b ошибки. @nn
 //!          См. [1] <a href=http://books.google.ru/books?id=uwgNv8VlNPgC&pg=PA343>пример работы с этими исключениями,</a>
 //!              [2] <a href=http://www.gamasutra.com/view/news/169203/Exceptional_floating_point.php>статью о них.</a>
 //!
@@ -3173,7 +3174,7 @@ double txSqr (double x)
 //!
 //!          // А теперь попробуйте объявить переменную z для расчета 3-D координат x, y, z:
 //!
-//!          int z = 0;  // Да! TXLib уничтожает трехмерность! Очень круто. =/
+//!          int z = 0;  // Да! TXLib уничтожает трехмерность! Очень круто. :=/
 //! @endcode
 //!
 //! @hideinitializer
@@ -3226,7 +3227,7 @@ template <typename T> inline T zero();
 //! @note
 //!        - Для автоматически вызываемой функции допускается только @a один параметр.
 //!        - Его тип @c param_t и имя @c param должны соответствовать определению переменной, доступной в текущей
-//!          области видимости.
+//!          области видимости. @n
 //!          Параметр вызываемой функции будет связан с этой переменной через ссылку.
 //!        - Синоним: TX_FINALLY
 //!
@@ -3817,7 +3818,7 @@ template <typename T> inline T txUnlock (T value);
 //!          то на время выполнения функции GDI поток, обновляющий окно TXLib, блокируется. @n
 //!
 //! @note    Если в вызове функции GDI используются запятые, то используйте двойные скобки, чтобы получился один
-//!          параметр, так как txGDI() это макрос.
+//!          параметр, так как txGDI() это все же макрос.
 //!
 //! @see     txDC(), txLock(), txUnlock()
 //!
@@ -8976,13 +8977,13 @@ struct _txSaveConsoleAttr
 #endif
 
 #if defined (__INTEL_COMPILER)
-                                                                                                           
-    #pragma warning (default:  174)             // remark: expression has no effect                                
-    #pragma warning (default:  304)             // remark: access control not specified ("public" by default)      
-    #pragma warning (default:  444)             // remark: destructor for base class "..." is not virtual          
-    #pragma warning (default:  522)             // remark: function redeclared "inline" after being called         
+
+    #pragma warning (default:  174)             // remark: expression has no effect
+    #pragma warning (default:  304)             // remark: access control not specified ("public" by default)
+    #pragma warning (default:  444)             // remark: destructor for base class "..." is not virtual
+    #pragma warning (default:  522)             // remark: function redeclared "inline" after being called
     #pragma warning (default: 1684)             // conversion from pointer to same-sized integral type (potential portability problem)
-                                                                                                                   
+                                           
     #pragma warning (disable:  981)             // remark: operands are evaluated in unspecified order             
                                                                                                                    
 #endif                                                                                                             
@@ -8996,4 +8997,3 @@ struct _txSaveConsoleAttr
 //=================================================================================================================
 // EOF                                                                                                             
 //=================================================================================================================
-
