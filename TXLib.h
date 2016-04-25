@@ -6,9 +6,9 @@
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 109 $
+//!          $Version: 00173a, Revision: 110 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2016-04-23 02:04:59 +0400 $
+//!          $Date: 2016-04-25 09:32:11 +0400 $
 //!
 //!          TX Library - компактная библиотека двумерной графики для Win32 на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -31,12 +31,6 @@
 //!
 //! @par     Баг-трекер на SourceForge:
 //!       -  <a href=http://sourceforge.net/p/txlib/bugs/new> <b>Сообщить об ошибке</b></a>
-//!
-//! @par     Литература :)
-//!       -# <a href=http://storage.ded32.net.ru/Materials/ConferencePseudoScientific-2003.pdf>
-//!          Сальников В.Н., Шарко Ф.С., Митина Н.В., Белая И.В., Индукаев А.К., Дединский И.Р.
-//!          Структура и динамика поведенческих реакций в условиях информационной перегрузки.
-//!          In: <i>Batman Proceedings in Sheep Philosophy,</i> 2003, Vol. 22. pp. 23-24.</a>
 //!
 //           $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
 //-----------------------------------------------------------------------------------------------------------------
@@ -79,8 +73,8 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VERSION           _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 109, 2016-04-23 02:04:59 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR            _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 109, 2016-04-23 02:04:59 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION           _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 110, 2016-04-25 09:32:11 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR            _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 110, 2016-04-25 09:32:11 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @}
 //{----------------------------------------------------------------------------------------------------------------
@@ -102,7 +96,7 @@
 //! @hideinitializer
 //}----------------------------------------------------------------------------------------------------------------
 
-#define _TX_VER               _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 109, 2016-04-23 02:04:59 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER               _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 110, 2016-04-25 09:32:11 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //}
 //-----------------------------------------------------------------------------------------------------------------
@@ -272,6 +266,7 @@
 
         #pragma GCC optimize           "no-strict-aliasing"
 
+        #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
         #pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
         #pragma GCC diagnostic ignored "-Wshadow"
         #pragma GCC diagnostic ignored "-Wsign-conversion"
@@ -294,9 +289,12 @@
         #pragma GCC system_header                          // "override controls (override/final) only available with -std=c++11
         #endif                                             // or -std=gnu++11" warning when -std=... command line option is not set.
 
+        #define _TX_DEPRECATED       __attribute__ (( deprecated ))
+
     #else
         #define _tx_explicit
         #define _tx_override
+        #define _TX_DEPRECATED
 
     #endif
 
@@ -312,6 +310,7 @@
 #else
 
     #define _TX_CHECK_FORMAT( arg )
+    #define _TX_DEPRECATED
 
     #define _txNOP( value )         ( value )
 
@@ -369,9 +368,9 @@
 
     #if (_MSC_VER >= 1400)                      // MSVC 8 (2005) or greater
 
-        #pragma warning (disable: 26135)            // missing locking annotation
-        #pragma warning (disable: 28125)            // the function must be called from within a try/except block
-        #pragma warning (disable: 28159)            // consider using another function instead
+        #pragma warning (disable: 26135)        // missing locking annotation
+        #pragma warning (disable: 28125)        // the function must be called from within a try/except block
+        #pragma warning (disable: 28159)        // consider using another function instead
 
         #pragma setlocale           ("russian") // Set source file encoding, see also _TX_CP
 
@@ -447,7 +446,7 @@
 
 #define _USE_MATH_DEFINES                       // math.h's M_PI etc.
 
-namespace std { enum nomeow_t { nomeow }; }     // Vital additions to C++ standard. Should contact C++ std committee.
+namespace std { enum nomeow_t { nomeow }; }     // Vital addition to the C++ standard. Should contact C++ std committee.
 
 //! @} @endcond
 //}
@@ -578,7 +577,7 @@ namespace { namespace TX {                       // <<<<<<<<< The main code is h
 //!          выйти из main().
 //!
 //! @warning Одновременное создание нескольких окон не потокобезопасно (not thread-safe). @nn
-//!          Многооконная програма на TXLib тормозит, да и однооконная тоже не отличается высокой скоростью. Чтобы
+//!          Многооконная программа на TXLib тормозит, да и однооконная тоже не отличается высокой скоростью. Чтобы
 //!          избавиться от этого, бросьте TXLib и используйте другие оконные библиотеки (<a href=http://qt-project.org>Qt</a>,
 //!          <a href=http://wxwidgets.org>wxWidgets</a>, <a href=http://gtk.org>GTK+</a> и т.д., см. также
 //!          <a href=http://libsdl.org>SDL</a>, <a href=http://opengl.org>OpenGL</a> и т.п.) или напишите свою.
@@ -938,8 +937,6 @@ bool txSetColor (COLORREF color, double thickness = 1, HDC dc = txDC (true));
 //! @param   red        Количество красного цвета в интервале [0; 1]
 //! @param   green      Количество зеленого цвета в интервале [0; 1]
 //! @param   blue       Количество синего   цвета в интервале [0; 1]
-//! @param   thickness  Толщина линий
-//! @param   dc         Дескриптор контекста рисования (холста) для установки цвета
 //!
 //! @return  Если операция была успешна - true, иначе - false.
 //!
@@ -951,7 +948,7 @@ bool txSetColor (COLORREF color, double thickness = 1, HDC dc = txDC (true));
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-bool txColor (double red, double green, double blue, double thickness = 1, HDC dc = txDC (true));
+bool txColor (double red, double green, double blue);
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1000,7 +997,6 @@ bool txSetFillColor (COLORREF color, HDC dc = txDC (true));
 //! @param   red    Количество красного цвета в интервале [0; 1]
 //! @param   green  Количество зеленого цвета в интервале [0; 1]
 //! @param   blue   Количество синего   цвета в интервале [0; 1]
-//! @param   dc     Дескриптор контекста рисования (холста) для установки цвета
 //!
 //! @return  Если операция была успешна - true, иначе - false.
 //!
@@ -1011,7 +1007,7 @@ bool txSetFillColor (COLORREF color, HDC dc = txDC (true));
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-bool txFillColor (double red, double green, double blue, HDC dc = txDC (true));
+bool txFillColor (double red, double green, double blue);
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1808,7 +1804,8 @@ LOGFONT* txFontExist (const char name[]);
 //!          <small>When the program will be shutting down, TXLib will try to delete DCs which were not deleted,
 //!          but this is not guaranteed.</small>
 //!
-//! @see     txCreateWindow(), txCreateCompatibleDC(), txLoadImage(), txDeleteDC(), txSaveImage(), txGetExtent()
+//! @see     txCreateWindow(), txCreateCompatibleDC(), txLoadImage(), txDeleteDC(), txSaveImage(), txGetExtent(),
+//!          txCreateDIBSection()
 //!
 //! @usage @code
 //!          HDC save = txCreateCompatibleDC (100, 100);
@@ -1828,6 +1825,87 @@ HDC txCreateCompatibleDC (double sizeX, double sizeY, HBITMAP bitmap = NULL);
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
+//! @brief   Создает аппаратно-независимый дополнительный холст (контекст рисования, Device Context, DC) в памяти
+//!          с возможностью прямого доступа к нему как к массиву.
+//!
+//! @param   sizeX   Ширина холста
+//! @param   sizeY   Высота холста
+//! @param   pixels  Указатель на переменную, которая будет использоваться для доступа к пикселям изображения
+//!
+//! @return  Дескриптор созданного аппаратно-независимого холста (контекста рисования).
+//!
+//!          Аппаратно-независимые холсты, создаваемые этой функцией, позволяют напрямую и быстро изменять цвета
+//!          пикселей изображения, а также его прозрачность в каждой точке. См. пример использования ниже.
+//!
+//! @note    Аппаратно-независимые холсты @d это контексты устройств, связанные с аппаратно-независимыми растрами
+//!          (Device Independent Bitmaps, DIB) Windows.
+//!
+//! @warning Созданный контекст затем будет нужно @b обязательно удалить при помощи txDeleteDC(). @n
+//!          <small>When the program will be shutting down, TXLib will try to delete DCs which were not deleted,
+//!          but this is not guaranteed.</small>
+//!
+//! @see     txCreateWindow(), txCreateCompatibleDC(), txLoadImage(), txDeleteDC(), txSaveImage(), txGetExtent(),
+//!          txCreateCompatibleDC()
+//!
+//! @usage @code
+//!          int main()
+//!              {
+//!              txCreateWindow (800, 600);
+//!
+//!              POINT size = txGetExtent();
+//!
+//!              txSetFillColor (TX_BLACK);
+//!              txTextCursor (false);
+//!              txBegin();
+//!
+//!              HDC src = GetDC (HWND_DESKTOP);                       // Get HDC from Windows Desktop
+//!
+//!              RGBQUAD* buf = NULL;
+//!              HDC dc = txCreateDIBSection (size.x, size.y, &buf);
+//!              assert (dc); assert (buf);
+//!
+//!              while (!GetAsyncKeyState (VK_ESCAPE))
+//!                  {
+//!                  txBitBlt (dc, 0, 0, size.x, size.y, src);
+//!
+//!                  for (int y = 0; y < size.y; y++)
+//!                  for (int x = 0; x < size.x; x++)
+//!                      {
+//!                      RGBQUAD* c = &buf [x + y*size.x];             // Get color at (x, y) within image buffer
+//!
+//!                      c->rgbRed      = (BYTE) (255 - c->rgbRed);    // Negative colors
+//!                      c->rgbGreen    = (BYTE) (255 - c->rgbGreen);
+//!                      c->rgbBlue     = (BYTE) (255 - c->rgbBlue);
+//!
+//!                      double r       = hypot (x - size.x/2, y - size.y/2);
+//!                      double alpha   = sin (0.05 * r) * 0.1 + 0.5;
+//!
+//!                      c->rgbReserved = (BYTE) ROUND (255 * alpha);  // Set alpha-channel (transparency)
+//!                      }
+//!
+//!                  txUseAlpha (dc) asserted;                         // Premultiply colors with alpha
+//!
+//!                  txClear();
+//!                  txAlphaBlend (txDC(), 0, 0, 0, 0, dc);
+//!
+//!                  printf ("FPS %.0lf\t\t\r", txGetFPS());
+//!                  txSleep (0);
+//!                  }
+//!
+//!              txSaveImage ("TxFilter.bmp", dc);
+//!
+//!              txDeleteDC (dc);
+//!              ReleaseDC (HWND_DESKTOP, src);                        // Free Windows Desktop HDC
+//!
+//!              return 0;
+//!              }
+//! @endcode
+//}----------------------------------------------------------------------------------------------------------------
+
+HDC txCreateDIBSection (int sizeX, int sizeY, RGBQUAD** pixels);
+
+//{----------------------------------------------------------------------------------------------------------------
+//! @ingroup Drawing
 //! @brief   Загружает из файла изображение в формате BMP. Делает это довольно медленно.
 //!
 //! @param   filename    Имя файла с изображением в формате BMP
@@ -1837,8 +1915,8 @@ HDC txCreateCompatibleDC (double sizeX, double sizeY, HBITMAP bitmap = NULL);
 //! @return  Дескриптор созданного контекста рисования в памяти, с загруженным изображением.
 //!          Если изображение не загружено (не найден файл, неверный формат файла и т.д.), то NULL.
 //!
-//! @warning Изображение загружается в создаваемый контекст рисования в памяти ("виртуальный холст"), который затем
-//!          будет нужно <b>обязательно удалить</b> при помощи txDeleteDC(). @n
+//! @warning Изображение загружается в автоматически создаваемый контекст рисования в памяти ("виртуальный холст"),
+//!          который затем будет нужно <b>обязательно удалить</b> при помощи txDeleteDC(). @n
 //!          <small>When the program will be shutting down, TXLib will try to delete DCs which were not deleted,
 //!          but this is not guaranteed.</small>
 //!
@@ -1852,20 +1930,28 @@ HDC txCreateCompatibleDC (double sizeX, double sizeY, HBITMAP bitmap = NULL);
 //!          программирования. Текущую папку программы можно посмотреть по команде About в системном меню
 //!          (она указана там как "Run from").
 //!
+//!          Если изображение в файле содержит альфа-канал (информацию о прозрачности), то его цвета должны
+//!          находиться в формате <b>Premultiplied Alpha</b>. См. замечания к функции txAlphaBlend().
+//!
+//!          Если изображение в файле с альфа-каналом @b не находится в формате <b>Premultiplied Alpha</b>, то после
+//!          вызова txLoadImage() нужно вызвать функцию txUseAlpha(). Однако не надо этого делать, если цвета в файле
+//!          @b уже находятся в формате Premultiplied Alpha, иначе картинка станет темнее. Также не надо вызывать
+//!          txUseAlpha() несколько раз для одного и того же изображения.
+//!
 //! @note    <b>Не надо часто загружать</b> одно и то же изображение, особенно в цикле. От этого программа начинает
 //!          тормозить! @n
 //! @note    Загрузите один раз @a перед циклом, потом используйте много раз. Посмотрите, как это сделано в примере
 //!          TX\Examples\Tennis\Tennis.cpp.
 //!
-//! @title   Типы изображений:
-//! @table   @tr IMAGE_BITMAP @td Загружает рисунок в формате BMP
-//!          @tr IMAGE_CURSOR @td Загружает курсор
-//!          @tr IMAGE_ICON   @td Загружает иконку
+//! @title   Типы загружаемых изображений:
+//! @table   @tr IMAGE_BITMAP @td Рисунок в формате BMP
+//!          @tr IMAGE_CURSOR @td Курсор в формате CUR или ANI
+//!          @tr IMAGE_ICON   @td Иконка в формате ICO
 //!          @endtable
 //!
 //! @title   Флаги загрузки:
 //! @table   @tr LR_CREATEDIBSECTION @td Создает DIB (device-indepandent bitmap), удобную для прямого доступа к данным
-//!          @tr LR_LOADFROMFILE     @td Загружает из файла (если этот флаг не указан, то загружает из ресурса)
+//!          @tr LR_LOADFROMFILE     @td Загружает из файла (если этот флаг не указан, то загружает из ресурса EXE-файла)
 //!          @tr Остальные флаги загрузки @td см. на MSDN.com, поиск "LoadImage function".
 //!          @endtable
 //!
@@ -1901,7 +1987,8 @@ HDC txLoadImage (const char filename[], unsigned imageFlags = IMAGE_BITMAP, unsi
 //!
 //! @return  Если операция была успешна - true, иначе - false.
 //!
-//! @see     txCreateWindow(), txCreateCompatibleDC(), txLoadImage(), txDeleteDC(), txSaveImage(), txGetExtent()
+//! @see     txCreateWindow(), txCreateCompatibleDC(), txLoadImage(), txDeleteDC(), txSaveImage(), txGetExtent(),
+//!          txCreateDIBSection()
 //!
 //! @usage   Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
@@ -1968,7 +2055,7 @@ bool txDeleteDC (HDC* dc);
 //!          @endtable
 //!
 //! @see     txAlphaBlend(), txTransparentBlt(), txSaveImage(), txGetExtent(), txSetColor(), txGetColor(),
-//!          txSetFillColor(), txGetFillColor(), txColors, RGB()
+//!          txSetFillColor(), txGetFillColor(), txColors, RGB(), txCreateDIBSection()
 //!
 //! @usage   Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
@@ -1988,9 +2075,13 @@ bool txDeleteDC (HDC* dc);
 
 bool txBitBlt (HDC dest, double xDest, double yDest, double width, double height,
                HDC src,  double xSrc = 0, double ySrc = 0, DWORD rOp = SRCCOPY);
+
+//! @cond INTERNAL
+
 inline
 bool txBitBlt (HDC dest, double xDest, double yDest, HDC src,
                double xSrc = 0, double ySrc = 0, double width = 0, double height = 0, DWORD rOp = SRCCOPY);
+//! @endcond
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -2002,8 +2093,8 @@ bool txBitBlt (HDC dest, double xDest, double yDest, HDC src,
 //! @param   width       Ширина копируемого изображения. Если <= 0, то автоматически берется из размера источника
 //! @param   height      Высота копируемого изображения. Если <= 0, то автоматически берется из размера источника
 //! @param   src         Контекст источника (откуда копировать)
-//! @param   xSrc        Х-координата верхнего левого угла изображения-источника, должна быть в пределах размера источника.
-//! @param   ySrc        Y-координата верхнего левого угла изображения-источника, должна быть в пределах размера источника.
+//! @param   xSrc        Х-координата верхнего левого угла изображения-источника, должна быть в пределах размера источника
+//! @param   ySrc        Y-координата верхнего левого угла изображения-источника, должна быть в пределах размера источника
 //! @param   transColor  Цвет, который будет считаться прозрачным
 //!
 //! @return  Если операция была успешна - true, иначе - false.
@@ -2021,7 +2112,8 @@ bool txBitBlt (HDC dest, double xDest, double yDest, HDC src,
 //!
 //! @note    Если TransparentBlt не работает, используйте функцию AlphaBlend, она вообще лучше.
 //!
-//! @see     txBitBlt(), txTransparentBlt(), txLoadImage(), txCreateCompatibleDC(), txSaveImage(), txGetExtent()
+//! @see     txBitBlt(), txTransparentBlt(), txLoadImage(), txCreateCompatibleDC(), txSaveImage(), txGetExtent(),
+//!          txCreateDIBSection()
 //!
 //! @usage   Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
@@ -2035,7 +2127,7 @@ bool txBitBlt (HDC dest, double xDest, double yDest, HDC src,
 //!          txTransparentBlt (txDC(), 0, 0, 800, 600, superman_FromTXLibHelp);
 //!
 //!          // А можно и так:
-//!          Win32::TransparentBlt (txDC(), 0, 0, 800, 600, superman_FromTXLibHelp, 0, 0, 80, 60, -1); // 10-кратное увеличение
+//!          Win32::TransparentBlt (txDC(), 0, 0, 800, 600, superman_FromTXLibHelp, 0, 0, 80, 60, -1); // 10x zoom
 //!          // Познай мощь Win32 GDI, отказавшись от TXLib'а! :) см. TransparentBlt в MSDN.com.
 //!
 //!          ...
@@ -2045,9 +2137,13 @@ bool txBitBlt (HDC dest, double xDest, double yDest, HDC src,
 
 bool txTransparentBlt (HDC dest, double xDest, double yDest, double width, double height,
                        HDC src,  double xSrc = 0, double ySrc = 0, COLORREF transColor = TX_BLACK);
+
+//! @cond INTERNAL
+
 inline
 bool txTransparentBlt (HDC dest, double xDest, double yDest, HDC src,
                        double xSrc = 0, double ySrc = 0, double width = 0, double height = 0, COLORREF transColor = TX_BLACK);
+//! @endcond
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -2058,12 +2154,12 @@ bool txTransparentBlt (HDC dest, double xDest, double yDest, HDC src,
 //! @param   yDest   Y-координата верхнего левого угла изображения-приемника
 //! @param   width   Ширина копируемого изображения. Если <= 0, то автоматически берется из размера источника
 //! @param   height  Высота копируемого изображения. Если <= 0, то автоматически берется из размера источника
-//! @param   src     Контекст источника (откуда копировать). Должен иметь 32-битовый формат и альфа-канал (см. ниже).
+//! @param   src     Контекст источника (откуда копировать). Должен иметь 32-битовый формат и альфа-канал (см. ниже)
 //! @param   xSrc    Х-координата верхнего левого угла изображения-источника
 //! @param   ySrc    Y-координата верхнего левого угла изображения-источника
 //! @param   alpha   Общая прозрачность изображения, в дополнение к альфа-каналу (0 - все прозрачно, 1 - использовать
 //!                  только альфа-канал)
-//! @param   format  Если нужно учитывать альфа-канал источника (например, в картинках), то AC_SRC_ALPHA,
+//! @param   format  Если нужно учитывать альфа-канал источника (например, в загруженных картинках), то AC_SRC_ALPHA,
 //!                  иначе 0 (например, если холст источника создан с помощью txCreateCompatibleDC, см. ниже)
 //!
 //! @return  Если операция была успешна - true, иначе - false.
@@ -2076,7 +2172,8 @@ bool txTransparentBlt (HDC dest, double xDest, double yDest, HDC src,
 //!          Если прямоугольник копируемой области не полностью лежит в прямоугольнике источника, то функция
 //!          работать не будет.
 //!
-//! @note    Изображение-источник должно быть загружено с помощью txLoadImage() и иметь <b>32-битовый RGBA-формат.</b>
+//! @note    Изображение-источник должно быть загружено с помощью txLoadImage() и иметь <b>32-битовый RGBA-формат,</b>
+//!          либо создано с помощью функции txCreateDIBSection(). @nn
 //!          Дополнительный канал <b>(A, альфа-канал)</b> этого формата отвечает за прозрачность участков
 //!          изображения. 24-битовый формат файлов (TrueColor RGB) функция txAlphaBlend поддерживает только если
 //!          установить параметр @p format равным 0.
@@ -2084,10 +2181,12 @@ bool txTransparentBlt (HDC dest, double xDest, double yDest, HDC src,
 //!          Альфа-канал можно сделать, например, в Adobe Photoshop, командой "Новый канал (New Channel)" в палитре
 //!          каналов (Channels). Черный цвет в альфа-канале соответствует полной прозрачности, белый - полной
 //!          непрозрачности. <b>При этом в прозрачных областях само изображение (в каналах R, G, B) должно быть
-//!          черным, и чем прозрачнее, тем чернее.</b> См. изображение с альфа-каналом в примере
-//!          TX\Examples\Tennis\Tennis.cpp (файл с теннисной ракеткой: TX\Examples\Tennis\Resources\Images\Racket.bmp).
+//!          черным, и чем прозрачнее, тем чернее.</b> Такой формат цвета называется <b>Premultiplied Alpha.</b>
+//!          См. изображение с альфа-каналом в примере TX\Examples\Tennis\Tennis.cpp (файл с теннисной ракеткой:
+//!          TX\Examples\Tennis\Resources\Images\Racket.bmp).
 //!
-//!          Строго говоря, надо домножить каналы R,G,B на альфа-канал: <tt>R,G,B *= A</tt>. Получится вот что:
+//!          Иначе говоря, при пересчете в формат <b>Premultiplied Alpha</b> надо домножить цвета в каналах R,G,B
+//!          на значения альфа-канале @c A: <tt>R,G,B *= A / 255.0</tt>. Получится вот что:
 //!
 //!        - Если значение альфа-канала для некоторого пикселя равно   0 (полная   прозрачность), тогда значения
 //!          каналов R,G,B для этого пикселя также станут 0 (это черный цвет).
@@ -2095,7 +2194,7 @@ bool txTransparentBlt (HDC dest, double xDest, double yDest, HDC src,
 //!          каналов R,G,B для этого пикселя не изменятся.
 //!        - Для других значений альфа-канала, пиксели изображения станут темнее.
 //!
-//!          В Photoshop это можно сделать командой <b>Image @d Apply Image</b> с параметрами:
+//!          В редакторе Adobe Photoshop это можно сделать командой <b>Image @d Apply Image</b> с параметрами:
 //! @table   @tr Source:     @td <i>Имя файла с картинкой</i>
 //!          @tr Layer:      @td Background
 //!          @tr @b Channel: @td <b> Alpha 1</b>
@@ -2103,18 +2202,28 @@ bool txTransparentBlt (HDC dest, double xDest, double yDest, HDC src,
 //!          @tr Opacity:    @td 100%
 //! @endtable
 //!
-//! @note    Изображение-источник также может быть создано с помощью txCreateCompatibleDC(), если видеорежим дисплея
+//!          Если изображение с альфа-каналом не находится в формате <b>Premultiplied Alpha</b>, то для перевода
+//!          в этот формат можно использовать функцию txUseAlpha(). Однако не надо вызывать txUseAlpha() несколько
+//!          раз для одного и того же изображения, иначе оно будет становиться темнее.
+//!
+//!          Изображение-источник также может быть создано с помощью txCreateCompatibleDC(), если видеорежим дисплея
 //!          32-битовый (TrueColor). @nn
 //!          В этом случае альфа-канал созданного холста будет содержать нули, т.е. изображение на нем будет всегда
 //!          трактоваться как полностью прозрачное и при копировании с помощью txAlphaBlend результата не будет.
-//!          Чтобы игнорировать такой нулевой альфа-канал, параметр @p format надо установить в 0, и прозрачность
-//!          регулировать параметром @p alpha. См. пример к функции txSaveImage().
+//!          Чтобы игнорировать такой нулевой альфа-канал, параметр @p format надо установить в 0, и общую прозрачность
+//!          регулировать только параметром @p alpha. Попиксельной прозрачности в этом случае не будет. См. пример
+//!          к функции txSaveImage().
+//!
+//!          Если изображение-источник создано с помощью txCreateDIBSection() или txLoadImage(), то txAlppaBlend()
+//!          может использовать как общую прозрачность, задачаемую параметром @p alpha, так и попиксельную прозрачность,
+//!          задаваемую альфа-каналом.
 //!
 //! @note    Стандартная функция AlphaBlend из Win32 API @b может масштабировать изображение. В txAlphaBlend это
 //!          @b убрано для упрощения использования. If you still need image scaling, use original function AlphaBlend
 //!          and don't mess with stupid TX-based tools. (See implementation of txAlphaBlend in TXLib.h).
 //!
-//! @see     txBitBlt(), txTransparentBlt(), txLoadImage(), txCreateCompatibleDC(), txSaveImage(), txGetExtent()
+//! @see     txBitBlt(), txTransparentBlt(), txLoadImage(), txCreateCompatibleDC(), txSaveImage(), txGetExtent(),
+//!          txCreateDIBSection(), txUseAlpha()
 //!
 //! @usage   Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
@@ -2137,17 +2246,54 @@ bool txTransparentBlt (HDC dest, double xDest, double yDest, HDC src,
 
 bool txAlphaBlend (HDC dest, double xDest, double yDest, double width, double height,
                    HDC src,  double xSrc = 0, double ySrc = 0, double alpha = 1.0, unsigned format = AC_SRC_ALPHA);
+
+//! @cond INTERNAL
+
 inline
 bool txAlphaBlend (HDC dest, double xDest, double yDest, HDC src,
                    double xSrc = 0, double ySrc = 0, double width = 0, double height = 0, double alpha = 1.0,
                    unsigned format = AC_SRC_ALPHA);
+//! @endcond
+
+//{----------------------------------------------------------------------------------------------------------------
+//! @ingroup Drawing
+//! @brief   Пересчитывает цвета пикселей с учетом прозрачности (переводит цвета в формат Premultiplied Alpha).
+//!
+//! @param   dc  Дескриптор холста, изображение которого пересчитывается.
+//!
+//! @return  Если операция была успешна, возвращается исходный HDC, иначе - NULL.
+//!
+//!          Пересчет цветов в каналах R,G,B в формат <b>Premultiplied Alpha</b> с учетом значения в альфа-канале
+//!          @c A идет по формуле <tt>R,G,B *= A / 255.0</tt>. Получается вот что:
+//!
+//!        - Если значение альфа-канала для некоторого пикселя равно   0 (полная   прозрачность), тогда значения
+//!          каналов R,G,B для этого пикселя также станут 0 (это черный цвет).
+//!        - Если значение альфа-канала для некоторого пикселя равно 255 (полная непрозрачность), тогда значения
+//!          каналов R,G,B для этого пикселя не изменятся.
+//!        - Для других значений альфа-канала, пиксели изображения станут темнее.
+//!
+//!          Пересчет цветов пикселей с учетом их прозрачности в формат Premultiplied Alpha необходим:
+//!
+//!        - В случае ручного изменения цветов (пример см. в функции txCreateDIBSection).
+//!        - После загрузки картинок из файла с помощью txLoadImage(), если цвета изображения в нем не были заранее
+//!          домножены на альфа-канал в Adobe Photoshop или аналогичной программе (см. замечания к функции @ref
+//!          txAlphaBlend).
+//!
+//!          См. также замечания к функции txAlphaBlend().
+//!
+//! @see     txCreateCompatibleDC(), txCreateDIBSection(), txLoadImage(), txDeleteDC(), txAlphaBlend()
+//!
+//! @usage   См. в функции txCreateDIBSection().
+//}----------------------------------------------------------------------------------------------------------------
+
+HDC txUseAlpha (HDC dc);
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
 //! @brief   Сохраняет в файл изображение в формате BMP.
 //!
 //! @param   filename    Имя файла с расширением "BMP", куда будет записано изображение в формате BMP
-//! @param   dc          Декскриптор холста, изображение которого сохраняется в файл. Если NULL, сохраняется изображение
+//! @param   dc          Дескриптор холста, изображение которого сохраняется в файл. Если NULL, сохраняется изображение
 //!                      окна TXLib.
 //!
 //! @return  Если операция была успешна - true, иначе - false.
@@ -2360,7 +2506,7 @@ bool txDestroyWindow();
 //!
 //! @return  Скорость работы (графических операций) в условных единицах.
 //!
-//! @see     txSleep()
+//! @see     txSleep(), txGetFPS()
 //!
 //! @usage @code
 //!          if (txQueryPerformance() < 1) printf ("Хочется новый компьютер");
@@ -2368,6 +2514,24 @@ bool txDestroyWindow();
 //}----------------------------------------------------------------------------------------------------------------
 
 double txQueryPerformance();
+
+//{----------------------------------------------------------------------------------------------------------------
+//! @ingroup Drawing
+//! @brief   Выдает количество кадров (вызовов этой функции) в секунду.
+//!
+//! @param   minFrames  Количество вызовов, после которых FPS начинает усредняться.
+//!
+//! @return  FPS (Frames per Second), т.е. количество кадров (вызовов этой функции) в секунду.
+//!
+//! @note    Когда количество вызовов этой функции превысит @p minFrames, FPS начинает усредняться по последним
+//!          кадрам. Максимальное количество интервала усреднения @d 100 кадров.
+//!
+//! @see     txSleep(), txQueryPerformance()
+//!
+//! @usage   См. в функции txCreateDIBSection().
+//}----------------------------------------------------------------------------------------------------------------
+
+double txGetFPS (unsigned minFrames = 0);
 
 //! @}
 //}
@@ -2497,7 +2661,7 @@ inline unsigned txMouseButtons();
 //!          @tr  7 = @td @c 0x7 @td = Серый,        @td 15 = @td @c 0xF @td = Белый.
 //! @endtable
 //!
-//!          В шестнадцатиричной системе счисления атрибуты задавать можно проще: если нужен, скажем, желтый цвет
+//!          В шестнадцатеричной системе счисления атрибуты задавать можно проще: если нужен, скажем, желтый цвет
 //!          на синем фоне, то его код будет @c 0x1e (старшая цифра - старшие 4 бита - это цвет фона, младшая
 //!          цифра - младшие 4 бита - это цвет текста).
 //!
@@ -2776,7 +2940,7 @@ int txOutputDebugPrintf (const char format[], ...) _TX_CHECK_FORMAT (1);
 //!          компиляции.
 //!
 //!          Макрос SIZEARR() просто делит размер всего массива в байтах на размер его элемента, получается размер
-//!          массива в элементах.
+//!          массива в элементах. @n
 //!          Он <b>не проверяет,</b> можно ли его правильно вычислить, и при неправильном использовании может
 //!          выдать <b>неверный размер.</b>
 //!
@@ -2881,7 +3045,7 @@ int txOutputDebugPrintf (const char format[], ...) _TX_CHECK_FORMAT (1);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-inline int random (int range);
+inline int random (int range) _TX_DEPRECATED;
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
@@ -2910,7 +3074,7 @@ inline int random (int range);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-inline double random (double left, double right);
+inline double random (double left, double right) _TX_DEPRECATED;
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
@@ -2936,10 +3100,10 @@ inline double random (double left, double right);
 //}----------------------------------------------------------------------------------------------------------------
 
 template <typename Tx, typename Ta, typename Tb>
-inline bool In (Tx x, Ta a, Tb b);
+inline bool In (Tx x, Ta a, Tb b) _TX_DEPRECATED;
 
 template <typename Tx, typename Ta, typename Tb>
-inline bool In (std::nomeow_t, Tx x, Ta a, Tb b);
+inline bool In (std::nomeow_t, Tx x, Ta a, Tb b) _TX_DEPRECATED;
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
@@ -2990,9 +3154,9 @@ inline bool In (std::nomeow_t, Tx x, Ta a, Tb b);
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-inline bool In (const POINT& pt, const RECT& rect);
+inline bool In (const POINT& pt, const RECT& rect)       _TX_DEPRECATED;
 
-inline bool In (const COORD& pt, const SMALL_RECT& rect);
+inline bool In (const COORD& pt, const SMALL_RECT& rect) _TX_DEPRECATED;
 
 //! @}
 //{----------------------------------------------------------------------------------------------------------------
@@ -3162,10 +3326,10 @@ double txSqr (double x)
 //!
 //! @warning Это еще один пример, как <b> не надо </b> писать код. @nn
 //!          Макрос определен так: @nn
-//!          <tt> #define z 0 </tt> @nn
+//!          <tt> \#define z 0 </tt> @nn
 //!          Замечательный макрос! Теперь на одну переменную в программе стало меньше. :((
 //!
-//! @note    (Используйте @c #undef. С @c <http://www.google.ru/search?q=%23undef>#undef</a> ваша программа станет
+//! @note    (Используйте @c \#undef. С @c <http://www.google.ru/search?q=%23undef>\#undef</a> ваша программа станет
 //!          мягкой и шелковистой.)
 //!
 //! @usage @code
@@ -3333,19 +3497,17 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
-//! @brief   Замена стандартного макроса assert(), с выдачей сообщения через txMessageBox(), консоль и
-//!          OutputDebugString().
+//! @brief   Замена стандартного макроса assert(), с выдачей сообщения через txMessageBox(), консоль и OutputDebugString().
 //!
 //! @param   cond  Условие для проверки
 //!
 //! @return  Не определено
 //!
 //!          Если условие, проверяемое assert(), истинно, то макрос ничего не делает. @n
-//!          Если условие оказывается ложно, то выводится диагностическое сообщение и программа аварийно
-//!          завершается.
+//!          Если условие оказывается ложно, то выводится диагностическое сообщение и программа аварийно завершается.
 //!
 //! @warning <b>При компиляции в режиме Release (или если определен NDEBUG) assert превращается в пустой оператор.</b> @n
-//!          Не надо помещать в assert() действия, которые важны для работы алгорима!
+//!          Не надо помещать в assert() действия, которые важны для работы алгоритма!
 //!
 //! @note    Если условие @c cond может быть вычислено уже во время компиляции как ложное, компилятор может
 //!          предупредить об этом (как о делении на 0).
@@ -3436,8 +3598,7 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
 //! @return  1, если выражение @p expr истинно, иначе 0.
 //!
 //!          Если условие, проверяемое verify(), истинно, то макрос ничего не делает. @n
-//!          Если условие оказывается ложно, то выводится диагностическое сообщение и программа аварийно
-//!          завершается.
+//!          Если условие оказывается ложно, то выводится диагностическое сообщение и программа аварийно завершается.
 //!
 //! @note    Действие макроса аналогично assert(), но при компиляции в режиме Release (или если определен NDEBUG)
 //!          verify @b не превращается в пустой оператор.
@@ -3994,7 +4155,6 @@ const unsigned _TX_BIGBUFSIZE             = 2048;
 //! @see     _TX_ALLOW_KILL_PARENT, _TX_NOINIT
 //}----------------------------------------------------------------------------------------------------------------
 
-            // TX_VEGETABLE_PRINTERS
 #if !defined  (_TX_WAITABLE_PARENTS)
     #define    _TX_WAITABLE_PARENTS       "cmd.exe:devenv.exe, "                    /* MSVS 2003+    */ \
                                           "vcspawn.exe:msdev.exe, "                 /* MSVS 6        */ \
@@ -4210,7 +4370,7 @@ void _txTrace (const char file[], int line, const char func[], const char msg[] 
 //!          в деструкторе @d LeaveCriticalSection(). Это @c RAII в чистом виде: вы никогда не забудете разблочить
 //!          секцию and your thread show will always go on.
 //!
-//!          Некоторые добавления: есть возожность вызвать TryEnterCriticalSection(), и, если она не заблочила
+//!          Некоторые добавления: есть возможность вызвать TryEnterCriticalSection(), и, если она не заблочила
 //!          секцию, деструктор ее не разблочивает. Есть оператор для проверки, заблочилась ли секция или нет
 //!          (см. конструкторы класса и оператор @c bool).
 //!
@@ -4687,10 +4847,9 @@ const char* txInputBox (const char* text, const char* caption, const char* input
     //-------------------------------------------------------------------------------------------------------------
     // Идентификаторы элементов диалога. Они требуются в GetDlgItemText().
     // Если диалог строится не вручную, а редактором ресурсов, то они задаются в нем автоматически.
-    // У нас же тут - хардкор стайл, к сожалению. Причина в том, что у разных сред программирования
-    // разные редакторы ресурсов и системы сборки. Поэтому для независимости от них все будет
-    // строиться на этапе выполнения, динамически. Вы еще гляньте, как это реализовано в
-    // txDialog::dialogBox() и функциях _tx_DLGTEMPLATE_()... О_о
+    // У нас же тут - хардкор стайл, к сожалению. Причина в том, что у разных сред программирования разные редакторы
+    // ресурсов и системы сборки. Поэтому для независимости от них все будет строиться на этапе выполнения,
+    // динамически. Вы еще гляньте, как это реализовано в txDialog::dialogBox() и функциях _tx_DLGTEMPLATE_()... О_о
     //-------------------------------------------------------------------------------------------------------------
 
     #define ID_TEXT_  101
@@ -4698,8 +4857,8 @@ const char* txInputBox (const char* text, const char* caption, const char* input
 
     //-------------------------------------------------------------------------------------------------------------
     // Задание макета (вида) диалога в виде массива структур.
-    // С помощью особого порядка полей в структуре txDialog::Layout и констант из класса
-    // txDialog этот массив становится похож на описание ресурса диалога в .rc - файле.
+    // С помощью особого порядка полей в структуре txDialog::Layout и констант из класса txDialog этот массив
+    // становится похож на описание ресурса диалога в .rc - файле.
     // См. описание синтаксиса rc-файла в документации по Win32 (MSDN, http://msdn.com).
     //-------------------------------------------------------------------------------------------------------------
 
@@ -4720,11 +4879,10 @@ const char* txInputBox (const char* text, const char* caption, const char* input
 
     //-------------------------------------------------------------------------------------------------------------
     // Класс диалога для InputBox. Внутренний, т.к. зачем ему быть внешним.
-    // Нужен в основном для задания строки ввода (str) и оконной функции диалогового окна,
-    // требуемой Win32 (она построена макросами TX_BEGIN_MESSAGE_MAP и другими). Можно не делать
-    // внутреннего класса, но тогда оконную функцию придется писать в глобальной области видимости,
-    // и str объявлять глобально тоже (или передавать ее адрес через DialogBoxParam и записывать
-    // его в класс во время обработки WM_INITDIALOG).
+    // Нужен в основном для задания строки ввода (str) и оконной функции диалогового окна, требуемой Win32 (она
+    // построена макросами TX_BEGIN_MESSAGE_MAP и другими). Можно не делать внутреннего класса, но тогда оконную
+    // функцию придется писать в глобальной области видимости, и str объявлять глобально тоже (или передавать ее
+    // адрес через DialogBoxParam и записывать его в класс во время обработки WM_INITDIALOG).
     //-------------------------------------------------------------------------------------------------------------
     struct inputDlg : txDialog
         {
@@ -4745,8 +4903,8 @@ const char* txInputBox (const char* text, const char* caption, const char* input
             TX_COMMAND_MAP        // Здесь обрабатываются WM_COMMAND. На самом деле это switch.
 
                 //-------------------------------------------------------------------------------------------------
-                // При нажатии кнопки OK копируем строку из поля ввода в нашу переменную str,
-                // т.к. после закрытия диалога строка ввода умрет и текст уже из нее получить.
+                // При нажатии кнопки OK копируем строку из поля ввода в нашу переменную str, т.к. после закрытия
+                // диалога строка ввода умрет и текст уже из нее получить.
                 // Этот макрос на самом деле превращается в case из оператора switch.
                 // _wnd - это параметр оконной функции, см. определение макроса TX_BEGIN_MESSAGE_MAP().
                 //-------------------------------------------------------------------------------------------------
@@ -4773,10 +4931,9 @@ const char* txInputBox (const char* text, const char* caption, const char* input
 
     //-------------------------------------------------------------------------------------------------------------
     // Убираем дефайны, чтобы потом не мешали.
-    // От этого они получаются "локального действия", как будто у них была бы область видимости -
-    // функция. На самом деле это сделано вручную через #undef. Чтобы подчеркнуть их локальную
-    // природу, у них имена заканчиваются на _. Такие дейфайны потом не перекосячат весь код после
-    // того как, фактически, стали уже не нужны.
+    // От этого они получаются "локального действия", как будто у них была бы область видимости - функция. На самом
+    // деле это сделано вручную через #undef. Чтобы подчеркнуть их локальную природу, у них имена заканчиваются на _.
+    // Такие дефайны потом не перекосячат весь код после того как, фактически, стали уже не нужны.
     //-------------------------------------------------------------------------------------------------------------
 
     #undef ID_TEXT_
@@ -4795,9 +4952,9 @@ const char* txInputBox (const char* text, const char* caption, const char* input
     dlg.dialogBox (layout);
 
     //-------------------------------------------------------------------------------------------------------------
-    // Возвращаем адрес строки из статического объекта. Так можно делать, потому что статический
-    // объект не умрет при выходе из функции и строка в нем, соответственно, тоже. Адрес
-    // нестатических переменных передавать синтаксически можно, но ведет к серьезным ошибкам.
+    // Возвращаем адрес строки из статического объекта. Так можно делать, потому что статический объект не умрет
+    // при выходе из функции и строка в нем, соответственно, тоже. Адрес нестатических переменных передавать
+    // синтаксически можно, но ведет к серьезным ошибкам.
     //-------------------------------------------------------------------------------------------------------------
 
     return dlg.str;
@@ -5033,6 +5190,8 @@ _TX_DLLIMPORT     ("GDI32",    int,      GetDIBits,                (HDC hdc, HBI
 _TX_DLLIMPORT     ("GDI32",    bool,     PatBlt,                   (HDC dc, int x0, int y0, int width, int height, DWORD rOp));
 _TX_DLLIMPORT     ("GDI32",    int,      SetROP2,                  (HDC dc, int mode));
 _TX_DLLIMPORT     ("GDI32",    int,      SetStretchBltMode,        (HDC dc, int mode));
+_TX_DLLIMPORT     ("GDI32",    HBITMAP,  CreateDIBSection,         (HDC dc, const BITMAPINFO* bmInfo, unsigned colorUsage, void **vBits,
+                                                                    HANDLE section, DWORD offset));
 
 _TX_DLLIMPORT     ("User32",   int,      DrawTextA,                (HDC dc, const char text[], int length, RECT* rect, unsigned format));
 _TX_DLLIMPORT     ("User32",   HANDLE,   LoadImageA,               (HINSTANCE inst, const char name[], unsigned type,
@@ -5864,7 +6023,7 @@ $   AdjustTokenPrivileges (token, false, &priv, sizeof (priv), &old, &oldSz) ass
 $   HANDLE proc = OpenProcess (PROCESS_ALL_ACCESS, 0, pid);
 $   if (!proc) return false;
 
-$   bool ok = !!TerminateProcess (proc, 0);
+$   bool ok = !!Win32::TerminateProcess (proc, 0);
 $   CloseHandle (proc);
 
 $   return ok;
@@ -5939,9 +6098,8 @@ $       for (thunk0 = RVA_ (IMAGE_THUNK_DATA*, desc->OriginalFirstThunk),
 $       if (found) break;
         }
 
-    if (debug)
-        printf ("_txSetProcAddress (%s, 0x%p, %s, 0x%p): ", funcName, (void*)(ptrdiff_t) newFunc, dllName, (void*) module),
-        printf (found? "FOUND\n\n" : "NOT found\n\n");
+    if (debug) printf ("_txSetProcAddress (%s, 0x%p, %s, 0x%p): %s\n\n",
+                       funcName, (void*)(ptrdiff_t) newFunc, dllName, (void*) module, (found? "FOUND" : "NOT found"));
 
 $   if (!found) return NULL;
 
@@ -6032,7 +6190,7 @@ $   LeaveCriticalSection (&_txCanvas_LockBackBuf);
 
 $   if (_txRunning && _txMain)         // Main window is destroyed but main() is still running.
         {                              // No chances for good termination, so use exit().
-$       exit ((int) msg.wParam);
+$       ::exit ((int) msg.wParam);
         }
 
     _TX_ON_DEBUG (OutputDebugString (_TX_VERSION " - STOPPED: " _TX_MODULE "\n"));
@@ -6880,20 +7038,36 @@ $1  txAutoLock _lock;
 $   HDC wndDC = GetDC (wnd);
 $   if (!wndDC) return NULL;
 
-$   RECT r = {0};
-$   if (wnd) GetClientRect (wnd, &r) asserted;
-$   POINT sz = { r.right - r.left, r.bottom - r.top };
-$   if (!size) size = &sz;
+$   POINT sz = { 1, 1 };
+$   if (size) sz = *size;
+
+$   if (!size && wnd)
+        {
+$       RECT r = {0};
+$       GetClientRect (wnd, &r) asserted;
+
+$       sz.x = r.right  - r.left;
+$       sz.y = r.bottom - r.top;
+        }
+
+$   if (bitmap)
+        {
+$       BITMAP bmap = {0};
+$       Win32::GetObject (bitmap, sizeof (bmap), &bmap) asserted;
+
+$       sz.x = bmap.bmWidth;
+$       sz.y = bmap.bmHeight;
+        }
 
 $   HDC dc = Win32::CreateCompatibleDC (wndDC);
 $   if (!dc) TX_DEBUG_ERROR ("Cannot create buffer: CreateCompatibleDC() failed");
 
-$   HBITMAP bmap = bitmap? bitmap : Win32::CreateCompatibleBitmap (wndDC, size->x, size->y);
+$   HBITMAP bmap = bitmap? bitmap : Win32::CreateCompatibleBitmap (wndDC, sz.x, sz.y);
 $   if (!bmap) TX_DEBUG_ERROR ("Cannot create buffer: CreateCompatibleBitmap() failed");
 
 $   Win32::SelectObject (dc, bmap) asserted;
 
-$   if (!bitmap) Win32::PatBlt (dc, 0, 0, size->x, size->y, BLACKNESS) asserted;
+$   if (!bitmap) Win32::PatBlt (dc, 0, 0, sz.x, sz.y, BLACKNESS) asserted;
 
 $   ReleaseDC (wnd, wndDC) asserted;
 
@@ -7128,7 +7302,7 @@ $   txOutputDebugPrintf ("%s - %s", _TX_VERSION, tools::compressSpaces (str, wha
 
     if (!isFatal) return what;
 
-    if (!IsDebuggerPresent()) exit (EXIT_FAILURE);
+    if (!IsDebuggerPresent()) ::exit (EXIT_FAILURE);
 
 //  vvvvvvvvvvvvvvvvvv
     DebugBreak();   //>>> Вы в отладчике. Есть шанс посмотреть переменные и разобраться.
@@ -7154,11 +7328,9 @@ int txOutputDebugPrintf (const char format[], ...)
 
     OutputDebugString (str);
 
-    if (print)
-        fprintf (stderr, "%s", str);
+    if (print)  fprintf (stderr, "%s", str);
 
-    if (msgbox)
-        txMessageBox (str, "Оказывается, что", MB_ICONEXCLAMATION | MB_TOPMOST);
+    if (msgbox) txMessageBox (str, "Оказывается, что", MB_ICONEXCLAMATION | MB_TOPMOST);
 
     return n;
     }
@@ -7344,15 +7516,13 @@ $   return _txBuffer_Select (Win32::CreatePen ((color == TX_TRANSPARENT? PS_NULL
 
 //-----------------------------------------------------------------------------------------------------------------
 
-bool txColor (double red, double green, double blue, double thickness /*= 1*/, HDC dc /*= txDC (true)*/)
+bool txColor (double red, double green, double blue)
     {
-$1  _TX_IF_ARGUMENT_FAILED (dc) return false;
-
-$   if (red   > 1) red   = 1; if (red   < 0) red   = 0;
+$1  if (red   > 1) red   = 1; if (red   < 0) red   = 0;
 $   if (green > 1) green = 1; if (green < 0) green = 0;
 $   if (blue  > 1) blue  = 1; if (blue  < 0) blue  = 0;
 
-$   return txSetColor (RGB (ROUND (red * 255), ROUND (green * 255), ROUND (blue * 255)), thickness, dc);
+$   return txSetColor (RGB (ROUND (red * 255), ROUND (green * 255), ROUND (blue * 255)));
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -7384,15 +7554,13 @@ $   return _txBuffer_Select ((color == TX_TRANSPARENT)? Win32::GetStockObject   
 
 //-----------------------------------------------------------------------------------------------------------------
 
-bool txFillColor (double red, double green, double blue, HDC dc /*= txDC (true)*/)
+bool txFillColor (double red, double green, double blue)
     {
-$1  _TX_IF_ARGUMENT_FAILED (dc) return false;
-
-$   if (red   > 1) red   = 1; if (red   < 0) red   = 0;
+$1  if (red   > 1) red   = 1; if (red   < 0) red   = 0;
 $   if (green > 1) green = 1; if (green < 0) green = 0;
 $   if (blue  > 1) blue  = 1; if (blue  < 0) blue  = 0;
 
-$   return txSetFillColor (RGB (ROUND (red * 255), ROUND (green * 255), ROUND (blue * 255)), dc);
+$   return txSetFillColor (RGB (ROUND (red * 255), ROUND (green * 255), ROUND (blue * 255)));
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -7728,6 +7896,17 @@ $   return dc;
 
 //-----------------------------------------------------------------------------------------------------------------
 
+HDC txCreateDIBSection (int sizeX, int sizeY, RGBQUAD** buf)
+    {
+$1  _TX_IF_ARGUMENT_FAILED (buf) return NULL;
+
+$   BITMAPINFO info = {{ sizeof (info), sizeX, sizeY, 1, WORD (sizeof (RGBQUAD) * 8), BI_RGB }};
+
+$   return txCreateCompatibleDC (0, 0, Win32::CreateDIBSection (NULL, &info, DIB_RGB_COLORS, (void**) buf, NULL, 0));
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
 HDC txLoadImage (const char filename[], unsigned imageFlags /*= IMAGE_BITMAP*/, unsigned loadFlags /*= LR_LOADFROMFILE*/)
     {
 $1  _TX_IF_TXWINDOW_FAILED                         return NULL;
@@ -7885,6 +8064,57 @@ $1  return txAlphaBlend (dest, xDest, yDest, width, height, src, xSrc, ySrc, alp
 
 //-----------------------------------------------------------------------------------------------------------------
 
+HDC txUseAlpha (HDC dc)
+    {
+$1  _TX_IF_ARGUMENT_FAILED (dc) return NULL;
+
+$   HBITMAP bitmap = (HBITMAP) Win32::GetCurrentObject (dc, OBJ_BITMAP); assert (bitmap);
+
+$   DIBSECTION dib = {{0}};
+$   Win32::GetObject (bitmap, sizeof (dib), &dib) asserted;
+
+$   POINT      size = {  dib.dsBm.bmWidth, dib.dsBm.bmHeight };
+$   BITMAPINFO info = {{ sizeof (info), size.x, size.y, 1, (WORD) (sizeof (RGBQUAD) * 8), BI_RGB }};
+$   RGBQUAD*   buf  = NULL;
+
+$   bool isDIB = (dib.dsBm.bmPlanes        == 1                    &&
+                  dib.dsBm.bmBitsPixel     == sizeof (RGBQUAD) * 8 &&
+                  dib.dsBmih.biCompression == DIB_RGB_COLORS       &&
+                  dib.dsBm.bmBits);
+$   if (!isDIB)
+        {
+$       buf = new (std::nothrow) RGBQUAD [size.x * size.y];
+$       if (!buf) return NULL;
+
+$       Win32::GetDIBits (dc, bitmap, 0, size.y, buf, &info, DIB_RGB_COLORS) asserted;
+        }
+    else
+        {
+$       buf = (RGBQUAD*) dib.dsBm.bmBits;
+        }
+
+$   for (int y = 0; y < size.y; y++)
+    for (int x = 0; x < size.x; x++)
+        {
+        RGBQUAD* color = &buf [x + y * size.x];  // Get color at (x, y) within image buffer
+
+        color->rgbRed   = (BYTE) ROUND (color->rgbRed   * color->rgbReserved / 255.0);
+        color->rgbGreen = (BYTE) ROUND (color->rgbGreen * color->rgbReserved / 255.0);
+        color->rgbBlue  = (BYTE) ROUND (color->rgbBlue  * color->rgbReserved / 255.0);
+        }
+
+$   if (!isDIB)
+        {
+$       Win32::SetDIBitsToDevice (dc, 0, 0, size.x, size.y, 0, 0, 0, size.y, buf, &info, DIB_RGB_COLORS) asserted;
+
+$       delete[] buf;
+        }
+
+$   return dc;
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
 bool txSaveImage (const char* filename, HDC dc /*= txDC()*/)
     {
 $1  _TX_IF_ARGUMENT_FAILED (filename) return false;
@@ -7900,11 +8130,11 @@ $   BITMAPINFOHEADER info = { sizeof (info), size.x, size.y, 1, (WORD) (sizeof (
 
 $   bool ok = true;
 
-$   RGBQUAD* buf = new RGBQUAD [size.x * size.y];
+$   RGBQUAD* buf = new (std::nothrow) RGBQUAD [size.x * size.y];
 $   ok &= (buf != NULL);
 
-$   if (ok) Win32::GetDIBits (dc, (HBITMAP) Win32::GetCurrentObject (dc, OBJ_BITMAP),
-                              0, size.y, buf, (BITMAPINFO*) &info, DIB_RGB_COLORS);
+$   if (ok) Win32::GetDIBits (dc, (HBITMAP) Win32::GetCurrentObject (dc, OBJ_BITMAP), 0, size.y,
+                              buf, (BITMAPINFO*) &info, DIB_RGB_COLORS) asserted;
 $   FILE* f = NULL;
 $   if (ok) fopen_s (&f, filename, "wb");
 $   ok &= (f != NULL);
@@ -7916,6 +8146,7 @@ $   if (ok) ok &= (fwrite (buf,   szImg,         1, f) == 1);
 $   ok &= (f && fclose (f) == 0);
 
 $   delete[] buf;
+$   buf = NULL;
 
 $   return ok;
     }
@@ -8330,6 +8561,36 @@ $   return 15.0 * samples / sqrt (1.0 * size.x * size.y);
 
 //-----------------------------------------------------------------------------------------------------------------
 
+double txGetFPS (unsigned minFrames /*= 0*/)
+    {
+$1  static unsigned long time0 = GetTickCount();
+$          unsigned long time  = GetTickCount();
+
+$   if (time - time0 == 0)
+        { $ return 0; }
+
+$   double fps = 1000.0 / (time - time0);
+$   time0 = time;
+
+$   static double average[100] = {0};
+$   static unsigned n = 0;
+
+$   average [n++ % SIZEARR (average)] = fps;
+
+$   if (n < minFrames)
+        { $ return 0; }
+
+$   unsigned nn = MIN (n, (unsigned) SIZEARR (average));
+
+$   fps = 0;
+$   for (unsigned i = 0; i <= nn; i++) fps += average[i];
+$   fps /= nn;
+
+$   return fps;
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
 unsigned txExtractColor (COLORREF color, COLORREF component)
     {
 $1  switch (component)
@@ -8509,6 +8770,7 @@ $   if (_controlfp_s (&old87, 0, 0) == 0)
 
 template <typename T>
 inline T zero()
+
 #ifdef _MSC_VER_6
     { T __zero = {0}; return __zero; }
 
@@ -8960,6 +9222,7 @@ struct _txSaveConsoleAttr
     #pragma GCC diagnostic pop
 
     #else
+    #pragma GCC diagnostic warning "-Wdeprecated-declarations"
     #pragma GCC diagnostic warning "-Wnon-virtual-dtor"
     #pragma GCC diagnostic warning "-Wshadow"
     #pragma GCC diagnostic warning "-Wstrict-aliasing"
@@ -8983,17 +9246,54 @@ struct _txSaveConsoleAttr
     #pragma warning (default:  444)             // remark: destructor for base class "..." is not virtual
     #pragma warning (default:  522)             // remark: function redeclared "inline" after being called
     #pragma warning (default: 1684)             // conversion from pointer to same-sized integral type (potential portability problem)
-                                           
-    #pragma warning (disable:  981)             // remark: operands are evaluated in unspecified order             
-                                                                                                                   
-#endif                                                                                                             
-                                                                                                                   
-//! @endcond                                                                                                       
-//}                                                                                                                
+
+    #pragma warning (disable:  981)             // remark: operands are evaluated in unspecified order
+
+#endif
+
+//! @endcond
+//}
 //-----------------------------------------------------------------------------------------------------------------
-                                                                                                                   
-#endif // __TXLIB_H_INCLUDED                                                                                       
-                                                                                                                   
+
+#endif // __TXLIB_H_INCLUDED
+
 //=================================================================================================================
-// EOF                                                                                                             
+// EOF
 //=================================================================================================================
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
