@@ -6,9 +6,9 @@
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 110 $
+//!          $Version: 00173a, Revision: 111 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2016-04-25 09:32:11 +0400 $
+//!          $Date: 2016-05-13 11:24:59 +0400 $
 //!
 //!          TX Library - компактная библиотека двумерной графики для Win32 на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -54,7 +54,7 @@
 //! @cond INTERNAL
 #define _TX_V_FROM_CVS(_1,file,ver,rev,date,auth,_2)  "TXLib [Ver: " #ver ", Rev: " #rev "]"
 #define _TX_A_FROM_CVS(_1,file,ver,rev,date,auth,_2)  "Copyright (C) " auth
-#define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver << 16) | 0x##rev)
+#define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
 //! @endcond
 
 //{----------------------------------------------------------------------------------------------------------------
@@ -73,8 +73,8 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VERSION           _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 110, 2016-04-25 09:32:11 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR            _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 110, 2016-04-25 09:32:11 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION           _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 111, 2016-05-13 11:24:59 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR            _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 111, 2016-05-13 11:24:59 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @}
 //{----------------------------------------------------------------------------------------------------------------
@@ -96,7 +96,7 @@
 //! @hideinitializer
 //}----------------------------------------------------------------------------------------------------------------
 
-#define _TX_VER               _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 110, 2016-04-25 09:32:11 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER               _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 111, 2016-05-13 11:24:59 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //}
 //-----------------------------------------------------------------------------------------------------------------
@@ -1830,12 +1830,24 @@ HDC txCreateCompatibleDC (double sizeX, double sizeY, HBITMAP bitmap = NULL);
 //!
 //! @param   sizeX   Ширина холста
 //! @param   sizeY   Высота холста
-//! @param   pixels  Указатель на переменную, которая будет использоваться для доступа к пикселям изображения
+//! @param   pixels  Указатель на переменную, которая будет использоваться для доступа к пикселям изображения.
+//!                  Эта переменная, в свою очередь @d указатель на массив структур RGBQUAD, каждая из которых
+//!                  описывает цвет одного пикселя.
 //!
 //! @return  Дескриптор созданного аппаратно-независимого холста (контекста рисования).
 //!
 //!          Аппаратно-независимые холсты, создаваемые этой функцией, позволяют напрямую и быстро изменять цвета
 //!          пикселей изображения, а также его прозрачность в каждой точке. См. пример использования ниже.
+//!
+//!          Для прямого доступа к пикселям холста, как к массиву, надо объявить указатель на массив структур
+//!          RGBQUAD и передать адрес этого указателя в качестве третьего параметра функции txCreateDIBSection().
+//!          Она изменит значение этого указателя так, что он станет указывать на массив цветов пикселей холста.
+//!          Память под массив RGBQUAD выделять и освобождать @b не надо, этим занимается сама txCreateDIBSection().
+//!
+//!          Массив @p pixels @d одномерный, но по сути он описывает двумерное изображение. Поэтому с ним надо
+//!          работать как с двумерным прямоугольным массивом, физически расположенным в одномерном массиве:
+//!          вручную вычислять смещение от начала массива до нужного пикселя и после этого адресоваться к массиву.
+//!          (Так обычно делают, размещая двумерные массивы в динамической памяти.) См. пример использования ниже.
 //!
 //! @note    Аппаратно-независимые холсты @d это контексты устройств, связанные с аппаратно-независимыми растрами
 //!          (Device Independent Bitmaps, DIB) Windows.
@@ -1902,7 +1914,7 @@ HDC txCreateCompatibleDC (double sizeX, double sizeY, HBITMAP bitmap = NULL);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-HDC txCreateDIBSection (int sizeX, int sizeY, RGBQUAD** pixels);
+HDC txCreateDIBSection (double sizeX, double sizeY, RGBQUAD** pixels = NULL);
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -2202,9 +2214,9 @@ bool txTransparentBlt (HDC dest, double xDest, double yDest, HDC src,
 //!          @tr Opacity:    @td 100%
 //! @endtable
 //!
-//!          Если изображение с альфа-каналом не находится в формате <b>Premultiplied Alpha</b>, то для перевода
+//!          Если изображение с альфа-каналом @b не находится в формате <b>Premultiplied Alpha</b>, то для перевода
 //!          в этот формат можно использовать функцию txUseAlpha(). Однако не надо вызывать txUseAlpha() несколько
-//!          раз для одного и того же изображения, иначе оно будет становиться темнее.
+//!          раз для одного и того же изображения, иначе оно может становиться темнее.
 //!
 //!          Изображение-источник также может быть создано с помощью txCreateCompatibleDC(), если видеорежим дисплея
 //!          32-битовый (TrueColor). @nn
@@ -3662,7 +3674,7 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
     #define TX_ERROR( msg )   _txError (__FILE__, __LINE__, __TX_FUNCTION__, msg)
 
 #else
-    #define TX_ERROR( ... )   _txError (__FILE__, __LINE__, __TX_FUNCTION__, __VA_ARGS__)
+    #define TX_ERROR( ... )   _txError (__FILE__, __LINE__, __TX_FUNCTION__, ##__VA_ARGS__)
 
 #endif
 
@@ -5085,7 +5097,7 @@ FARPROC          _txDllImport (const char dllFileName[], const char funcName[], 
     #define  _TX_ON_DEBUG( code )              ;
 #endif
 
-// This is a macro because cond is an expression and not always a function. Lack of lambdas in pre-C++0x.
+// This is a macro because cond is an expression and is not always a function. Lack of lambdas in pre-C++0x.
 
 #define      _txWaitFor( cond, time )          { for (DWORD _t = GetTickCount() + (time); \
                                                       !(cond) && GetTickCount() < _t;     \
@@ -7139,7 +7151,7 @@ $       return;
         }
 
     const char* sSig = "Неизвестный тип сигнала";
-    const char* sFPE = "неизвестный тип исключения";
+    const char* sFPE = "Неизвестный тип исключения";
 
     #define GET_DESCR_( str, code, descr )  case (code): { (str) = #code ": " descr; break; }
 
@@ -7155,17 +7167,17 @@ $       return;
 
     if (sig == SIGFPE) switch (fpe)
         {
-        GET_DESCR_ (sFPE, 0x81 /* _FPE_INVALID        */, "результат неверен")
-        GET_DESCR_ (sFPE, 0x82 /* _FPE_DENORMAL       */, "денормализация")
-        GET_DESCR_ (sFPE, 0x83 /* _FPE_ZERODIVIDE     */, "деление на ноль")
-        GET_DESCR_ (sFPE, 0x84 /* _FPE_OVERFLOW       */, "результат слишком большой")
-        GET_DESCR_ (sFPE, 0x85 /* _FPE_UNDERFLOW      */, "результат слишком маленький")
-        GET_DESCR_ (sFPE, 0x86 /* _FPE_INEXACT        */, "результат неточен")
-        GET_DESCR_ (sFPE, 0x87 /* _FPE_UNEMULATED     */, "операция не поддерживается")
-        GET_DESCR_ (sFPE, 0x88 /* _FPE_SQRTNEG        */, "квадратный корень из отрицательного числа")
-        GET_DESCR_ (sFPE, 0x8A /* _FPE_STACKOVERFLOW  */, "переполнение стека сопроцессора")
-        GET_DESCR_ (sFPE, 0x8B /* _FPE_STACKUNDERFLOW */, "в стеке сопроцессора не хватает данных")
-        GET_DESCR_ (sFPE, 0x8C /* _FPE_EXPLICITGEN    */, "явный вызов исключения")
+        GET_DESCR_ (sFPE, 0x81 /* _FPE_INVALID        */, "Результат неверен")
+        GET_DESCR_ (sFPE, 0x82 /* _FPE_DENORMAL       */, "Денормализация")
+        GET_DESCR_ (sFPE, 0x83 /* _FPE_ZERODIVIDE     */, "Деление на ноль")
+        GET_DESCR_ (sFPE, 0x84 /* _FPE_OVERFLOW       */, "Результат слишком большой")
+        GET_DESCR_ (sFPE, 0x85 /* _FPE_UNDERFLOW      */, "Результат слишком маленький")
+        GET_DESCR_ (sFPE, 0x86 /* _FPE_INEXACT        */, "Результат неточен")
+        GET_DESCR_ (sFPE, 0x87 /* _FPE_UNEMULATED     */, "Операция не поддерживается")
+        GET_DESCR_ (sFPE, 0x88 /* _FPE_SQRTNEG        */, "Квадратный корень из отрицательного числа")
+        GET_DESCR_ (sFPE, 0x8A /* _FPE_STACKOVERFLOW  */, "Переполнение стека сопроцессора")
+        GET_DESCR_ (sFPE, 0x8B /* _FPE_STACKUNDERFLOW */, "В стеке сопроцессора не хватает данных")
+        GET_DESCR_ (sFPE, 0x8C /* _FPE_EXPLICITGEN    */, "Явный вызов исключения")
         default:   break;
         }
 
@@ -7896,13 +7908,14 @@ $   return dc;
 
 //-----------------------------------------------------------------------------------------------------------------
 
-HDC txCreateDIBSection (int sizeX, int sizeY, RGBQUAD** buf)
+HDC txCreateDIBSection (double sizeX, double sizeY, RGBQUAD** pixels /*= NULL*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (buf) return NULL;
+$1  RGBQUAD* buf = NULL;
+$   if (!pixels) pixels = &buf;
 
-$   BITMAPINFO info = {{ sizeof (info), sizeX, sizeY, 1, WORD (sizeof (RGBQUAD) * 8), BI_RGB }};
+$   BITMAPINFO info = {{ sizeof (info), ROUND (sizeX), ROUND (sizeY), 1, WORD (sizeof (RGBQUAD) * 8), BI_RGB }};
 
-$   return txCreateCompatibleDC (0, 0, Win32::CreateDIBSection (NULL, &info, DIB_RGB_COLORS, (void**) buf, NULL, 0));
+$   return txCreateCompatibleDC (0, 0, Win32::CreateDIBSection (NULL, &info, DIB_RGB_COLORS, (void**) pixels, NULL, 0));
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -9032,8 +9045,8 @@ using ::std::string;
 //! @warning Эти макросы могут измениться в будущих версиях. @strike Чтобы вам повеселее жилось. @endstrike
 //!
 //! @title   Назначение: @table
-//!          @tr <tt> $ (x) </tt>      @td Печать имени и значения переменной @c x внутри выражения.
-//!          @tr <tt> $_(x) </tt>      @td Печать только  значения переменной @c x внутри выражения.
+//!          @tr <tt> $ (var) </tt>    @td Печать имени и значения переменной или выражения @c var.
+//!          @tr <tt> $_(var) </tt>    @td То же, что и <tt>$(var),</tt> но без новой строки.
 //!          @tbr
 //!          @tr <tt> $$ (expr)  </tt> @td Печать выражения, его вычисление, печать и возврат значения. @n
 //!                                        Если выражение содержит оператор "запятая", не взятый в скобки,
@@ -9104,9 +9117,9 @@ using ::std::string;
 
 //! @cond INTERNAL
 
-#define $_(var)      _txDump (var)
+#define $(var)     ( _txDump ((var),  "[" #var " = ", "]\n") )
 
-#define $(var)     ( _txDump ((var),  "[" #var " = ", "] ") )
+#define $_(var)    ( _txDump ((var),  "[" #var " = ", "] " ) )
 
 #define $$(cmd)    ( ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n",  \
                      _txDump ((cmd),"\n[" __TX_FILELINE__ ": " #cmd ": ", ", DONE]\n") )
@@ -9260,20 +9273,7 @@ struct _txSaveConsoleAttr
 //=================================================================================================================
 // EOF
 //=================================================================================================================
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                                       
 
 
 
