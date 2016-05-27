@@ -6,9 +6,9 @@
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 111 $
+//!          $Version: 00173a, Revision: 112 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2016-05-13 11:24:59 +0400 $
+//!          $Date: 2016-05-27 05:50:19 +0400 $
 //!
 //!          TX Library - компактная библиотека двумерной графики для Win32 на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -73,8 +73,8 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VERSION           _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 111, 2016-05-13 11:24:59 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR            _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 111, 2016-05-13 11:24:59 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION           _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 112, 2016-05-27 05:50:19 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR            _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 112, 2016-05-27 05:50:19 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @}
 //{----------------------------------------------------------------------------------------------------------------
@@ -96,7 +96,7 @@
 //! @hideinitializer
 //}----------------------------------------------------------------------------------------------------------------
 
-#define _TX_VER               _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 111, 2016-05-13 11:24:59 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER               _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 112, 2016-05-27 05:50:19 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //}
 //-----------------------------------------------------------------------------------------------------------------
@@ -297,6 +297,8 @@
         #define _TX_DEPRECATED
 
     #endif
+
+    #define __USE_MINGW_ANSI_STDIO   1
 
     #define _TX_CHECK_FORMAT( arg )  __attribute__ (( format (printf, (arg), (arg)+1) ))
 
@@ -1186,6 +1188,7 @@ COLORREF txHSL2RGB (COLORREF hslColor);
 //! @see     txSetFillColor(), txFillColor(), txGetFillColor(), txColors, RGB()
 //!
 //! @usage @code
+//!          txSetFillColor (TX_BLUE);  // Кто-то хотел синий фон?
 //!          txClear();
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
@@ -1206,7 +1209,8 @@ bool txClear (HDC dc = txDC (true));
 //! @see     txPixel(), txGetPixel(), txColors, RGB()
 //!
 //! @usage @code
-//!          txSetPixel (100, 100, TX_RED);
+//!          txSetPixel (100, 100, TX_LIGHTRED);  // Красная точка! http://www.google.ru/search?q=коты+и+красная+точка
+//!
 //!          txSetPixel (100, 100, RGB (255, 128, 0));
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
@@ -1916,6 +1920,10 @@ HDC txCreateCompatibleDC (double sizeX, double sizeY, HBITMAP bitmap = NULL);
 
 HDC txCreateDIBSection (double sizeX, double sizeY, RGBQUAD** pixels = NULL);
 
+//! @cond INTERNAL
+HDC txCreateDIBSection (double sizeX, double sizeY, COLORREF** pixels = NULL);
+//! @endcond
+
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
 //! @brief   Загружает из файла изображение в формате BMP. Делает это довольно медленно.
@@ -2089,10 +2097,7 @@ bool txBitBlt (HDC dest, double xDest, double yDest, double width, double height
                HDC src,  double xSrc = 0, double ySrc = 0, DWORD rOp = SRCCOPY);
 
 //! @cond INTERNAL
-
-inline
-bool txBitBlt (HDC dest, double xDest, double yDest, HDC src,
-               double xSrc = 0, double ySrc = 0, double width = 0, double height = 0, DWORD rOp = SRCCOPY);
+inline bool txBitBlt (HDC dest, double xDest, double yDest, HDC src, double xSrc = 0, double ySrc = 0);
 //! @endcond
 
 //{----------------------------------------------------------------------------------------------------------------
@@ -2151,10 +2156,7 @@ bool txTransparentBlt (HDC dest, double xDest, double yDest, double width, doubl
                        HDC src,  double xSrc = 0, double ySrc = 0, COLORREF transColor = TX_BLACK);
 
 //! @cond INTERNAL
-
-inline
-bool txTransparentBlt (HDC dest, double xDest, double yDest, HDC src,
-                       double xSrc = 0, double ySrc = 0, double width = 0, double height = 0, COLORREF transColor = TX_BLACK);
+inline bool txTransparentBlt (HDC dest, double xDest, double yDest, HDC src, COLORREF transColor = TX_BLACK);
 //! @endcond
 
 //{----------------------------------------------------------------------------------------------------------------
@@ -2260,11 +2262,7 @@ bool txAlphaBlend (HDC dest, double xDest, double yDest, double width, double he
                    HDC src,  double xSrc = 0, double ySrc = 0, double alpha = 1.0, unsigned format = AC_SRC_ALPHA);
 
 //! @cond INTERNAL
-
-inline
-bool txAlphaBlend (HDC dest, double xDest, double yDest, HDC src,
-                   double xSrc = 0, double ySrc = 0, double width = 0, double height = 0, double alpha = 1.0,
-                   unsigned format = AC_SRC_ALPHA);
+inline bool txAlphaBlend (HDC dest, double xDest, double yDest, HDC src, double alpha = 1.0);
 //! @endcond
 
 //{----------------------------------------------------------------------------------------------------------------
@@ -3674,7 +3672,7 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
     #define TX_ERROR( msg )   _txError (__FILE__, __LINE__, __TX_FUNCTION__, msg)
 
 #else
-    #define TX_ERROR( ... )   _txError (__FILE__, __LINE__, __TX_FUNCTION__, ##__VA_ARGS__)
+    #define TX_ERROR( ... )   _txError (__FILE__, __LINE__, __TX_FUNCTION__, __VA_ARGS__)
 
 #endif
 
@@ -7186,12 +7184,11 @@ $       return;
     _fpreset();
 
     if (sig == SIGFPE && fpe)
-        _txError (NULL, 0, NULL, "signal (%d, 0x%02X): %s: %s." _ sig _ (unsigned) fpe _ sSig _ sFPE);
+        _txError (NULL, 0, NULL, "signal (%d, 0x%02X): %s: %s.", sig, (unsigned) fpe, sSig, sFPE);
     else
-        _txError (NULL, 0, NULL, "signal (%d): %s"              _ sig                  _ sSig);
+        _txError (NULL, 0, NULL, "signal (%d): %s",              sig,                 sSig);
 
     _txExit = true;
-
     _txCleanup();
     }
 
@@ -7920,6 +7917,13 @@ $   return txCreateCompatibleDC (0, 0, Win32::CreateDIBSection (NULL, &info, DIB
 
 //-----------------------------------------------------------------------------------------------------------------
 
+HDC txCreateDIBSection (double sizeX, double sizeY, COLORREF** pixels /*= NULL*/)
+    {
+$1  return txCreateDIBSection (sizeX, sizeY, (RGBQUAD**) pixels);
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
 HDC txLoadImage (const char filename[], unsigned imageFlags /*= IMAGE_BITMAP*/, unsigned loadFlags /*= LR_LOADFROMFILE*/)
     {
 $1  _TX_IF_TXWINDOW_FAILED                         return NULL;
@@ -7996,11 +8000,9 @@ $   return txGDI (!!(Win32::BitBlt (dest, ROUND (xDest), ROUND (yDest), ROUND (w
 
 //-----------------------------------------------------------------------------------------------------------------
 
-inline bool txBitBlt (HDC dest, double xDest, double yDest, HDC src,
-                      double xSrc /*= 0*/, double ySrc /*= 0*/, double width /*= 0*/, double height /*= 0*/,
-                      DWORD rOp /*= SRCCOPY*/)
+inline bool txBitBlt (HDC dest, double xDest, double yDest, HDC src, double xSrc /*= 0*/, double ySrc /*= 0*/)
     {
-$1  return txBitBlt (dest, xDest, yDest, width, height, src, xSrc, ySrc, rOp);
+$1  return txBitBlt (dest, xDest, yDest, 0, 0, src, xSrc, ySrc);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -8029,11 +8031,9 @@ $   return (Win32::TransparentBlt)?
 
 //-----------------------------------------------------------------------------------------------------------------
 
-inline bool txTransparentBlt (HDC dest, double xDest, double yDest, HDC src,
-                              double xSrc /*= 0*/, double ySrc /*= 0*/, double width /*= 0*/, double height /*= 0*/,
-                              COLORREF transColor /*= TX_BLACK*/)
+inline bool txTransparentBlt (HDC dest, double xDest, double yDest, HDC src, COLORREF transColor /*= TX_BLACK*/)
     {
-$1  return txTransparentBlt (dest, xDest, yDest, width, height, src, xSrc, ySrc, transColor);
+$1  return txTransparentBlt (dest, xDest, yDest, 0, 0, src, 0, 0, transColor);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -8068,11 +8068,9 @@ $   return (Win32::AlphaBlend)?
 
 //-----------------------------------------------------------------------------------------------------------------
 
-inline bool txAlphaBlend (HDC dest, double xDest, double yDest, HDC src,
-                          double xSrc /*= 0*/, double ySrc /*= 0*/, double width /*= 0*/, double height /*= 0*/,
-                          double alpha /*= 1.0*/, unsigned format /*= AC_SRC_ALPHA*/)
+inline bool txAlphaBlend (HDC dest, double xDest, double yDest, HDC src, double alpha /*= 1.0*/)
     {
-$1  return txAlphaBlend (dest, xDest, yDest, width, height, src, xSrc, ySrc, alpha, format);
+$1  return txAlphaBlend (dest, xDest, yDest, 0, 0, src, 0, 0, alpha);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -9045,8 +9043,11 @@ using ::std::string;
 //! @warning Эти макросы могут измениться в будущих версиях. @strike Чтобы вам повеселее жилось. @endstrike
 //!
 //! @title   Назначение: @table
-//!          @tr <tt> $ (var) </tt>    @td Печать имени и значения переменной или выражения @c var.
-//!          @tr <tt> $_(var) </tt>    @td То же, что и <tt>$(var),</tt> но без новой строки.
+//!          @tr <tt> $ (var)  </tt>   @td Печать имени и значения переменной или выражения @c var.
+//!          @tr <tt> $_(var)  </tt>   @td То же, что и <tt>$(var),</tt> но без новой строки.
+//!          @tbr
+//!          @tr <tt> $x (var) </tt>   @td Печать имени и значения переменной или выражения @c var в 16-ричной системе счисления.
+//!          @tr <tt> $x_(var) </tt>   @td То же, что и <tt>$x(var),</tt> но без новой строки.
 //!          @tbr
 //!          @tr <tt> $$ (expr)  </tt> @td Печать выражения, его вычисление, печать и возврат значения. @n
 //!                                        Если выражение содержит оператор "запятая", не взятый в скобки,
@@ -9086,7 +9087,7 @@ using ::std::string;
 //!          @td @c $L @td Location bold    @td Светло-серый     на темно-сером    @td
 //! @endtable
 //! @title @table
-//!          @tr @c $s @td Запомнить атрибуты. При выходе из блока кода атрибуты восстанавливаются.
+//!          @tr @c $s @td Запомнить атрибуты. При выходе из @c { блока кода @c } атрибуты восстанавливаются.
 //! @endtable
 //!
 //! @see     assert(), asserted, __TX_FILELINE__, __TX_FUNCTION__, TX_ERROR
@@ -9118,80 +9119,55 @@ using ::std::string;
 //! @cond INTERNAL
 
 #define $(var)     ( _txDump ((var),  "[" #var " = ", "]\n") )
-
 #define $_(var)    ( _txDump ((var),  "[" #var " = ", "] " ) )
 
-#define $$(cmd)    ( ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n",  \
-                     _txDump ((cmd),"\n[" __TX_FILELINE__ ": " #cmd ": ", ", DONE]\n") )
+#define $x(var)    ( _txDump ((var),  "[" #var " = ", "]\n", ::std::ios_base::showbase | ::std::ios_base::hex) )
+#define $x_(var)   ( _txDump ((var),  "[" #var " = ", "] ",  ::std::ios_base::showbase | ::std::ios_base::hex) )
 
-#define $$_(cmd)   ( ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n",  \
-                     _txDump ((cmd),  "[" __TX_FILELINE__ ": " #cmd ": ", ", DONE]\n") )
+#define $$(cmd)    ( ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n",  _txDump ((cmd),"\n[" __TX_FILELINE__ ": " #cmd ": ", ", DONE]\n") )
+#define $$_(cmd)   ( ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n",  _txDump ((cmd),  "[" __TX_FILELINE__ ": " #cmd ": ", ", DONE]\n") )
 
-#define $$$(cmd)   { ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n";  \
-                     _txDumpSuffix ("\n[" __TX_FILELINE__ ": " #cmd " DONE]\n"); { cmd; } }
+#define $$$(cmd)   { ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n";  _txDumpSuffix ("\n[" __TX_FILELINE__ ": " #cmd " DONE]\n"); { cmd; } }
+#define $$$_(cmd)  { ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n";  _txDumpSuffix   ("[" __TX_FILELINE__ ": " #cmd " DONE]\n"); { cmd; } }
 
-#define $$$_(cmd)  { ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n";  \
-                     _txDumpSuffix   ("[" __TX_FILELINE__ ": " #cmd " DONE]\n"); { cmd; } }
+#define $$$$       { txOutputDebugPrintf ("\f\n"); { $s $l txOutputDebugPrintf ("\f" "[%s (%d) %s]", __FILE__, __LINE__, __TX_FUNCTION__); } txOutputDebugPrintf ("\f\n"); }
+#define $$$$_      { txOutputDebugPrintf ("\f\n"); { $s $l txOutputDebugPrintf ("\f" "[%s]",         __func__);                            } txOutputDebugPrintf ("\f\n"); }
 
-#define $$$$       {       txOutputDebugPrintf ("\f\n"); \
-                   { $s $l txOutputDebugPrintf ("\f" "[%s (%d) %s]", __FILE__, __LINE__, __TX_FUNCTION__); } txOutputDebugPrintf ("\f\n"); }
+#define $n         { ::std::cerr << "\n"; }
 
-#define $$$$_      {       txOutputDebugPrintf ("\f\n"); \
-                   { $s $l txOutputDebugPrintf ("\f" "[%s]", __func__);                                    } txOutputDebugPrintf ("\f\n"); }
+#define $s         _txSaveConsoleAttr __txSaveConsoleAttr;
 
-#define $n            ::std::cerr << "\n";
+#define $T         txSetConsoleAttr (0x00);
+#define $B         txSetConsoleAttr (0x01);
+#define $G         txSetConsoleAttr (0x02);
+#define $C         txSetConsoleAttr (0x03);
+#define $R         txSetConsoleAttr (0x04);
+#define $M         txSetConsoleAttr (0x05);
+#define $Y         txSetConsoleAttr (0x06);
+#define $d         txSetConsoleAttr (0x07);
+#define $D         txSetConsoleAttr (0x08);
+#define $b         txSetConsoleAttr (0x09);
+#define $g         txSetConsoleAttr (0x0a);
+#define $c         txSetConsoleAttr (0x0b);
+#define $r         txSetConsoleAttr (0x0c);
+#define $m         txSetConsoleAttr (0x0d);
+#define $y         txSetConsoleAttr (0x0e);
+#define $t         txSetConsoleAttr (0x0f);
 
-#define $s            _txSaveConsoleAttr __txSaveConsoleAttr;
-
-#define $T            txSetConsoleAttr (0x00);
-#define $B            txSetConsoleAttr (0x01);
-#define $G            txSetConsoleAttr (0x02);
-#define $C            txSetConsoleAttr (0x03);
-#define $R            txSetConsoleAttr (0x04);
-#define $M            txSetConsoleAttr (0x05);
-#define $Y            txSetConsoleAttr (0x06);
-#define $d            txSetConsoleAttr (0x07);
-#define $D            txSetConsoleAttr (0x08);
-#define $b            txSetConsoleAttr (0x09);
-#define $g            txSetConsoleAttr (0x0a);
-#define $c            txSetConsoleAttr (0x0b);
-#define $r            txSetConsoleAttr (0x0c);
-#define $m            txSetConsoleAttr (0x0d);
-#define $y            txSetConsoleAttr (0x0e);
-#define $t            txSetConsoleAttr (0x0f);
-
-#define $i            txSetConsoleAttr (0x1b);
-#define $I            txSetConsoleAttr (0x1e);
-#define $a            txSetConsoleAttr (0x2a);
-#define $A            txSetConsoleAttr (0x2e);
-#define $e            txSetConsoleAttr (0x4f);
-#define $E            txSetConsoleAttr (0x4e);
-#define $w            txSetConsoleAttr (0x5d);
-#define $W            txSetConsoleAttr (0x5e);
-#define $f            txSetConsoleAttr (0xc0);
-#define $F            txSetConsoleAttr (0xc5);
-#define $l            txSetConsoleAttr (0x80);
-#define $L            txSetConsoleAttr (0x87);
+#define $i         txSetConsoleAttr (0x1b);
+#define $I         txSetConsoleAttr (0x1e);
+#define $a         txSetConsoleAttr (0x2a);
+#define $A         txSetConsoleAttr (0x2e);
+#define $e         txSetConsoleAttr (0x4f);
+#define $E         txSetConsoleAttr (0x4e);
+#define $w         txSetConsoleAttr (0x5d);
+#define $W         txSetConsoleAttr (0x5e);
+#define $f         txSetConsoleAttr (0xc0);
+#define $F         txSetConsoleAttr (0xc5);
+#define $l         txSetConsoleAttr (0x80);
+#define $L         txSetConsoleAttr (0x87);
 
 //-----------------------------------------------------------------------------------------------------------------
-
-#if !defined (_MSC_VER_6)
-
-template <typename T> inline
-const T& _txDump (const T& value, const char* prefix = "", const char* suffix = "")
-    {
-    ::std::cerr << prefix << value << suffix;
-    return value;
-    }
-
-#endif
-
-template <typename T> inline
-      T& _txDump (      T& value, const char* prefix = "", const char* suffix = "")
-    {
-    ::std::cerr << prefix << value << suffix;
-    return value;
-    }
 
 struct _txDumpSuffix
     {
@@ -9212,6 +9188,76 @@ struct _txSaveConsoleAttr
     inline _tx_explicit _txSaveConsoleAttr (WORD attr) : attr_ (txGetConsoleAttr ()) { txSetConsoleAttr (attr);  }
     inline             ~_txSaveConsoleAttr()                                         { txSetConsoleAttr (attr_); }
     };
+
+#if !defined (_MSC_VER_6)
+
+template <typename T> inline
+const T&  _txDump (const T& value,       const char* prefix = "", const char* suffix = "", std::ios_base::fmtflags flags = ::std::cerr.flags())
+    {
+    ::std::cerr << prefix;
+
+    std::ios_base::fmtflags old = ::std::cerr.flags (flags);
+    ::std::cerr << value;
+    ::std::cerr.flags (old);
+
+    ::std::cerr << suffix;
+    return value;
+    }
+
+template <typename T, int N> inline
+const T (&_txDump (const T (&value) [N], const char* prefix = "", const char* suffix = "", std::ios_base::fmtflags flags = ::std::cerr.flags())) [N]
+    {
+    ::std::cerr << prefix;
+
+    for (int i = 0; i < N; i++)
+        {
+        { $s $D; ::std::cerr << "[" << i << "]="; }
+
+        std::ios_base::fmtflags old = ::std::cerr.flags (flags);
+        ::std::cerr << value[i];
+        ::std::cerr.flags (old);
+
+        if (i < N-1) ::std::cerr << ", ";
+        }
+
+    ::std::cerr << suffix;
+    return value;
+    }
+
+#endif
+
+template <typename T> inline
+      T&  _txDump (      T& value,       const char* prefix = "", const char* suffix = "", std::ios_base::fmtflags flags = ::std::cerr.flags())
+    {
+    ::std::cerr << prefix;
+
+    std::ios_base::fmtflags old = ::std::cerr.flags (flags);
+    ::std::cerr << value;
+    ::std::cerr.flags (old);
+
+    ::std::cerr << suffix;
+    return value;
+    }
+
+template <typename T, int N> inline
+      T (&_txDump (      T (&value) [N], const char* prefix = "", const char* suffix = "", std::ios_base::fmtflags flags = ::std::cerr.flags())) [N]
+    {
+    ::std::cerr << prefix;
+
+    for (int i = 0; i < N; i++)
+        {
+        { $s $D; ::std::cerr << "[" << i << "]="; }
+
+        std::ios_base::fmtflags old = ::std::cerr.flags (flags);
+        ::std::cerr << value[i];
+        ::std::cerr.flags (old);
+
+        if (i < N-1) ::std::cerr << ", ";
+        }
+
+    ::std::cerr << suffix;
+    return value;
+    }
 
 //! @endcond
 
@@ -9273,16 +9319,9 @@ struct _txSaveConsoleAttr
 //=================================================================================================================
 // EOF
 //=================================================================================================================
-                                                       
-
-
-
-
-
-
-
-
-
+                                                                                                                   
+                                                                                                                   
+                                                                                                                
 
 
 
