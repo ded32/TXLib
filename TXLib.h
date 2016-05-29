@@ -6,31 +6,53 @@
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 112 $
+//!          $Version: 00173a, Revision: 113 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2016-05-27 05:50:19 +0400 $
+//!          $Date: 2016-05-29 03:40:04 +0400 $
 //!
-//!          TX Library - компактная библиотека двумерной графики для Win32 на С++.
+//!          TX Library - компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
 //!          простейших принципов программирования. Документация на русском языке.
-//!
 //!          Философия TX Library - облегчить первые шаги в программировании и подтолкнуть
 //!          к творчеству и самостоятельности.
 //!
-//!          TX Library is a tiny 2D graphics library for Win32 written in C++. This is a small
+//!          TX Library is a tiny 2D graphics library for MS Windows written in C++. This is a small
 //!          sandbox for the very beginners to help them to learn basic programming principles.
 //!          The documentation is currently in Russian.
 //!
 //!          Официальный сайт библиотеки: <a href=http://txlib.ru>txlib.ru.</a>
 //!
 //!          См. также <a href=http://sourceforge.net/p/txlib>страницу проекта на SourceForge.</a>
+//!          Короткая ссылка на онлайн-документацию: <a href=http://gg.gg/TXLib>gg.gg/TXLib.</a>
 //!
-//! @warning <b>Это альфа-версия. Для использования требуется согласование с автором библиотеки.</b> @nn
-//!          Правила использования материалов библиотеки и сайта см. на <a href=http://txlib.ru>
-//!          официальном сайте.</a>
+//! @par     Установка библиотеки:
+//!       -# <a href=https://sourceforge.net/projects/txlib/files/latest/download>Скачайте</a> программу
+//!          установки, загрузка по ссылке начнется автоматически. Ее имя имеет вид TXLib-v0173a.rar.exe.
+//!          Цифры могут отличаться (это номер версии), расширение @c .exe может не отображаться, в зависимости
+//!          от текущих настроек Windows.
+//!       -# Запустите скачанную программу установки. Программа установки - это саморазархивирующийся архив,
+//!          она не требует особых прав для запуска.
+//!       -# На рабочем столе появится "Ярлык для TX". Откройте его и запустите систему помощи <tt>TXLib Help,</tt>
+//!          изучите ее. Простейший пример см. <http://storage.ded32.net.ru/Lib/TX/TXUpdate/Doc/HTML.ru/a00001.htm>
+//!          здесь.</a> Другие примеры см. <a href=http://storage.ded32.net.ru/Lib/TX/TXUpdate/Doc/HTML.ru/dirs.htm>
+//!          в папке Examples,</a> в папке Examples/Demo.
+//!       -  Если при установке происходят ошибки или запуск программы установки невозможен, скачайте
+//!          файл библиотеки @c \TXLib.h <a href=http://sf.net/projects/txlib/files/TXLib/TXLib.h/download>
+//!          отсюда (загрузка начнется автоматически)</a>, скопируйте его в свою рабочую папку
+//!          (где вы сохраняете свои программы). Скачайте систему помощи <tt>TXLib Help</tt>
+//!          <a href=http://sf.net/projects/txlib/files/TXLib/TXLib%20Help.chm/download>отсюда</a>
+//!          или пользуйтесь <a href=http://storage.ded32.net.ru/Lib/TX/TXUpdate/Doc/HTML.ru/index.htm>
+//!          системой помощи онлайн.</a>
+//!
+//! @note    Библиотека состоит из единственного файла и не требует никаких настроек в среде программирования,
+//!          чтобы облегчить ее установку и работу для начинающих.
+//!
+//! @warning <b>Это альфа-версия. Для использования библиотеки требуется согласование с ее автором.</b> @nn
+//!          Правила использования материалов библиотеки и сайта см. на <a href=http://txlib.ru>официальном сайте
+//!          TXLib.</a>
 //!
 //! @par     Баг-трекер на SourceForge:
-//!       -  <a href=http://sourceforge.net/p/txlib/bugs/new> <b>Сообщить об ошибке</b></a>
+//!        - <a href=http://sourceforge.net/p/txlib/bugs/new><b>Сообщить об ошибке</b></a>
 //!
 //           $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
 //-----------------------------------------------------------------------------------------------------------------
@@ -73,8 +95,8 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VERSION           _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 112, 2016-05-27 05:50:19 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR            _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 112, 2016-05-27 05:50:19 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION           _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 113, 2016-05-29 03:40:04 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR            _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 113, 2016-05-29 03:40:04 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @}
 //{----------------------------------------------------------------------------------------------------------------
@@ -96,7 +118,7 @@
 //! @hideinitializer
 //}----------------------------------------------------------------------------------------------------------------
 
-#define _TX_VER               _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 112, 2016-05-27 05:50:19 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER               _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 113, 2016-05-29 03:40:04 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //}
 //-----------------------------------------------------------------------------------------------------------------
@@ -4357,8 +4379,8 @@ void _txTrace (const char file[], int line, const char func[], const char msg[] 
         va_end (arg);
         }
 
-    txOutputDebugPrintf ("%s - %p %c%c%c%c%c%c [%c] - %s (%d)  " "|%*s%s" "%s%s\n",
-                         _TX_VERSION, (void*) &_txInitialized,
+    txOutputDebugPrintf ("%s - 0x%LX %c%c%c%c%c%c [%c] - %s (%d)  " "|%*s%s" "%s%s\n",
+                         _TX_VERSION, (uint64_t) &_txInitialized,
                          "cC"[_txConsole], "mM"[_txMain], "dD"[_txIsDll], "rR"[_txRunning], "eE"[_txExit], "tT"[_txAllowTrace],
                          mark, (file? file : "(NULL file)"), line, (_txInTX - 1) * 2, "", (func? func : ""),
                          (*msgStr? ": " : ""), msgStr);
@@ -5422,7 +5444,7 @@ bool                    _txMain                = false;  // First TXLib wnd open
 bool                    _txIsDll               = false;  // TXLib module is in DLL
 bool           volatile _txRunning             = false;  // main() is still running
 bool           volatile _txExit                = false;  // exit() is active
-bool           volatile _txAllowTrace          = true;   // Internal TX trace is active
+bool           volatile _txAllowTrace          = false;  // Internal TX trace is active, when enabled by _TX_ALLOW_TRACE
 
 POINT                   _txMousePos            = {0};    // Ask Captn Obviouos about it. See txCanvas_OnMOUSE()
 unsigned                _txMouseButtons        =  0;
@@ -5456,6 +5478,10 @@ int _txInitialize()
     {
     #if defined (_TX_ALLOC_BREAK) && defined (_MSC_VER)
     _CrtSetBreakAlloc (_TX_ALLOC_BREAK);
+    #endif
+
+    #if defined (_TX_ALLOW_TRACE)
+    _txAllowTrace = true;
     #endif
 
     _TX_ON_DEBUG (OutputDebugString ("\n");
@@ -6046,7 +6072,7 @@ $   return ok;
 PROC _txSetProcAddress (const char* funcName, PROC newFunc, const char* dllName /*= NULL*/, HMODULE module /*= NULL*/,
                         bool debug /*= false*/)
     {
-$1  if (debug) printf ("_txSetProcAddress (%s, 0x%p, %s, 0x%p):\n", funcName, (void*)(ptrdiff_t)newFunc, dllName, (void*) module);
+$1  if (debug) printf ("_txSetProcAddress (%s, 0x%LX, %s, 0x%LX):\n", funcName, (uint64_t) newFunc, dllName, (uint64_t) module);
 
 $   _TX_IF_ARGUMENT_FAILED (funcName) return NULL;
 $   _TX_IF_ARGUMENT_FAILED (newFunc)  return NULL;
@@ -6060,7 +6086,7 @@ $   PROC    oldFunc = (dll)?     GetProcAddress  (dll, funcName) : NULL;
 //  For PE structure and Import Table format, e.g. see https://books.google.ru/books?id=ifQPC86G66sC&pg=PA255
 //  and below through Figure 5-5, and/or http://www.brokenthorn.com/Resources/OSDevPE.html.
 
-    #define RVA_( type, addr )  ( (type) ((ptrdiff_t) module + (ptrdiff_t) (addr)) )
+    #define RVA_(type, addr)  ( (type) ((ptrdiff_t) module + (ptrdiff_t) (addr)) )
 
 $   IMAGE_DOS_HEADER* dosHdr = RVA_ (IMAGE_DOS_HEADER*, 0);
 $   IMAGE_NT_HEADERS* ntHdr  = RVA_ (IMAGE_NT_HEADERS*, dosHdr->e_lfanew);
@@ -6095,7 +6121,7 @@ $       for (thunk0 = RVA_ (IMAGE_THUNK_DATA*, desc->OriginalFirstThunk),
             impName = (char*) RVA_ (IMAGE_IMPORT_BY_NAME*, thunk0->u1.AddressOfData) -> Name;
             impPtr  = (void**)                            &thunk1->u1.Function;  // Should change it, so this is ptr
 
-            if (debug) printf ("[0x%p] %s!%s\n", *impPtr, impDll, impName);
+            if (debug) printf ("[0x%LX] %s!%s\n", (uint64_t) *impPtr, impDll, impName);
 
             if ((oldFunc && (ptrdiff_t) oldFunc == (ptrdiff_t) *impPtr) ||
                 (impName && _stricmp (funcName, impName) == 0))
@@ -6108,8 +6134,8 @@ $       for (thunk0 = RVA_ (IMAGE_THUNK_DATA*, desc->OriginalFirstThunk),
 $       if (found) break;
         }
 
-    if (debug) printf ("_txSetProcAddress (%s, 0x%p, %s, 0x%p): %s\n\n",
-                       funcName, (void*)(ptrdiff_t) newFunc, dllName, (void*) module, (found? "FOUND" : "NOT found"));
+    if (debug) printf ("_txSetProcAddress (%s, 0x%LX, %s, 0x%LX): %s\n\n",
+                       funcName, (uint64_t) newFunc, dllName, (uint64_t) module, (found? "FOUND" : "NOT found"));
 
 $   if (!found) return NULL;
 
@@ -7151,7 +7177,7 @@ $       return;
     const char* sSig = "Неизвестный тип сигнала";
     const char* sFPE = "Неизвестный тип исключения";
 
-    #define GET_DESCR_( str, code, descr )  case (code): { (str) = #code ": " descr; break; }
+    #define GET_DESCR_(str, code, descr)  case (code): { (str) = #code ": " descr; break; }
 
     switch (sig)
         {
@@ -7183,10 +7209,20 @@ $       return;
 
     _fpreset();
 
+// MinGW SEH doesn't really provide the fpe code.
+// See: [1] http://sourceforge.net/p/mingw-w64/mingw-w64/ci/master/tree/mingw-w64-crt/crt/crt_handler.c, line 166
+//      [2] http://sourceforge.net/p/mingw/files/MinGW/Base/w32api/w32api-4.0.3/w32api-4.0.3-1-mingw32-src.tar.lzma/download
+//          file w32api-4.0.3-1.mingw32-src.tar.lzma/.../w32api-4.0.3-1.mingw32-src/src/libcrt/crt/crt1.c, line 183
+//
+// MSVC provides the fpe code as a MS extension.
+// See: https://msdn.microsoft.com/ru-ru/library/xdkz3x12.aspx
+
+#if defined (_MSC_VER)
     if (sig == SIGFPE && fpe)
         _txError (NULL, 0, NULL, "signal (%d, 0x%02X): %s: %s.", sig, (unsigned) fpe, sSig, sFPE);
     else
-        _txError (NULL, 0, NULL, "signal (%d): %s",              sig,                 sSig);
+#endif
+        _txError (NULL, 0, NULL, "signal (%d): %s", sig, sSig);
 
     _txExit = true;
     _txCleanup();
@@ -7245,8 +7281,8 @@ const char* _txError (const char file[] /*= NULL*/, int line /*= 0*/, const char
                 s += _vsnprintf_s  (s, SZARG_(1), msg, arg),
                 s +=  _snprintf_s  (s, SZARG_(1), "\n\n");
 
-                s +=  _snprintf_s  (s, SZARG_(1), "#%d: %s, Instance: 0x%p, Flags: %c%c%c%c%c%c, Thread: 0x%08X%s",
-                                                  nCalls, _TX_VERSION, (void*) &_txInitialized,
+                s +=  _snprintf_s  (s, SZARG_(1), "#%d: %s, Instance: 0x%LX (%d-bit), Flags: %c%c%c%c%c%c, Thread: 0x%X%s",
+                                                  nCalls, _TX_VERSION, (uint64_t) &_txInitialized, (sizeof (void*) == 4)? 32 : 64,
                                                   "cC"[_txConsole], "mM"[_txMain], "dD"[_txIsDll], "rR"[_txRunning], "eE"[_txExit], "tT"[_txAllowTrace],
                                                   threadId,
                                                   (threadId == _txMainThreadId)?    " (Main)"   :
@@ -9107,7 +9143,7 @@ using ::std::string;
 //!          $$( txCreateWindow (800, 600) );
 //!
 //!          $d  // default color
-//!          $$$( if ($(xy) < $(h)) { $s return $(h); } )
+//!          $$$( if ($(xy) < $(h)) { $s return $(h); } );
 //!
 //!          $$$$
 //! @endcode
@@ -9321,7 +9357,32 @@ template <typename T, int N> inline
 //=================================================================================================================
                                                                                                                    
                                                                                                                    
-                                                                                                                
+                               
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
