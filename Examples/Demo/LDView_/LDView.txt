@@ -5,10 +5,10 @@
 //!
 //!             Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!             $Version$
-//!             $Date$
-//!             $Copyright$
-//              $Copyright$
+//!             $Version: 00173a, Revision: 105 $
+//!             $Date: 2016-06-14 02:18:02 +0400 $
+//!             $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
+//              $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
 //}===========================================================================
 
 //=============================================================================

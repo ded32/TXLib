@@ -1,0 +1,203 @@
+//------------------------------------------------------------------------------------------------------------------
+
+/*! @page Example0 Очень простой пример. Простая пересылка вводимой строки.
+
+@section Example1_01 Простейшая программа
+
+    Первое, что вы должны сделать при использовании библиотеки TXNetwork это указать
+    компилятору, что нужно присоединить файл Ws2_32 (который используется Winsock'ом).
+    Делается это просто: в настройках линкера укажите файл Ws2_32 (без расширения).
+    Настройки линкера находятся в (Code::Blocks)"Settings\Compiler...".
+    Далее выбираете вкладку "Linker Settings", и смотрите в левое окно: Если есть что-то
+    похожее на "Ws2_32", то все хорошо. Иначе нажмите кнопку "Add", и введите это название.
+    Нажмите "ОК". Все, вы готовы использовать TXNetwork.
+    Также можно указать опцию компилятора -lWs2_32
+
+@par Подключение и инициализация
+    В коде библиотека подключается как обычно. При использовании с TXLib'ом подключайте TXNetwork до него.
+    Например:
+
+    @code
+    #include "TXNetwork.h"
+    #include "TXLib.h"
+    @endcode
+
+    Разберем пример пересылки @strike кота @endstrike строки.
+
+    Первый файл - файл протокола общения. В нем описываются общие части клиента и сервера,
+    а также сам порядок общения.
+
+    @code
+
+    // 1. server -> client: Message (char[Message_size])
+    // 2. server <- client: Message (char[Message_size])
+
+    #include "TXNetwork.h"
+    #include "TXlib.h"
+
+    const size_t Message_size = 256;
+
+    @endcode
+
+    Второй файл - пример клиента.
+    В начале идет подключение файла протокола и определение IP адреса.
+
+    @code
+
+    #include "proto.h"
+    #define SERVER_IP "localhost" // IP адрес писать здесь. Например: "192.168.0.1"
+
+    @endcode
+
+    Далее объявляется main, открывается окно и печатается приветственное сообщение.
+
+    @code
+
+    int main()
+    {
+    txCreateWindow (1024, 768);
+
+    printf ("Searching for server...\n");
+
+    @endcode
+
+    Тут начинается использование @strike черной магии @endstrike txNetwork'a.
+    Объявляется и создается сокет.
+
+    @code
+
+    TX_SOCKET client = txCreateSocket (TX_CLIENT, SERVER_IP);
+
+    @endcode
+
+    Далее создается буфер обмена.
+
+    @code
+
+    char str[Message_size] = "";
+
+    @endcode
+
+    Теперь принимаем строку от клиента и записываем ее в свежесозданный буфер.
+
+    @code
+
+    txRecvFrom (client, str, Message_size);
+
+    @endcode
+
+    Выводим полученную строку на экран и вводим ту строку, которую мы хотим отправить серверу.
+
+    @code
+
+    printf ("in: %s\nout: ", str);
+    scanf ("%s", str);
+
+    @endcode
+
+    Отправляем строку серверу и завершаемся.
+
+    @code
+    txSendTo (client, str, Message_size);
+
+    return 0;
+    }
+
+    @endcode
+
+    В коде сервера все аналогично, за исключением порядка пересылки строк.
+    Далее представлен весь код примеров.
+
+    @section  Example0_Client_Code  Файл: client.cpp - код клиента.
+    @include "Examples/Example00/client.cpp"
+
+    @section  Example0_Server_Code  Файл: server.cpp - код клиента.
+    @include "Examples/Example00/server.cpp"
+                                  
+    @section  Example0_Proto_Code   Файл: proto.h - общие структуры и данные сервера и клиента.
+    @include "Examples/Example00/proto.h"
+
+*/
+
+//------------------------------------------------------------------------------------------------------------------
+
+/*! @page Example1 Первый пример: синхронизированные шарики на двух компьютерах.
+
+    @par
+    Можно (и нужно) передавать структуры вместо отдельных переменных.
+
+    @section  Example1_Client_Code  Файл: client.cpp - код клиента.
+    @include "Examples/Example01/client.cpp"
+
+    @section  Example1_Server_Code  Файл: server.cpp - код клиента.
+    @include "Examples/Example01/server.cpp"
+
+    @section  Example1_Proto_Code   Файл: proto.h - общие структуры и данные сервера и клиента.
+    @include "Examples/Example01/proto.h"
+
+*/
+
+//------------------------------------------------------------------------------------------------------------------
+
+/*! @page Example2 Второй пример: сетевая рисовалка.
+
+    @par
+    Можно передавать структуры в обе стороны. Как от сервера к клиенту, так и от сервера к клиенту.
+
+    @section  Example2_Client_Code  Файл: client.cpp - код клиента.
+    @include "Examples/Example02/client.cpp"
+
+    @section  Example2_Server_Code  Файл: server.cpp - код клиента.
+    @include "Examples/Example02/server.cpp"
+
+    @section  Example2_Proto_Code   Файл: proto.h - общие структуры и данные сервера и клиента.
+    @include "Examples/Example02/proto.h"/server.cpp"
+
+*/
+
+//------------------------------------------------------------------------------------------------------------------
+
+/*! @page Example3 Третий пример: простая сетевая игра типа Арканоид.
+
+    @par
+    Можно передавать и не один тип структур.
+
+    @section  Example3_Client_Code  Файл: client.cpp - код клиента.
+    @include "Examples/Example03/client.cpp"
+
+    @section  Example3_Server_Code  Файл: server.cpp - код клиента.
+    @include "Examples/Example03/server.cpp"
+
+    @section  Example3_Proto_Code   Файл: proto.h - общие структуры и данные сервера и клиента.
+    @include "Examples/Example03/proto.h"
+
+*/
+
+//------------------------------------------------------------------------------------------------------------------
+
+/*! @page Example4 Четвертый пример: синхронизированные шарики на многих компьютерах. Надо больше шариков!
+
+    @par
+    Существует специальный IP-адрес 255.255.255.255 и аналогичные ему (в зависимости от подсети). Если на них
+    отправить данные, то они придут на все компьютеры в подсети, или даже далее. Запрос на такой адрес
+    называется широковещательным (broadcast).
+
+    @section  Example4_Client_Code  Файл: client.cpp - код клиента.
+    @include "Examples/Example04/client.cpp"
+
+    @section  Example4_Server_Code  Файл: server.cpp - код клиента.
+    @include "Examples/Example04/server.cpp"
+
+    @section  Example4_Proto_Code   Файл: proto.h - общие структуры и данные сервера и клиента.
+    @include "Examples/Example04/proto.h"
+
+*/
+
+//------------------------------------------------------------------------------------------------------------------
+
+/*! @page ExampleYours Твой личный пример!
+
+    @section    ExampleYours_Code
+    @include   "Examples/ExampleYours/ExampleYours.cpp"
+
+*/

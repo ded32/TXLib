@@ -6,9 +6,9 @@
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version$
-//!          $Copyright$
-//!          $Date$
+//!          $Version: 00173a, Revision: 105 $
+//!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
+//!          $Date: 2016-06-14 02:18:02 +0400 $
 //!
 //!          TX Library - компактная библиотека двумерной графики для Win32 на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -39,7 +39,7 @@
 //!          Структура и динамика поведенческих реакций в условиях информационной перегрузки. <i>Batman
 //!          Proceedings in Sheep Philosophy,</i> 2003, Vol. 22. pp. 23-24.</a>
 //!
-//           $Copyright$
+//           $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
 //-----------------------------------------------------------------------------------------------------------------
 //!
 //! @defgroup Drawing   Рисование
@@ -80,8 +80,8 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VERSION           _TX_V_FROM_CVS ($VersionInfo$)
-#define _TX_AUTHOR            _TX_A_FROM_CVS ($VersionInfo$)
+#define _TX_VERSION           _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 105, 2016-06-14 02:18:02 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR            _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 105, 2016-06-14 02:18:02 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @}
 //{----------------------------------------------------------------------------------------------------------------
@@ -103,7 +103,7 @@
 //! @hideinitializer
 //}----------------------------------------------------------------------------------------------------------------
 
-#define _TX_VER               _TX_v_FROM_CVS ($VersionInfo$)
+#define _TX_VER               _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 105, 2016-06-14 02:18:02 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //}
 //-----------------------------------------------------------------------------------------------------------------
@@ -7874,7 +7874,10 @@ $   const double prec = 0.001;
 
 $   if (fabs (dm) < prec)
         {
-$       is = dm / ((sm <= 1)? sm : (2-sm));
+$       double sm_ = (sm <= 1)? sm : (2-sm);
+$       if (fabs (sm_) <= DBL_EPSILON) return RGB (0, 0, 0);
+
+$       is = dm / sm_;
 
 $       double cr = (m1 - ir) / dm,
                cg = (m1 - ig) / dm,
@@ -8487,10 +8490,7 @@ struct _txSaveConsoleAttr
 //=================================================================================================================
                                                                                                                    
                                                                                                                    
-                                                                                                                   
-              
-
-
+                                              
 
 
 

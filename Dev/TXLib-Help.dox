@@ -1,15 +1,15 @@
 #------------------------------------------------------------------------------
 # TXLib-Help.dox
 #
-# $Version$
-# $Copyright$
-# $Date$
+# $Version: 00173a, Revision: 105 $
+# $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
+# $Date: 2016-06-14 02:18:02 +0400 $
 #
 # Doxyfile 1.7.3
 #------------------------------------------------------------------------------
 
 PROJECT_NAME           = "TX Library"
-PROJECT_NUMBER         = "Help &ndash; $Version$"
+PROJECT_NUMBER         = "Help &ndash; $Version: 00173a, Revision: 105 $"
 PROJECT_BRIEF          = "<s>&nbsp;ALL&nbsp;</s> Windows graphics in a sandbox"
 PROJECT_LOGO           = "Doc/TXLib.png"
 

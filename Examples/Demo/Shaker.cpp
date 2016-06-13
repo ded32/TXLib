@@ -16,6 +16,9 @@
 
 //============================================================================
 
+double Random (double min, double max);
+POINT TxGetWindowOrg();
+
 unsigned long Time = 0;
 
 POINT WindowSize   = {0};
@@ -40,12 +43,12 @@ struct Ball_t
 //----------------------------------------------------------------------------
 
 Ball_t::Ball_t() :
-    x_     (random (100, WindowSize.x - 100)),
-    y_     (random (100, WindowSize.y - 100)),
-    vx_    (random (  5, 15)),
-    vy_    (random (  5, 15)),
-    r_     (random ( 10, 30)),
-    color_ (RGB (random (50, 255), random (50, 255), random (50, 255)))
+    x_     (Random (100, WindowSize.x - 100)),
+    y_     (Random (100, WindowSize.y - 100)),
+    vx_    (Random (  5, 15)),
+    vy_    (Random (  5, 15)),
+    r_     (Random ( 10, 30)),
+    color_ (RGB (Random (50, 255), Random (50, 255), Random (50, 255)))
     {}
 
 //----------------------------------------------------------------------------
@@ -80,7 +83,7 @@ void Ball_t::draw (bool shading) const
 
 #define AY         ( 0.7 )
 #define DT         ( 1.0 )
-#define ELASTICITY ( 0.6 + random (-0.2, +0.1) )
+#define ELASTICITY ( 0.6 + Random (-0.2, +0.1) )
 
 void Ball_t::move (const POINT& d)
     {
@@ -100,14 +103,17 @@ void Ball_t::move (const POINT& d)
 
 //============================================================================
 
-POINT TxGetWindowOrg();
-
 POINT TxGetWindowOrg()
     {
     RECT r = {0, 0, 0, 0};
     GetWindowRect (txWindow(), &r);
     POINT org = { r.left, r.top };
     return org;
+    }
+
+inline double Random (double min, double max)
+    {
+    return min + (max - min) * rand() / RAND_MAX;
     }
 
 //============================================================================
@@ -145,7 +151,7 @@ int main()
 
         txSleep (0);
 
-        char s[100] = ""; sprintf (s, "%+03ld ms free", Time - GetTickCount());
+        char s[100] = ""; sprintf (s, "+%03lu ms free", Time - GetTickCount());
         SetWindowText (txWindow(), s);
 
         while (GetTickCount() < Time) Sleep (0);

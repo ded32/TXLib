@@ -5,10 +5,10 @@
 //!
 //!             Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!             $Version$
-//!             $Date$
-//!             $Copyright$
-//              $Copyright$
+//!             $Version: 00173a, Revision: 105 $
+//!             $Date: 2016-06-14 02:18:02 +0400 $
+//!             $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
+//              $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
 //}===========================================================================
 
 // Press Alt+Ctrl+Shift+F12 to view this info in About Box
@@ -98,7 +98,7 @@ void JumpMan (int x, int y, int sizeX, int sizeY, double jump,
 
     txBegin();
 
-    for (int i = 0; i < jumps && !kbhit(); i++)
+    for (int i = 0; i < jumps && !_kbhit(); i++)
         {
         DrawMan (x, y - (int)(i%2 * jump*10), sizeX, sizeY, color,
                 (i%2-0.5) * jump/3, 0, (i%2-0.5) * -jump/3, 0);
@@ -127,7 +127,7 @@ void DanceMan (int x, int y, int sizeX, int sizeY, double jump,
     txBegin();
 
     int i = 0;
-    for (; !kbhit(); i++)
+    for (; !_kbhit(); i++)
         {
         DrawMan  (x, y - (int)(i%2 * jump*10), sizeX, sizeY, color,
                  (i%2-0.5) * jump/3, 0, (i%2-0.5) * -jump/3, (i%2-0.5) * jump);
@@ -154,7 +154,7 @@ void MoveMan (int fromX, int fromY, int toX, int toY,
     {
     txBegin();
 
-    for (int i = 0; i <= steps && !kbhit(); i++)
+    for (int i = 0; i <= steps && !_kbhit(); i++)
         {
         int x = fromX + (toX - fromX) * i/steps,
             y = fromY + (toY - fromY) * i/steps;
@@ -180,7 +180,7 @@ void UnwindFlag (int x, int y, int fromSizeX, int toSizeX, int sizeY,
     {
     txBegin();
 
-    for (int i = 0; i <= steps && !kbhit(); i++)
+    for (int i = 0; i <= steps && !_kbhit(); i++)
         {
         int sizeX = fromSizeX + (toSizeX - fromSizeX) * i/steps;
 
@@ -236,7 +236,7 @@ void AppearEarth (int x, int y, int sizeX, int sizeY, COLORREF from, COLORREF to
         g0 = txExtractColor (from, TX_GREEN), g1 = txExtractColor (to, TX_GREEN),
         b0 = txExtractColor (from, TX_BLUE),  b1 = txExtractColor (to, TX_BLUE);
 
-    for (int i = 0; i <= steps && !kbhit(); i++)
+    for (int i = 0; i <= steps && !_kbhit(); i++)
         {
         int r = r0 + (r1 - r0) * i/steps,
             g = g0 + (g1 - g0) * i/steps,
@@ -261,7 +261,7 @@ void AppearText (int x, int y, const char* text, COLORREF from, COLORREF to,
         g0 = txExtractColor (from, TX_GREEN), g1 = txExtractColor (to, TX_GREEN),
         b0 = txExtractColor (from, TX_BLUE),  b1 = txExtractColor (to, TX_BLUE);
 
-    for (int i = 0; i <= steps && !kbhit(); i++)
+    for (int i = 0; i <= steps && !_kbhit(); i++)
         {
         int r = r0 + (r1 - r0) * i/steps,
             g = g0 + (g1 - g0) * i/steps,
@@ -320,7 +320,7 @@ void DrawFrame (int sizeX, int sizeY, int size, COLORREF color)
 int kbget()
     {
     int ch = 0;
-    while (kbhit()) ch = getch();
+    while (_kbhit()) ch = _getch();
     return ch;
     }
 

@@ -5,10 +5,10 @@
 //!
 //!             Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //! 
-//!             $Version$
-//!             $Date$
-//!             $Copyright$
-//              $Copyright$
+//!             $Version: 00173a, Revision: 105 $
+//!             $Date: 2016-06-14 02:18:02 +0400 $
+//!             $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
+//              $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
 //}===========================================================================
 
 #include "TXLib.h"                         // Подключение библиотеки рисования
@@ -30,6 +30,6 @@ int main()                                 // Заголовок главной функции
     return 0;                              // Возврат успешного кода завершения
     }                                      // Конец функции
 
-
-
-
+// Если вам непонятно, что означает та или иная команда в программе, посмотрите в системе
+// помощи TXLib Help @ref Tutor_1st "Простейший пример" или помощь по этой команде в разделе
+// @ref Drawing "Рисование". Например, по txLine или txTextOut.

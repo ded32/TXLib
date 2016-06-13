@@ -7,9 +7,9 @@
 
     @section    MainPage              Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib)
 
-                $Version$
-                $Date$
-                $Copyright$
+                $Version: 00173a, Revision: 105 $
+                $Date: 2016-06-14 02:18:02 +0400 $
+                $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
 
     @section    Description           Назначение
 
@@ -18,9 +18,8 @@
                 помочь им в изучении простейших принципов программирования.
                 Документация на русском языке.
 
-                Философия<sup><a href=#Refs><small>1</small></a></sup> TX Library -
-                облегчить первые шаги в программировании и подтолкнуть к творчеству
-                и самостоятельности.
+                Философия TX Library - облегчить первые шаги в программировании
+                и подтолкнуть к творчеству и самостоятельности.
 
                 TX Library is a tiny graphics library for Win32 written in C++.
                 It is a small sandbox for the very beginners to help them to
@@ -29,12 +28,10 @@
 
     @section    Contents              Разделы системы помощи
 
-             -  @ref Contents        "Информация о библиотеке"
              -  @ref Drawing         "Рисование"
-             -  @ref Mouse           "Поддержка мыши"
+             -  @ref Mouse           "Поддержка Мыши!"
              -  @ref Misc            "Разное"
              -  @ref Dialogs         "Диалоговые окна"
-             -  @ref Service         "Служебное"
              -  @ref Technical       "Технические детали"
 
     @par        Примеры:
@@ -50,13 +47,16 @@
 
                 Официальный сайт библиотеки:
                 <a href=http://txlib.ru>txlib.ru.</a>
-                См. также <a href=http://txlib.sourceforge.net> страницу проекта на SourceForge</a>
-                и <a href=http://code.google.com/p/txlib>на Google Code.</a>
 
-    @warning    <b>Это альфа-версия.
-                Для использования требуется согласование с автором библиотеки.</b> @n
-                Правила использования материалов библиотеки и сайта см. на
-                <a href=http://txlib.ru> официальном сайте.</a>
+                См. также <a href=http://sourceforge.net/p/txlib>страницу проекта на SourceForge.</a>
+                Короткая ссылка на онлайн-документацию: <a href=http://gg.gg/TXLib>gg.gg/TXLib.</a>
+
+                Аналогичный проект для Linux/MacOS:
+                <a href=http://txlin.roveramd.com>txlin.roveramd.com.</a>
+
+    @warning    <b>Это альфа-версия. Для использования библиотеки требуется согласование с ее автором.</b> @nn
+                Правила использования материалов библиотеки и сайта см. на <a href=http://txlib.ru>официальном
+                сайте TXLib.</a>
 
     @par        Ссылки:
            -    <a href="http://dl.dropbox.com/u/1557330/TXLib/TXLib-v0172a.rar.exe"><b>Скачать TX Library</b></a>
@@ -94,8 +94,8 @@
                 обладать и опытом разработки больших программ, и педагогическими навыками, чтобы передать
                 свой опыт начинающим. К сожалению, не всегда это совпадает. Профессионалы-программисты зачастую
                 не хотят лезть в обучение, где хватает своих проблем. С другой стороны, недобросовестные
-                учителя, иногда даже в сильных школах и курсах, хватаются за удобные им инструменты обучения
-                (чужие или свои библиотеки, среды и языки программирования), не удосуживаясь следить за
+                учителя, иногда даже в сильных школах и курсах, хватаются за удобные инструменты обучения (чужие
+                или свои библиотеки, среды и языки программирования), не удосуживаясь следить за
                 <a href="http://www.google.ru/search?q=literate+programming">качеством кода обучаемых, за стилем
                 и направлением их мышления,</a> ограничиваясь лишь видимостью обучения.
                 Такие образовательные иллюзии очень вредны. Заметны они становятся достаточно  поздно, когда
@@ -142,37 +142,94 @@
 
                 Удачи, и May the Source be with you! :)
 
+    @section    TXLibSetup            Установка библиотеки
+
+    @note       Библиотека TXLib состоит из единственного файла и не требует никаких настроек в среде
+                программирования, чтобы облегчить ее установку и работу для начинающих.
+
+             -# <a href=https://sourceforge.net/projects/txlib/files/latest/download>Скачайте</a>
+                программу установки, загрузка по ссылке начнется автоматически. Ее имя имеет вид
+                <tt>TXLib-v0173a.rar.exe.</tt> Цифры могут отличаться (это номер версии), расширение
+                @c .exe может не отображаться, в зависимости от текущих настроек Windows.
+             -# Запустите скачанную программу установки. Программа установки - это самораспаковывающийся
+                архив, она не требует особых прав для запуска.
+             -# На рабочем столе появится "Ярлык для TX". Откройте его и запустите систему помощи <tt>TXLib Help,</tt>
+                изучите ее. Простейший пример см. <http://storage.ded32.net.ru/Lib/TX/TXUpdate/Doc/HTML.ru/a00001.htm>
+                здесь.</a> Другие примеры см. <a href=http://storage.ded32.net.ru/Lib/TX/TXUpdate/Doc/HTML.ru/dirs.htm>
+                в папке Examples,</a> в папке Examples/Demo.
+
+             -  Если при установке происходят ошибки или запуск программы установки невозможен, скачайте
+                файл библиотеки @c TXLib.h <a href=http://sf.net/projects/txlib/files/TXLib/TXLib.h/download>
+                отсюда (загрузка начнется автоматически)</a>, скопируйте его в свою рабочую папку
+                (где вы сохраняете свои программы). Скачайте систему помощи <tt>TXLib Help</tt>
+                <a href=http://sf.net/projects/txlib/files/TXLib/TXLib%20Help.chm/download>отсюда</a>
+                или пользуйтесь <a href=http://storage.ded32.net.ru/Lib/TX/TXUpdate/Doc/HTML.ru/index.htm>
+                системой помощи онлайн.</a>
+
+             -# Для полной обработки ошибок библиотеке требуются модули, которые желательно установить
+                (скопировать) в папку Windows. Устанавливать эти библиотеки не обязательно. Программы,
+                использующие TXLib, будут запускаться и без них.
+
+                -# Модули библиотеки Microsoft DBGHELP для доступа к отладочным символам Microsoft:
+
+                   - @c dbghelp32.dll для 32-разрядных программ (либо @c dbghelp.dll, 32-разрядная версия),
+                   - @c dbghelp64.dll для 64-разрядных программ (либо @c dbghelp.dll, 64-разрядная версия).
+
+                -# Модули библиотеки <a href=https://github.com/jrfonseca/drmingw/releases>DrMinGW</a> для доступа
+                   к отладочным символам MinGW компилятора GCC @c g++:
+
+                   - @c mgwhelp32.dll для 32-разрядных программ (либо @c mgwhelp.dll, 32-разрядная версия),
+                   - @c mgwhelp64.dll для 64-разрядных программ (либо @c mgwhelp.dll, 64-разрядная версия).
+
+                Суффиксы @c 32 и @c 64 помогают отличить 32-разрядную и 64-разрядную версии DLL-файлов библиотек.
+                Например, @c dbghelp32.dll - это просто переименованная 32-разрядная версия файла @c dbghelp.dll.
+
+                <b>Самораспаковывающийся архив с этими библиотеками можно скачать
+                <a href=http://storage.ded32.net.ru/Lib/TX/TXLib-SupportDLLs.rar.exe>здесь.</a></b>
+
+                Для наиболее полной диагностики ошибок полностью отключайте оптимизацию при компиляции. Например,
+                для компилятора GCC @c g++ - с помощью ключа командной строки @c -O0. Разные среды программирования
+                позволяют задать эти ключи по-разному, например, в CodeBlocks через Главное меню - Settings -
+                Compiler - (Global Compiler Settings) - (Compiler Settings) - Other Options.
+
+    @note       Кодовая страница в редакторе среды разработки должна быть установлена как Windows CP1251, проверьте
+                это. В разных средах разработки она устанавливается по-разному, например, в CodeBlocks через
+                Главное меню - Settings - Editor - (General Settings) - Other Settings - Encoding. Иначе русские
+                буквы в сообщениях TXLib будут отображаться неправильно.
+
     @section    PlatformsSupported    Поддерживаемые платформы
 
-           -    Среды программирования и компиляторы
-             -# CodeBlocks 12.11  + MinGW GCC 4.8.1 (NUWEN)
-             -# CodeBlocks 12.11  + MinGW GCC 4.7.2 (NUWEN)
-             -# CodeBlocks 12.11  + MinGW GCC 4.7.1
-             -# CodeBlocks 10.05  + MinGW GCC 4.7.1 (TDM-GCC), 32-bit и 64-bit
-             -# CodeBlocks 10.05  + MinGW GCC 4.6.1 (TDM-GCC)
-             -# CodeBlocks 10.05  + MinGW GCC 4.4.1
-             -# CodeBlocks 8.02   + MinGW GCC 3.4.5
-             -# CodeBlocks 1.0rc2 + MinGW GCC 3.4.4
-             -# Dev-CPP 4.9.9.2   + MinGW GCC 3.4.2
-             -# Microsoft Visual Studio 11.0 (2012)
-             -# Microsoft Visual Studio 10.0 (2010)
-             -# Microsoft Visual Studio  9.0 (2008)
-             -# Microsoft Visual Studio  8.0 (2005)
-             -# Microsoft Visual Studio  7.1 (2003)
-             -# Microsoft Visual Studio  6.0 (1998)
+           - <b>Среды программирования и исполнения + компиляторы</b>
+             -#                     MinGW  GCC 9.2.0 (NUWEN), 64-bit
+             -#                     MinGW  GCC 8.2.0 (NUWEN), 64-bit
+             -#                     MinGW  GCC 7.2.0 (NUWEN), 64-bit
+             -#                     MinGW  GCC 6.3.0 (NUWEN), 64-bit
+             -#                     MinGW  GCC 5.3.0 (NUWEN), 32-bit и 64-bit
+             -# CodeBlocks 12.11  + MinGW  GCC 4.8.0 (NUWEN)
+             -# CodeBlocks 12.11  + MinGW  GCC 4.7.2 (NUWEN)
+             -# Dev-CPP    5.11   + MinGW  GCC 4.9.2 (TDM)
+             -# Qt Creator 4.2.2  + MinGW  GCC 5.3.0 (Qt), 32-bit (кодировка файлов в редакторе: только CP1251)
+             -# Cygwin            + Cygwin GCC 7.4.0, 32-bit и 64-bit
+             -# LLVM              + MSVC Clang-cl 9.0.0, 32-bit и 64-bit
+             -# Microsoft Visual Studio 16 (2019), 32-bit и 64-bit
+             -# Microsoft Visual Studio 15 (2017), 32-bit и 64-bit
+             -# Microsoft Visual Studio 14 (2015), 32-bit и 64-bit
+             -# Microsoft Visual Studio 12 (2013), 32-bit и 64-bit
+             -# Microsoft Visual Studio 11 (2012), 32-bit и 64-bit
+             -# Microsoft Visual Studio 10 (2010), 32-bit и 64-bit
              -# Intel C++ Compiler 13.0 (2013)
-             -# Intel C++ Compiler 9.0
-           -    Операционные системы
-             -# Windows 8, 8.1         ru/en
-             -# Windows 7              ru/en
+           - <b>Операционные системы</b>
+             -# Windows 10             ru/en, 32-bit и 64-bit
+             -# Windows 8              ru/en, 32-bit и 64-bit
+             -# Windows 7              ru/en, 32-bit и 64-bit
              -# Windows Vista          ru/en
              -# Windows 2003 SP1 R1/R2 ru/en
              -# Windows XP   SP2/SP3   ru/en
              -# Windows 2000 SP4       ru/en
              -# Linux + Wine
-                - Ubuntu 10.04, 11.04 + Wine 1.2.2+
+                - Ubuntu 16.04, 11.04 + Wine
              -# MacOS X + Wine
-                - Snow Leopard 10.6.8 + Wine 1.4-rc2
+                - Snow Leopard 10.6.8 + Wine
 
     @note
              -  <b>Принудительно отключается режим UNICODE</b> (кроме редактора ресурсов
@@ -182,30 +239,62 @@
     @warning    Если программа разрабатывалась на определенных платформах с настройками
                 по умолчанию, то во время исполнения могут потребоваться файлы библиотек,
                 без которых программа не запустится:
-                @n
-    @table      @tr @b Компилятор      @td <b>Среда разработки</b>     @td @b Конфигурация @td <b>Требуемые библиотеки</b> @td
+                @nn
+    @table      @tr @b Компилятор         @td Сборка         @td <b>Среда разработки</b>            @td @b Конфигурация @td <b>Требуемые библиотеки</b>         @td
 
-                @tr @c GCC @c g++      @td CodeBlocks, DevCpp, Eclipse @td Debug, Release  @td @c msvcrt.dll @td
-                
-                @tr Microsoft Visual C @td Visual Studio 6             @td Debug, Release  @td <i>Не требуются</i> @td
-                @tr Intel Compiler 9.0 @td Visual Studio 6             @td Debug, Release  @td <i>Не требуются</i> @td
+                @tr GCC g++ 4.7.2         @td NUWEN.net      @td CodeBlocks, DevCpp, CLion, VS Code @td Debug, Release  @td msvcrt.dll, libstdc++-6.dll,
+                                                                                                                            libgcc_s_dw2-1.dll, libssp-0.dll    @td
 
-                @tr Microsoft Visual C @td Visual Studio 2003          @td Debug, Release  @td <i>Не требуются</i> @td
-                @tr Intel Compiler 9.0 @td Visual Studio 2003          @td Debug, Release  @td <i>Не требуются</i> @td
-                @tr Microsoft Visual C @td Visual Studio 2005          @td Debug           @td @c msvcp80d.dll,    @c msvcr80d.dll  @td
-                @tr Microsoft Visual C @td Visual Studio 2005          @td Release         @td @c msvcp80.dll, @ss @c msvcr80.dll   @td
-                @tr Microsoft Visual C @td Visual Studio 2008          @td Debug           @td @c msvcp90d.dll,    @c msvcr90d.dll  @td
-                @tr Microsoft Visual C @td Visual Studio 2008          @td Release         @td @c msvcp90.dll, @ss @c msvcr90.dll   @td
-                @tr Microsoft Visual C @td Visual Studio 2010          @td Debug           @td @c msvcp100d.dll,   @c msvcr100d.dll @td
-                @tr Microsoft Visual C @td Visual Studio 2010          @td Release         @td @c msvcp100.dll,@s  @c msvcr100.dll  @td
-                @tr Microsoft Visual C @td Visual Studio 2012          @td Debug           @td @c msvcp110d.dll,   @c msvcr110d.dll @td
-                @tr Microsoft Visual C @td Visual Studio 2012          @td Release         @td @c msvcp110.dll,@s  @c msvcr110.dll  @td
+                @tr GCC g++ 4.8.1         @td NUWEN.net      @td CodeBlocks, DevCpp, CLion, VS Code @td Debug, Release  @td msvcrt.dll                          @td
+
+                @tr GCC g++ 4.9.2, 5.1.0  @td TDM-GCC 32-bit @td DevCPP 5.11                        @td Debug, Release  @td msvcrt.dll, libssp-0.dll            @td
+                @tr GCC g++ 4.9.2, 5.1.0  @td TDM-GCC 64-bit @td DevCPP 5.11                        @td Debug, Release  @td msvcrt.dll, libssp_64-0.dll         @td
+
+                @tr GCC g++ 5.3.0 - 9.2.0 @td NUWEN.net      @td CodeBlocks, DevCpp, CLion, VS Code @td Debug, Release  @td msvcrt.dll                          @td
+
+                @tr GCC g++               @td Mingw.org      @td CodeBlocks, DevCpp, CLion, VS Code @td Debug, Release  @td msvcrt.dll, libstdc++-6.dll,
+                                                                                                                            libgcc_s_dw2-1.dll                  @td
+
+                @tr GCC g++               @td Qt (Mingw-64)  @td Qt Creator                         @td Debug, Release  @td msvcrt.dll, libstdc++-6.dll,
+                                                                                                                            libgcc_s_dw2-1.dll, libssp-0.dll,
+                                                                                                                            libwinpthread-1.dll                 @td
+
+                @tr GCC g++               @td Cygwin         @td CodeBlocks, DevCpp, CLion, VS Code @td Debug, Release  @td msvcrt.dll, cygwin1.dll,
+                                                                                                                            cygstdc++-6.dll, cyggcc_s-seh-1.dll @td
+
+                @tr Microsoft Visual C    @td Microsoft      @td Visual Studio 2010 (10.0)          @td Debug           @td msvcp100d.dll,   msvcr100d.dll      @td
+                @tr Microsoft Visual C    @td Microsoft      @td Visual Studio 2010 (10.0)          @td Release         @td msvcp100.dll,    msvcr100.dll       @td
+
+                @tr Microsoft Visual C    @td Microsoft      @td Visual Studio 2012 (11.0)          @td Debug           @td msvcp110d.dll,   msvcr110d.dll      @td
+                @tr Microsoft Visual C    @td Microsoft      @td Visual Studio 2012 (11.0)          @td Release         @td msvcp110.dll,    msvcr110.dll       @td
+
+                @tr Microsoft Visual C    @td Microsoft      @td Visual Studio 2013 (12.0)          @td Debug           @td msvcp120d.dll,   msvcr120d.dll      @td
+                @tr Microsoft Visual C    @td Microsoft      @td Visual Studio 2013 (12.0)          @td Release         @td msvcp120.dll,    msvcr120.dll       @td
+
+                @tr Microsoft Visual C    @td Microsoft      @td Visual Studio 2015 (14.0)          @td Debug           @td concrt140d.dll,   msvcp140d.dll,
+                                                                                                                            vccorlib140d.dll, vcruntime140d.dll @td
+                @tr Microsoft Visual C    @td Microsoft      @td Visual Studio 2015 (14.0)          @td Release         @td concrt140.dll,    msvcp140.dll,
+                                                                                                                            vccorlib140.dll,  vcruntime140.dll  @td
+
+                @tr Microsoft Visual C    @td Microsoft      @td Visual Studio 2017 (15.0)          @td Debug           @td concrt140d.dll,   msvcp140d.dll,
+                                                                                                                            vccorlib140d.dll, vcruntime140d.dll @td
+                @tr Microsoft Visual C    @td Microsoft      @td Visual Studio 2017 (15.0)          @td Release         @td concrt140.dll,    msvcp140.dll,
+                                                                                                                            vccorlib140.dll,  vcruntime140.dll  @td
+
+                @tr Microsoft Visual C    @td Microsoft      @td Visual Studio 2019 (16.0)          @td Debug           @td concrt140d.dll,   msvcp140d.dll,
+                                                                                                                            msvcp140_1d.dll,  msvcp140_2d.dll,
+                                                                                                                            vccorlib140d.dll, vcruntime140d.dll @td
+                @tr Microsoft Visual C    @td Microsoft      @td Visual Studio 2019 (16.0)          @td Release         @td concrt140.dll,    msvcp140.dll,
+                                                                                                                            msvcp140_1.dll,   msvcp140_2.dll,
+                                                                                                                            vccorlib140.dll,  vcruntime140.dll  @td
+
+                @tr Intel Compiler 13     @td Intel          @td Visual Studio 2010+                @td Debug, Release  @td <i>Не требуются</i>
     @endtable
                 Посмотреть эти зависимости можно утилитой <a href=http://www.dependencywalker.com>Depends.exe</a>.
 
     @section    UsageNotes            Особенности использования
 
-    @note    Файл @c TXLib.h должен быть включен <tt>(\#include)</tt> в программу:
+    @note       Файл @c TXLib.h должен быть включен <tt>(\#include)</tt> в программу:
              -  @b До или вместо файла @c @b windows.h. Либо надо задать @c (\#define) константы @c WINVER и
                 @c _WIN32_IE не ниже @c 0x0500 и отменить @c (\#undef) макросы @c UNICODE и @c _UNICODE.
              -  @b До или вместо файлов @c @b string.h или @c @b stdio.h, если используется режим строгого
@@ -213,50 +302,149 @@
              -  @b После включения библиотек <a href=http://boost.org><tt>boost</tt></a>, использующих модуль
                 @c @b boost::preprocessor.
 
+    @warning    При использовании вместе с <a href=http://sfml-dev.org><tt>SFML</tt></a> необходимо @b перед
+                включением <tt>(\#include)</tt> в программу задать макрос TX_USE_SRML @c (\#define TX_USE_SRML).
+                TXLib по умолчанию включает режим отладки стандартной библиотеки glibc, а SFML, как правило,
+                собрана без этого режима, что приводит к ложным сообщениям об ошибках, связанным с динамической
+                памятью, например <a href=http://github.com/SFML/SFML/issues/1318>при использовании класса sf::Text.</a>
+
     @title      Опции командной строки: </dt><dd>
 
     <table class=smalltext>
-                <tr valign=middle><td>           Компилятор                       </td><td> Режим   </td><td> Опции командной строки </td></tr>
-                <tr valign=middle><td rowspan=2> Dev-Cpp 4.9.9.2,  GCC&nbsp;3.4.2 </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  <i> -ansi -std=c++98 </i>           -Wall         -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings </td></tr>
-                <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O2 <i> -ansi -std=c++98 </i>           -Wall         -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings </td></tr>
-                <tr valign=middle><td rowspan=2> CodeBlocks 10.05, GCC&nbsp;3.4.2 </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  <i> -ansi -std=c++98 </i> -pedantic -Wall         -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings </td></tr>
-                <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O2 <i> -ansi -std=c++98 </i> -pedantic -Wall         -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings </td></tr>
-                <tr valign=middle><td rowspan=2> CodeBlocks  8.02, GCC&nbsp;3.4.5 </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  <i> -ansi -std=c++98 </i> -pedantic -Wall         -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings </td></tr>
-                <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O2 <i> -ansi -std=c++98 </i> -pedantic -Wall         -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings </td></tr>
-                <tr valign=middle><td rowspan=2> CodeBlocks 10.05, GCC&nbsp;4.4.1 </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  <i> -ansi -std=c++0x </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel </td></tr>
-                <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O2 <i> -ansi -std=c++0x </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel </td></tr>
-                <tr valign=middle><td rowspan=2> TDM-GCC,          GCC&nbsp;4.6.1 </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  <i> -ansi -std=c++0x </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel </td></tr>
-                <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O3 <i> -ansi -std=c++0x </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel </td></tr>
-                <tr valign=middle><td rowspan=2> CodeBlocks 12.11, GCC&nbsp;4.7.2 </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  <i> -ansi -std=c++11 </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel -Wstack-usage=8192 </td></tr>
-                <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O3 <i> -ansi -std=c++11 </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel -Wstack-usage=8192 </td></tr>
+                <tr valign=middle><td>           Среда/Компилятор                 </td><td> Режим   </td><td> Опции командной строки </td></tr>
+
+
+
+                <tr valign=middle><td rowspan=2> GCC&nbsp;9.2.0 http://NUWEN.net  </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  <i> -ansi -std=gnu++2a -Wc++0x-compat -Wc++11-compat -Wc++14-compat -Wc++17-compat </i> -Wall -Wextra -Weffc++ -Waggressive-loop-optimizations -Walloc-zero -Walloca -Walloca-larger-than=8192 -Warray-bounds -Wcast-align -Wcast-qual -Wchar-subscripts -Wconditionally-supported -Wconversion -Wctor-dtor-privacy -Wdangling-else -Wduplicated-branches -Wempty-body -Wfloat-equal -Wformat-nonliteral -Wformat-security -Wformat-signedness -Wformat=2 -Wformat-overflow=2
+                                                                                                                                     -Wformat-truncation=2 -Winline -Wlarger-than=8192 -Wvla-larger-than=8192 -Wlogical-op -Wmissing-declarations -Wnon-virtual-dtor -Wopenmp-simd -Woverloaded-virtual -Wpacked -Wpointer-arith -Wredundant-decls -Wrestrict -Wshadow -Wsign-promo -Wstack-usage=8192 -Wstrict-null-sentinel -Wstrict-overflow=2 -Wstringop-overflow=4 -Wsuggest-attribute=noreturn -Wsuggest-final-types -Wsuggest-override -Wswitch-default -Wswitch-enum -Wsync-nand -Wundef -Wunreachable-code
+                                                                                                                                     -Wunused -Wvariadic-macros -Wno-literal-suffix -Wno-missing-field-initializers -Wnarrowing -Wno-old-style-cast -Wvarargs -Waligned-new -Walloc-size-larger-than=1073741824 -Walloc-zero -Walloca -Walloca-larger-than=8192 -Wcast-align=strict -Wdangling-else -Wduplicated-branches -Wformat-overflow=2 -Wformat-truncation=2 -Wmissing-attributes -Wmultistatement-macros -Wrestrict -Wshadow=global -Wsuggest-attribute=malloc -fcheck-new -fsized-deallocation -fstack-check
+                                                                                                                                     -fstrict-overflow -flto-odr-type-merging -fno-omit-frame-pointer</td></tr>
+                <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O3 <i> -ansi -std=gnu++2a -Wc++0x-compat -Wc++11-compat -Wc++14-compat -Wc++17-compat </i> -Wall -Wextra -Weffc++ -Waggressive-loop-optimizations -Walloc-zero -Walloca -Walloca-larger-than=8192 -Warray-bounds -Wcast-align -Wcast-qual -Wchar-subscripts -Wconditionally-supported -Wconversion -Wctor-dtor-privacy -Wdangling-else -Wduplicated-branches -Wempty-body -Wfloat-equal -Wformat-nonliteral -Wformat-security -Wformat-signedness -Wformat=2 -Wformat-overflow=2
+                                                                                                                                     -Wformat-truncation=2 -Winline -Wlarger-than=8192 -Wvla-larger-than=8192 -Wlogical-op -Wmissing-declarations -Wnon-virtual-dtor -Wopenmp-simd -Woverloaded-virtual -Wpacked -Wpointer-arith -Wredundant-decls -Wrestrict -Wshadow -Wsign-promo -Wstack-usage=8192 -Wstrict-null-sentinel -Wstrict-overflow=2 -Wstringop-overflow=4 -Wsuggest-attribute=noreturn -Wsuggest-final-types -Wsuggest-override -Wswitch-default -Wswitch-enum -Wsync-nand -Wundef -Wunreachable-code
+                                                                                                                                     -Wunused -Wvariadic-macros -Wno-literal-suffix -Wno-missing-field-initializers -Wnarrowing -Wno-old-style-cast -Wvarargs -Waligned-new -Walloc-size-larger-than=1073741824 -Walloc-zero -Walloca -Walloca-larger-than=8192 -Wcast-align=strict -Wdangling-else -Wduplicated-branches -Wformat-overflow=2 -Wformat-truncation=2 -Wmissing-attributes -Wmultistatement-macros -Wrestrict -Wshadow=global -Wsuggest-attribute=malloc -fcheck-new -fsized-deallocation -fstack-check
+                                                                                                                                     -fstrict-overflow -flto-odr-type-merging -fno-omit-frame-pointer</td></tr>
+                <tr valign=middle><td rowspan=2> GCC&nbsp;8.2.0 http://NUWEN.net  </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  <i> -ansi -std=c++17 -Wc++0x-compat -Wc++11-compat -Wc++14-compat </i>                  -Wall -Wextra -Weffc++ -Waggressive-loop-optimizations -Walloc-zero -Walloca -Walloca-larger-than=8192 -Warray-bounds -Wcast-align -Wcast-qual -Wchar-subscripts -Wconditionally-supported -Wconversion -Wctor-dtor-privacy -Wdangling-else -Wduplicated-branches -Wempty-body -Wfloat-equal -Wformat-nonliteral -Wformat-security -Wformat-signedness -Wformat=2 -Wformat-overflow=2
+                                                                                                                                     -Wformat-truncation=2 -Winline -Wlarger-than=8192 -Wvla-larger-than=8192 -Wlogical-op -Wmissing-declarations -Wnon-virtual-dtor -Wopenmp-simd -Woverloaded-virtual -Wpacked -Wpointer-arith -Wredundant-decls -Wrestrict -Wshadow -Wsign-promo -Wstack-usage=8192 -Wstrict-null-sentinel -Wstrict-overflow=2 -Wstringop-overflow=4 -Wsuggest-attribute=noreturn -Wsuggest-final-types -Wsuggest-override -Wswitch-default -Wswitch-enum -Wsync-nand -Wundef -Wunreachable-code
+                                                                                                                                     -Wunused -Wvariadic-macros -Wno-literal-suffix -Wno-missing-field-initializers -Wnarrowing -Wno-old-style-cast -Wvarargs -Waligned-new -Walloc-size-larger-than=1073741824 -Walloc-zero -Walloca -Walloca-larger-than=8192 -Wcast-align=strict -Wdangling-else -Wduplicated-branches -Wformat-overflow=2 -Wformat-truncation=2 -Wmissing-attributes -Wmultistatement-macros -Wrestrict -Wshadow=global -Wsuggest-attribute=malloc -fcheck-new -fsized-deallocation -fstack-check
+                                                                                                                                     -fstrict-overflow -fchkp-first-field-has-own-bounds -fchkp-narrow-to-innermost-array -flto-odr-type-merging -fno-omit-frame-pointer</td></tr>
+                <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O3 <i> -ansi -std=c++17 -Wc++0x-compat -Wc++11-compat -Wc++14-compat </i>                  -Wall -Wextra -Weffc++ -Waggressive-loop-optimizations -Walloc-zero -Walloca -Walloca-larger-than=8192 -Warray-bounds -Wcast-align -Wcast-qual -Wchar-subscripts -Wconditionally-supported -Wconversion -Wctor-dtor-privacy -Wdangling-else -Wduplicated-branches -Wempty-body -Wfloat-equal -Wformat-nonliteral -Wformat-security -Wformat-signedness -Wformat=2 -Wformat-overflow=2
+                                                                                                                                     -Wformat-truncation=2 -Winline -Wlarger-than=8192 -Wvla-larger-than=8192 -Wlogical-op -Wmissing-declarations -Wnon-virtual-dtor -Wopenmp-simd -Woverloaded-virtual -Wpacked -Wpointer-arith -Wredundant-decls -Wrestrict -Wshadow -Wsign-promo -Wstack-usage=8192 -Wstrict-null-sentinel -Wstrict-overflow=2 -Wstringop-overflow=4 -Wsuggest-attribute=noreturn -Wsuggest-final-types -Wsuggest-override -Wswitch-default -Wswitch-enum -Wsync-nand -Wundef -Wunreachable-code
+                                                                                                                                     -Wunused -Wvariadic-macros -Wno-literal-suffix -Wno-missing-field-initializers -Wnarrowing -Wno-old-style-cast -Wvarargs -Waligned-new -Walloc-size-larger-than=1073741824 -Walloc-zero -Walloca -Walloca-larger-than=8192 -Wcast-align=strict -Wdangling-else -Wduplicated-branches -Wformat-overflow=2 -Wformat-truncation=2 -Wmissing-attributes -Wmultistatement-macros -Wrestrict -Wshadow=global -Wsuggest-attribute=malloc -fcheck-new -fsized-deallocation -fstack-check
+                                                                                                                                     -fstrict-overflow -fchkp-first-field-has-own-bounds -fchkp-narrow-to-innermost-array -flto-odr-type-merging -fno-omit-frame-pointer</td></tr>
+                <tr valign=middle><td rowspan=2> GCC&nbsp;7.2.0 http://NUWEN.net  </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  <i> -ansi -std=c++14 -Wc++0x-compat -Wc++11-compat -Wc++14-compat </i>                  -Wall -Wextra -Weffc++ -Waggressive-loop-optimizations -Walloc-zero -Walloca -Walloca-larger-than=8192 -Warray-bounds -Wcast-align -Wcast-qual -Wchar-subscripts -Wconditionally-supported -Wconversion -Wctor-dtor-privacy -Wdangling-else -Wduplicated-branches -Wempty-body -Wfloat-equal -Wformat-nonliteral -Wformat-security -Wformat-signedness -Wformat=2 -Wformat-overflow=2
+                                                                                                                                     -Wformat-truncation=2 -Winline -Wlarger-than=8192 -Wvla-larger-than=8192 -Wlogical-op -Wmissing-declarations -Wnon-virtual-dtor -Wopenmp-simd -Woverloaded-virtual -Wpacked -Wpointer-arith -Wredundant-decls -Wrestrict -Wshadow -Wsign-promo -Wstack-usage=8192 -Wstrict-null-sentinel -Wstrict-overflow=2 -Wstringop-overflow=4 -Wsuggest-attribute=noreturn -Wsuggest-final-types -Wsuggest-override -Wswitch-default -Wswitch-enum -Wsync-nand -Wundef -Wunreachable-code
+                                                                                                                                     -Wunused -Wvariadic-macros -Wno-literal-suffix -Wno-missing-field-initializers -Wnarrowing -Wno-old-style-cast -Wvarargs -fcheck-new -fsized-deallocation -fstack-check -fstrict-overflow -fchkp-first-field-has-own-bounds -fchkp-narrow-to-innermost-array -flto-odr-type-merging</td></tr>
+                <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O3 <i> -ansi -std=c++14 -Wc++0x-compat -Wc++11-compat -Wc++14-compat </i>                  -Wall -Wextra -Weffc++ -Waggressive-loop-optimizations -Walloc-zero -Walloca -Walloca-larger-than=8192 -Warray-bounds -Wcast-align -Wcast-qual -Wchar-subscripts -Wconditionally-supported -Wconversion -Wctor-dtor-privacy -Wdangling-else -Wduplicated-branches -Wempty-body -Wfloat-equal -Wformat-nonliteral -Wformat-security -Wformat-signedness -Wformat=2 -Wformat-overflow=2
+                                                                                                                                     -Wformat-truncation=2 -Winline -Wlarger-than=8192 -Wvla-larger-than=8192 -Wlogical-op -Wmissing-declarations -Wnon-virtual-dtor -Wopenmp-simd -Woverloaded-virtual -Wpacked -Wpointer-arith -Wredundant-decls -Wrestrict -Wshadow -Wsign-promo -Wstack-usage=8192 -Wstrict-null-sentinel -Wstrict-overflow=2 -Wstringop-overflow=4 -Wsuggest-attribute=noreturn -Wsuggest-final-types -Wsuggest-override -Wswitch-default -Wswitch-enum -Wsync-nand -Wundef -Wunreachable-code
+                                                                                                                                     -Wunused -Wvariadic-macros -Wno-literal-suffix -Wno-missing-field-initializers -Wnarrowing -Wno-old-style-cast -Wvarargs -fcheck-new -fsized-deallocation -fstack-check -fstrict-overflow -fchkp-first-field-has-own-bounds -fchkp-narrow-to-innermost-array -flto-odr-type-merging</td></tr>
+                <tr valign=middle><td rowspan=2> GCC&nbsp;6.3.0 http://NUWEN.net  </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  <i> -ansi -std=c++14 -Wc++0x-compat -Wc++11-compat -Wc++14-compat </i>                  -Wall -Wextra -Weffc++ -Waggressive-loop-optimizations -Warray-bounds -Wcast-align -Wcast-qual -Wchar-subscripts -Wconditionally-supported -Wconversion -Wctor-dtor-privacy -Wempty-body -Wfloat-equal -Wformat-nonliteral -Wformat-security -Wformat-signedness -Wformat=2 -Winline -Wlarger-than=8192 -Wlogical-op -Wmissing-declarations -Wnon-virtual-dtor -Wopenmp-simd
+                                                                                                                                     -Woverloaded-virtual -Wpacked -Wpointer-arith -Wredundant-decls -Wshadow -Wsign-promo -Wstack-usage=8192 -Wstrict-null-sentinel -Wstrict-overflow=2 -Wsuggest-attribute=noreturn -Wsuggest-final-types -Wsuggest-override -Wswitch-default -Wswitch-enum -Wsync-nand -Wundef -Wunreachable-code -Wunused -Wvariadic-macros -Wno-literal-suffix -Wno-missing-field-initializers -Wnarrowing -Wno-old-style-cast -Wvarargs -fcheck-new -fsized-deallocation -fstack-check
+                                                                                                                                     -fstack-protector-all -fstrict-overflow -fchkp-first-field-has-own-bounds -fchkp-narrow-to-innermost-array -flto-odr-type-merging</td></tr>
+                <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O3 <i> -ansi -std=c++14 -Wc++0x-compat -Wc++11-compat -Wc++14-compat </i>                  -Wall -Wextra -Weffc++ -Waggressive-loop-optimizations -Warray-bounds -Wcast-align -Wcast-qual -Wchar-subscripts -Wconditionally-supported -Wconversion -Wctor-dtor-privacy -Wempty-body -Wfloat-equal -Wformat-nonliteral -Wformat-security -Wformat-signedness -Wformat=2 -Winline -Wlarger-than=8192 -Wlogical-op -Wmissing-declarations -Wnon-virtual-dtor -Wopenmp-simd
+                                                                                                                                     -Woverloaded-virtual -Wpacked -Wpointer-arith -Wredundant-decls -Wshadow -Wsign-promo -Wstack-usage=8192 -Wstrict-null-sentinel -Wstrict-overflow=2 -Wsuggest-attribute=noreturn -Wsuggest-final-types -Wsuggest-override -Wswitch-default -Wswitch-enum -Wsync-nand -Wundef -Wunreachable-code -Wunused -Wvariadic-macros -Wno-literal-suffix -Wno-missing-field-initializers -Wnarrowing -Wno-old-style-cast -Wvarargs -fcheck-new -fsized-deallocation -fstack-check
+                                                                                                                                     -fstack-protector-all -fstrict-overflow -fchkp-first-field-has-own-bounds -fchkp-narrow-to-innermost-array -flto-odr-type-merging</td></tr>
+                <tr valign=middle><td rowspan=2> GCC&nbsp;5.3.0 http://NUWEN.net  </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  <i> -ansi -std=c++14 -Wc++0x-compat -Wc++11-compat -Wc++14-compat </i>                  -Wall -Wextra -Weffc++ -Waggressive-loop-optimizations -Warray-bounds -Wcast-align -Wcast-qual -Wchar-subscripts -Wconditionally-supported -Wconversion -Wctor-dtor-privacy -Wempty-body -Wfloat-equal -Wformat-nonliteral -Wformat-security -Wformat-signedness -Wformat=2 -Winline -Wlarger-than=8192 -Wlogical-op -Wmissing-declarations -Wnon-virtual-dtor -Wopenmp-simd -Woverloaded-virtual
+                                                                                                                                     -Wpacked -Wpointer-arith -Wredundant-decls -Wshadow -Wsign-promo -Wstack-usage=8192 -Wstrict-null-sentinel -Wstrict-overflow=2 -Wsuggest-attribute=noreturn -Wsuggest-final-types -Wsuggest-override -Wswitch-default -Wswitch-enum -Wsync-nand -Wundef -Wunreachable-code -Wunused -Wvariadic-macros -Wno-literal-suffix -Wno-missing-field-initializers -Wnarrowing -Wno-old-style-cast -Wvarargs -fcheck-new -fsized-deallocation -fstack-check -fstack-protector-all
+                                                                                                                                     -fstrict-overflow -fchkp-first-field-has-own-bounds -fchkp-narrow-to-innermost-array -flto-odr-type-merging</td></tr>
+                <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O3 <i> -ansi -std=c++14 -Wc++0x-compat -Wc++11-compat -Wc++14-compat </i>                  -Wall -Wextra -Weffc++ -Waggressive-loop-optimizations -Warray-bounds -Wcast-align -Wcast-qual -Wchar-subscripts -Wconditionally-supported -Wconversion -Wctor-dtor-privacy -Wempty-body -Wfloat-equal -Wformat-nonliteral -Wformat-security -Wformat-signedness -Wformat=2 -Winline -Wlarger-than=8192 -Wlogical-op -Wmissing-declarations -Wnon-virtual-dtor -Wopenmp-simd -Woverloaded-virtual
+                                                                                                                                     -Wpacked -Wpointer-arith -Wredundant-decls -Wshadow -Wsign-promo -Wstack-usage=8192 -Wstrict-null-sentinel -Wstrict-overflow=2 -Wsuggest-attribute=noreturn -Wsuggest-final-types -Wsuggest-override -Wswitch-default -Wswitch-enum -Wsync-nand -Wundef -Wunreachable-code -Wunused -Wvariadic-macros -Wno-literal-suffix -Wno-missing-field-initializers -Wnarrowing -Wno-old-style-cast -Wvarargs -fcheck-new -fsized-deallocation -fstack-check -fstack-protector-all
+                                                                                                                                     -fstrict-overflow -fchkp-first-field-has-own-bounds -fchkp-narrow-to-innermost-array -flto-odr-type-merging</td></tr>
+                <tr valign=middle><td rowspan=2> GCC&nbsp;5.1.0 TDM-GCC           </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  <i> -ansi -std=c++14 -Wc++0x-compat -Wc++11-compat -Wc++14-compat </i>                  -Wall -Wextra -Weffc++ -Waggressive-loop-optimizations -Warray-bounds -Wcast-align -Wcast-qual -Wchar-subscripts -Wconditionally-supported -Wconversion -Wctor-dtor-privacy -Wempty-body -Wfloat-equal -Wformat-nonliteral -Wformat-security -Wformat-signedness -Wformat=2 -Winline -Wlarger-than=8192 -Wlogical-op -Wmissing-declarations -Wnon-virtual-dtor -Wopenmp-simd -Woverloaded-virtual
+                                                                                                                                     -Wpacked -Wpointer-arith -Wredundant-decls -Wshadow -Wsign-promo -Wstack-usage=8192 -Wstrict-null-sentinel -Wstrict-overflow=2 -Wsuggest-attribute=noreturn -Wsuggest-final-types -Wsuggest-override -Wswitch-default -Wswitch-enum -Wsync-nand -Wundef -Wunreachable-code -Wunused -Wvariadic-macros -Wno-literal-suffix -Wno-missing-field-initializers -Wnarrowing -Wno-old-style-cast -Wvarargs -fcheck-new -fsized-deallocation -fstack-check -fstack-protector-all
+                                                                                                                                     -fstrict-overflow -fchkp-first-field-has-own-bounds -fchkp-narrow-to-innermost-array -flto-odr-type-merging</td></tr>
+                <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O3 <i> -ansi -std=c++14 -Wc++0x-compat -Wc++11-compat -Wc++14-compat </i>                  -Wall -Wextra -Weffc++ -Waggressive-loop-optimizations -Warray-bounds -Wcast-align -Wcast-qual -Wchar-subscripts -Wconditionally-supported -Wconversion -Wctor-dtor-privacy -Wempty-body -Wfloat-equal -Wformat-nonliteral -Wformat-security -Wformat-signedness -Wformat=2 -Winline -Wlarger-than=8192 -Wlogical-op -Wmissing-declarations -Wnon-virtual-dtor -Wopenmp-simd -Woverloaded-virtual
+                                                                                                                                     -Wpacked -Wpointer-arith -Wredundant-decls -Wshadow -Wsign-promo -Wstack-usage=8192 -Wstrict-null-sentinel -Wstrict-overflow=2 -Wsuggest-attribute=noreturn -Wsuggest-final-types -Wsuggest-override -Wswitch-default -Wswitch-enum -Wsync-nand -Wundef -Wunreachable-code -Wunused -Wvariadic-macros -Wno-literal-suffix -Wno-missing-field-initializers -Wnarrowing -Wno-old-style-cast -Wvarargs -fcheck-new -fsized-deallocation -fstack-check -fstack-protector-all
+                                                                                                                                     -fstrict-overflow -fchkp-first-field-has-own-bounds -fchkp-narrow-to-innermost-array -flto-odr-type-merging</td></tr>
+                <tr valign=middle><td rowspan=2> GCC&nbsp;4.9.2 TDM-GCC           </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  <i> -ansi -std=c++11 -Wc++0x-compat -Wc++11-compat </i>                                 -Wall -Wextra -Weffc++ -Waggressive-loop-optimizations -Warray-bounds -Wcast-align -Wcast-qual -Wchar-subscripts -Wconversion -Wctor-dtor-privacy -Wempty-body -Wfloat-equal -Wformat=2 -Winline -Wlarger-than=8192 -Wlogical-op -Wmissing-declarations -Wnon-virtual-dtor -Woverloaded-virtual -Wpacked -Wpointer-arith -Wredundant-decls -Wshadow -Wsign-promo -Wstack-usage=8192
+                                                                                                                                     -Wstrict-null-sentinel -Wstrict-overflow=2 -Wsuggest-attribute=noreturn -Wswitch-default -Wswitch-enum -Wsync-nand -Wundef -Wunreachable-code -Wunused -Wvariadic-macros -Wno-literal-suffix -Wno-missing-field-initializers -Wnarrowing -Wno-old-style-cast -Wvarargs -fcheck-new -fstack-check -fstack-protector-all -fstrict-overflow</td></tr>
+                <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O3 <i> -ansi -ansi -std=c++11 -Wc++0x-compat -Wc++11-compat </i>                           -Wall -Wextra -Weffc++ -Waggressive-loop-optimizations -Warray-bounds -Wcast-align -Wcast-qual -Wchar-subscripts -Wconversion -Wctor-dtor-privacy -Wempty-body -Wfloat-equal -Wformat=2 -Winline -Wlarger-than=8192 -Wlogical-op -Wmissing-declarations -Wnon-virtual-dtor -Woverloaded-virtual -Wpacked -Wpointer-arith -Wredundant-decls -Wshadow -Wsign-promo -Wstack-usage=8192
+                                                                                                                                     -Wstrict-null-sentinel -Wstrict-overflow=2 -Wsuggest-attribute=noreturn -Wswitch-default -Wswitch-enum -Wsync-nand -Wundef -Wunreachable-code -Wunused -Wvariadic-macros -Wno-literal-suffix -Wno-missing-field-initializers -Wnarrowing -Wno-old-style-cast -Wvarargs -fcheck-new -fstack-check -fstack-protector-all -fstrict-overflow</td></tr>
                 <tr valign=middle><td rowspan=2> CodeBlocks 12.11, GCC&nbsp;4.8.0 </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  <i> -ansi -std=c++11 </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel -Wstack-usage=8192 </td></tr>
+
                 <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O3 <i> -ansi -std=c++11 </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel -Wstack-usage=8192 </td></tr>
-                <tr valign=middle><td rowspan=2> MSVS&nbsp;6                      </td><td> Debug   </td><td> /D&nbsp;_DEBUG /Od /Gm  /GX /GR /GZ <a href="http://support.microsoft.com/kb/199057">/Zi</a>              /MTd /FD /W4                                                                              /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_MBCS </td></tr>
-                <tr valign=middle>                                                     <td> Release </td><td> /D&nbsp;NDEBUG /O2      /GX /GR                                                                           /MT  /FD /W4                                                                              /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_MBCS </td></tr>
-                <tr valign=middle><td rowspan=2> Intel C++ 9 (MSVS&nbsp;6)        </td><td> Debug   </td><td> /D&nbsp;_DEBUG /Od /Gm  /GX /GR /GZ <a href="http://support.microsoft.com/kb/199057">/Zi</a>              /MTd /FD /W4 /Wall /Wcheck /Wport                                                         /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_MBCS </td></tr>
-                <tr valign=middle>                                                     <td> Release </td><td> /D&nbsp;NDEBUG /O2      /GX /GR                                                                           /MT  /FD /W4 /Wall /Wcheck /Wport                                                         /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_MBCS </td></tr>
-                <tr valign=middle><td rowspan=2> MSVS&nbsp;2003                   </td><td> Debug   </td><td> /D&nbsp;_DEBUG /Od /Gm  /GS /GR                                       /EHsc /RTC1 /RTCc     /Wp64 /TP /ZI /MTd     /W4                                                                              /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_MBCS </td></tr>
-                <tr valign=middle>                                                     <td> Release </td><td> /D&nbsp;NDEBUG /O2      /GS /GR                                       /EHsc                 /Wp64 /TP /Zi /MT  /FD /W4                                                                              /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_MBCS </td></tr>
-                <tr valign=middle><td rowspan=2> Intel C++ 9 (MSVS&nbsp;2003)     </td><td> Debug   </td><td> /D&nbsp;_DEBUG /Od /Gm  /GS /GR     /Gd                               /EHsc /RTC1 /RTCc     /Wp64     /ZI /MTd     /W4 /Wall /Wcheck /Wport /Qtrapuv /Qmultibyte-chars /Qvc7.1                      /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_MBCS </td></tr>
-                <tr valign=middle>                                                     <td> Release </td><td> /D&nbsp;NDEBUG /O2          /GR     /Gd                               /EHsc                 /Wp64     /Zi /MT  /FD /W4 /Wall /Wcheck /Wport          /Qmultibyte-chars /Qvc7.1                      /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_MBCS </td></tr>
-                <tr valign=middle><td rowspan=2> MSVS&nbsp;2005                   </td><td> Debug   </td><td> /D&nbsp;_DEBUG /Od /Gm                                                /EHsc /RTC1 /RTCc     /Wp64 /TP /ZI /MTd     /W4 /analyze /fp:except                                                          /D&nbsp;WIN32 /D&nbsp;_CONSOLE </td></tr>
-                <tr valign=middle>                                                     <td> Release </td><td> /D&nbsp;NDEBUG /O2              /GL                                   /EHsc                 /Wp64 /TP /Zi /MT  /FD /W4 /analyze                                                                     /D&nbsp;WIN32 /D&nbsp;_CONSOLE </td></tr>
-                <tr valign=middle><td rowspan=2> MSVS&nbsp;2008                   </td><td> Debug   </td><td> /D&nbsp;_DEBUG /Od /Gm                                                /EHsc /RTC1 /RTCc           /TP /ZI /MTd     /W4 /analyze /fp:except                                                          /D&nbsp;WIN32 /D&nbsp;_CONSOLE </td></tr>
-                <tr valign=middle>                                                     <td> Release </td><td> /D&nbsp;NDEBUG /O2              /GL             /Gy /Oi               /EHsc                       /TP /Zi /MT  /FD /W4 /analyze                                                                     /D&nbsp;WIN32 /D&nbsp;_CONSOLE </td></tr>
-                <tr valign=middle><td rowspan=2> MSVS&nbsp;2010                   </td><td> Debug   </td><td> /D&nbsp;_DEBUG /Od /Gm  /GS /GR     /Gd                 /Oy-          /EHsc /RTC1 /RTCc /MP /WX-  /TP /ZI /MTd     /W4 /analyze /fp:except /fp:precise /Zc:wchar_t /Zc:forScope                     /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;CODE_ANALYSIS </td></tr>
-                <tr valign=middle>                                                     <td> Release </td><td> /D&nbsp;NDEBUG /O2 /Gm- /GS /GR /GL /Gd         /Gy /Oi /Oy-          /EHsc             /MP /WX-  /TP /Zi /MT      /W4 /analyze            /fp:precise /Zc:wchar_t /Zc:forScope                     /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;CODE_ANALYSIS </td></tr>
+
+                <tr valign=middle><td rowspan=2> CodeBlocks 12.11, GCC&nbsp;4.7.2 </td><td> Debug   </td><td> -D&nbsp;_DEBUG -g  <i> -ansi -std=c++11 </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel -Wstack-usage=8192 </td></tr>
+
+                <tr valign=middle>                                                     <td> Release </td><td> -D&nbsp;NDEBUG -O3 <i> -ansi -std=c++11 </i> -pedantic -Wall -Wextra -Weffc++ -fexceptions -Wcast-align -Wfloat-equal -Winit-self -Winline -Wredundant-decls -Wshadow -Wundef -Wunreachable-code -Wctor-dtor-privacy -Wnon-virtual-dtor -Woverloaded-virtual -Wpointer-arith -Wsign-promo -Wcast-qual -Wconversion -Wformat=2 -Wstrict-aliasing -Wswitch-default -Wswitch-enum -Wwrite-strings -Wmissing-declarations -Wmissing-include-dirs -Wlogical-op -Wstrict-null-sentinel -Wstack-usage=8192 </td></tr>
+
                 <tr valign=middle><td rowspan=2> MSVS&nbsp;2012                   </td><td> Debug   </td><td> /D&nbsp;_DEBUG /Od /Gm  /GS /GR     /Gd /GF             /Oy-          /EHsc /RTC1 /RTCc /MP /WX-  /TP /ZI /MTd     /W4 /analyze /fp:except /fp:precise /Zc:wchar_t /Zc:forScope /sdl /openmp /Qpar- /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_WINDOWS      </td></tr>
+
                 <tr valign=middle>                                                     <td> Release </td><td> /D&nbsp;NDEBUG /O2 /Gm- /GS /GR /GL /Gd /GF /GT /Gy /Oi /Oy- /Ob2 /Ot /EHsc             /MP /WX-  /TP /Zi /MT      /W4 /analyze            /fp:precise /Zc:wchar_t /Zc:forScope /sdl /openmp /Qpar  /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;_WINDOWS      </td></tr>
+
+                <tr valign=middle><td rowspan=2> MSVS&nbsp;2010                   </td><td> Debug   </td><td> /D&nbsp;_DEBUG /Od /Gm  /GS /GR     /Gd                 /Oy-          /EHsc /RTC1 /RTCc /MP /WX-  /TP /ZI /MTd     /W4 /analyze /fp:except /fp:precise /Zc:wchar_t /Zc:forScope                     /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;CODE_ANALYSIS </td></tr>
+
+                <tr valign=middle>                                                     <td> Release </td><td> /D&nbsp;NDEBUG /O2 /Gm- /GS /GR /GL /Gd         /Gy /Oi /Oy-          /EHsc             /MP /WX-  /TP /Zi /MT      /W4 /analyze            /fp:precise /Zc:wchar_t /Zc:forScope                     /D&nbsp;WIN32 /D&nbsp;_CONSOLE /D&nbsp;CODE_ANALYSIS </td></tr>
     </table>
                 Эти ключи могут вызывать появление предупреждений для файла @c TXLib.h о символе @c $, использующемся для
                 отладки, и о директиве @c \#warning. Они настолько суровы, что могут вызвать <small>@strike Чака Норриса @endstrike</small>
                 предупреждения даже для файлов стандартных библиотек C++ (вне зависимости от того, используется TXLib.h или нет).
+                При использовании этих ключей могут возникнуть дополнительные зависимости от DLL-файлов.
 
     @section    VersionHistory        История изменений
 
+    - <b>Версия 0.173</b>
+           -#   <b>API</b>
+             -# Добавлена совместимость с компиляторами GCC версии до 9.2 (MinGW и Cygwin), Clang, средами
+                MS Visual Studio 2017 и 2019, CLion <sub>(тоже пример <i>талантливой</i> работы с консолью, почти
+                как у Eclipse. Но <i>эти</i> непрерывно копипастят из уменьшеного окна. Вот жесть-то).</sub>
+             -# Убрана поддержка компиляторов GCC версий младше 4.7.2 и MS Visual Studio версий младше 2010.
+             -# Добавлены функции API рисования txCreateDIBSection(), txGetAsyncKeyState(), txGetConsoleExtent(),
+                txGetFPS(), txPlayVideo() <i>(еще больше кота Мару!),</i> txSpeak(), txSaveImage(), txUseAlpha(),
+                txVideoMemory(), txRedrawWindow(), переменная _txSwapBuffers, константы TX_USE_SPEAK, TX_USE_SFML.
+             -# Функция txAlphaBlend() теперь <i>почти</i> масштабирует изображение (см. ее исходный текст).
+             -# Окно TXLib может изменять размеры, если в _txWindowStyle включить стиль окна WS_THICKFRAME.
+             -# Все функции рисования (ну, кроме txCircle(), это традиция) теперь могут рисовать на внеэкранных
+                холстах (HDC), в них добавлен соответствующий параметр по умолчанию. Для этого даже не требуется
+                создавать главное окно TXLib. Однако может сломаться совместимость, если вы работали с указателями
+                на эти функции.
+             -# Функция txVideoMemory() позволяет работать с главным окном TXLib как с фреймбуфером (массивом
+                пикселей).
+             -# Улучшена диагностика в случае неверного использования TXLib API. @strike Теперь функции TXLib
+                не форматируют системный диск в случае неудачного завершения, какая гуманность. @endstrike
+             -# Обновлены отладочные $-макросы. Даже нано-поддержка юнит-тестов есть. Хоть сейчас в Сколково.
+             -# Обеспечена возможность совместного использования TXLib и <a href=http://sfml-dev.org>SFML</a>,
+                разумеется, в разных окнах.
+             -# Добавлены служебные функции txDemangle(), txRegQuery(), txStackBackTrace(), tx_fpreset(), макросы
+                NEW (отладочный оператор new), константы _TX_EXCEPTIONS_LIMIT, _TX_FATAL_EXCEPTIONS_LIMIT,
+                _TX_FULL_STACKTRACE, _TX_NOINIT, _TX_BUFSIZE и др., _txWatchdogTimeout, _TX_CP, _TX_LOCALE,
+                _TX_WLOCALE и другие.
+             -# Расширена работа внутреннего трассировочного механизма TXLib (_TX_ALLOW_TRACE, TX_TRACE).
+             -# Добавлены всякие шуточки типа макросов txSqr(), _TX_DESTROY_3D, @ref meow, @ref please, @ref мяу,
+                txCatchMouse() и другие. См. хелпы и исходные тексты.
+             -# Добавлены недокументированные функции txCreateExtraWindow(), txRegisterClass(), txReopenStdio(),
+                txSetLocale(), txTaskKill(), _txCreateShortcut(), _txSetProcAddress(), _txFindProcess(),
+                _txKillProcess(), _txIsBadReadPtr(), _txGetCommandLine(), _tx_snprintf_s(), _tx_vsnprintf_s(),
+                _getch(), _putch() _kbhit() (три последние @d для Cygwin, их там по умолчанию нет), stristr(),
+                stristrw(), переменная _txLogName, макросы _tx_thread, _TX_ARGUMENT_FAILED() и др., _TX_ON_DEBUG,
+                _TX_UNEXPECTED(), _TX_CALL(), _txWaitFor(), $debug, $printf, $PRINTF и другие.
+                Возможно, вы разберетесь по исходникам, зачем они нужны и как работают. Вот txSetLocale(),
+                например, устанавливает в консоли русский язык, и узнать это можно, только читая вот
+                <a href=#VersionHistory>этот</a> раздел документации. Да, недокументированные функции @d
+                это плохо, но они существуют, и надо уметь с ними работать.
+             -# Обновлена документация. Теперь она занимает не половину файла, как раньше, а где-то треть,
+                но, как ни странно, ее стало больше. @strike Можно очередную задачку про это придумать.
+                (Но не надо.) @endstrike
+           -#   <b>Реализация</b>
+             -# Добавлен перехват структурных (системных) исключений Windows и поддержка отладки с
+                трассировкой стека. Файл библиотеки вырос почти в 2 раза, м-да. К сожалению, появилась
+                (необязательная) зависимость от динамических библиотек поддержки отладочной информации
+                и зоопарка их версий, устроенного Microsoft. Эх. :(
+             -# Код библиотеки верифицирован в статических анализаторах кода
+                <a href="http://www.viva64.com/ru/pvs-studio">PVS-Studio v7.05</a> и
+                <a href="http://llvm.org">Clang-tidy</a>, а также в динамическом анализаторе
+                <a href="http://www.microfocus.com/products/micro-focus-developer/devpartner/index.aspx">
+                MicroFocus DevPartner v10.5</a>.
+           -#   <b>Установка</b>
+             -# Добавлена установка для Visual Studio 2017, 2019, убрана установка для Visual Studio 6.0 - 2008.
+             -# Добавлена установка для @c MinGW (сканируются папки в @c C:\\MinGW, @c C:\\MinGW64,
+                <tt>C:\\Program Files\\MinGW, C:\\Program Files (x86)\\MinGW).</tt>
+             -# Добавлена установка для Qt Creator (сканируются папки в <tt>C:\\Program Files (x86)\\Qt\\Tools).</tt>
+             -# Добавлена установка для Cygwin (сканируются папки в <tt>C:\\Program Files\\Cygwin\\usr\\include</tt>
+                и <tt>C:\\Program Files (x86)\\Cygwin\\usr\\include).</tt>
+             -# Установщик генерирует лог-файл <tt>%Temp%\\~TXSetup.log.</tt>
     - <b>Версия 0.172</b>
            -#   <b>API</b>
-             -# Добавлена cовместимость с MS Visual Studio 2010 и 2012.
+             -# Добавлена совместимость с MS Visual Studio 2010, 2012 и 2015.
              -# Соответствие стандарту @c C++0x для MSVS 2010, MSVS 2012, GCC 4.6.1 и @c C++11 для GCC 4.7.1
                 в режиме компиляции @c -Wall @c -Wextra @c -Weffc++ (см. таблицу опций компиляторов).
              -# Убраны лишние предупреждения о неинициализированнях полях структур при
@@ -271,16 +459,16 @@
              -# Убрана облегченная поддержка регионов отсечения (теперь @d только средствами Win32).
              -# Добавлена системная клавиша @c Alt+Ctrl+Shift+PrintScreen, временно отменяющая блокировку
                 обновления окна, см. txBegin().
-             -# Добавлена многооконность и работа в DLL (experimental and not fully documented).
+             -# Добавлена (суррогатная) многооконность и работа в DLL (experimental and not fully documented).
              -# Файл @c Graphics.h больше не поддерживается @d не нужен он никому.
            -#   <b>Документация</b>
              -# Дополнен текст документации, примеров использования, добавлены демонстрационные программы
                 и дополнения от разных авторов (в папке TX/Examples/Demo). Подробно документирован исходный
                 текст функции txInputBox() для иллюстрации работы с диалогами Win32.
              -# Документация по примерам вынесена в отдельный файл.
-             -# TXLib теперь упоминает <a href="http://sisinmaru.blog17.fc2.com">кота Мару (Maru the cat)</a>
-                в одной из своих функций. TXLib is now referencing <a href="http://sisinmaru.blog17.fc2.com">
-                Maru the cat</a> in one of its functions.
+             -# TXLib теперь упоминает <a href="http://sisinmaru.com">кота Мару (Maru the cat)</a>
+                в одной из своих функций. TXLib is now referencing <a href="http://sisinmaru.com">
+                Maru the Сat</a> in one of its functions.
            -#   <b>Реализация</b>
              -# Во все функции добавлены проверки параметров и установка кода ошибки SetLastError().
              -# Упрощен механизм трансляции текста консоли в окно TXLib.
@@ -301,6 +489,7 @@
                 <a href="http://coverity.com">Coverity Scan</a>, и в динамическом анализаторе
                 <a href="http://www.microfocus.com/products/micro-focus-developer/devpartner/index.aspx">
                 MicroFocus DevPartner v10.5</a>.
+             -# TODO: Should contact C++ std committee, see std::nomeow_t, std::nomeow.
            -#   <b>Установка</b>
              -# Убраны сообщения об ошибках в Setup.js
     - <b>Версия 0.171</b>
@@ -342,15 +531,6 @@
     - <a href=https://sourceforge.net/tracker/?func=add&group_id=213688&atid=1026713>
       <b>Предложить улучшение</b></a>
 
-    @section    Refs                  Литература
-    -# <a href=http://storage.ded32.net.ru/Materials/ConferencePseudoScientific-2003.pdf>
-       Сальников В.Н., Ильин В.В., Шарко Ф.С., Митина Н.В., Белая И.В., Индукаев А.К., Дединский И.Р.
-       Структура и динамика поведенческих реакций в условиях информационной перегрузки. <i>Batman
-       Proceedings in Sheep Philosophy,</i> 2003, Vol. 22. pp. 23-24.</a>
+    <hr>
+    @image html TXCat.png
 */
-
-
-
-
-
-

@@ -66,6 +66,7 @@ void Credits();
 int main()
     {
     txCreateWindow (1280, 720);
+    txBegin();
 
     StartTitles();
 
@@ -101,6 +102,8 @@ int main()
     BigBoom();
 
     BLACKEND();
+
+    txEnd();
     return 0;
     }
 

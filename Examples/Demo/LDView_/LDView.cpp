@@ -5,10 +5,10 @@
 //!
 //!             Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!             $Version$
-//!             $Date$
-//!             $Copyright$
-//              $Copyright$
+//!             $Version: 00173a, Revision: 105 $
+//!             $Date: 2016-06-14 02:18:02 +0400 $
+//!             $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
+//              $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
 //}===========================================================================
 
 #define __MODULE       "LDView"
@@ -194,19 +194,16 @@ void DrawTree (vec2d pos, double length, double angle)
     if (txMouseButtons() || GetTickCount() > time) return;
     Sleep (0);
 
-    vec2d p = pos + vec2d (length * random (0.75, 1.5) * +cos (angle),
-                           length * random (0.75, 1.5) * -sin (angle)) + shift;
+    vec2d p = pos + vec2d (length * Random (0.75, 1.5) * +cos (angle),
+                           length * Random (0.75, 1.5) * -sin (angle)) + shift;
 
     txSetColor (RGB (128-16, 0, 0), (int) (length / 15 + 1));
 
     txLine (pos.x, pos.y, p.x, p.y);
 
-                    DrawTree (p, -length * random (0.7, 0.8), angle - random (-0.2, +0.8) - shift.x/50);
-                    DrawTree (p, -length * random (0.7, 0.8), angle + random (-0.2, +0.8) - shift.x/50);
+                    DrawTree (p, -length * Random (0.7, 0.8), angle - Random (-0.2, +0.8) - shift.x/50);
+                    DrawTree (p, -length * Random (0.7, 0.8), angle + Random (-0.2, +0.8) - shift.x/50);
 
-    if (rand() % 5) DrawTree (p, -length * random (0.8, 0.9), angle + random (-0.5, +0.5) + shift.x/50);
+    if (rand() % 5) DrawTree (p, -length * Random (0.8, 0.9), angle + Random (-0.5, +0.5) + shift.x/50);
     }
-
-
-
 

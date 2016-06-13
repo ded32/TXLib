@@ -5,10 +5,10 @@
 //!
 //!             Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!             $Version$
-//!             $Date$
-//!             $Copyright$
-//              $Copyright$
+//!             $Version: 00173a, Revision: 105 $
+//!             $Date: 2016-06-14 02:18:02 +0400 $
+//!             $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
+//              $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
 //}===========================================================================
 
 #ifndef __LDVIEW_TOOLS_H
@@ -154,6 +154,11 @@ double Distance (POINT p, POINT a, POINT b)
 END_NAMESPACE (a_bit_of_vector_algebra)
 
 //-----------------------------------------------------------------------------
+
+inline double Random (double min, double max)
+    {
+    return min + (max - min) * rand() / RAND_MAX;
+    }
 
 #endif
 

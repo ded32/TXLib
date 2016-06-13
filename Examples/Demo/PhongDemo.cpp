@@ -10,8 +10,6 @@
 //          (C) Стас Артюхин, 9 класс, 2006
 //}===========================================================================
 
-#define _CRT_SECURE_NO_WARNINGS 1
-
 #include "TXLib.h"
 
 #if !defined (_TX_VER) || (_TX_VER < 0x172a0000)
@@ -26,6 +24,7 @@ struct Vector
     T x, y, z;
 
     Vector();
+    explicit Vector (T xyz);
     Vector (T x0, T y0, T z0);
     };
 
@@ -47,6 +46,15 @@ inline Vector<T>::Vector (T x0, T y0, T z0) :
     x (x0),
     y (y0),
     z (z0)
+    {}
+
+//----------------------------------------------------------------------------
+
+template <typename T>
+inline Vector<T>::Vector (T xyz) :
+    x (xyz),
+    y (xyz),
+    z (xyz)
     {}
 
 //----------------------------------------------------------------------------
@@ -138,104 +146,73 @@ inline std::ostream& operator << (std::ostream& o, const Vector<T>& v)
     return o;
     }
 
-//============================================================================
+//----------------------------------------------------------------------------
 
-template <typename T>
-inline void DrawPixel (T x, T y, Vector<T> color, bool useTxPixel = true, HDC dc = txDC())
+inline double Clamp (double value, double min, double max)
     {
-    static POINT scr = txGetExtent();
+    return (value < min)? min : (value > max)? max : value;
+    }
 
-    POINT p = { ROUND (x + scr.x/2),
-                ROUND (y + scr.y/2) };
+//----------------------------------------------------------------------------
 
-    if (color.x > +1) color.x = +1; if (color.x < 0) color.x = 0;
-    if (color.y > +1) color.y = +1; if (color.y < 0) color.y = 0;
-    if (color.z > +1) color.z = +1; if (color.z < 0) color.z = 0;
-
-    COLORREF rgb = RGB (ROUND (color.x * 255),
-                        ROUND (color.y * 255),
-                        ROUND (color.z * 255));
-    if (useTxPixel)
-             txSetPixel (    p.x, p.y, rgb);
-    else
-        Win32::SetPixel (dc, p.x, p.y, rgb);  // For FPS testing only
+inline double Random (double min, double max)
+    {
+    return min + (max - min) * rand() / RAND_MAX;
     }
 
 //============================================================================
 
-unsigned DrawScene (const vec& lightPos, double R,
-                    bool tx = true, HDC dc = txDC()); // For FPS testing only
+void DrawScene (const vec& lightPos, double r);
 
 vec PhongLightning (const vec& p, const vec& N, const vec& V,
                     const vec& lightPos, const vec& lightColor,
                     const vec& materialColor,
                     const vec& ambientColor = vec (0, 0, 0));
 
-const vec Bump (const vec& p = vec (0, 0, 0));
+const vec Bump (const vec& p = vec(), double r = 0);
+
+void DrawPixel (double x, double y, Vector<double> color);
+
+//----------------------------------------------------------------------------
+
+bool UseTxPixel = false;
 
 //----------------------------------------------------------------------------
 
 int main()
     {
-    double R = 200;
+    double r = 200;
 
     txCreateWindow (800, 600);
     txTextCursor (false);
     txBegin();
 
-    HDC wndDC = GetDC (txWindow());
-    bool useTxPixel = true, useTxDC = true;
-
-    txUpdateWindow (false);
-
+    static double perf = txQueryPerformance();
+    
     txSetTextAlign (TA_CENTER);
     txSetColor (TX_DARKGRAY);
     txSelectFont ("Lucida Console", 15, 0);
-    txTextOut (txGetExtentX()/2, txGetExtentY()*19/20, "Alt, Ctrl, Shift, Space to bump");
-
+    txTextOut (txGetExtentX()/2, txGetExtentY()*19/20, "Press Z, R, X, H to bump, T to use txSetPixel(), "
+                                                       "ESC to exit");
     for (double t = txPI/2; ; t += 0.1)
         {
-        if (useTxDC && !useTxPixel) txLock();    // For FPS testing only
+        DrawScene (vec (-2*r * (1 + cos (t)),
+                        -2*r *      cos (t),
+                        +2*r *      sin (t)), r);
+        txSleep ();
 
-        double time = DrawScene (vec (-2*R * (1 + cos (t)),
-                                      -2*R *      cos (t),
-                                      +2*R *      sin (t)),
-                                 R,
-
-                                 useTxPixel,
-                                 useTxDC? txDC() : wndDC);
-
-        if (useTxDC && !useTxPixel) txUnlock();  // For FPS testing only
-
-        if (useTxDC) txSleep (0); else Sleep (0);
-
-        /* For FPS testing only */
-
-        useTxPixel = !GetAsyncKeyState ('P'),
-        useTxDC    = !GetAsyncKeyState ('D');
-        if (GetAsyncKeyState (VK_SPACE)) continue;
         if (GetAsyncKeyState (VK_ESCAPE) && GetForegroundWindow() == txWindow()) break;
 
-        static double avr[5] = {0};
-        static unsigned n = 0;
-
-        avr [n++ % SIZEARR (avr)] = time;
-        if  (n   < SIZEARR (avr)) continue;
-
-        time = 0;
-        for (unsigned i = 0; i < SIZEARR (avr); i++) time += avr[i];
-        time /= SIZEARR (avr);
-
-        static double perf = txQueryPerformance();
-        if (GetAsyncKeyState ('Q')) perf = txQueryPerformance();
+        /* For FPS testing only: */
+        
+        if (GetAsyncKeyState (VK_SPACE)) continue;
+        UseTxPixel = GetAsyncKeyState ('T');
 
         static char s [128] = "";
-        sprintf (s, "tx[Q]ueryPerformance(): %.2f. %.2f ms per frame. Using %sSet[P]ixel and %s[D]C",
-                    perf, time, (useTxPixel? "tx" : ""), (useTxDC? "tx" : "Get"));
+        sprintf (s, "tx[Q]ueryPerformance(): %.2f. FPS %.2f. Using %s",
+                    perf, txGetFPS(), (UseTxPixel? "txSetPixel" : "direct memory access"));
         SetWindowText (txWindow(), s);
         }
-
-    ReleaseDC (txWindow(), wndDC);
 
     txEnd();
     return 0;
@@ -243,51 +220,69 @@ int main()
 
 //----------------------------------------------------------------------------
 
-unsigned DrawScene (const vec& lightPos, double R, bool tx /*= true*/, HDC dc /*= txDC()*/)
+void DrawScene (const vec& lightPos, double r)
     {
-    const vec viewPos       (   0,    0, +5*R);
-//  const vec lightPos      (-2*R, +2*R, +2*R);
+    const vec viewPos       (   0,    0, +5*r);
+//  const vec lightPos      (-2*r, +2*r, +2*r);
 
     const vec materialColor (0.0, 1.0, 0.0);
     const vec lightColor    (1.0, 0.7, 0.0);
     const vec ambientColor  (0.2, 0.2, 0.2);
 
-    unsigned time = GetTickCount();  // For FPS testing only
-    srand (0);                       // Reset random sequence in Bump()
+    for (double y = +r; y >= -r; y--)
+    for (double x = -r; x <= +r; x++)
+        {
+        if (x*x + y*y > r*r) continue;
 
-    for (double y = -R; y <= R; y++)
-        for (double x = -R; x <= R; x++)
-            {
-            if (x*x + y*y > R*R) continue;
+        vec p = vec (x, y, 0);
+        p = p + Bump (p, r) * 100;
+        if (p.x*p.x + p.y*p.y > r*r) { DrawPixel (x, y, vec (0)); continue; }
 
-            vec p = vec (x, y, sqrt (R*R - x*x - y*y));
-            vec N = !p + Bump (p);
+        p.z = sqrt (r*r - p.x*p.x - p.y*p.y);
+        vec N = !p + Bump (p, r);
 
-            vec V = !(viewPos  - p);
-            vec L = !(lightPos - p);
+        vec V = !(viewPos  - p);
+        vec L = !(lightPos - p);
 
-            double diffuse = N ^ L;
-            if (diffuse < 0) diffuse = 0;
+        double diffuse = N ^ L;
+        if (diffuse < 0) diffuse = 0;
 
-            vec Lr = 2*(N^L)*N - L;
-            double spec = Lr ^ V;
-            if (spec < 0) spec = 0;
-            double specular = pow (spec, 25);
+        vec Lr = 2*(N^L)*N - L;
+        double spec = Lr ^ V;
+        if (spec < 0) spec = 0;
+        double specular = pow (spec, 25);
 
-            vec color = ambientColor * materialColor              +
+        vec color = ambientColor * materialColor              +
 
-                        diffuse      * materialColor * lightColor +
-                        specular     *                 lightColor +
+                    diffuse      * materialColor * lightColor +
+                    specular     *                 lightColor +
 
-                        PhongLightning (p, N, V,
-                                        vec (+2*R, -1*R,   0),
-                                        vec ( 0.5,  0.5, 0.5),
-                                        materialColor);
+                    PhongLightning (p, N, V,
+                                    vec (+2*r, -1*r,   0),
+                                    vec ( 0.5,  0.5, 0.5),
+                                    materialColor);
+                                    
+        DrawPixel (x, y, color);
+        }
+    }
 
-            DrawPixel (x, y, color, tx, dc);
-            }
+//----------------------------------------------------------------------------
 
-    return GetTickCount() - time;    // For FPS testing only
+inline void DrawPixel (double x, double y, Vector<double> color)
+    {
+    static POINT scr = txGetExtent();
+
+    POINT   p   = { (int) (x + scr.x/2 + 0.5),
+                    (int) (y + scr.y/2 + 0.5) };
+
+    RGBQUAD rgb = { (BYTE) (Clamp (color.x, 0, 1) * 255 + 0.5),
+                    (BYTE) (Clamp (color.y, 0, 1) * 255 + 0.5),
+                    (BYTE) (Clamp (color.z, 0, 1) * 255 + 0.5) };
+
+    if (UseTxPixel)
+         txSetPixel (p.x, p.y, RGB (rgb.rgbRed, rgb.rgbGreen, rgb.rgbBlue));
+    else
+         *(txVideoMemory() + p.x + (-p.y + scr.y) * scr.x) = rgb;
     }
 
 //----------------------------------------------------------------------------
@@ -312,16 +307,33 @@ vec PhongLightning (const vec& p, const vec& N, const vec& V,
 
 //----------------------------------------------------------------------------
 
-const vec Bump (const vec& p)
+const vec Bump (const vec& p, double r)
     {
-    vec bump = vec (0, 0, 0);
+    bool bXY  = (GetAsyncKeyState ('X') != 0),
+         bXY2 = (GetAsyncKeyState ('H') != 0),
+         bZ   = (GetAsyncKeyState ('Z') != 0),
+         bRnd = (GetAsyncKeyState ('R') != 0);
 
-    if (GetAsyncKeyState (VK_MENU))    bump += p * ( sin (p.z*p.z / 500)        / 2 + 1.5)          / 5000.0;
-    if (GetAsyncKeyState (VK_CONTROL)) bump += p * ((sin (p.x/4) + cos (p.y/4)) / 4 + 1.5)          / 5000.0;
-    if (GetAsyncKeyState (VK_SHIFT))   bump += p * ((cos (p.x/4) + sin (p.y/4)) / 2 + 1.0)          / 1000.0;
-    if (GetAsyncKeyState (VK_SPACE))   bump += vec (random (-1,+1), random (-1,+1), random (-1,+1)) /  100.0;
+    if (!bXY && !bXY2 && !bZ && !bRnd) return vec (0);
+
+    const int sz = 100;
+    static vec env[sz][sz] = {};
+
+    static bool init = false;
+    if (!init)
+        {
+        for (int y = 0; y < sz; y++) for (int x = 0; x < sz; x++)
+            env[y][x] = vec (Random (-1, +1), Random (-1, +1), Random (-1, +1));
+            
+        init = true;
+        }
+
+    vec bump (0);
+
+    if (bXY)  bump += p * ((sin (p.x/4) + cos (p.y/4)) / 4 + 1.5) / 5000.0;
+    if (bXY2) bump += p * ((cos (p.x/4) + sin (p.y/4)) / 2 + 1.0) / 3000.0;
+    if (bZ)   bump += p * ( sin (p.z*p.z / 500)        / 2 + 1.5) / 5000.0;
+    if (bRnd) bump += env [(unsigned) ROUND (p.y + r) % sz] [(unsigned) ROUND (p.x + r) % sz] / 100.0;
 
     return bump;
     }
-
-
