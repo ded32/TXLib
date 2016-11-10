@@ -6,9 +6,9 @@
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 115 $
+//!          $Version: 00173a, Revision: 116 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2016-10-27 13:09:16 +0400 $
+//!          $Date: 2016-11-10 15:50:27 +0400 $
 //!
 //!          TX Library - компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -95,8 +95,8 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VERSION           _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 115, 2016-10-27 13:09:16 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR            _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 115, 2016-10-27 13:09:16 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION           _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 116, 2016-11-10 15:50:27 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR            _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 116, 2016-11-10 15:50:27 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @}
 //{----------------------------------------------------------------------------------------------------------------
@@ -118,7 +118,7 @@
 //! @hideinitializer
 //}----------------------------------------------------------------------------------------------------------------
 
-#define _TX_VER               _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 115, 2016-10-27 13:09:16 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER               _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 116, 2016-11-10 15:50:27 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //}
 //-----------------------------------------------------------------------------------------------------------------
@@ -320,18 +320,15 @@
 
     #endif
 
+    #ifndef MINGW_HAS_SECURE_API
+    #define MINGW_HAS_SECURE_API    1
+    #endif
+
     #ifndef __USE_MINGW_ANSI_STDIO
     #define __USE_MINGW_ANSI_STDIO  1
     #endif
 
-    #if (_GCC_VER >= 530)
-        #define TX_LONG_FMT         "L"
-    #else
-        #define TX_LONG_FMT         "l"
-    #endif
-
     #define _TX_CHECK_FORMAT( arg ) __attribute__ (( format (printf, (arg), (arg)+1) ))
-    #define _TX_NOINLINE            __attribute__ (( noinline ))
 
     template <typename T>
     inline T _txNOP (T value)       { return value; }  // To suppress performance warnings in assert etc
@@ -344,7 +341,6 @@
 
     #define _TX_CHECK_FORMAT( arg )
     #define _TX_DEPRECATED
-    #define _TX_NOINLINE
 
     #define _txNOP( value )         ( value )
 
@@ -416,7 +412,6 @@
         #endif
 
         #define _CRT_SECURE_CPP_OVERLOAD_SECURE_NAMES 1
-        #define _TX_TRUNCATE        , _TRUNCATE
 
         #define _tx_explicit        explicit
         #define _tx_override        override
@@ -427,33 +422,6 @@
         #define _tx_override
 
     #endif
-
-#endif
-
-#if !( defined (_MSC_VER) && (_MSC_VER >= 1400) || defined (__STDC_LIB_EXT1__) )
-
-    #define  strcpy_s               strcpy      // MSVC prior to 8 (2005) versions and GCC (unless having bounds-checker
-    #define  strncpy_s              strncpy     //   library extension do NOT have secure variants of these functions,
-    #define  strncat_s              strncat     //   so use insecure ones.
-    #define  wcsncpy_s              wcsncpy     //
-    #define _snprintf_s            _snprintf    //
-    #define _vsnprintf_s           _vsnprintf   //
-
-    #define  strerror_s(   buf, code )              (              strncpy  ((buf), strerror ((int)(code)), sizeof(buf)-1) )
-    #define  getenv_s( sz, buf, sizeof_buf, name )  ( (void)(sz),  strncpy  ((buf), getenv (name),         (sizeof_buf)-1) )
-    #define  strtok_s(     buf, delim, ctx )        ( (void)(ctx), strtok   ((buf), (delim)) )
-    #define  fopen_s(  file, name, mode )           ( *(file) = fopen ((name), (mode)) )
-    #define _strlwr_s( str, sizeof_str )            ( _strlwr (str) )
-
-    #if !( defined (_GCC_VER) && (_GCC_VER >= 510) && defined (__x86_64__) )  // At least GCC 5.1.0 x64 already has it
-    #define  ctime_s( buf, sizeof_buf, time )       ( strncpy ((buf), ctime (time), (sizeof_buf)-1) )
-    #endif
-
-    #if !( defined (_GCC_VER) && (_GCC_VER >= 471) && defined (__x86_64__) )  // At least GCC 4.7.1 x64 already has it
-    #define _controlfp_s( oldCtl, newCtl, mask )    ( *(oldCtl) = _controlfp (newCtl, mask), 0 )
-    #endif
-
-    #define _TX_TRUNCATE
 
 #endif
 
@@ -471,7 +439,7 @@
 #if !defined (WINVER)
     #define   WINVER                0x0500      // Defaults to Windows 2000
     #define   WINDOWS_ENABLE_CPLUSPLUS          // Allow use of type-limit macros in <basetsd.h>,
-#endif                                          //   they allowed by default if WINVER >= 0x0600.
+#endif                                          //   they are allowed by default if WINVER >= 0x0600.
 
 #if !defined (_WIN32_WINNT)
     #define   _WIN32_WINNT          WINVER      // Defaults to the same as WINVER
@@ -535,14 +503,14 @@ namespace std { enum nomeow_t { nomeow }; }     // Vital addition to the C++ sta
 #include <tlhelp32.h>
 #include <shellapi.h>
 
-#if  defined (_MSC_VER)
+#if defined (_MSC_VER)
 #pragma warning (disable: 4091)                 // 'typedef ': ignored on left of '' when no variable is declared
 #pragma warning (disable: 6001)                 // Uninitialized variable usage "*ppidls"
 #endif
 
 #include <shlobj.h>
 
-#if  defined (_MSC_VER)
+#if defined (_MSC_VER)
 #pragma warning (default: 4091)                 // 'typedef ': ignored on left of '' when no variable is declared
 #pragma warning (default: 6001)                 // Uninitialized variable usage "*ppidls"
 #endif
@@ -572,6 +540,29 @@ namespace std { enum nomeow_t { nomeow }; }     // Vital addition to the C++ sta
 
 #ifdef __STRICT_ANSI__UNDEFINED
     #define  __STRICT_ANSI__                    // Redefine back
+#endif
+
+#if !defined (_TRUNCATE)
+
+    #define  strncpy_s( dest, sizeof_dest, src, count )  ( (void)(sizeof_dest), strncpy ((dest), (src), (count)) )
+    #define  wcsncpy_s( dest, sizeof_dest, src, count )  ( (void)(sizeof_dest), wcsncpy ((dest), (src), (count)) )
+    #define  strncat_s( dest, sizeof_dest, src, count )  ( (void)(sizeof_dest), strncat ((dest), (src), (count)) )
+    #define  strerror_s( buf, sizeof_buf, code        )  ( strncpy  ((buf), strerror ((int)(code)), (sizeof_buf)-1) )
+    #define  strtok_s(   buf, delim, ctx              )  ( (void)(ctx), strtok ((buf), (delim)) )
+    #define  fopen_s(    file, name, mode             )  ( *(file) = fopen ((name), (mode)) )
+    #define _strlwr_s(   str, sizeof_str              )  ( _strlwr (str) )
+
+    #define  ctime_s( buf, sizeof_buf, time    )         ( strncpy ((buf), ctime (time), (sizeof_buf)-1) )
+    #define _controlfp_s( oldCtl, newCtl, mask )         ( *(oldCtl) = _controlfp (newCtl, mask), 0 )
+
+    #define _snprintf_s                                  _snprintf
+
+#endif
+
+#if !( defined (_MSC_VER) && (_MSC_VER >= 1400) || defined (__STDC_LIB_EXT1__) )
+
+    #define  getenv_s( sz, buf, sizeof_buf, name )       ( (void)(sz), strncpy ((buf), getenv (name), (sizeof_buf)-1) )
+
 #endif
 
 //}
@@ -3863,7 +3854,7 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
 //!
 //! @note    Распечатывается область памяти размером 256 байт.
 //!
-//! @see     txPrintCallStack(), TX_ERROR(), TX_DEBUG_ERROR()
+//! @see     txStackBackTrace(), TX_ERROR(), TX_DEBUG_ERROR()
 //!
 //! @usage @code
 //!          const char text[] = "Каждому лектору - в портфель по вектору";
@@ -5096,14 +5087,16 @@ const char* txInputBox (const char* text, const char* caption, const char* input
         // Конец внутреннего класса диалога
         //---------------------------------------------------------------------------------------------------------
 
-        #if defined (_GCC_VER) && (_GCC_VER >= 530) || \
-            defined (_MSC_VER) && (_MSC_VER >= 1900)
+        #if defined (_GCC_VER) && (_GCC_VER >= 530) || defined (_MSC_VER) && (_MSC_VER >= 1900)
 
         private:
         inputDlg (const inputDlg&)              = delete;
-        inputDlg (const inputDlg&&)             = delete;
         inputDlg& operator = (const inputDlg&)  = delete;
+
+        #if __STDC_VERSION__ >= 201112L
+        inputDlg (const inputDlg&&)             = delete;
         inputDlg& operator = (const inputDlg&&) = delete;
+        #endif
 
         #endif
         };
@@ -5260,12 +5253,14 @@ ptrdiff_t        _txDumpExceptionObj         (char what[], ptrdiff_t size, void*
 ptrdiff_t        _txDumpExceptionCPP         (char what[], ptrdiff_t size, unsigned code = 0,
                                               unsigned params = 0, const ULONG_PTR info[] = NULL);
 
+const char*      _txStackWalk                (int framesToSkip = 0, bool readSource = true, CONTEXT* context = NULL);
+int              _txCaptureStackBackTrace    (int framesToSkip, size_t szCapture, void* capture[], unsigned long* backTraceHash,
+                                              CONTEXT* context = NULL, HANDLE thread = GetCurrentThread());
 void             _txStackBackTrace           (const char file[] = "?.???", int line = 0, const char func[] = "?()",
                                               bool readSource = true);
-bool             _txStackWalk                (const EXCEPTION_POINTERS* info, int framesToSkip = 0, bool readSource = true); //!!!
-const char*      _txCaptureStackBackTrace    (int framesToSkip = 0, bool readSource = true);
+                                              
 const char*      _txSymPrintFromAddr         (void* addr = NULL, const char format[] = NULL, ...) _TX_CHECK_FORMAT (2);
-unsigned         _txSymGetFromAddr           (void* addr = NULL, Win32::SYMBOL_INFO** symbol = NULL,
+bool             _txSymGetFromAddr           (void* addr, Win32::SYMBOL_INFO** symbol = NULL,
                                               Win32::IMAGEHLP_LINE64** line = NULL, const char** module = NULL,
                                               const char** source = NULL, int context = 2);
 ptrdiff_t        _txReadText                 (char buf[], ptrdiff_t size, const char file[],
@@ -5336,65 +5331,20 @@ namespace Win32 {
 
 struct NT_CONSOLE_PROPS;
 struct CONSOLE_FONT_INFOEX;
+struct ADDRESS64;
+struct STACKFRAME64;
+struct WOW64_CONTEXT;
 
-//{ From: DbgHelp.h
-
-enum ADDRESS_MODE
-    {
-    AddrMode1616,
-    AddrMode1632,
-    AddrModeReal,
-    AddrModeFlat
-    };
-
-struct ADDRESS64
-    {
-    DWORD64      Offset;
-    WORD         Segment;
-    ADDRESS_MODE Mode;
-    };
-
-struct KDHELP64
-    {
-    DWORD64 Thread;
-    DWORD   ThCallbackStack;
-    DWORD   ThCallbackBStore;
-    DWORD   NextCallback;
-    DWORD   FramePointer;
-    DWORD64 KiCallUserMode;
-    DWORD64 KeUserCallbackDispatcher;
-    DWORD64 SystemRangeStart;
-    DWORD64 KiUserExceptionDispatcher;
-    DWORD64 StackBase;
-    DWORD64 StackLimit;
-    DWORD64 Reserved[5];
-    };
-
-struct STACKFRAME64
-    {
-    ADDRESS64 AddrPC;          // Program counter
-    ADDRESS64 AddrReturn;      // Return address
-    ADDRESS64 AddrFrame;       // Frame pointer
-    ADDRESS64 AddrStack;       // Stack pointer
-    ADDRESS64 AddrBStore;      // Backing store pointer
-    PVOID     FuncTableEntry;  // Pointer to pData/FPO or NULL
-    DWORD64   Params[4];       // Possible arguments to the function
-    BOOL      Far;             // WOW far call
-    BOOL      Virtual;         // Is this a virtual frame?
-    DWORD64   Reserved[3];
-    KDHELP64  KdHelp;
-    };
+#ifdef _MSC_VER_6
+struct CONSOLE_FONT_INFO;
+#endif
 
 typedef bool    (__stdcall *PREAD_PROCESS_MEMORY_ROUTINE64)   (HANDLE process, DWORD64 baseAddress, void* buffer, DWORD size, DWORD* bytesRead);
 typedef void*   (__stdcall *PFUNCTION_TABLE_ACCESS_ROUTINE64) (HANDLE process, DWORD64 baseAddress);
 typedef DWORD64 (__stdcall *PGET_MODULE_BASE_ROUTINE64)       (HANDLE process, DWORD64 address);
 typedef DWORD64 (__stdcall *PTRANSLATE_ADDRESS_ROUTINE64)     (HANDLE process, HANDLE thread, ADDRESS64* address);
 
-//}
-
-#ifdef _MSC_VER_6
-struct CONSOLE_FONT_INFO;
-#endif
+//-----------------------------------------------------------------------------------------------------------------
 
 _TX_DLLIMPORT     ("GDI32",    HDC,      CreateCompatibleDC,         (HDC dc));
 _TX_DLLIMPORT     ("GDI32",    HBITMAP,  CreateCompatibleBitmap,     (HDC dc, int width, int height));
@@ -5473,6 +5423,8 @@ _TX_DLLIMPORT_OPT ("Kernel32", bool,     SetCurrentConsoleFontEx,    (HANDLE con
 _TX_DLLIMPORT_OPT ("Kernel32", USHORT,   RtlCaptureStackBackTrace,   (DWORD framesToSkip, DWORD framesToCapture, void** backTrace, DWORD* hash));
 _TX_DLLIMPORT_OPT ("Kernel32", void*,    AddVectoredExceptionHandler,(unsigned long firstHandler, PVECTORED_EXCEPTION_HANDLER handler));
 _TX_DLLIMPORT_OPT ("Kernel32", bool,     GetModuleHandleEx,          (DWORD flags, const char moduleName[], HMODULE* module));
+_TX_DLLIMPORT_OPT ("Kernel32", bool,     IsWow64Process,             (HANDLE process, int* isWow64Process));
+_TX_DLLIMPORT_OPT ("Kernel32", bool,     Wow64GetThreadContext,      (HANDLE thread, WOW64_CONTEXT* context));
 
 _TX_DLLIMPORT     ("OLE32",    HRESULT,  CoInitialize,               (void*));
 _TX_DLLIMPORT     ("OLE32",    HRESULT,  CoCreateInstance,           (REFCLSID clsId, IUnknown*, DWORD, REFIID iId, PVOID* value));
@@ -5530,15 +5482,15 @@ FARPROC _txDllImport (const char dllFileName[], const char funcName[], bool requ
 
     if (arch)
         {
-        strncpy_s (dllName, dllFileName, arch - dllFileName);
-        strncat_s (dllName, arch+1, sizeof (dllName) - 1 - strlen (dllName));
+        strncpy_s (dllName, sizeof (dllName), dllFileName, arch - dllFileName);
+        strncat_s (dllName, sizeof (dllName), arch+1, sizeof (dllName) - 1 - strlen (dllName));
 
-        strncpy_s (dllArch, dllFileName, arch - dllFileName);
-        strncat_s (dllArch, sizeof (void*) == 8? "64" : "32", 3);
-        strncat_s (dllArch, arch+1, sizeof (dllArch) - 1 - strlen (dllArch));
+        strncpy_s (dllArch, sizeof (dllArch), dllFileName, arch - dllFileName);
+        strncat_s (dllArch, sizeof (dllArch), sizeof (void*) == 8? "64" : "32", 3);
+        strncat_s (dllArch, sizeof (dllArch), arch+1, sizeof (dllArch) - 1 - strlen (dllArch));
         }
     else if (dllFileName)
-        strncat_s (dllName, dllFileName, sizeof (dllName) - 1);
+        strncat_s (dllName, sizeof (dllName), dllFileName, sizeof (dllName) - 1);
 
     HMODULE   dll = GetModuleHandle (dllFileName);
 
@@ -5771,6 +5723,104 @@ const GUID IID_IPersistFile       = {0x0000010b, 0x0000, 0x0000, {0xc0,0x00,0x00
 
 #undef  INTERFACE
 
+enum ADDRESS_MODE
+    {
+    AddrMode1616,
+    AddrMode1632,
+    AddrModeReal,
+    AddrModeFlat
+    };
+
+struct ADDRESS64
+    {
+    DWORD64      Offset;
+    WORD         Segment;
+    ADDRESS_MODE Mode;
+    };
+
+struct KDHELP64
+    {
+    DWORD64 Thread;
+    DWORD   ThCallbackStack;
+    DWORD   ThCallbackBStore;
+    DWORD   NextCallback;
+    DWORD   FramePointer;
+    DWORD64 KiCallUserMode;
+    DWORD64 KeUserCallbackDispatcher;
+    DWORD64 SystemRangeStart;
+    DWORD64 KiUserExceptionDispatcher;
+    DWORD64 StackBase;
+    DWORD64 StackLimit;
+    DWORD64 Reserved[5];
+    };
+
+struct STACKFRAME64
+    {
+    ADDRESS64 AddrPC;
+    ADDRESS64 AddrReturn;
+    ADDRESS64 AddrFrame;
+    ADDRESS64 AddrStack;
+    ADDRESS64 AddrBStore;
+    PVOID     FuncTableEntry;
+    DWORD64   Params[4];
+    BOOL      Far;
+    BOOL      Virtual;
+    DWORD64   Reserved[3];
+    KDHELP64  KdHelp;
+    };
+
+struct WOW64_FLOATING_SAVE_AREA
+    {
+    DWORD ControlWord;
+    DWORD StatusWord;
+    DWORD TagWord;
+    DWORD ErrorOffset;
+    DWORD ErrorSelector;
+    DWORD DataOffset;
+    DWORD DataSelector;
+    BYTE  RegisterArea[80];
+    DWORD Cr0NpxState;
+    };
+
+#pragma pack (push, 4)
+
+struct WOW64_CONTEXT
+    {
+    DWORD ContextFlags;
+
+    DWORD Dr0;
+    DWORD Dr1;
+    DWORD Dr2;
+    DWORD Dr3;
+    DWORD Dr6;
+    DWORD Dr7;
+
+    WOW64_FLOATING_SAVE_AREA FloatSave;
+
+    DWORD SegGs;
+    DWORD SegFs;
+    DWORD SegEs;
+    DWORD SegDs;
+
+    DWORD Edi;
+    DWORD Esi;
+    DWORD Ebx;
+    DWORD Edx;
+    DWORD Ecx;
+    DWORD Eax;
+
+    DWORD Ebp;
+    DWORD Eip;
+    DWORD SegCs;
+    DWORD EFlags;
+    DWORD Esp;
+    DWORD SegSs;
+    
+    BYTE  ExtendedRegisters[512];
+    };
+
+#pragma pack (pop)
+
 struct SYMBOL_INFO
     {
     ULONG   SizeOfStruct;
@@ -5941,40 +5991,40 @@ using namespace Win32;
 
 int                     _txInitialized              = _TX_NOINIT || _txInitialize();
 
-unsigned       volatile _txMainThreadId             = 0;      // ID потока, где выполняется main()
+unsigned       volatile _txMainThreadId             = 0;       // ID потока, где выполняется main()
 
-unsigned       volatile _txCanvas_ThreadId          = 0;      // ID потока, владеющего окном холста TXLib
-HANDLE         volatile _txCanvas_Thread            = NULL;   // Дексриптор этого потока
-HWND           volatile _txCanvas_Window            = NULL;   // Дескриптор окна холста TXLib
+unsigned       volatile _txCanvas_ThreadId          = 0;       // ID потока, владеющего окном холста TXLib
+HANDLE         volatile _txCanvas_Thread            = NULL;    // Дексриптор этого потока
+HWND           volatile _txCanvas_Window            = NULL;    // Дескриптор окна холста TXLib
 
-UINT                    _txCanvas_RefreshTimer      = 0;      // Timer to redraw TXLib window
-int            volatile _txCanvas_RefreshLock       = 0;      // Blocks auto on-timer canvas update, see txBegin/txEnd
+UINT                    _txCanvas_RefreshTimer      = 0;       // Timer to redraw TXLib window
+int            volatile _txCanvas_RefreshLock       = 0;       // Blocks auto on-timer canvas update, see txBegin/txEnd
 
-HDC                     _txCanvas_BackBuf[2]        = {NULL,  // [0] Main working TXLib memory DC, where user picture lies
-                                                       NULL}; // [1] Image ready for auto-refresh, see txCanvas_OnPAINT()
-CRITICAL_SECTION        _txCanvas_LockBackBuf       = {0,-1}; // Prevent simultaneous access to back buffer, see txLock()
+HDC                     _txCanvas_BackBuf[2]        = {NULL,   // [0] Main working TXLib memory DC, where user picture lies
+                                                       NULL};  // [1] Image ready for auto-refresh, see txCanvas_OnPAINT()
+CRITICAL_SECTION        _txCanvas_LockBackBuf       = {0,-1};  // Prevent simultaneous access to back buffer, see txLock()
 
-::std::vector<HDC>*     _txCanvas_UserDCs           = NULL;   // List of DCs allocated, for auto-free
+::std::vector<HDC>*     _txCanvas_UserDCs           = NULL;    // List of DCs allocated, for auto-free
 
-bool           volatile _txConsole_IsBlinking       = true;   // To blink or not to blink, that is the question.
+bool           volatile _txConsole_IsBlinking       = true;    // To blink or not to blink, that is the question.
 
-bool                    _txConsole                  = false;  // Only first TXLib module in app can own the console
-bool                    _txMain                     = false;  // First TXLib wnd opened (closing it terminates program)
-bool                    _txIsDll                    = false;  // TXLib module is in DLL
-bool           volatile _txRunning                  = false;  // main() is still running
-bool           volatile _txExit                     = false;  // exit() is active
+bool                    _txConsole                  = false;   // Only first TXLib module in app can own the console
+bool                    _txMain                     = false;   // First TXLib wnd opened (closing it terminates program)
+bool                    _txIsDll                    = false;   // TXLib module is in DLL
+bool           volatile _txRunning                  = false;   // main() is still running
+bool           volatile _txExit                     = false;   // exit() is active
 
-POINT                   _txMousePos                 = {0};    // Ask Captn Obviouos about it. See txCanvas_OnMOUSE()
-unsigned                _txMouseButtons             =  0;
+POINT                   _txMousePos                 = {-1,-1}; // Ask Captn Obviouos about it. See txCanvas_OnMOUSE()
+unsigned                _txMouseButtons             = 0;
 
-WNDPROC        volatile _txAltWndProc               = NULL;   // Альтернативная оконная функция. См. txSetWindowsHook().
+WNDPROC        volatile _txAltWndProc               = NULL;    // Альтернативная оконная функция. См. txSetWindowsHook().
 
-_tx_thread _txLoc       _txCurLoc                   = {};     // Execution point tracking and trace state, see "$" macro
+_tx_thread _txLoc       _txCurLoc                   = {};      // Execution point tracking and trace state, see "$" macro
 
-char                    _txDumpSE [_TX_BUFSIZE]     = "";     // SEH dump data area
-char                    _txTraceSE[_TX_HUGEBUFSIZE] = "";     // Stack trace data area
-jmp_buf                 _txDumpExceptionObjJmp      = {0};    // Hook for _txDumpExceptionObj
-LPTOP_LEVEL_EXCEPTION_FILTER _txPrevUEFilter        = NULL;   // Previous UnhandledExceptionFilter
+char                    _txDumpSE [_TX_BUFSIZE]     = "";      // SEH dump data area
+char                    _txTraceSE[_TX_HUGEBUFSIZE] = "";      // Stack trace data area
+jmp_buf                 _txDumpExceptionObjJmp      = {0};     // Hook for _txDumpExceptionObj
+LPTOP_LEVEL_EXCEPTION_FILTER _txPrevUEFilter        = NULL;    // Previous UnhandledExceptionFilter
 
 PROC           volatile _txForceImportThese[]       = { (PROC) ::TerminateProcess, (PROC) ::ExitProcess, (PROC) ::exit };
 
@@ -6151,10 +6201,10 @@ $   if (centered) { size.cx *= -1; size.cy *= -1; }
 
     #if !( defined (_MSC_VER) && (_MSC_VER < 1400) && !defined (_MT) )
 $   unsigned id = 0;
-$   _txCanvas_Thread = (HANDLE) _beginthreadex (NULL, 0,                        _txCanvas_ThreadProc, &size, 0, &id);
+$   _txCanvas_Thread = (HANDLE) _beginthreadex (NULL, 0,                         _txCanvas_ThreadProc, &size, 0, &id);
     #else
 $   DWORD    id = 0;
-$   _txCanvas_Thread =           CreateThread  (NULL, 0, (PTHREAD_START_ROUTINE)_txCanvas_ThreadProc, &size, 0, &id);
+$   _txCanvas_Thread =           CreateThread  (NULL, 0, (LPTHREAD_START_ROUTINE)_txCanvas_ThreadProc, &size, 0, &id);
     #endif
 
 $   if (!_txCanvas_Thread) return TX_DEBUG_ERROR ("\a" "Cannot start canvas thread."), (HWND)NULL;
@@ -6527,7 +6577,7 @@ $   info = _txFindProcess (info->th32ParentProcessID);
 $   if (!info) return false;
 
 $   char parent [MAX_PATH] = "";
-$   strncpy_s (parent, info->szExeFile, sizeof (parent) - 1);
+$   strncpy_s (parent, sizeof (parent), info->szExeFile, sizeof (parent) - 1);
 $   if (parentPID) *parentPID = info->th32ProcessID;
 
 $   info = _txFindProcess (info->th32ParentProcessID);          // info: grandparent
@@ -7484,7 +7534,7 @@ $       if (!Win32::GetCurrentConsoleFontEx (out, false, &info)) return false;
 
 $       info.FontFamily = 0x36;                                                    // Unicode fixed-pitch
 $       if (!*info.FaceName) info.dwFontSize.Y = (SHORT) (info.dwFontSize.Y + 2);  // Terminal font is too small
-$       wcsncpy_s (info.FaceName, L"Lucida Console", SIZEARR (info.FaceName));
+$       wcsncpy_s (info.FaceName, SIZEARR (info.FaceName), L"Lucida Console", SIZEARR (info.FaceName));
 
 $       return !!Win32::SetCurrentConsoleFontEx (out, false, &info);
         }
@@ -7506,7 +7556,7 @@ $       size_t sz = 0;
 
 $       char link [MAX_PATH] = "";
 $       getenv_s (&sz, link, sizeof (link) - 1, "TEMP");
-$       strncat_s (link, "\\~txLink.lnk", sizeof (link) - 1);
+$       strncat_s (link, sizeof (link), "\\~txLink.lnk", sizeof (link) - 1);
 
 $       char comspec [MAX_PATH] = "";
 $       getenv_s (&sz, comspec, sizeof (comspec), "COMSPEC");
@@ -8096,7 +8146,7 @@ long _txOnExceptionSEH (EXCEPTION_POINTERS* exc, const char func[])
         exc->ExceptionRecord->ExceptionCode == EXCEPTION_THREAD_NAME         ||
         exc->ExceptionRecord->ExceptionCode == EXCEPTION_BREAKPOINT && IsDebuggerPresent())
         return EXCEPTION_CONTINUE_SEARCH;
-        
+
     if (((unsigned long long*) _txDumpExceptionObjJmp) [0]) longjmp (_txDumpExceptionObjJmp, 1);
 
     _txLoc loc = _txCurLoc;
@@ -8107,10 +8157,10 @@ $   if (primaryException)
         {
 $       unsigned err = GetLastError();
 
-        _txStackWalk (exc); // !!!
+$       _txDumpExceptionSEH    (_txDumpSE,  (ptrdiff_t) sizeof (_txDumpSE)  - 1, exc->ExceptionRecord, func);
 
-$       _txDumpExceptionSEH (_txDumpSE,  (ptrdiff_t) sizeof (_txDumpSE)  - 1, exc->ExceptionRecord, func);
-$       _tx_snprintf_s      (_txTraceSE, (ptrdiff_t) sizeof (_txTraceSE) - 1, "%s", _txCaptureStackBackTrace (0));
+$       if (exc->ExceptionRecord && exc->ExceptionRecord->ExceptionCode != EXCEPTION_STACK_OVERFLOW)
+            { $ _tx_snprintf_s (_txTraceSE, (ptrdiff_t) sizeof (_txTraceSE) - 1, "%s", _txStackWalk (0, true, exc->ContextRecord)); }
 
 $       SetLastError (err);
         }
@@ -8120,7 +8170,7 @@ $   if (_txDumpSE[0] == '\a')
 $       _txCurLoc = loc;
 
         _txError (NULL, 0, NULL, 0,
-                  "\a" "%s"
+                  "\a\t" "%s"
                   "С помощью функции _set_se_translator() вы можете сами обработать эту ошибку.",
                   _txDumpSE + 1);
         }
@@ -8561,7 +8611,7 @@ $   return s - what;
 
 // Stack WALKING if the program is DEAD. Dead, Carl!
 
-const char* _txCaptureStackBackTrace (int framesToSkip /*= 0*/, bool readSource /*= true*/)
+const char* _txStackWalk (int framesToSkip /*= 0*/, bool readSource /*= true*/, CONTEXT* context /*= NULL*/)
     {
     const int maxFrames = 62;  // MS says: < 63
     static char trace [(MAX_PATH + 1024+1) * maxFrames] = "";
@@ -8569,44 +8619,42 @@ const char* _txCaptureStackBackTrace (int framesToSkip /*= 0*/, bool readSource 
     if (framesToSkip == -1) return trace;
 
     static void* capture [maxFrames] = {};
-    int frames = Win32::RtlCaptureStackBackTrace (framesToSkip + 1, SIZEARR (capture), capture, NULL);
-
+    int frames = _txCaptureStackBackTrace (framesToSkip + 1, SIZEARR (capture), capture, NULL, context);
+    
     memset (trace, 0, sizeof (trace));
     char* s = trace;
 
     #define PRINT_(msg)  s += _tx_snprintf_s (s, sizeof (trace) - 1 - 3 - (s-trace), msg)
 
-    for (int i = 0; i < frames; i++)
+    for (int i = 0, n = 0; i < frames; i++)
         {
         void* addr = capture[i];
-
-        if (addr) (char*&) addr -= 1 + sizeof (DWORD);  // sizeof (CALL instruction)
 
         Win32::SYMBOL_INFO*     sym    = NULL;
         Win32::IMAGEHLP_LINE64* line   = NULL;
         const char*             module = NULL;
         const char*             source = NULL;
+        bool                    inTX   = false;
 
-        if (addr) _txSymGetFromAddr (addr, &sym, &line, &module);
+        if (addr) inTX = _txSymGetFromAddr ((char*) addr - (i == 0), &sym, &line, &module);
 
-        if (!(sym && sym->Name &&
-             (strstr  (sym->Name, "::TX::")                                || 
-              strncmp (sym->Name, "_tx", 3) == 0 && isupper (sym->Name[3]) ||
-              strncmp (sym->Name,  "tx", 2) == 0 && isupper (sym->Name[2]))))
-            {
-            _txSymGetFromAddr ((void*)1, NULL, NULL, NULL, (readSource? &source : NULL), 2);
-            }
+        if (readSource && !inTX) _txSymGetFromAddr ((void*) 1, NULL, NULL, NULL, &source, 2);
 
         while (s > trace && s[-1] == '\n') s--;
 
-        PRINT_ ("%s#%2d 0x%p in " _ (i? source? "\n\n" : "\n" : "")_ i _ addr);
+        int nl = 0;
+        while (s > trace && s[-1] == '\n') { s--; nl++; }
 
-        if (module)                      PRINT_ ("%s" _         module);
-        if (module && sym && *sym->Name) PRINT_ ("!");
-        if (sym && *sym->Name)           PRINT_ ("%s" _         sym->Name);
-        if (line && line->FileName)      PRINT_ (" at %s" _     line->FileName);
-        if (line && line->LineNumber)    PRINT_ (" (%u)" _      line->LineNumber);
-        if (source)                      PRINT_ (":\n\n" "%s" _ source);
+        PRINT_ ("%s#%2d 0x%p" _ ((n)? (source || nl? "\n\n" : "\n") : "")_ n _ addr);
+        n++;
+
+        if (addr == (void*) 0xBAADF00D) { PRINT_ (" [Неинициализированная память от LocalAlloc()]"); break; }
+
+        if (module)                   PRINT_ (" in %s%s" _     module _ ((sym && *sym->Name)? "!" : ""));
+        if (sym  && *sym->Name)       PRINT_ ("%s" _           sym->Name);
+        if (line && line->FileName)   PRINT_ (" at %s" _       line->FileName);
+        if (line && line->LineNumber) PRINT_ (" (%u)" _        line->LineNumber);
+        if (source)                   PRINT_ (":\n\n" "%s\n" _ source);
 
         if (sym && sym->Name && strcmp (sym->Name , "main") == 0) break;
         }
@@ -8632,109 +8680,88 @@ const char* _txCaptureStackBackTrace (int framesToSkip /*= 0*/, bool readSource 
 // Note that Rick and Carl are speaking near the C language block. "C block", Carl. See: http://knowyourmeme.com/memes/carl
 
 //-----------------------------------------------------------------------------------------------------------------
-//!!!
 
-bool _txStackWalk (const EXCEPTION_POINTERS* info, int framesToSkip /*= 0*/, bool readSource /*= true*/)
+int _txCaptureStackBackTrace (int framesToSkip, size_t szCapture, void* capture[], unsigned long* backTraceHash,
+                              CONTEXT* context /*= NULL*/, HANDLE thread /* = GetCurrentThread()*/)
     {
-    assert (info);
-    assert (info->ExceptionRecord);
-    assert (info->ContextRecord);
-    
-    if (info->ExceptionRecord->ExceptionCode == EXCEPTION_STACK_OVERFLOW) return false;
-
-    CONTEXT* ctx = info->ContextRecord;
-    
-    const int maxFrames = 62;
-    static char trace [(MAX_PATH + 1024+1) * maxFrames] = "";
-
-    if (framesToSkip == -1) return trace;
-
-    memset (trace, 0, sizeof (trace));
-    char* s = trace;
-
-    #define PRINT_(msg)  s += _tx_snprintf_s (s, sizeof (trace) - 1 - 3 - (s-trace), msg)
-
-    #if   defined (_M_X32)
-        unsigned cpu = IMAGE_FILE_MACHINE_I386;
-        Win32::STACKFRAME64 frame = {{ctx->Eip, 0, Win32::AddrModeFlat}, {}, {ctx->Ebp, 0, Win32::AddrModeFlat}, {ctx->Esp, 0, Win32::AddrModeFlat}};
-    #elif defined (_M_X64)
-        unsigned cpu = IMAGE_FILE_MACHINE_AMD64;
-        Win32::STACKFRAME64 frame = {{ctx->Rip, 0, Win32::AddrModeFlat}, {}, {ctx->Rbp, 0, Win32::AddrModeFlat}, {ctx->Rsp, 0, Win32::AddrModeFlat}};
-    #endif
-
     namespace MinGW = Win32::MinGW;
 
-    MinGW::SymInitialize (GetCurrentProcess(), 0, true);
+    assert (capture);
+    
+    if (!context)
+        return Win32::RtlCaptureStackBackTrace (framesToSkip + 1, szCapture, capture, backTraceHash);
 
-    printf ("\nСтек вызовов (текущий вызов сверху):\n");
+    HANDLE              process = GetCurrentProcess();
+    unsigned            cpu     = 0;
+    Win32::STACKFRAME64 frame   = {};
 
-    int i = 0;
-    while (MinGW::StackWalk64 (cpu, GetCurrentProcess(), GetCurrentThread(), &frame, ctx,
-                               NULL, MinGW::SymFunctionTableAccess64, MinGW::SymGetModuleBase64, NULL))
+    frame.AddrPC.Mode = frame.AddrStack.Mode = frame.AddrFrame.Mode = Win32::AddrModeFlat;
+
+    #if  (defined (_M_X32) || defined (_M_IX86)) && !defined (_M_X64) && !defined (_WIN64)
+
+    cpu = IMAGE_FILE_MACHINE_I386;
+
+    frame.AddrPC.Offset    = context->Eip;
+    frame.AddrStack.Offset = context->Esp;
+    frame.AddrFrame.Offset = context->Ebp;
+    
+    #elif (defined (_M_X64) || defined (_WIN64)) && !defined (_M_X32) && !defined (_M_IX86)
+    
+    cpu = IMAGE_FILE_MACHINE_AMD64;
+
+    frame.AddrPC.Offset    = context->Rip;
+    frame.AddrStack.Offset = context->Rsp;
+    frame.AddrFrame.Offset = context->Rbp;
+
+    #else
+
+    #ifdef __GNUC__
+    #error
+    #error --------------------------------------------------------------------------------------------------------
+    #endif
+    #error TXLib.h: CPU architecture is not properly defined (_M_X32/_M_IX86 or _M_X64/_WIN64).
+    #error --------------------------------------------------------------------------------------------------------
+    #error
+    
+    #endif
+        
+    _txSymGetFromAddr ((void*) 1);
+
+    int frames = 0;
+    for (frames = 0; frames < szCapture; frames++)
         {
+        DWORD64 prev = frame.AddrStack.Offset;
+
+        // Я злой и страшный серый walk. Я в поросятах знаю talk.
+
+        if ((MinGW::StackWalk64)? !MinGW::StackWalk64 (cpu, process, thread, &frame, context,
+                                                       NULL, MinGW::SymFunctionTableAccess64, MinGW::SymGetModuleBase64, NULL) :
+
+            (Win32::StackWalk64)? !Win32::StackWalk64 (cpu, process, thread, &frame, context,
+                                                       NULL, Win32::SymFunctionTableAccess64, Win32::SymGetModuleBase64, NULL) :
+            true)
+            {
+            break;
+            }
+            
         void* addr = (void*) frame.AddrPC.Offset;
 
-        if (addr) (char*&) addr -= 1 + sizeof (DWORD);  // sizeof (CALL instruction)
+        if (frame.AddrFrame.Offset == 0)   addr = 0;
+        if (frame.AddrStack.Offset < prev) addr = (void*) -1;
 
-        Win32::SYMBOL_INFO*     sym    = NULL;
-        Win32::IMAGEHLP_LINE64* line   = NULL;
-        const char*             module = NULL;
-        const char*             source = NULL;
+        if (frames < framesToSkip) continue;
 
-        if (addr) _txSymGetFromAddr (addr, &sym, &line, &module);
-
-        if (!(sym && sym->Name &&
-             (strstr  (sym->Name, "::TX::")                                || 
-              strncmp (sym->Name, "_tx", 3) == 0 && isupper (sym->Name[3]) ||
-              strncmp (sym->Name,  "tx", 2) == 0 && isupper (sym->Name[2]))))
-            {
-            _txSymGetFromAddr ((void*)1, NULL, NULL, NULL, (readSource? &source : NULL), 2);
-            }
-
-        while (s > trace && s[-1] == '\n') s--;
-
-        PRINT_ ("%s#%2d 0x%p in " _ (i? source? "\n\n" : "\n" : "")_ i++ _ addr);
-
-        if (module)                      PRINT_ ("%s" _         module);
-        if (module && sym && *sym->Name) PRINT_ ("!");
-        if (sym && *sym->Name)           PRINT_ ("%s" _         sym->Name);
-        if (line && line->FileName)      PRINT_ (" at %s" _     line->FileName);
-        if (line && line->LineNumber)    PRINT_ (" (%u)" _      line->LineNumber);
-        if (source)                      PRINT_ (":\n\n" "%s" _ source);
-
-        if (sym && sym->Name && strcmp (sym->Name , "main") == 0) break;
+        capture [frames - framesToSkip] = (void*) frame.AddrPC.Offset;
         }
-        
-    MinGW::SymCleanup (GetCurrentProcess());
 
-    #ifdef _MSC_VER
-    #pragma warning (disable: 28199)  // Using possibly uninitialized memory '*s'
-    #endif
-
-    while (s > trace && s[-1] == '\n') s--;
-    *s = 0;
-
-    #ifdef _MSC_VER
-    #pragma warning (default: 28199)  // Using possibly uninitialized memory '*s'
-    #endif
-
-    #undef PRINT_
-
-    s += _tx_snprintf_s (s, sizeof (trace) - 1 - (s-trace), "");
-
-    printf ("{"
-            "%s\n"
-            "}\n", trace);
-
-    return true;
+    return frames - framesToSkip;
     }
 
-//!!!
 //-----------------------------------------------------------------------------------------------------------------
 
-unsigned _txSymGetFromAddr (void* addr /*= NULL*/, Win32::SYMBOL_INFO** symbol /*= NULL*/,
-                            Win32::IMAGEHLP_LINE64** line /*= NULL*/, const char** module /*= NULL*/,
-                            const char** source /*= NULL*/, int context /*= 2*/)
+bool _txSymGetFromAddr (void* addr, Win32::SYMBOL_INFO** symbol /*= NULL*/,
+                        Win32::IMAGEHLP_LINE64** line /*= NULL*/, const char** module /*= NULL*/,
+                        const char** source /*= NULL*/, int context /*= 2*/)
     {
     namespace MinGW = Win32::MinGW;
 
@@ -8754,7 +8781,7 @@ unsigned _txSymGetFromAddr (void* addr /*= NULL*/, Win32::SYMBOL_INFO** symbol /
                         SYMOPT_DEFERRED_LOADS | SYMOPT_FAVOR_COMPRESSED | SYMOPT_FAIL_CRITICAL_ERRORS | SYMOPT_NO_PROMPTS;
         #ifdef _DEBUG
             options |= SYMOPT_DEBUG;
-            #define RES_(sym)       (strncat_s (res, #sym, sizeof (res) - 1), 1)
+            #define RES_(sym)       (strncat_s (res, sizeof (res) - 1, #sym, sizeof (res) - 1), 1)
             #define DBG_(msg, ...)  txOutputDebugPrintf ("DBGTXLP: " __TX_FILELINE__ " _txSymGetFromAddr(): err = 0x%03lX, " msg "\n", \
                                                         (DWORD) GetLastError(), ##__VA_ARGS__)
         #else
@@ -8771,6 +8798,8 @@ unsigned _txSymGetFromAddr (void* addr /*= NULL*/, Win32::SYMBOL_INFO** symbol /
         (CALL_(Win32::SymInitialize, (process, NULL, true)) && RES_(I)) || DBG_ ("Win32::SymInitialize() failed");
         }
 
+    static DWORD64 mod = 0;
+
     if (module)
         {
         static char sMod [MAX_PATH] = "";
@@ -8778,8 +8807,7 @@ unsigned _txSymGetFromAddr (void* addr /*= NULL*/, Win32::SYMBOL_INFO** symbol /
 
         SetLastError (0);
 
-        DWORD64 mod = 0;
-                    mod = CALL_(MinGW::SymGetModuleBase64, (process, (uintptr_t) addr)); if (mod) (void) RES_(m);
+        mod = 0;    mod = CALL_(MinGW::SymGetModuleBase64, (process, (uintptr_t) addr)); if (mod) (void) RES_(m);
         if (!mod) { mod = CALL_(Win32::SymGetModuleBase64, (process, (uintptr_t) addr)); if (mod) (void) RES_(M); }
         if (!mod) DBG_ ("SymGetModuleBase64() failed");
 
@@ -8792,12 +8820,12 @@ unsigned _txSymGetFromAddr (void* addr /*= NULL*/, Win32::SYMBOL_INFO** symbol /
         }
 
     static char buffer [_TX_BUFSIZE] = "";
+    static Win32::SYMBOL_INFO* sym = (Win32::SYMBOL_INFO*) buffer;
 
     if (symbol)
         {
         memset (buffer, 0, sizeof (buffer));
 
-        static Win32::SYMBOL_INFO* sym = (Win32::SYMBOL_INFO*) buffer;
         sym->MaxNameLen   = sizeof (buffer) - sizeof (Win32::SYMBOL_INFO) - 1;
         sym->SizeOfStruct = sizeof (Win32::SYMBOL_INFO);
         unsigned long long ofs = 0;
@@ -8807,6 +8835,10 @@ unsigned _txSymGetFromAddr (void* addr /*= NULL*/, Win32::SYMBOL_INFO** symbol /
         (CALL_(Win32::SymFromAddr, (process, (uintptr_t) addr, &ofs, sym)) && RES_(Y)) ||
             DBG_ ("SymFromAddr (0x%p) failed", addr);
 
+        if (strcmp (sym->Name, "??") == 0) *sym->Name = 0;
+
+        if (!*sym->Name && mod) _tx_snprintf_s (sym->Name, sym->MaxNameLen, "0x%p", (char*) addr - mod);
+        
         *symbol = sym;
         }
 
@@ -8858,7 +8890,24 @@ unsigned _txSymGetFromAddr (void* addr /*= NULL*/, Win32::SYMBOL_INFO** symbol /
     #undef CALL_
     #undef DBG_
 
-    return 0;
+    if (symbol)
+        {
+        if (strstr  (sym->Name, "::TX::")                                                 || 
+            strncmp (sym->Name, "_tx",  3) == 0 && isupper ((unsigned char) sym->Name[3]) ||
+            strncmp (sym->Name,  "tx",  2) == 0 && isupper ((unsigned char) sym->Name[2]) ||
+            strncmp (sym->Name, "_tx_", 4) == 0                                           ||
+            strncmp (sym->Name,  "tx_", 3) == 0)
+            return true;
+
+        if (!line || !line64.FileName) return false;
+
+        ptrdiff_t len = strlen (line64.FileName) - (sizeof (__FILE__) - 1);
+
+        return (len >= 0 && _stricmp (line64.FileName + len, __FILE__) == 0) &&
+               (len == 0 || line64.FileName[len-1] == '/' || line64.FileName[len-1] == '\\');
+        }
+
+    return false;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -8953,11 +9002,13 @@ const char* _txReportError (const char file[], int line, const char func[], unsi
     int            crterr   = errno;
     unsigned long  doserr   = _doserrno;
     unsigned       threadId = GetCurrentThreadId();
-    const char*    stkTrace = _txCaptureStackBackTrace (1, true);
 
     bool isFatal  = (msg && *msg == '\a')? (msg++, true) : false;
+    bool traceSE  = (msg && *msg == '\t')? (msg++, true) : false;
     bool noMsgBox = (msg && *msg == '\b')? (msg++, true) : false;
     bool fmtOnly  = (msg && *msg == '\f')? (msg++, true) : false;
+
+    const char* stkTrace = (traceSE? _txTraceSE : _txStackWalk (1, true));
 
     static char what[_TX_BIGBUFSIZE*10] = "";
     static char str [_TX_BIGBUFSIZE]    = "";
@@ -8991,8 +9042,8 @@ const char* _txReportError (const char file[], int line, const char func[], unsi
                 s -=  (s[-1] == '.')? 1 : 0,
                 PRINT_ (")");
 
-    if (crterr) PRINT_ (", errno: %d (%s)" _      crterr _ (strerror_s (str, crterr), str));
-    if (doserr) PRINT_ (", _doserrno: %lu (%s)" _ doserr _ (strerror_s (str, doserr), str));
+    if (crterr) PRINT_ (", errno: %d (%s)" _      crterr _ (strerror_s (str, sizeof (str), crterr), str));
+    if (doserr) PRINT_ (", _doserrno: %lu (%s)" _ doserr _ (strerror_s (str, sizeof (str), doserr), str));
                 PRINT_ (". %s\n" _ ::std::uncaught_exception()? "std::uncaught_exception(): true." : "");
 
     if (_txCurLoc.inTX > 0 && !(_txCurLoc.line == line && file && _stricmp (_txCurLoc.file, file) == 0))
@@ -9154,18 +9205,18 @@ ptrdiff_t _tx_snprintf_s (char stream[], ptrdiff_t size, const char format[], ..
 
 ptrdiff_t _tx_vsnprintf_s (char stream[], ptrdiff_t size, const char format[], va_list arg)
     {
-    ptrdiff_t ret = _vsnprintf_s (stream, size _TX_TRUNCATE, format, arg);
+    #if defined (_TRUNCATE)
+    ptrdiff_t ret = _vsnprintf_s (stream, size, _TRUNCATE, format, arg);
+    #else
+    ptrdiff_t ret = _vsnprintf   (stream, size,            format, arg);
+    #endif
 
     if (ret < 0 && size >= 4)
         {
         const char ellipsis[] = "...";
         size_t     szEllipsis = sizeof (ellipsis) - 1;
 
-        #if defined (_MSC_VER) && (_MSC_VER >= 1400) || defined (__STDC_LIB_EXT1__)
         strncpy_s (stream + size - szEllipsis, szEllipsis+1, ellipsis, szEllipsis);
-        #else
-        strncpy   (stream + size - szEllipsis,               ellipsis, szEllipsis);
-        #endif
         }
 
     return (ret >= 0)? ret : size;
@@ -9206,8 +9257,8 @@ $   nid.uFlags = NIF_ICON | NIF_TIP | NIF_INFO;
 $   nid.hWnd   = NULL;
 $   nid.uID    = 1;
 $   nid.hIcon  = _txCreateTXIcon (16); assert (nid.hIcon);
-$   strncpy_s       (nid.szTip, "TXLib Information", sizeof (nid.szTip));
-$   strncpy_s       (nid.szInfoTitle, (title? title : "TXLib сообщает"), sizeof (nid.szInfoTitle) - 1);
+$   strncpy_s       (nid.szTip,       sizeof (nid.szTip),       "TXLib Information", sizeof (nid.szTip));
+$   strncpy_s       (nid.szInfoTitle, sizeof (nid.szInfoTitle), (title? title : "TXLib сообщает"), sizeof (nid.szInfoTitle) - 1);
 $   _tx_vsnprintf_s (nid.szInfo, sizeof (nid.szInfo), format, arg);
 $   nid.dwInfoFlags = flags;
 
@@ -9248,7 +9299,7 @@ const char* txGetModuleFileName (bool fileNameOnly /*= true*/)
 
     if (!*name)
         {
-        GetModuleFileName (NULL, name, sizeof (name) - 1) || strcpy_s (name, "");
+        if (!GetModuleFileName (NULL, name, sizeof (name) - 1)) *name = 0;
 
         char* ext = strrchr (name, '.');
         if (ext) _strlwr_s (ext, sizeof (name) - 1 - (ext - name));
@@ -9259,18 +9310,13 @@ const char* txGetModuleFileName (bool fileNameOnly /*= true*/)
     if (fileNameOnly) return name;
 
     static char fullName[MAX_PATH] = "";
-    strncpy_s (fullName, name, sizeof (fullName) - 1);
+    strncpy_s (fullName, sizeof (fullName), name, sizeof (fullName) - 1);
 
     char* title = strrchr (fullName, '\\'); if (!title) title = fullName;
     char* ext   = strrchr (fullName,  '.'); if (!ext)   ext   = fullName + strlen (fullName);
 
     size_t sz = sizeof (fullName) - (ext - fullName) - 1;
-
-    #if defined (_CRT_SECURE_CPP_OVERLOAD_SECURE_NAMES) && _CRT_SECURE_CPP_OVERLOAD_SECURE_NAMES
     strncpy_s (ext, sz, " - TXLib", sz);
-    #else
-    strncpy   (ext,     " - TXLib", sz);
-    #endif
 
     return title + 1;
     }
@@ -9736,7 +9782,7 @@ $1  _TX_IF_ARGUMENT_FAILED (name) return NULL;
 
 $   static LOGFONT font = {0};
 $   font.lfCharSet = DEFAULT_CHARSET;
-$   strncpy_s (font.lfFaceName, name, sizeof (font.lfFaceName) - 1);
+$   strncpy_s (font.lfFaceName, sizeof (font.lfFaceName), name, sizeof (font.lfFaceName) - 1);
 
 $   struct tools
         {
@@ -10363,7 +10409,7 @@ $   printf ("\n" "--------------------------------------------------\n"
                  "Трассировка стека из %s (%d) %s:\n\n"
                  "%s\n\n"
                  "--------------------------------------------------\n\n",
-                 file, line, func, _txCaptureStackBackTrace (1, readSource));
+                 file, line, func, _txStackWalk (1, readSource));
 
 $   txSetConsoleAttr (attr);
     }
