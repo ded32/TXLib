@@ -6,9 +6,9 @@
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 116 $
+//!          $Version: 00173a, Revision: 117 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2016-11-10 15:50:27 +0400 $
+//!          $Date: 2016-11-23 03:55:09 +0400 $
 //!
 //!          TX Library - компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -25,17 +25,22 @@
 //!          См. также <a href=http://sourceforge.net/p/txlib>страницу проекта на SourceForge.</a>
 //!          Короткая ссылка на онлайн-документацию: <a href=http://gg.gg/TXLib>gg.gg/TXLib.</a>
 //!
-//! @par     Установка библиотеки:
-//!       -# <a href=https://sourceforge.net/projects/txlib/files/latest/download>Скачайте</a> программу
-//!          установки, загрузка по ссылке начнется автоматически. Ее имя имеет вид TXLib-v0173a.rar.exe.
-//!          Цифры могут отличаться (это номер версии), расширение @c .exe может не отображаться, в зависимости
-//!          от текущих настроек Windows.
-//!       -# Запустите скачанную программу установки. Программа установки - это саморазархивирующийся архив,
-//!          она не требует особых прав для запуска.
+//! @note    Библиотека TXLib состоит из единственного файла и не требует никаких настроек в среде
+//!          программирования, чтобы облегчить ее установку и работу для начинающих.
+//!
+//! @par     Установка библиотеки
+//!
+//!       -# <a href=https://sourceforge.net/projects/txlib/files/latest/download>Скачайте</a>
+//!          программу установки, загрузка по ссылке начнется автоматически. Ее имя имеет вид
+//!          <tt>TXLib-v0173a.rar.exe.</tt> Цифры могут отличаться (это номер версии), расширение
+//!          @c .exe может не отображаться, в зависимости от текущих настроек Windows.
+//!       -# Запустите скачанную программу установки. Программа установки - это саморазархивирующийся
+//!          архив, она не требует особых прав для запуска.
 //!       -# На рабочем столе появится "Ярлык для TX". Откройте его и запустите систему помощи <tt>TXLib Help,</tt>
 //!          изучите ее. Простейший пример см. <http://storage.ded32.net.ru/Lib/TX/TXUpdate/Doc/HTML.ru/a00001.htm>
 //!          здесь.</a> Другие примеры см. <a href=http://storage.ded32.net.ru/Lib/TX/TXUpdate/Doc/HTML.ru/dirs.htm>
 //!          в папке Examples,</a> в папке Examples/Demo.
+//!
 //!       -  Если при установке происходят ошибки или запуск программы установки невозможен, скачайте
 //!          файл библиотеки @c \TXLib.h <a href=http://sf.net/projects/txlib/files/TXLib/TXLib.h/download>
 //!          отсюда (загрузка начнется автоматически)</a>, скопируйте его в свою рабочую папку
@@ -44,12 +49,43 @@
 //!          или пользуйтесь <a href=http://storage.ded32.net.ru/Lib/TX/TXUpdate/Doc/HTML.ru/index.htm>
 //!          системой помощи онлайн.</a>
 //!
-//! @note    Библиотека состоит из единственного файла и не требует никаких настроек в среде программирования,
-//!          чтобы облегчить ее установку и работу для начинающих.
+//!       -# Для наиболее полной обработки ошибок библиотеке требуются модули, которые желательно установить
+//!          (скопировать) в папку Windows. Устанавливать эти библиотеки не обязательно. Программы, использующие
+//!          TXLib, будут запускаться и без них.
+//!
+//!          -# Модули библиотеки Microsoft DBGHELP для доступа к отладочным символам Microsoft:
+//!
+//!             - @c dbghelp32.dll для 32-разрядных программ (либо @c dbghelp.dll, 32-разрядная версия),
+//!             - @c dbghelp64.dll для 64-разрядных программ (либо @c dbghelp.dll, 64-разрядная версия),
+//!             - @c symsrv32.dll  для 32-разрядных программ (либо @c symsrv.dll,  32-разрядная версия),
+//!             - @c symsrv64.dll  для 64-разрядных программ (либо @c symsrv.dll,  64-разрядная версия),
+//!             - @c symsrv.yes.
+//!
+//!          -# Модули библиотеки <a href=https://github.com/jrfonseca/drmingw/releases>DrMinGW</a> для доступа
+//!             к отладочным символам MinGW компилятора GCC @c g++:
+//!
+//!             - @c mgwhelp32.dll для 32-разрядных программ (либо @c mgwhelp.dll, 32-разрядная версия),
+//!             - @c mgwhelp64.dll для 64-разрядных программ (либо @c mgwhelp.dll, 64-разрядная версия).
+//!
+//!          Суффиксы @c 32 и @c 64 помогают отличить 32-разрядную и 64-разрядную версии DLL-файлов библиотек.
+//!          Например, @c dbghelp32.dll - это просто переименованная 32-разрядная версия файла @c dbghelp.dll.
+//!
+//!          <b>Cамораспаковывающийся архив с этими библиотеками можно скачать
+//!          <a href=http://storage.ded32.net.ru/Lib/TX/TXLib-SupportDLLs.rar.exe>здесь.</a></b>
+//!
+//!          Для наиболее полной диагностики ошибок полностью отключайте оптимизацию при компиляции. Например,
+//!          для компилятора GCC @c g++ - с помощью ключа командной строки @c -O0. Разные среды программирования
+//!          позволяют задать эти ключи по-разному, например, в CodeBlocks через Главное меню - Settings -
+//!          Compiler - (Global Compiler Settings) - (Compiler Settings) - Other Options.
+//!
+//! @note    Кодовая страница в редакторе среды разработки должна быть установлена как Windows CP1251, проверьте
+//!          это. В разных средах разработки она устанавливается по-разному, например, в CodeBlocks через
+//!          Главное меню - Settings - Editor - (General Settings) - Other Settings - Encoding. Иначе русские
+//!          буквы в сообщениях TXLib будут отображаться неправильно.
 //!
 //! @warning <b>Это альфа-версия. Для использования библиотеки требуется согласование с ее автором.</b> @nn
-//!          Правила использования материалов библиотеки и сайта см. на <a href=http://txlib.ru>официальном сайте
-//!          TXLib.</a>
+//!          Правила использования материалов библиотеки и сайта см. на <a href=http://txlib.ru>официальном
+//!          сайте TXLib.</a>
 //!
 //! @par     Баг-трекер на SourceForge:
 //!        - <a href=http://sourceforge.net/p/txlib/bugs/new><b>Сообщить об ошибке</b></a>
@@ -95,8 +131,8 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VERSION           _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 116, 2016-11-10 15:50:27 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR            _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 116, 2016-11-10 15:50:27 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 117, 2016-11-23 03:55:09 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 117, 2016-11-23 03:55:09 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @}
 //{----------------------------------------------------------------------------------------------------------------
@@ -118,7 +154,7 @@
 //! @hideinitializer
 //}----------------------------------------------------------------------------------------------------------------
 
-#define _TX_VER               _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 116, 2016-11-10 15:50:27 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 117, 2016-11-23 03:55:09 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //}
 //-----------------------------------------------------------------------------------------------------------------
@@ -185,7 +221,7 @@
 
 #endif
 
-#if  defined (__STRICT_ANSI__)                   // Try to extend strict ANSI rules
+#if  defined (__STRICT_ANSI__)                  // Try to extend strict ANSI rules
 
     #undef  __STRICT_ANSI__
     #define __STRICT_ANSI__UNDEFINED
@@ -208,7 +244,7 @@
 
 #if  defined (__GNUC__)
 
-    #define _GCC_VER                ( __GNUC__*100 + __GNUC_MINOR__*10 + __GNUC_PATCHLEVEL__ )
+    #define _GCC_VER                   ( __GNUC__*100 + __GNUC_MINOR__*10 + __GNUC_PATCHLEVEL__ )
 
     #if (_GCC_VER >= 420)
 
@@ -284,8 +320,6 @@
         #pragma GCC diagnostic push
         #endif
 
-        #pragma GCC optimize           "no-strict-aliasing"
-
         #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
         #pragma GCC diagnostic ignored "-Wredundant-decls"
         #pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
@@ -295,23 +329,25 @@
         #pragma GCC diagnostic ignored "-Wunused-value"
         #pragma GCC diagnostic ignored "-Wunused-label"    // Just for fun in _txCanvas_OnCmdAbout()
 
+        #pragma GCC optimize           "no-strict-aliasing"
+
     #endif
 
     #if (_GCC_VER >= 420)
-        #define _tx_thread          __thread
+        #define _tx_thread             __thread
     #else
         #define _tx_thread
     #endif
 
     #if (_GCC_VER >= 472)
-        #define _tx_explicit        explicit
-        #define _tx_override        override
+        #define _tx_explicit           explicit
+        #define _tx_override           override
 
-        #if !defined (_TX_TESTING)                         // This is not a fair play, but this pragma is the only way to clear the
-        #pragma GCC system_header                          // "override controls (override/final) only available with -std=c++11
-        #endif                                             // or -std=gnu++11" warning when -std=... command line option is not set.
+        #if !defined (_TX_TESTING)              // This is not a fair play, but this pragma is the only way to clear the
+        #pragma GCC system_header               // "override controls (override/final) only available with -std=c++11
+        #endif                                  // or -std=gnu++11" warning when -std=... command line option is not set.
 
-        #define _TX_DEPRECATED      __attribute__ (( deprecated ))
+        #define _TX_DEPRECATED         __attribute__ (( deprecated ))
 
     #else
         #define _tx_explicit
@@ -321,28 +357,28 @@
     #endif
 
     #ifndef MINGW_HAS_SECURE_API
-    #define MINGW_HAS_SECURE_API    1
+    #define MINGW_HAS_SECURE_API       1
     #endif
 
     #ifndef __USE_MINGW_ANSI_STDIO
-    #define __USE_MINGW_ANSI_STDIO  1
+    #define __USE_MINGW_ANSI_STDIO     1
     #endif
 
-    #define _TX_CHECK_FORMAT( arg ) __attribute__ (( format (printf, (arg), (arg)+1) ))
+    #define _TX_CHECK_FORMAT( arg )    __attribute__ (( format (printf, (arg), (arg)+1) ))
 
     template <typename T>
-    inline T _txNOP (T value)       { return value; }  // To suppress performance warnings in assert etc
+    inline T _txNOP (T value)          { return value; }      // To suppress performance warnings in assert etc.
 
     // From MinGW\include\float.h which is replaced by MinGW\lib\gcc\i686-pc-mingw32\x.x.x\include\float.h
-    extern "C" __declspec (dllimport) unsigned int __cdecl _controlfp (unsigned int unNew, unsigned int unMask);
-    extern "C"                        void         __cdecl _fpreset   (void);
+    extern "C" __declspec (dllimport)  unsigned int __cdecl _controlfp (unsigned int unNew, unsigned int unMask);
+    extern "C"                         void         __cdecl _fpreset   (void);
 
 #else
 
     #define _TX_CHECK_FORMAT( arg )
     #define _TX_DEPRECATED
 
-    #define _txNOP( value )         ( value )
+    #define _txNOP( value )            ( value )
 
 #endif
 
@@ -366,14 +402,11 @@
     #pragma warning (disable: 4127)             // conditional expression is constant
     #pragma warning (disable: 4200)             // nonstandard extension used: zero-sized array in struct/union
     #pragma warning (disable: 4351)             // new behavior: elements of array will be default initialized
-
     #pragma warning (disable: 4611)             // interaction between '_setjmp' and C++ object destruction is non-portable
     #pragma warning (disable: 4702)             // unreachable code
-
-
     #pragma warning (disable: 4481)             // nonstandard extension used: override specifier 'override'
 
-    #define _tx_thread              __declspec (thread)
+    #define _tx_thread                 __declspec (thread)
 
     #if  (_MSC_VER == 1200)                     // MSVC 6 (1998)
 
@@ -387,14 +420,14 @@
         #pragma warning (disable: 4786)         // identifier was truncated to '255' characters in the debug information
 
         #if !defined (WINVER)
-            #define   WINVER        0x0400      // MSVC 6: Defaults to Windows 95
+            #define   WINVER           0x0400   // MSVC 6: Defaults to Windows 95
         #endif
 
         #if !defined (NDEBUG)
             #define _CRTDBG_MAP_ALLOC 1         // Set debug mode heap allocation
         #endif
 
-        #define AC_SRC_ALPHA        0x01        // Copied from Windows SDK 7.0a.
+        #define AC_SRC_ALPHA           0x01     // Copied from Windows SDK 7.0a.
 
     #endif
 
@@ -404,17 +437,17 @@
         #pragma warning (disable: 28125)        // the function must be called from within a try/except block
         #pragma warning (disable: 28159)        // consider using another function instead
 
-        #pragma setlocale           ("russian") // Set source file encoding, see also _TX_CP
+        #pragma setlocale              ("russian")  // Set source file encoding, see also _TX_CP
 
         #if !defined (NDEBUG)
-            #pragma check_stack     (      on)  // Turn on stack probes at runtime
-            #pragma strict_gs_check (push, on)  // Detects stack buffer overruns
+            #pragma check_stack        (      on)   // Turn on stack probes at runtime
+            #pragma strict_gs_check    (push, on)   // Detects stack buffer overruns
         #endif
 
-        #define _CRT_SECURE_CPP_OVERLOAD_SECURE_NAMES 1
+        #define _CRT_SECURE_CPP_OVERLOAD_SECURE_NAMES  1
 
-        #define _tx_explicit        explicit
-        #define _tx_override        override
+        #define _tx_explicit           explicit
+        #define _tx_override           override
 
     #else
 
@@ -437,25 +470,27 @@
 #endif
 
 #if !defined (WINVER)
-    #define   WINVER                0x0500      // Defaults to Windows 2000
+    #define   WINVER                   0x0500   // Defaults to Windows 2000
     #define   WINDOWS_ENABLE_CPLUSPLUS          // Allow use of type-limit macros in <basetsd.h>,
 #endif                                          //   they are allowed by default if WINVER >= 0x0600.
 
 #if !defined (_WIN32_WINNT)
-    #define   _WIN32_WINNT          WINVER      // Defaults to the same as WINVER
+    #define   _WIN32_WINNT             WINVER   // Defaults to the same as WINVER
 #endif
 
 #if !defined (_WIN32_IE)
-    #define   _WIN32_IE             WINVER      // Defaults to the same as WINVER
+    #define   _WIN32_IE                WINVER   // Defaults to the same as WINVER
 #endif
 
-#define _USE_MATH_DEFINES           1           // math.h's M_PI etc.
-#define __STDC_WANT_LIB_EXT1__      1           // string and output *_s functions
-#define _SECURE_SCL                 1           // To enable checked STL iterators to throw an exception on incorrect use
+#define _USE_MATH_DEFINES              1        // math.h's M_PI etc.
+#define __STDC_WANT_LIB_EXT1__         1        // string and output *_s functions
+#define _SECURE_SCL                    1        // To enable checked STL iterators to throw an exception on incorrect use
 
 #if !( defined (_MSC_VER) && (1600 <= _MSC_VER && _MSC_VER <= 1899) )
-#define _SECURE_SCL_THROWS          1
+#define _SECURE_SCL_THROWS             1
 #endif
+
+#define stristr( str1, str2 )          Win32::StrStrIA ((char*) (str1), (str2))
 
 namespace std { enum nomeow_t { nomeow }; }     // Vital addition to the C++ standard. Should contact C++ std committee.
 
@@ -1252,7 +1287,7 @@ bool txClear (HDC dc = txDC (true));
 //! @ingroup Drawing
 //! @brief   Рисует пиксель (точку на экране).
 //!
-//! @param   x      Х-координата точки
+//! @param   x      X-координата точки
 //! @param   y      Y-координата точки
 //! @param   color  Цвет точки, см. txColors, RGB()
 //! @param   dc     Дескриптор контекста рисования (холста) для рисования
@@ -1274,7 +1309,7 @@ inline bool txSetPixel (double x, double y, COLORREF color, HDC dc = txDC (true)
 //! @ingroup Drawing
 //! @brief   Рисует пиксель (точку на экране).
 //!
-//! @param   x      Х-координата точки
+//! @param   x      X-координата точки
 //! @param   y      Y-координата точки
 //! @param   red    Количество красного цвета в интервале [0; 1]
 //! @param   green  Количество зеленого цвета в интервале [0; 1]
@@ -1296,7 +1331,7 @@ inline bool txPixel (double x, double y, double red, double green, double blue, 
 //! @ingroup Drawing
 //! @brief   Возвращает текущий цвет точки (пикселя) на экране.
 //!
-//! @param   x  Х-координата точки
+//! @param   x  X-координата точки
 //! @param   y  Y-координата точки
 //! @param   dc Дескриптор контекста рисования (холста) для возврата цвета
 //!
@@ -1358,7 +1393,7 @@ bool txLine (double x0, double y0, double x1, double y1, HDC dc = txDC (true));
 //! @usage @code
 //!          txRectangle (100, 200, 400, 500);
 //!
-//!          Win32::RoundRect (txDC(), 100, 200, 400, 500, 30, 30);  // И такое есть. См. RoundRect в MSDN.com
+//!          Win32::RoundRect (txDC(), 100, 200, 400, 500, 30, 30);  // И такое есть. Погуглите "RoundRect function".
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
@@ -1415,7 +1450,7 @@ bool txEllipse (double x0, double y0, double x1, double y1, HDC dc = txDC (true)
 //! @ingroup Drawing
 //! @brief   Рисует окружность или круг.
 //!
-//! @param   x  Х-координата центра
+//! @param   x  X-координата центра
 //! @param   y  Y-координата центра
 //! @param   r  Радиус
 //!
@@ -1515,7 +1550,7 @@ bool txChord (double x0, double y0, double x1, double y1, double startAngle, dou
 //! @ingroup Drawing
 //! @brief   Заливает произвольный контур текущим цветом заполнения.
 //!
-//! @param   x      Х-координата точки начала заливки
+//! @param   x      X-координата точки начала заливки
 //! @param   y      Y-координата точки начала заливки
 //! @param   color  Цвет заливаемой области (TX_TRANSPARENT - автоопределение)
 //! @param   mode   Режим заливки (FLOODFILLSURFACE - заливка однородного фона)
@@ -1549,11 +1584,11 @@ bool txFloodFill (double x, double y, COLORREF color = TX_TRANSPARENT, DWORD mod
 //! @ingroup Drawing
 //! @brief   Функция, которая должна бы рисовать треугольник.
 //!
-//! @param   x1     Х-координата 1 точки
+//! @param   x1     X-координата 1 точки
 //! @param   y1     Y-координата 1 точки
-//! @param   x2     Х-координата 2 точки
+//! @param   x2     X-координата 2 точки
 //! @param   y2     Y-координата 2 точки
-//! @param   x3     Х-координата 3 точки
+//! @param   x3     X-координата 3 точки
 //! @param   y3     Y-координата 3 точки
 //!
 //! @return  Если операция была бы успешна - true, иначе - false.
@@ -1601,7 +1636,7 @@ bool txNotifyIcon (unsigned flags, const char title[], const char format[], ...)
 //!
 //! Это пример функции, которую Вы могли бы написать и сами.
 //!
-//! @param   x      Х-координата человечка
+//! @param   x      X-координата человечка
 //! @param   y      Y-координата человечка
 //! @param   sizeX  Ширина человечка
 //! @param   sizeY  Высота человечка (также определяет размер головы)
@@ -1702,7 +1737,7 @@ void txDrawMan (int x, int y, int sizeX, int sizeY, COLORREF color, double handL
 //! @ingroup Drawing
 //! @brief   Рисует текст.
 //!
-//! @param   x     Х-координата начальной точки текста
+//! @param   x     X-координата начальной точки текста
 //! @param   y     Y-координата начальной точки текста
 //! @param   text  Текстовая строка
 //! @param   dc    Дескриптор контекста рисования (холста) для рисования
@@ -1791,7 +1826,7 @@ bool txDrawText (double x0, double y0, double x1, double y1, const char text[],
 //! @param   bold       Жирность шрифта (от 0 до 1000)
 //! @param   italic     Курсив
 //! @param   underline  Подчеркивание
-//! @param   strikeout  Зачеркивание
+//! @param   strikeout  Перечеркивание
 //! @param   angle      Угол поворота текста (в градусах)
 //! @param   dc         Дескриптор контекста рисования (холста) для выбора шрифта
 //!
@@ -2173,12 +2208,12 @@ bool txDeleteDC (HDC* dc);
 //! @brief   Копирует изображение с одного холста (контекста рисования, DC) на другой.
 //!
 //! @param   dest    Контекст назначения (куда копировать). Если NULL, то копирует в окно TXLib
-//! @param   xDest   Х-координата верхнего левого угла изображения-приемника
+//! @param   xDest   X-координата верхнего левого угла изображения-приемника
 //! @param   yDest   Y-координата верхнего левого угла изображения-приемника
 //! @param   width   Ширина копируемого изображения. Если <= 0, то автоматически берется из размера источника
 //! @param   height  Высота копируемого изображения. Если <= 0, то автоматически берется из размера источника
 //! @param   src     Контекст источника (откуда копировать)
-//! @param   xSrc    Х-координата верхнего левого угла изображения-источника
+//! @param   xSrc    X-координата верхнего левого угла изображения-источника
 //! @param   ySrc    Y-координата верхнего левого угла изображения-источника
 //! @param   rOp     Растровая операция копирования
 //!
@@ -2239,12 +2274,12 @@ inline bool txBitBlt (HDC dest, double xDest, double yDest, HDC src, double xSrc
 //! @brief   Копирует изображение с одного холста (контекста рисования, DC) на другой с учетом прозрачности.
 //!
 //! @param   dest        Контекст назначения (куда копировать). Если NULL, то копирует в окно TXLib
-//! @param   xDest       Х-координата верхнего левого угла изображения-приемника
+//! @param   xDest       X-координата верхнего левого угла изображения-приемника
 //! @param   yDest       Y-координата верхнего левого угла изображения-приемника
 //! @param   width       Ширина копируемого изображения. Если <= 0, то автоматически берется из размера источника
 //! @param   height      Высота копируемого изображения. Если <= 0, то автоматически берется из размера источника
 //! @param   src         Контекст источника (откуда копировать)
-//! @param   xSrc        Х-координата верхнего левого угла изображения-источника, должна быть в пределах размера источника
+//! @param   xSrc        X-координата верхнего левого угла изображения-источника, должна быть в пределах размера источника
 //! @param   ySrc        Y-координата верхнего левого угла изображения-источника, должна быть в пределах размера источника
 //! @param   transColor  Цвет, который будет считаться прозрачным
 //!
@@ -2298,12 +2333,12 @@ inline bool txTransparentBlt (HDC dest, double xDest, double yDest, HDC src, COL
 //! @brief   Копирует изображение с одного холста (контекста рисования, DC) на другой с учетом полупрозрачности.
 //!
 //! @param   dest    Контекст назначения (куда копировать). Если NULL, то копирует в окно TXLib
-//! @param   xDest   Х-координата верхнего левого угла изображения-приемника
+//! @param   xDest   X-координата верхнего левого угла изображения-приемника
 //! @param   yDest   Y-координата верхнего левого угла изображения-приемника
 //! @param   width   Ширина копируемого изображения. Если <= 0, то автоматически берется из размера источника
 //! @param   height  Высота копируемого изображения. Если <= 0, то автоматически берется из размера источника
 //! @param   src     Контекст источника (откуда копировать). Должен иметь 32-битовый формат и альфа-канал (см. ниже)
-//! @param   xSrc    Х-координата верхнего левого угла изображения-источника
+//! @param   xSrc    X-координата верхнего левого угла изображения-источника
 //! @param   ySrc    Y-координата верхнего левого угла изображения-источника
 //! @param   alpha   Общая прозрачность изображения, в дополнение к альфа-каналу (0 - все прозрачно, 1 - использовать
 //!                  только альфа-канал)
@@ -2709,9 +2744,9 @@ inline POINT txMousePos();
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Mouse
-//! @brief   Возвращает Х-Координату Мыши!
+//! @brief   Возвращает X-Координату Мыши!
 //!
-//! @return  Х-координата мыши.
+//! @return  X-координата мыши.
 //!
 //! @see     txMouseX(), txMouseY(), txMousePos(), txMouseButtons()
 //!
@@ -3499,8 +3534,28 @@ double txSqr (double x)
 
 #ifdef _TX_DESTROY_3D
 
-    #define z 0                    // Читайте "Флатландию" Эбботта!
+    #define z  0                   // Читайте "Флатландию" Эбботта!
     #endif
+
+//{----------------------------------------------------------------------------------------------------------------
+//! @ingroup Misc
+//! @brief   <i>Еще парочка макросов.</i>
+//!
+//! @usage @code
+//!          #include "TXLib.h"
+//!
+//!          int x = rand() meow   // Как же без котиков?
+//!          int y = rand() meow
+//!          if (x+y > RAMD_MAX/2) please x = y = 0;
+//! @endcode
+//}----------------------------------------------------------------------------------------------------------------
+//! @{
+
+#define please
+
+#define meow  ;
+
+//! @}
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
@@ -5253,12 +5308,12 @@ ptrdiff_t        _txDumpExceptionObj         (char what[], ptrdiff_t size, void*
 ptrdiff_t        _txDumpExceptionCPP         (char what[], ptrdiff_t size, unsigned code = 0,
                                               unsigned params = 0, const ULONG_PTR info[] = NULL);
 
-const char*      _txStackWalk                (int framesToSkip = 0, bool readSource = true, CONTEXT* context = NULL);
-int              _txCaptureStackBackTrace    (int framesToSkip, size_t szCapture, void* capture[], unsigned long* backTraceHash,
-                                              CONTEXT* context = NULL, HANDLE thread = GetCurrentThread());
-void             _txStackBackTrace           (const char file[] = "?.???", int line = 0, const char func[] = "?()",
+void             _txStackBackTrace           (const char file[] = "?", int line = 0, const char func[] = "?",
                                               bool readSource = true);
-                                              
+const char*      _txCaptureStackBackTrace    (int framesToSkip = 0, bool readSource = true, CONTEXT* context = NULL);
+int              _txStackWalk                (int framesToSkip, size_t szCapture, void* capture[], unsigned long* backTraceHash,
+                                              CONTEXT* context = NULL, HANDLE thread = GetCurrentThread());
+
 const char*      _txSymPrintFromAddr         (void* addr = NULL, const char format[] = NULL, ...) _TX_CHECK_FORMAT (2);
 bool             _txSymGetFromAddr           (void* addr, Win32::SYMBOL_INFO** symbol = NULL,
                                               Win32::IMAGEHLP_LINE64** line = NULL, const char** module = NULL,
@@ -5815,7 +5870,7 @@ struct WOW64_CONTEXT
     DWORD EFlags;
     DWORD Esp;
     DWORD SegSs;
-    
+
     BYTE  ExtendedRegisters[512];
     };
 
@@ -7864,7 +7919,7 @@ $       return;
     signal (sig, (void(*)(int))_txOnSignal);
     _fpreset();
 
-    _txError (NULL, 0, NULL, 0, "\a" "signal (%d, 0x%02X):%s%s "
+    _txError (NULL, 0, NULL, 0, "\a\t" "signal (%d, 0x%02X):%s%s "
               "%s%s"
               "С помощью функции signal() вы можете сами обработать эту ошибку.",
               sig, (unsigned) fpe, sSig, sFPE,
@@ -7884,13 +7939,13 @@ void _txOnTerminate()
         _txDumpExceptionCPP (_txDumpSE + 1, sizeof (_txDumpSE) - 2);
 
     _txError (NULL, 0, NULL, 0,
-              "\a" "std::terminate(): Неперехваченное исключение в функции main() или в деструкторе, "
+              "\a%s" "std::terminate(): Неперехваченное исключение в функции main() или в деструкторе, "
               "или другая фатальная ошибка C++."
               "%s"
               "Используйте try/catch блоки, перехватывайте catch (...), проверяйте вызовы виртуальных функций, "
               "разбирайтесь, в чем дело.\n\n"
               "С помощью std::set_terminate() вы можете сами обработать эту ошибку.",
-              _txDumpSE + 1);
+              (*_txDumpSE? "\t" : ""), _txDumpSE + 1);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -7946,7 +8001,7 @@ void _txOnNewHandlerAnsi()
               "operator new: Ошибка выделения памяти.\n\n"
               "С помощью std::set_new_handler() вы можете сами обработать эту ошибку "
               "и где-нибудь найти недостающую память.");
-    
+
     throw std::bad_alloc();
     }
 
@@ -8160,7 +8215,10 @@ $       unsigned err = GetLastError();
 $       _txDumpExceptionSEH    (_txDumpSE,  (ptrdiff_t) sizeof (_txDumpSE)  - 1, exc->ExceptionRecord, func);
 
 $       if (exc->ExceptionRecord && exc->ExceptionRecord->ExceptionCode != EXCEPTION_STACK_OVERFLOW)
-            { $ _tx_snprintf_s (_txTraceSE, (ptrdiff_t) sizeof (_txTraceSE) - 1, "%s", _txStackWalk (0, true, exc->ContextRecord)); }
+            {
+$           _tx_snprintf_s (_txTraceSE, (ptrdiff_t) sizeof (_txTraceSE) - 1, "%s",
+                            _txCaptureStackBackTrace (0, true, exc->ContextRecord));
+            }
 
 $       SetLastError (err);
         }
@@ -8171,8 +8229,8 @@ $       _txCurLoc = loc;
 
         _txError (NULL, 0, NULL, 0,
                   "\a\t" "%s"
-                  "С помощью функции _set_se_translator() вы можете сами обработать эту ошибку.",
-                  _txDumpSE + 1);
+                         "С помощью функции _set_se_translator() вы можете сами обработать эту ошибку.",
+                         _txDumpSE + 1);
         }
 
 $   _txCurLoc = loc;
@@ -8609,9 +8667,7 @@ $   return s - what;
 //{          Stack trace and debug info access
 //-----------------------------------------------------------------------------------------------------------------
 
-// Stack WALKING if the program is DEAD. Dead, Carl!
-
-const char* _txStackWalk (int framesToSkip /*= 0*/, bool readSource /*= true*/, CONTEXT* context /*= NULL*/)
+const char* _txCaptureStackBackTrace (int framesToSkip /*= 0*/, bool readSource /*= true*/, CONTEXT* context /*= NULL*/)
     {
     const int maxFrames = 62;  // MS says: < 63
     static char trace [(MAX_PATH + 1024+1) * maxFrames] = "";
@@ -8619,8 +8675,8 @@ const char* _txStackWalk (int framesToSkip /*= 0*/, bool readSource /*= true*/, 
     if (framesToSkip == -1) return trace;
 
     static void* capture [maxFrames] = {};
-    int frames = _txCaptureStackBackTrace (framesToSkip + 1, SIZEARR (capture), capture, NULL, context);
-    
+    int frames = _txStackWalk (framesToSkip, SIZEARR (capture), capture, NULL, context);
+
     memset (trace, 0, sizeof (trace));
     char* s = trace;
 
@@ -8636,19 +8692,20 @@ const char* _txStackWalk (int framesToSkip /*= 0*/, bool readSource /*= true*/, 
         const char*             source = NULL;
         bool                    inTX   = false;
 
-        if (addr) inTX = _txSymGetFromAddr ((char*) addr - (i == 0), &sym, &line, &module);
+        const size_t callSz = 1 + sizeof (DWORD);  // sizeof (CALL instruction)
+        if (addr) inTX = _txSymGetFromAddr ((char*) addr - callSz, &sym, &line, &module);
 
         if (readSource && !inTX) _txSymGetFromAddr ((void*) 1, NULL, NULL, NULL, &source, 2);
-
-        while (s > trace && s[-1] == '\n') s--;
 
         int nl = 0;
         while (s > trace && s[-1] == '\n') { s--; nl++; }
 
-        PRINT_ ("%s#%2d 0x%p" _ ((n)? (source || nl? "\n\n" : "\n") : "")_ n _ addr);
+        PRINT_ ("%s#%2d 0x%p" _ ((n)? ((source || nl)? "\n\n" : "\n") : "")_ n _ addr);
         n++;
 
-        if (addr == (void*) 0xBAADF00D) { PRINT_ (" [Неинициализированная память от LocalAlloc()]"); break; }
+        if ((uintptr_t) addr ==  0)         { PRINT_ (" [Неверный фрейм]");        break; }
+        if ((uintptr_t) addr == -1)         { PRINT_ (" [Странный фрейм]");        break; }
+        if ((uintptr_t) addr == 0xBAADF00D) { PRINT_ (" [Мусор от LocalAlloc()]"); break; }
 
         if (module)                   PRINT_ (" in %s%s" _     module _ ((sym && *sym->Name)? "!" : ""));
         if (sym  && *sym->Name)       PRINT_ ("%s" _           sym->Name);
@@ -8659,14 +8716,14 @@ const char* _txStackWalk (int framesToSkip /*= 0*/, bool readSource /*= true*/, 
         if (sym && sym->Name && strcmp (sym->Name , "main") == 0) break;
         }
 
-    #ifdef _MSC_VER
+    #if defined (_MSC_VER)
     #pragma warning (disable: 28199)  // Using possibly uninitialized memory '*s'
     #endif
 
     while (s > trace && s[-1] == '\n') s--;
     *s = 0;
 
-    #ifdef _MSC_VER
+    #if defined (_MSC_VER)
     #pragma warning (default: 28199)  // Using possibly uninitialized memory '*s'
     #endif
 
@@ -8677,41 +8734,29 @@ const char* _txStackWalk (int framesToSkip /*= 0*/, bool readSource /*= true*/, 
     return trace;
     }
 
-// Note that Rick and Carl are speaking near the C language block. "C block", Carl. See: http://knowyourmeme.com/memes/carl
-
 //-----------------------------------------------------------------------------------------------------------------
 
-int _txCaptureStackBackTrace (int framesToSkip, size_t szCapture, void* capture[], unsigned long* backTraceHash,
-                              CONTEXT* context /*= NULL*/, HANDLE thread /* = GetCurrentThread()*/)
+// Stack WALKING if the program is DEAD. Dead, Carl!
+
+int _txStackWalk (int framesToSkip, size_t szCapture, void* capture[], unsigned long* backTraceHash,
+                  CONTEXT* context /*= NULL*/, HANDLE thread /* = GetCurrentThread()*/)
     {
     namespace MinGW = Win32::MinGW;
 
     assert (capture);
-    
+
     if (!context)
-        return Win32::RtlCaptureStackBackTrace (framesToSkip + 1, szCapture, capture, backTraceHash);
+        return Win32::RtlCaptureStackBackTrace (framesToSkip, (DWORD) szCapture, capture, backTraceHash);
 
-    HANDLE              process = GetCurrentProcess();
-    unsigned            cpu     = 0;
-    Win32::STACKFRAME64 frame   = {};
+    #if   (defined (_M_X32) || defined (_M_IX86)) && !defined (_M_X64) && !defined (_WIN64)
 
-    frame.AddrPC.Mode = frame.AddrStack.Mode = frame.AddrFrame.Mode = Win32::AddrModeFlat;
+        unsigned cpu = IMAGE_FILE_MACHINE_I386;
+        Win32::STACKFRAME64 frame = {{ context->Eip }, {}, { context->Ebp }, { context->Esp }};
 
-    #if  (defined (_M_X32) || defined (_M_IX86)) && !defined (_M_X64) && !defined (_WIN64)
-
-    cpu = IMAGE_FILE_MACHINE_I386;
-
-    frame.AddrPC.Offset    = context->Eip;
-    frame.AddrStack.Offset = context->Esp;
-    frame.AddrFrame.Offset = context->Ebp;
-    
     #elif (defined (_M_X64) || defined (_WIN64)) && !defined (_M_X32) && !defined (_M_IX86)
-    
-    cpu = IMAGE_FILE_MACHINE_AMD64;
 
-    frame.AddrPC.Offset    = context->Rip;
-    frame.AddrStack.Offset = context->Rsp;
-    frame.AddrFrame.Offset = context->Rbp;
+        unsigned cpu = IMAGE_FILE_MACHINE_AMD64;
+        Win32::STACKFRAME64 frame = {{ context->Rip }, {}, { context->Rbp }, { context->Rsp }};
 
     #else
 
@@ -8719,16 +8764,20 @@ int _txCaptureStackBackTrace (int framesToSkip, size_t szCapture, void* capture[
     #error
     #error --------------------------------------------------------------------------------------------------------
     #endif
-    #error TXLib.h: CPU architecture is not properly defined (_M_X32/_M_IX86 or _M_X64/_WIN64).
+    #error TXLib.h: CPU architecture is not properly defined (either _M_X32/_M_IX86 or _M_X64/_WIN64).
     #error --------------------------------------------------------------------------------------------------------
     #error
-    
+
     #endif
-        
+
+    frame.AddrPC.Mode = frame.AddrStack.Mode = frame.AddrFrame.Mode = Win32::AddrModeFlat;
+
+    HANDLE process = GetCurrentProcess();
+
     _txSymGetFromAddr ((void*) 1);
 
-    int frames = 0;
-    for (frames = 0; frames < szCapture; frames++)
+    int n = 0;
+    for (n = -framesToSkip; n < (int) szCapture; n++)
         {
         DWORD64 prev = frame.AddrStack.Offset;
 
@@ -8743,19 +8792,23 @@ int _txCaptureStackBackTrace (int framesToSkip, size_t szCapture, void* capture[
             {
             break;
             }
-            
+
         void* addr = (void*) frame.AddrPC.Offset;
 
-        if (frame.AddrFrame.Offset == 0)   addr = 0;
-        if (frame.AddrStack.Offset < prev) addr = (void*) -1;
+        if (frame.AddrFrame.Offset == 0)   addr = 0;           // Bad frame
+        if (frame.AddrStack.Offset < prev) addr = (void*) -1;  // Strange frame
 
-        if (frames < framesToSkip) continue;
+        if (n < 0) continue;
 
-        capture [frames - framesToSkip] = (void*) frame.AddrPC.Offset;
+        assert (0 <= n && n < (int) szCapture);
+
+        capture[n] = (void*) frame.AddrPC.Offset;
         }
 
-    return frames - framesToSkip;
+    return n;
     }
+
+// Note that Rick and Carl are speaking near the C language block. "C block", Carl. See: http://knowyourmeme.com/memes/carl
 
 //-----------------------------------------------------------------------------------------------------------------
 
@@ -8838,7 +8891,7 @@ bool _txSymGetFromAddr (void* addr, Win32::SYMBOL_INFO** symbol /*= NULL*/,
         if (strcmp (sym->Name, "??") == 0) *sym->Name = 0;
 
         if (!*sym->Name && mod) _tx_snprintf_s (sym->Name, sym->MaxNameLen, "0x%p", (char*) addr - mod);
-        
+
         *symbol = sym;
         }
 
@@ -8892,7 +8945,7 @@ bool _txSymGetFromAddr (void* addr, Win32::SYMBOL_INFO** symbol /*= NULL*/,
 
     if (symbol)
         {
-        if (strstr  (sym->Name, "::TX::")                                                 || 
+        if (strstr  (sym->Name, "::TX::")                                                 ||
             strncmp (sym->Name, "_tx",  3) == 0 && isupper ((unsigned char) sym->Name[3]) ||
             strncmp (sym->Name,  "tx",  2) == 0 && isupper ((unsigned char) sym->Name[2]) ||
             strncmp (sym->Name, "_tx_", 4) == 0                                           ||
@@ -9008,7 +9061,7 @@ const char* _txReportError (const char file[], int line, const char func[], unsi
     bool noMsgBox = (msg && *msg == '\b')? (msg++, true) : false;
     bool fmtOnly  = (msg && *msg == '\f')? (msg++, true) : false;
 
-    const char* stkTrace = (traceSE? _txTraceSE : _txStackWalk (1, true));
+    const char* stkTrace = (traceSE && *_txTraceSE)? _txTraceSE : _txCaptureStackBackTrace (4, true);
 
     static char what[_TX_BIGBUFSIZE*10] = "";
     static char str [_TX_BIGBUFSIZE]    = "";
@@ -9064,11 +9117,11 @@ $   txOutputDebugPrintf ("\r" "%s - %s", _TX_VERSION, what);
                  "--------------------------------------------------\n",
                  what);
 
-    if (Win32::StrStrIA (_txTraceSE, ".exe!"))
+    if (stristr (stkTrace, ".exe!"))
         printf  ("Трассировка стека:\n\n"
                  "%s\n\n"
                  "--------------------------------------------------\n",
-                 (*_txTraceSE? _txTraceSE : stkTrace));
+                 stkTrace);
 
     txSetConsoleAttr (restore);
 
@@ -9085,7 +9138,7 @@ $   txOutputDebugPrintf ("\r" "%s - %s", _TX_VERSION, what);
                            "--------------------------------------------------\n"
                            "%s\n\n"
                            "--------------------------------------------------\n",
-                           what, (*_txTraceSE? _txTraceSE : stkTrace), _txAppInfo());
+                           what, stkTrace, _txAppInfo());
         fclose (log);
         break;
         }
@@ -9445,7 +9498,18 @@ $1  _TX_IF_ARGUMENT_FAILED (dc) return NULL;
 
 $   HPEN pen = Win32::CreatePen ((color == TX_TRANSPARENT? PS_NULL : PS_SOLID), ROUND (thickness), color);
 
-$   return (_txBuffer_Select (pen) && txGDI ((Win32::SetTextColor (dc, color)), dc))? pen : (Win32::DeleteObject (pen), (HPEN) NULL);
+$   if (!pen) return (HPEN) NULL;
+
+$   if (!_txBuffer_Select (pen, dc))
+        {
+$       Win32::DeleteObject (pen);
+$       return (HPEN) NULL;
+        }
+
+$   if (txGDI (Win32::SetTextColor (dc, color), dc) == CLR_INVALID)
+        { $ return (HPEN) NULL; }
+
+$   return pen;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -10399,7 +10463,7 @@ $   printf ("\n");
 
 //-----------------------------------------------------------------------------------------------------------------
 
-void _txStackBackTrace (const char file[] /*= "?.???"*/, int line /*= 0*/, const char func[] /*= "?()"*/,
+void _txStackBackTrace (const char file[] /*= "?"*/, int line /*= 0*/, const char func[] /*= "?"*/,
                         bool readSource /*= true*/)
     {
 $1  unsigned attr = txGetConsoleAttr();
@@ -10409,7 +10473,7 @@ $   printf ("\n" "--------------------------------------------------\n"
                  "Трассировка стека из %s (%d) %s:\n\n"
                  "%s\n\n"
                  "--------------------------------------------------\n\n",
-                 file, line, func, _txStackWalk (1, readSource));
+                 file, line, func, _txCaptureStackBackTrace (3, readSource));
 
 $   txSetConsoleAttr (attr);
     }
