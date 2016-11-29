@@ -6,9 +6,9 @@
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 118 $
+//!          $Version: 00173a, Revision: 119 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2016-11-29 09:42:17 +0400 $
+//!          $Date: 2016-11-29 15:39:40 +0400 $
 //!
 //!          TX Library - компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -134,9 +134,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 118, 2016-11-29 09:42:17 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 118, 2016-11-29 09:42:17 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 118, 2016-11-29 09:42:17 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 119, 2016-11-29 15:39:40 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 119, 2016-11-29 15:39:40 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 119, 2016-11-29 15:39:40 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -5294,10 +5294,10 @@ void*            _tx_DLGTEMPLATE_Add    (void* dlgTemplatePtr, size_t bufsize, D
                                          short x, short y, short cx, short cy,
                                          WORD id, const char wclass[], const char caption[]);
 
-const char*      _txError       (const char file[] = NULL, int line = 0, const char func[] = NULL, unsigned color = 0,
-                                 const char msg[] = NULL, ...) _TX_CHECK_FORMAT (5);
-const char*      _txReportError (const char file[], int line, const char func[], unsigned color,
-                                 const char msg[], va_list args);
+const char*      _txError        (const char file[] = NULL, int line = 0, const char func[] = NULL, unsigned color = 0,
+                                  const char msg[] = NULL, ...) _TX_CHECK_FORMAT (5);
+const char*      _txProcessError (const char file[], int line, const char func[], unsigned color,
+                                  const char msg[], va_list args);
 const char*      _txAppInfo();
 
 void             _txOnTerminate();
@@ -5703,7 +5703,9 @@ namespace Win32 {
 #define EXCEPTION_CPP_BORLAND_BUILDER            0x0EEDFAE6  // Should never occur here
 #define EXCEPTION_CPP_BORLAND_DELPHI             0x0EEDFADE  // Should never occur here
 
-#define EXCEPTION_OUTPUT_DEBUG_STRING            0x40010006  // OutputDebugString() call
+#define EXCEPTION_OUTPUT_DEBUG_STRING            0x40010006  // OutputDebugStringA() call
+#define EXCEPTION_OUTPUT_DEBUG_STRING_W          0x4001000A  // OutputDebugStringW() call
+
 #define EXCEPTION_THREAD_NAME                    0x406D1388
 
 #pragma pack (push, 1)
@@ -7897,13 +7899,13 @@ $   return obj != NULL;
 
 const char* _txError (const char file[] /*= NULL*/, int line /*= 0*/, const char func[] /*= NULL*/, unsigned color /*= 0*/,
                       const char msg [] /*= NULL*/, ...)
-    {                                                                       //------------------Это ASCII KOT!
-$1  va_list arg; va_start (arg, msg);                                       //   /\_|_/\                     |
-$$  const char* what = _txReportError (file, line, func, color, msg, arg);  //  \| o o |/      Добавь его себе
-    va_end (arg);                                                           // --\ =!= /--  в исходник, и тебе
-                                                                            //  / \ v / \      будет, наверно,
-    if (!(msg && msg[0] == '\a')) return what;                              //     ---    приятно отлаживаться
-                                                                            //----------------долгими ночами:)
+    {                                                                        //------------------Это ASCII KOT!
+$1  va_list arg; va_start (arg, msg);                                        //   /\_|_/\                     |
+$$  const char* what = _txProcessError (file, line, func, color, msg, arg);  //  \| o o |/      Добавь его себе
+    va_end (arg);                                                            // --\ =!= /--  в исходник, и тебе
+                                                                             //  / \ v / \      будет, наверно,
+    if (!(msg && msg[0] == '\a')) return what;                               //     ---    приятно отлаживаться
+                                                                             //----------------долгими ночами:)
 //  vvvvvvvvvvvvvvvvvv
     DebugBreak();   //>>> Котики, вы в отладчике. Не пугайтесь. Есть шанс посмотреть переменные и разобраться.
 //  ^^^^^^^^^^^^^^^^^^
@@ -7997,13 +7999,13 @@ $1  static int terminating = 0;
 $   if (!*_txDumpSE)
         { $ _txDumpExceptionCPP (_txDumpSE + 1, sizeof (_txDumpSE) - 2); }
 
-$   _TX_UNEXPECTED ("\a"
+$   _TX_UNEXPECTED ("\t\a"
                     "std::terminate(): Неперехваченное исключение в функции main() или в деструкторе, "
                     "или другая фатальная ошибка C++."
                     "%s"
                     "Используйте try/catch блоки, перехватывайте catch (...), проверяйте вызовы виртуальных функций, "
                     "разбирайтесь, в чем дело.\n\n"
-                    "С помощью std::set_terminate() вы можете сами обработать эту ошибку." _
+                    "С помощью std::set_terminate() вы можете сами обработать эту ошибку." + !_txDumpSE _
                     _txDumpSE + 1);
     }
 
@@ -8289,9 +8291,27 @@ long WINAPI _txVectoredExceptionHandler (EXCEPTION_POINTERS* exc)
 
 long WINAPI _txUnhandledExceptionFilter (EXCEPTION_POINTERS* exc)
     {
+    unsigned code = exc->ExceptionRecord->ExceptionCode;
+
     long res = _txOnExceptionSEH (exc, "_txUnhandledExceptionFilter");
 
-    if (_txPrevUEFilter) res = _txPrevUEFilter (exc);
+    if (_txPrevUEFilter)
+        {
+        if (setjmp (_txDumpExceptionObjJmp) == 0)
+            {
+            res = _txPrevUEFilter (exc);
+            }
+        else
+            {
+            *(unsigned long long*) _txDumpExceptionObjJmp = 0;
+
+            _TX_UNEXPECTED ("\t\a"
+                            "%s"
+                            "С помощью функции _set_se_translator() вы можете сами обработать эту ошибку.\n\n"
+                            "Дополнительно: Сбой вызова стандартного обработчика неперехваченнных исключений SEH." + !_txDumpSE _
+                            _txDumpSE + 1);
+            }
+        }
 
     return res;
     }
@@ -8316,15 +8336,20 @@ long _txOnExceptionSEH (EXCEPTION_POINTERS* exc, const char func[])
 
     DWORD code = (exc && exc->ExceptionRecord)? exc->ExceptionRecord->ExceptionCode : 0;
 
-    if (code == EXCEPTION_OUTPUT_DEBUG_STRING ||
-        code == EXCEPTION_THREAD_NAME         ||
+    if (code == EXCEPTION_OUTPUT_DEBUG_STRING   ||
+        code == EXCEPTION_OUTPUT_DEBUG_STRING_W ||
+        code == EXCEPTION_THREAD_NAME           ||
         code == EXCEPTION_BREAKPOINT && IsDebuggerPresent())
         return EXCEPTION_CONTINUE_SEARCH;
 
     txOutputDebugPrintf ("\r" "%s - WARNING: %s (0x%p (code 0x%08lX), %s) called", _TX_VERSION, __func__, exc, code, func);
 
-$1  if (((unsigned long long*) _txDumpExceptionObjJmp) [0])
-        { $ longjmp (_txDumpExceptionObjJmp, 1); }
+$1  if (*(unsigned long long*) _txDumpExceptionObjJmp)
+        {
+$       longjmp (_txDumpExceptionObjJmp, 1);
+        }
+
+    tx_fpreset();
 
     #ifdef _MSC_VER
     if (code == EXCEPTION_STACK_OVERFLOW) { $ _resetstkoflw(); }
@@ -8340,8 +8365,7 @@ $       _txDumpExceptionSEH (_txDumpSE,  (ptrdiff_t) sizeof (_txDumpSE)  - 1, ex
 
 $       if (code != EXCEPTION_STACK_OVERFLOW)
             {
-$           _tx_snprintf_s  (_txTraceSE, (ptrdiff_t) sizeof (_txTraceSE) - 1, "%s",
-                             _txCaptureStackBackTrace (0, true, exc->ContextRecord));
+$           _tx_snprintf_s  (_txTraceSE, (ptrdiff_t) sizeof (_txTraceSE) - 1, "%s", _txCaptureStackBackTrace (0, true, exc->ContextRecord));
             }
 
 $       SetLastError (err);
@@ -8726,7 +8750,7 @@ $   free (typeName);
     #endif
 
 $   err = 0;
-$   if (mangledName && !setjmp (_txDumpExceptionObjJmp))
+$   if (mangledName && setjmp (_txDumpExceptionObjJmp) == 0)
         {
         #define PRINT_VAL_(fmt, typ, ...)                                                                      \
             else if (*type == typeid (      typ       )) { $ PRINT_ (" = " #fmt _ (* (typ* ) object) __VA_ARGS__); } \
@@ -8753,7 +8777,7 @@ $           PRINT_ (", what(): \"%s\"" _ e->what());
     else
         { $ err = 1; }
 
-$   ((unsigned long long*) _txDumpExceptionObjJmp) [0] = 0;
+$   *(unsigned long long*) _txDumpExceptionObjJmp = 0;
 
 $   if (err && object && szObj)
         {
@@ -8799,7 +8823,7 @@ $   static char trace [(MAX_PATH + 1024+1) * maxFrames] = "";
     if (framesToSkip == -1) { $ return trace; }
 
 $   static void* capture [maxFrames] = {};
-$   int frames = _txStackWalk (framesToSkip + 1, SIZEARR (capture), capture, NULL, context, thread);
+$   int frames = _txStackWalk (framesToSkip + !context, SIZEARR (capture), capture, NULL, context, thread);
 
 $   memset (trace, 0, sizeof (trace));
 $   char* s = trace;
@@ -8871,7 +8895,9 @@ $   namespace MinGW = Win32::MinGW;
 $   assert (capture);
 
     if (!context)
-        { $ return Win32::RtlCaptureStackBackTrace (framesToSkip + 1, (DWORD) szCapture, capture, backTraceHash); }
+        {
+$       return Win32::RtlCaptureStackBackTrace (framesToSkip + 1, (DWORD) szCapture, capture, backTraceHash);
+        }
 
     #if   (defined (_M_X32) || defined (_M_IX86)) && !defined (_M_X64) && !defined (_WIN64)
 
@@ -9208,7 +9234,7 @@ $   return trace;
 //{          Reporting
 //-----------------------------------------------------------------------------------------------------------------
 
-const char* _txReportError (const char file[], int line, const char func[], unsigned color, const char msg[], va_list args)
+const char* _txProcessError (const char file[], int line, const char func[], unsigned color, const char msg[], va_list args)
     {
     static int nCalls = 0; nCalls++;
 
@@ -9217,12 +9243,19 @@ const char* _txReportError (const char file[], int line, const char func[], unsi
     unsigned long  doserr   = _doserrno;
     unsigned       threadId = GetCurrentThreadId();
 
-    bool isFatal  = (msg && *msg == '\a')? (msg++, true) : false;
-    bool traceSE  = (msg && *msg == '\t')? (msg++, true) : false;
-    bool noMsgBox = (msg && *msg == '\b')? (msg++, true) : false;
-    bool fmtOnly  = (msg && *msg == '\f')? (msg++, true) : false;
+    enum { isFatal = 1, traceSE = 2, noMsgBox = 4, fmtOnly = 8 };
+    int options = 0;
 
-    const char* stkTrace = (traceSE && *_txTraceSE)? _txTraceSE : _txCaptureStackBackTrace (2, true);
+    for (; msg && *msg; msg++)
+        {
+        if      (*msg == '\a') options |= isFatal;
+        else if (*msg == '\t') options |= traceSE;
+        else if (*msg == '\b') options |= noMsgBox;
+        else if (*msg == '\f') options |= fmtOnly;
+        else break;
+        }
+
+    const char* stkTrace = ((options & traceSE) && *_txTraceSE)? _txTraceSE : _txCaptureStackBackTrace (2, true);
     const char*  txTrace = _txCaptureStackBackTraceTX (0, true);
 
     static char what[_TX_BIGBUFSIZE*10] = "";
@@ -9268,10 +9301,10 @@ const char* _txReportError (const char file[], int line, const char func[], unsi
 
     txOutputDebugPrintf ("\r" "%s - ERROR: %s", _TX_VERSION, what);
 
-    if (fmtOnly) return what;
+    if (options & fmtOnly) return what;
 
     unsigned restore = txGetConsoleAttr();
-    txSetConsoleAttr (isFatal? 0x0D /* LightMagenta */ : 0x0C /* LightRed */);
+    txSetConsoleAttr ((options & isFatal)? 0x0D /* LightMagenta */ : 0x0C /* LightRed */);
     if (color) txSetConsoleAttr (color);
 
     printf ("\n" "--------------------------------------------------\n"
@@ -9319,14 +9352,16 @@ const char* _txReportError (const char file[], int line, const char func[], unsi
         }
         while (0);
 
-    if (!noMsgBox)
+    if (!(options & noMsgBox))
         {
         txSleep (0);
         txMessageBox (what, (isFatal? "Фатальная ошибка" : "Ошибка в программе"), MB_ICONSTOP | MB_SYSTEMMODAL);
         }
 
-    if (isFatal && !IsDebuggerPresent())
+    if ((options & isFatal) && !IsDebuggerPresent())
+        {
         ::exit (EXIT_FAILURE);
+        }
 
     return what;
     }
@@ -9413,9 +9448,16 @@ int txOutputDebugPrintf (const char format[], ...)
     {
     if (!format) return 0;
 
-    bool msgbox = (*format == '\a')? (format++, true) : false;
-    bool print  = (*format == '\f')? (format++, true) : false;
-    bool compr  = (*format == '\r')? (format++, true) : false;
+    enum { msgbox = 1, print = 2, compr = 4 };
+    int options = 0;
+
+    for (; format && *format; format++)
+        {
+        if      (*format == '\a') options |= msgbox;
+        else if (*format == '\f') options |= print;
+        else if (*format == '\r') options |= compr;
+        else break;
+        }
 
     char str[_TX_BIGBUFSIZE] = "";
 
@@ -9432,13 +9474,13 @@ int txOutputDebugPrintf (const char format[], ...)
             else                                                 *dst++ = d = *src;
         }};
 
-    if (compr)  __::trimSpaces (str);
+    if (options & compr)  __::trimSpaces (str);
 
     OutputDebugString (str);
 
-    if (print)  fprintf (stderr, "%s\n", str);
+    if (options & print)  fprintf (stderr, "%s\n", str);
 
-    if (msgbox) txMessageBox (str, "Оказывается, что", MB_ICONEXCLAMATION);
+    if (options & msgbox) txMessageBox (str, "Оказывается, что", MB_ICONEXCLAMATION);
 
     return n;
     }
@@ -9487,6 +9529,8 @@ $1  static wchar_t textW   [_TX_BIGBUFSIZE * sizeof (wchar_t)] = L"[NULL text]";
 
     HWND wnd = _txCanvas_Window;
     return MessageBoxW ((wnd? wnd : Win32::GetConsoleWindow()), textW, headerW, flags | MB_SETFOREGROUND | MB_TOPMOST);
+
+    return 0;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
