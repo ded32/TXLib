@@ -6,9 +6,9 @@
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 117 $
+//!          $Version: 00173a, Revision: 118 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2016-11-23 03:55:09 +0400 $
+//!          $Date: 2016-11-29 09:42:17 +0400 $
 //!
 //!          TX Library - компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -25,10 +25,10 @@
 //!          См. также <a href=http://sourceforge.net/p/txlib>страницу проекта на SourceForge.</a>
 //!          Короткая ссылка на онлайн-документацию: <a href=http://gg.gg/TXLib>gg.gg/TXLib.</a>
 //!
+//! @par     Установка библиотеки
+//!
 //! @note    Библиотека TXLib состоит из единственного файла и не требует никаких настроек в среде
 //!          программирования, чтобы облегчить ее установку и работу для начинающих.
-//!
-//! @par     Установка библиотеки
 //!
 //!       -# <a href=https://sourceforge.net/projects/txlib/files/latest/download>Скачайте</a>
 //!          программу установки, загрузка по ссылке начнется автоматически. Ее имя имеет вид
@@ -49,9 +49,9 @@
 //!          или пользуйтесь <a href=http://storage.ded32.net.ru/Lib/TX/TXUpdate/Doc/HTML.ru/index.htm>
 //!          системой помощи онлайн.</a>
 //!
-//!       -# Для наиболее полной обработки ошибок библиотеке требуются модули, которые желательно установить
-//!          (скопировать) в папку Windows. Устанавливать эти библиотеки не обязательно. Программы, использующие
-//!          TXLib, будут запускаться и без них.
+//!       -# Для полной обработки ошибок библиотеке требуются модули, которые желательно установить
+//!          (скопировать) в папку Windows. Устанавливать эти библиотеки не обязательно. Программы,
+//!          использующие TXLib, будут запускаться и без них.
 //!
 //!          -# Модули библиотеки Microsoft DBGHELP для доступа к отладочным символам Microsoft:
 //!
@@ -109,42 +109,21 @@
 //{          Version information
 //-----------------------------------------------------------------------------------------------------------------
 
-//! @cond INTERNAL
-#define _TX_V_FROM_CVS(_1,file,ver,rev,date,auth,_2)  "TXLib [Ver: " #ver ", Rev: " #rev "]"
-#define _TX_A_FROM_CVS(_1,file,ver,rev,date,auth,_2)  "Copyright (C) " auth
-#define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
-//! @endcond
-
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup   Technical
 //! @brief     Текущая версия библиотеки.
 //!
+//!            Версия библиотеки в целочисленном формате: старшее слово - номер версии, младшее - номер ревизии,
+//!            в двоично-десятичном формате. Например, @c 0x172a0050 - версия @c 0.172a, ревизия @c 50.
 //! @code
-//!            #define _TX_VERSION "TXLib [Version: 1.72a, Revision 50]" (пример)
-//!            #define _TX_AUTHOR  "Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru)"
+//!            #define _TX_VERSION "TXLib [Version: 1.72a, Revision 50]"                 //
+//!            #define _TX_AUTHOR  "Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru)"  //  ПРИМЕР
+//!            #define _TX_VER     0x172a0000                                            //
 //! @endcode
 //!            Эти константы автоматически обновляются при изменении версии.
 //!
 //! @see       txVersion()
 //!
-//! @hideinitializer
-//}----------------------------------------------------------------------------------------------------------------
-//! @{
-
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 117, 2016-11-23 03:55:09 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 117, 2016-11-23 03:55:09 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-
-//! @}
-//{----------------------------------------------------------------------------------------------------------------
-//! @ingroup   Technical
-//! @brief     Версия библиотеки в целочисленном формате.
-//!
-//!            Формат: старшее слово - номер версии, младшее - номер ревизии, в двоично-десятичном формате.
-//!            Например, @c 0x172a0050 - версия @c 0.172a, ревизия @c 50.
-//!
-//!            Эта константа автоматически обновляется при изменении версии.
-//!
-//! @see       txVersion()
 //! @usage @code
 //!            #if !(defined (_TX_VER) && (_TX_VER >= 0x172a0000))
 //!            #error Must use TXLib.h version >= 1.72 to compile this.
@@ -153,9 +132,19 @@
 //!
 //! @hideinitializer
 //}----------------------------------------------------------------------------------------------------------------
+//! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 117, 2016-11-23 03:55:09 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 118, 2016-11-29 09:42:17 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 118, 2016-11-29 09:42:17 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 118, 2016-11-29 09:42:17 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
+//! @cond INTERNAL
+#define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
+#define _TX_V_FROM_CVS(_1,file,ver,rev,date,auth,_2)  "TXLib [Ver: " #ver ", Rev: " #rev "]"
+#define _TX_A_FROM_CVS(_1,file,ver,rev,date,auth,_2)  "Copyright (C) " auth
+//! @endcond
+
+//! @}
 //}
 //-----------------------------------------------------------------------------------------------------------------
 
@@ -341,7 +330,6 @@
 
     #if (_GCC_VER >= 472)
         #define _tx_explicit           explicit
-        #define _tx_override           override
 
         #if !defined (_TX_TESTING)              // This is not a fair play, but this pragma is the only way to clear the
         #pragma GCC system_header               // "override controls (override/final) only available with -std=c++11
@@ -351,7 +339,6 @@
 
     #else
         #define _tx_explicit
-        #define _tx_override
         #define _TX_DEPRECATED
 
     #endif
@@ -447,12 +434,10 @@
         #define _CRT_SECURE_CPP_OVERLOAD_SECURE_NAMES  1
 
         #define _tx_explicit           explicit
-        #define _tx_override           override
 
     #else
 
         #define _tx_explicit
-        #define _tx_override
 
     #endif
 
@@ -488,6 +473,20 @@
 
 #if !( defined (_MSC_VER) && (1600 <= _MSC_VER && _MSC_VER <= 1899) )
 #define _SECURE_SCL_THROWS             1
+#endif
+
+#if  ( __cplusplus >= 201103L )
+    #define _tx_override               override
+    #define _tx_final                  final
+    #define _tx_default                = default
+    #define _tx_delete                 = delete
+
+#else
+    #define _tx_override
+    #define _tx_final
+    #define _tx_default
+    #define _tx_delete
+
 #endif
 
 #define stristr( str1, str2 )          Win32::StrStrIA ((char*) (str1), (str2))
@@ -3024,7 +3023,7 @@ bool txPlaySound (const char filename[] = NULL, DWORD mode = SND_ASYNC);
 //!          неверно установлена кодовая страница для программ, не поддерживающих UNICODE.</i> В остальных случаях
 //!          нужды в @c txMessageBox нет.
 //!
-//! @see     TX_ERROR(), TX_DEBUG_ERROR(), txOutputDebugPrintf(), txNotifyIcon()
+//! @see     TX_ERROR(), TX_DEBUG_ERROR(), txOutputDebugPrintf(), txNotifyIcon(), txStackBackTrace()
 //!
 //! @usage @code
 //!          if (txMessageBox ("Получилось?", "Прочти меня", MB_YESNO) == IDYES)
@@ -3099,7 +3098,7 @@ bool txNotifyIcon (unsigned flags, const char title[], const char format[], ...)
 //!
 //! @warning Сообщение не должно превышать _TX_BIGBUFSIZE символов, иначе оно обрезается.
 //!
-//! @see     TX_ERROR(), TX_DEBUG_ERROR(), txNotifyIcon(), txMessageBox()
+//! @see     TX_ERROR(), TX_DEBUG_ERROR(), txNotifyIcon(), txMessageBox(), txStackBackTrace()
 //!
 //! @usage @code
 //!          int x = 42;
@@ -3720,7 +3719,7 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
 //!          Technology, JPL DOCID D-60411, Ver. 1.0, March 3, 2009</a>, page 15.</small>
 //!
 //! @see     asserted, verified, verify(), TX_ERROR(), TX_DEBUG_ERROR(), txOutputDebugPrintf(), txMessageBox(),
-//!          txNotifyIcon(), __TX_FILELINE__, __TX_FUNCTION__
+//!          txNotifyIcon(), txStackBackTrace(), __TX_FILELINE__, __TX_FUNCTION__
 //!
 //! @usage @code
 //!          assert (0 <= i && i < ARRAY_SIZE);
@@ -3762,7 +3761,7 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
 //!          <b>При компиляции в режиме Release (или если определен NDEBUG) asserted превращается в пустое место.</b>
 //!
 //! @see     assert(), verify(), verified, TX_ERROR(), TX_DEBUG_ERROR(), txOutputDebugPrintf(), txMessageBox(),
-//!          txNotifyIcon(), __TX_FILELINE__, __TX_FUNCTION__
+//!          txNotifyIcon(), txStackBackTrace(), __TX_FILELINE__, __TX_FUNCTION__
 //!
 //! @usage @code
 //!          FILE* input = fopen ("a.txt", "r"); assert (input);
@@ -3808,7 +3807,7 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
 //!          verify @b не превращается в пустой оператор.
 //!
 //! @see     verified, assert(), asserted, TX_ERROR(), TX_DEBUG_ERROR(), txOutputDebugPrintf(), txMessageBox(),
-//!          txNotifyIcon(), __TX_FILELINE__, __TX_FUNCTION__
+//!          txNotifyIcon(), txStackBackTrace(), __TX_FILELINE__, __TX_FUNCTION__
 //!
 //! @usage @code
 //!          FILE* input = verify (fopen ("a.txt", "r"));
@@ -3848,10 +3847,13 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
 //!          символ подчеркивания как свой собственный служебный макрос в модуле @c boost::preprocessor, @strike
 //!          где творится дефайновый адЪ. @endstrike
 //!
+//! @note    Этот макрос может распечатывать стек вызовов функций в консоли. По этому поводу см. замечания к функции
+//!          txStackBackTrace() и раздел @ref TXLibSetup "Установка библиотеки", п.4.
+//!
 //! @return  Всегда false
 //!
 //! @see     _, TX_COMMA, assert(), asserted, verify(), verified, TX_DEBUG_ERROR(), txOutputDebugPrintf(),
-//!          txMessageBox(), txNotifyIcon(), __TX_FILELINE__, __TX_FUNCTION__
+//!          txMessageBox(), txNotifyIcon(), txStackBackTrace(), __TX_FILELINE__, __TX_FUNCTION__
 //!
 //! @usage @code
 //!          TX_ERROR ("Не смог прочитать 'Войну и мир'. Отмазка %d: не нашел '%s'", reasonNum, fileName);
@@ -3883,7 +3885,7 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
 //! @note    В режиме Release этот макрос не выводит ничего.
 //!
 //! @see     _, TX_COMMA, assert(), asserted, verify(), verified, TX_ERROR(), txOutputDebugPrintf(),
-//!          txMessageBox(), txNotifyIcon(), __TX_FILELINE__, __TX_FUNCTION__
+//!          txMessageBox(), txNotifyIcon(), txStackBackTrace(), __TX_FILELINE__, __TX_FUNCTION__
 //!
 //! @usage @code
 //!          TX_DEBUG_ERROR ("Так и не смог прочитать 'Войну и мир'. Отмазка %d: потерял '%s'", reasonNum, fileName);
@@ -3923,12 +3925,24 @@ void txDump (const void* address, const char name[] = "txDump()");
 //! @ingroup Misc
 //! @brief   Распечатывает текущий стек вызовов функций в консоли.
 //!
+//! @warning Для корректной работы этой функкции требуются модули, которые нужно установить (скопировать)
+//!          в папку Windows. См. раздел @ref TXLibSetup "Установка библиотеки", п.4.
+//!
+//! @note    Для наиболее корректной работы этой функции полностью отключайте оптимизацию при компиляции. Например,
+//!          для компилятора GCC @c g++ - с помощью ключа командной строки @c -O0. Разные среды программирования
+//!          позволяют задать эти ключи по-разному, например, в CodeBlocks через Главное меню - Settings -
+//!          Compiler - (Global Compiler Settings) - (Compiler Settings) - Other Options.
+//!
 //! @see     txDump(), TX_ERROR(), TX_DEBUG_ERROR()
 //!
 //! @usage @code
 //!          void Recursion()  // http://google.ru/search?q=%D1%80%D0%B5%D0%BA%D1%83%D1%80%D1%81%D0%B8%D1%8F
 //!              {
 //!              txStackBackTrace();
+//!
+//!              printf ("Press any key...\n");
+//!              _getch();
+//!
 //!              Recursion();
 //!              }
 //! @endcode
@@ -4362,12 +4376,14 @@ unsigned       _txWindowUpdateInterval    = 25;
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Technical
-//! @brief   Размеры внутренних статических строковых буферов TXLib
+//! @brief   Размеры внутренних статических строковых буферов TXLib и стеков потоков
 //}----------------------------------------------------------------------------------------------------------------
 
 const unsigned _TX_BUFSIZE                =  1024,
                _TX_BIGBUFSIZE             = _TX_BUFSIZE *  2,
-               _TX_HUGEBUFSIZE            = _TX_BUFSIZE * 20;
+               _TX_HUGEBUFSIZE            = _TX_BUFSIZE * 20,
+
+               _TX_STACKSIZE              = 64 * 1024;
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Technical
@@ -4484,7 +4500,7 @@ const unsigned _TX_BUFSIZE                =  1024,
 //!          int main()
 //!              {
 //!              ...
-//!              TX_TRACE  // Через DbgView увидим имя файла и номер выполняемой строки
+//!              TX_TRACE;  // Через DbgView увидим имя файла и номер выполняемой строки
 //!              ...
 //!              }
 //! @endcode
@@ -4502,7 +4518,7 @@ const unsigned _TX_BUFSIZE                =  1024,
 #endif
 
 #if !defined (TX_TRACE)
-    #define   TX_TRACE  if (_txCurLoc.trace) _txTrace (__FILE__, __LINE__, __TX_FUNCTION__);
+    #define   TX_TRACE  { if (_txLocCur.trace) _txTrace (__FILE__, __LINE__, __TX_FUNCTION__); }
 #endif
 
 void _txTrace (const char file[], int line, const char func[], const char msg[] = NULL, ...);
@@ -4521,49 +4537,53 @@ namespace Win32
 
 struct _txLoc
     {
-    const char* volatile   file;
-    int         volatile   line;
-    const char* volatile   func;
-    int         volatile   inTX;   // We are inside one of TXLib functions
+    const char*   file;
+    int           line;
+    const char*   func;
 
-    bool        volatile   trace;  // Internal TX trace is active, when enabled by _TX_ALLOW_TRACE
+    int           inTX;   // We are inside one of TXLib functions
+    int           trace;  // Internal TX trace level, when enabled by _TX_ALLOW_TRACE
 
-    const Win32::SYMBOL_INFO*     symInfo;
-    const Win32::IMAGEHLP_LINE64* lineInfo;
-    const char*                   source;
+    const _txLoc* prev;   // Caller's location
     };
 
-extern _tx_thread _txLoc _txCurLoc;
+extern _txLoc _tx_thread  _txLocCur;
 
 struct _txFuncEntry
     {
-    _txFuncEntry()      { _txCurLoc.inTX++; }
-   ~_txFuncEntry()      { _txCurLoc.inTX--; }
+    const _txLoc loc;
+
+    _txFuncEntry() : loc (_txLocCur) { _txLocCur.inTX++; _txLocCur.prev = &loc; }
+   ~_txFuncEntry()      { _txLocCur = loc;                                      }
     };
 
-#define _TX_TRACK_POS   { _txCurLoc.file = __FILE__; _txCurLoc.line = __LINE__; _txCurLoc.func = __TX_FUNCTION__; }
+#define _txLocCurSet()  { _txLocCur.file = __FILE__; _txLocCur.line = __LINE__; _txLocCur.func = __TX_FUNCTION__; }
 
 //-----------------------------------------------------------------------------------------------------------------
 
 #if defined (_TX_ALLOW_TRACE)
 
     #if !defined ($1) && (_TX_ALLOW_TRACE +0 >= 0)
-    #define       $1    _txFuncEntry __txFuncEntry; { _TX_TRACK_POS; TX_TRACE; }
+    #define       $1    _txFuncEntry __txFuncEntry; { _txLocCurSet(); TX_TRACE;      }
     #endif
 
     #if !defined ($)  && (_TX_ALLOW_TRACE +0 >= 1)
-    #define       $                                 { _TX_TRACK_POS; TX_TRACE; }
+    #define       $                                 { _txLocCurSet(); TX_TRACE;      }
     #endif
+
+    #define       $$                                { __txFuncEntry.~_txFuncEntry(); }
 
 #elif defined (_DEBUG)
 
     #if !defined ($1)
-    #define       $1    _txFuncEntry __txFuncEntry; { _TX_TRACK_POS; }
+    #define       $1    _txFuncEntry __txFuncEntry; { _txLocCurSet();                }
     #endif
 
     #if !defined ($)
-    #define       $                                 { _TX_TRACK_POS; }
+    #define       $                                 { _txLocCurSet();                }
     #endif
+
+    #define       $$                                { __txFuncEntry.~_txFuncEntry(); }
 
 #endif
 
@@ -4573,6 +4593,10 @@ struct _txFuncEntry
 
 #if !defined ($)
     #define   $         ;
+    #endif
+
+#if !defined ($$)
+    #define   $$        ;
     #endif
 
 //! @endcond
@@ -5310,15 +5334,17 @@ ptrdiff_t        _txDumpExceptionCPP         (char what[], ptrdiff_t size, unsig
 
 void             _txStackBackTrace           (const char file[] = "?", int line = 0, const char func[] = "?",
                                               bool readSource = true);
-const char*      _txCaptureStackBackTrace    (int framesToSkip = 0, bool readSource = true, CONTEXT* context = NULL);
+const char*      _txCaptureStackBackTrace    (int framesToSkip = 0, bool readSource = true,
+                                              CONTEXT* context = NULL, HANDLE thread = GetCurrentThread());
 int              _txStackWalk                (int framesToSkip, size_t szCapture, void* capture[], unsigned long* backTraceHash,
                                               CONTEXT* context = NULL, HANDLE thread = GetCurrentThread());
+const char*      _txCaptureStackBackTraceTX  (int framesToSkip = 0, bool readSource = false);
 
 const char*      _txSymPrintFromAddr         (void* addr = NULL, const char format[] = NULL, ...) _TX_CHECK_FORMAT (2);
 bool             _txSymGetFromAddr           (void* addr, Win32::SYMBOL_INFO** symbol = NULL,
                                               Win32::IMAGEHLP_LINE64** line = NULL, const char** module = NULL,
                                               const char** source = NULL, int context = 2);
-ptrdiff_t        _txReadText                 (char buf[], ptrdiff_t size, const char file[],
+ptrdiff_t        _txReadSource               (char buf[], ptrdiff_t size, const char file[],
                                               int linStart = 0, int linEnd = INT_MIN, int linMark = INT_MIN);
 
 FARPROC          _txDllImport      (const char dllFileName[], const char funcName[], bool required = true);
@@ -5353,13 +5379,21 @@ ptrdiff_t        _tx_vsnprintf_s   (char stream[], ptrdiff_t size, const char fo
     #define  _TX_ON_DEBUG( code )              ;
 #endif
 
+#if defined (__STRICT_ANSI__) || defined (_MSC_VER) && (_MSC_VER < 1400)
+    #define _TX_UNEXPECTED( msg )              $$ _txError (NULL, 0, NULL, 0, msg)
+
+#else
+    #define _TX_UNEXPECTED( ... )              $$ _txError (NULL, 0, NULL, 0, ##__VA_ARGS__)
+
+#endif
+
 // This is a macro because cond is an expression and is not always a function. Lack of lambdas in pre-C++0x.
 
 #define      _txWaitFor( cond, time )          { for (DWORD _t = GetTickCount() + (time); \
                                                       !(cond) && GetTickCount() < _t;     \
                                                       Sleep (_txWindowUpdateInterval)) ;  \
                                                  if  (!(cond))                            \
-                                                      _txTrace (__FILE__, __LINE__, "WARNING: Timeout: " #cond "."); }
+                                                      _txTrace (__FILE__, __LINE__, NULL, "WARNING: Timeout: " #cond "."); }
 // Hand-made DLLIMPORT helpers
 
 #define _TX_DLLIMPORT(     lib, retval, name, params ) \
@@ -5480,6 +5514,7 @@ _TX_DLLIMPORT_OPT ("Kernel32", void*,    AddVectoredExceptionHandler,(unsigned l
 _TX_DLLIMPORT_OPT ("Kernel32", bool,     GetModuleHandleEx,          (DWORD flags, const char moduleName[], HMODULE* module));
 _TX_DLLIMPORT_OPT ("Kernel32", bool,     IsWow64Process,             (HANDLE process, int* isWow64Process));
 _TX_DLLIMPORT_OPT ("Kernel32", bool,     Wow64GetThreadContext,      (HANDLE thread, WOW64_CONTEXT* context));
+_TX_DLLIMPORT_OPT ("Kernel32", bool,     SetThreadStackGuarantee,    (unsigned long* stackSize));
 
 _TX_DLLIMPORT     ("OLE32",    HRESULT,  CoInitialize,               (void*));
 _TX_DLLIMPORT     ("OLE32",    HRESULT,  CoCreateInstance,           (REFCLSID clsId, IUnknown*, DWORD, REFIID iId, PVOID* value));
@@ -6044,46 +6079,47 @@ using namespace Win32;
 //=================================================================================================================
 //! @{
 
-int                     _txInitialized              = _TX_NOINIT || _txInitialize();
+int                          _txInitialized              = _TX_NOINIT || _txInitialize();
 
-unsigned       volatile _txMainThreadId             = 0;       // ID потока, где выполняется main()
+unsigned          volatile   _txMainThreadId             = 0;       // ID потока, где выполняется main()
 
-unsigned       volatile _txCanvas_ThreadId          = 0;       // ID потока, владеющего окном холста TXLib
-HANDLE         volatile _txCanvas_Thread            = NULL;    // Дексриптор этого потока
-HWND           volatile _txCanvas_Window            = NULL;    // Дескриптор окна холста TXLib
+unsigned          volatile   _txCanvas_ThreadId          = 0;       // ID потока, владеющего окном холста TXLib
+HANDLE            volatile   _txCanvas_Thread            = NULL;    // Дексриптор этого потока
+HWND              volatile   _txCanvas_Window            = NULL;    // Дескриптор окна холста TXLib
 
-UINT                    _txCanvas_RefreshTimer      = 0;       // Timer to redraw TXLib window
-int            volatile _txCanvas_RefreshLock       = 0;       // Blocks auto on-timer canvas update, see txBegin/txEnd
+UINT                         _txCanvas_RefreshTimer      = 0;       // Timer to redraw TXLib window
+int               volatile   _txCanvas_RefreshLock       = 0;       // Blocks auto on-timer canvas update, see txBegin/txEnd
 
-HDC                     _txCanvas_BackBuf[2]        = {NULL,   // [0] Main working TXLib memory DC, where user picture lies
-                                                       NULL};  // [1] Image ready for auto-refresh, see txCanvas_OnPAINT()
-CRITICAL_SECTION        _txCanvas_LockBackBuf       = {0,-1};  // Prevent simultaneous access to back buffer, see txLock()
+HDC                          _txCanvas_BackBuf[2]        = {NULL,   // [0] Main TXLib in-memory DC, where user's pictures lies
+                                                            NULL};  // [1] Image ready for auto-refresh, see txCanvas_OnPAINT()
+CRITICAL_SECTION             _txCanvas_LockBackBuf       = {0,-1};  // Prevent simultaneous access to back buffer, see txLock()
 
-::std::vector<HDC>*     _txCanvas_UserDCs           = NULL;    // List of DCs allocated, for auto-free
+::std::vector<HDC>*          _txCanvas_UserDCs           = NULL;    // List of DCs allocated, for auto-free
 
-bool           volatile _txConsole_IsBlinking       = true;    // To blink or not to blink, that is the question.
+bool              volatile   _txConsole_IsBlinking       = true;    // To blink or not to blink, that is the question.
 
-bool                    _txConsole                  = false;   // Only first TXLib module in app can own the console
-bool                    _txMain                     = false;   // First TXLib wnd opened (closing it terminates program)
-bool                    _txIsDll                    = false;   // TXLib module is in DLL
-bool           volatile _txRunning                  = false;   // main() is still running
-bool           volatile _txExit                     = false;   // exit() is active
+bool                         _txConsole                  = false;   // Only first TXLib module in app can own the console
+bool                         _txMain                     = false;   // First TXLib wnd opened (closing it terminates program)
+bool                         _txIsDll                    = false;   // TXLib module is in DLL
+bool              volatile   _txRunning                  = false;   // main() is still running
+bool              volatile   _txExit                     = false;   // exit() is active
 
-POINT                   _txMousePos                 = {-1,-1}; // Ask Captn Obviouos about it. See txCanvas_OnMOUSE()
-unsigned                _txMouseButtons             = 0;
+POINT                        _txMousePos                 = {-1,-1}; // Ask Captn Obviouos about it. See txCanvas_OnMOUSE()
+unsigned                     _txMouseButtons             = 0;
 
-WNDPROC        volatile _txAltWndProc               = NULL;    // Альтернативная оконная функция. См. txSetWindowsHook().
+WNDPROC           volatile   _txAltWndProc               = NULL;    // Альтернативная оконная функция. См. txSetWindowsHook().
 
-_tx_thread _txLoc       _txCurLoc                   = {};      // Execution point tracking and trace state, see "$" macro
+_txLoc            _tx_thread _txLocCur                   = {};      // Execution point tracking and trace state, see "$" macro
 
-char                    _txDumpSE [_TX_BUFSIZE]     = "";      // SEH dump data area
-char                    _txTraceSE[_TX_HUGEBUFSIZE] = "";      // Stack trace data area
-jmp_buf                 _txDumpExceptionObjJmp      = {0};     // Hook for _txDumpExceptionObj
-LPTOP_LEVEL_EXCEPTION_FILTER _txPrevUEFilter        = NULL;    // Previous UnhandledExceptionFilter
+char                         _txDumpSE [_TX_BUFSIZE]     = "";      // SEH dump data area
+char                         _txTraceSE[_TX_HUGEBUFSIZE] = "";      // Stack trace data area
 
-PROC           volatile _txForceImportThese[]       = { (PROC) ::TerminateProcess, (PROC) ::ExitProcess, (PROC) ::exit };
+jmp_buf                      _txDumpExceptionObjJmp      = {0};     // Hook for _txDumpExceptionObj
+LPTOP_LEVEL_EXCEPTION_FILTER _txPrevUEFilter             = NULL;    // Previous UnhandledExceptionFilter
 
-const unsigned          _txSystemMessage[]          = { 0x776F656D, 0x5E2E2E5E };  // A very system messages
+PROC              volatile   _txForceImportThese[]       = { (PROC) ::TerminateProcess, (PROC) ::ExitProcess, (PROC) ::exit };
+
+const unsigned               _txSystemMessage[]          = { 0x776F656D, 0x5E2E2E5E };  // A very system messages
 
 //! @}
 //}
@@ -6109,7 +6145,7 @@ int _txInitialize()
     #endif
 
     #if defined (_TX_ALLOW_TRACE)
-    _txCurLoc.trace = true;
+    _txLocCur.trace = 1;
     #endif
 
     _TX_ON_DEBUG (OutputDebugString ("\n");
@@ -6129,6 +6165,9 @@ $       (void)          AddAtom ("_txConsole");
 
 $   if (_txConsole)
         {
+$       unsigned long stackSize = _TX_STACKSIZE;
+        if (Win32::SetThreadStackGuarantee) { $ Win32::SetThreadStackGuarantee (&stackSize); }
+
 $       _txOnSignal();
 
 $       if (!*_txLogName)
@@ -6377,6 +6416,8 @@ inline bool txOK()
 
 void _txOnCExit()
     {
+    txOutputDebugPrintf ("\r" "%s - WARNING: %s() called", _TX_VERSION, __func__);
+
 $1  _txCleanup();
 
     if (Win32::_cexit) { $ Win32::_cexit(); }
@@ -6387,6 +6428,8 @@ $1  _txCleanup();
 
 void _txOnExit (int retcode)
     {
+    if (retcode != 0) txOutputDebugPrintf ("\r" "%s - WARNING: %s (%d) called", _TX_VERSION, __func__, retcode);
+
 $1  _txCleanup();
 
     Win32::exit (retcode);
@@ -6397,6 +6440,8 @@ $1  _txCleanup();
 
 void _txOnExitProcess (unsigned retcode)
     {
+    if (retcode != 0) txOutputDebugPrintf ("\r" "%s - WARNING: %s (%u) called", _TX_VERSION, __func__, retcode);
+
 $1  _txCleanup();
 
     Win32::ExitProcess (retcode);
@@ -6407,6 +6452,8 @@ $1  _txCleanup();
 
 bool _txOnTerminateProcess (HANDLE process, unsigned retcode)
     {
+    if (retcode != 0) txOutputDebugPrintf ("\r" "%s - WARNING: %s (0x%p, %u) called", _TX_VERSION, __func__, process, retcode);
+
 $1  _txCleanup();
 
     return Win32::TerminateProcess (process, retcode);
@@ -6416,6 +6463,8 @@ $1  _txCleanup();
 
 BOOL WINAPI _txOnConsoleCtrlEvent (DWORD type)
     {
+    txOutputDebugPrintf ("\r" "%s - WARNING: %s (0x%04X) called", _TX_VERSION, __func__, type);
+
 $1  switch (type)
         {
         case CTRL_LOGOFF_EVENT:
@@ -6576,10 +6625,10 @@ $       Sleep (_txWindowUpdateInterval);
             { $ TX_ERROR ("Программа зависла и будет завершена."); break; }
 
         if (canvas && Win32::IsHungAppWindow && Win32::IsHungAppWindow (canvas))
-            { $ _txTrace (__FILE__, __LINE__, "WARNING: Программа зависла и будет завершена.");     break; }
+            { $ _txTrace (__FILE__, __LINE__, NULL, "WARNING: Программа зависла и будет завершена.");     break; }
 
         if (canvas && !SendMessageTimeout (canvas, WM_NULL, 0,0, SMTO_BLOCK | SMTO_ABORTIFHUNG, _TX_TIMEOUT, NULL))
-            { $ _txTrace (__FILE__, __LINE__, "WARNING: Программа не отвечает и будет завершена."); break; }
+            { $ _txTrace (__FILE__, __LINE__, NULL, "WARNING: Программа не отвечает и будет завершена."); break; }
 
         if (!wine && !(i % 100500))
             { $ printf ("\r" "[Так нажмите же какую-нибудь клавишу для моего завершения]"); }
@@ -6751,7 +6800,9 @@ $   return ok;
 PROC _txSetProcAddress (const char funcName[], PROC newFunc, const char dllName[] /*= NULL*/, int useIAT /*= true*/,
                         HMODULE module /*= NULL*/, bool debug /*= false*/)
     {
-$1  if (debug) printf ("_txSetProcAddress (%s, 0x%p, %s, 0x%p):\n", funcName, newFunc, dllName, module);
+$1  _txLocCur.trace = 0;
+
+$   if (debug) printf ("_txSetProcAddress (%s, 0x%p, %s, 0x%p):\n", funcName, newFunc, dllName, module);
 
 $   _TX_IF_ARGUMENT_FAILED (funcName) return NULL;
 $   _TX_IF_ARGUMENT_FAILED (newFunc)  return NULL;
@@ -6881,6 +6932,9 @@ unsigned WINAPI _txCanvas_ThreadProc (void* data)
 $1  _txCanvas_ThreadId = GetCurrentThreadId();
 
 $   _TX_IF_ARGUMENT_FAILED (data) return false;
+
+$   unsigned long stackSize = _TX_STACKSIZE;
+    if (Win32::SetThreadStackGuarantee) { $ Win32::SetThreadStackGuarantee (&stackSize); }
 
 $   HWND wnd = _txCanvas_CreateWindow ((SIZE*) data);
 $   if (!txWindow()) return TX_DEBUG_ERROR ("\a" "Cannot create canvas"), 0;
@@ -7083,11 +7137,11 @@ LRESULT CALLBACK _txCanvas_WndProc (HWND wnd, UINT msg, WPARAM wpar, LPARAM lpar
     {
 #ifdef _TX_ALLOW_TRACE
 
-    _txCurLoc.inTX++;
+    int inTX = _txLocCur.inTX++;
 
-    if (_txCurLoc.trace) _txTrace (__FILE__, __LINE__, __TX_FUNCTION__, "%*s" "0x%X <- 0x%03X (0x%08X, 0x%08lX)",
-                                12 - _txCurLoc.inTX*2, "", wnd, msg, wpar, lpar);
-    _txCurLoc.inTX--;
+    if (_txLocCur.trace) _txTrace (__FILE__, __LINE__, __TX_FUNCTION__, "%*s" "0x%X <- 0x%03X (0x%08X, 0x%08lX)",
+                                   12 - _txLocCur.inTX*2, "", wnd, msg, wpar, lpar);
+    _txLocCur.inTX = inTX;
 
 #endif
 
@@ -7844,8 +7898,8 @@ $   return obj != NULL;
 const char* _txError (const char file[] /*= NULL*/, int line /*= 0*/, const char func[] /*= NULL*/, unsigned color /*= 0*/,
                       const char msg [] /*= NULL*/, ...)
     {                                                                       //------------------Это ASCII KOT!
-    va_list arg; va_start (arg, msg);                                       //   /\_|_/\                     |
-    const char* what = _txReportError (file, line, func, color, msg, arg);  //  \| o o |/      Добавь его себе
+$1  va_list arg; va_start (arg, msg);                                       //   /\_|_/\                     |
+$$  const char* what = _txReportError (file, line, func, color, msg, arg);  //  \| o o |/      Добавь его себе
     va_end (arg);                                                           // --\ =!= /--  в исходник, и тебе
                                                                             //  / \ v / \      будет, наверно,
     if (!(msg && msg[0] == '\a')) return what;                              //     ---    приятно отлаживаться
@@ -7863,9 +7917,9 @@ const char* _txError (const char file[] /*= NULL*/, int line /*= 0*/, const char
 
 void _txOnSignal (int sig /*= 0*/, int fpe /*= 0*/)
     {
-    if (!sig && !fpe)
+$1  if (!sig && !fpe)
         {
-$1      signal (SIGSEGV, (void(*)(int))_txOnSignal) != SIG_ERR asserted;
+$       signal (SIGSEGV, (void(*)(int))_txOnSignal) != SIG_ERR asserted;
 $       signal (SIGFPE,  (void(*)(int))_txOnSignal) != SIG_ERR asserted;
 $       signal (SIGABRT, (void(*)(int))_txOnSignal) != SIG_ERR asserted;
 $       signal (SIGILL,  (void(*)(int))_txOnSignal) != SIG_ERR asserted;
@@ -7873,11 +7927,13 @@ $       signal (SIGTERM, (void(*)(int))_txOnSignal) != SIG_ERR asserted;
 $       return;
         }
 
-    #define GET_DESCR_(str, code, descr)  case (code): { (str) = " " #code ": " descr; break; }
+    txOutputDebugPrintf ("\r" "%s - WARNING: %s (%d, %d) called", _TX_VERSION, __func__, sig, fpe);
 
-    const char* sSig = "Неизвестный тип сигнала";
+    #define GET_DESCR_(str, code, descr)  case (code): { $ (str) = " " #code ": " descr; break; }
 
-    switch (sig)
+$   const char* sSig = "Неизвестный тип сигнала";
+
+$   switch (sig)
         {
         GET_DESCR_ (sSig, SIGSEGV, "Доступ по неверному указателю. Ставьте ассерты!")
         GET_DESCR_ (sSig, SIGILL,  "Попытка выполнить недопустимую операцию. Проверьте указатели на функции.")
@@ -7887,14 +7943,14 @@ $       return;
         default:   break;
         }
 
-    const char* sFPE = "";
+$   const char* sFPE = "";
 
     #if defined (_MSC_VER)
 
     // MSVC provides the FPE code as a MS extension.
     // See: https://msdn.microsoft.com/ru-ru/library/xdkz3x12.aspx
 
-    if (sig == SIGFPE) switch (fpe)
+$   if (sig == SIGFPE) switch (fpe)
         {
         GET_DESCR_ (sFPE, _FPE_INVALID,        "Результат неверен.")
         GET_DESCR_ (sFPE, _FPE_DENORMAL,       "Денормализация.")
@@ -7911,68 +7967,74 @@ $       return;
         }
 
     #else
-    fpe = 0;
+$   fpe = 0;
     #endif
 
     #undef GET_DESCR_
 
-    signal (sig, (void(*)(int))_txOnSignal);
-    _fpreset();
+$   signal (sig, (void(*)(int))_txOnSignal);
+$   _fpreset();
 
-    _txError (NULL, 0, NULL, 0, "\a\t" "signal (%d, 0x%02X):%s%s "
-              "%s%s"
-              "С помощью функции signal() вы можете сами обработать эту ошибку.",
-              sig, (unsigned) fpe, sSig, sFPE,
-              ((_txDumpSE[1] == '\n')? "" : "\n\n"), _txDumpSE + 1);
+$   _TX_UNEXPECTED ("\a\t"
+                    "signal (%d, 0x%02X):%s%s "
+                    "%s%s"
+                    "С помощью функции signal() вы можете сами обработать эту ошибку." _
+                    sig _ (unsigned) fpe _ sSig _ sFPE _
+                    ((_txDumpSE[1] == '\n')? "" : "\n\n")_ _txDumpSE + 1);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
 
 void _txOnTerminate()
     {
+    txOutputDebugPrintf ("\r" "%s - WARNING: %s() called", _TX_VERSION, __func__);
+
     // From: http://github.com/gcc-mirror/gcc/blob/master/libstdc%2B%2B-v3/libsupc%2B%2B/vterminate.cc
 
-    static int terminating = 0;
-    if (terminating++) _txError (NULL, 0, NULL, 0, "\a" "std::terminate() вызвана рекурсивно.");
+$1  static int terminating = 0;
+    if (terminating++) { $ _TX_UNEXPECTED ("\a" "std::terminate() вызвана рекурсивно."); return; }
 
-    if (!*_txDumpSE)
-        _txDumpExceptionCPP (_txDumpSE + 1, sizeof (_txDumpSE) - 2);
+$   if (!*_txDumpSE)
+        { $ _txDumpExceptionCPP (_txDumpSE + 1, sizeof (_txDumpSE) - 2); }
 
-    _txError (NULL, 0, NULL, 0,
-              "\a%s" "std::terminate(): Неперехваченное исключение в функции main() или в деструкторе, "
-              "или другая фатальная ошибка C++."
-              "%s"
-              "Используйте try/catch блоки, перехватывайте catch (...), проверяйте вызовы виртуальных функций, "
-              "разбирайтесь, в чем дело.\n\n"
-              "С помощью std::set_terminate() вы можете сами обработать эту ошибку.",
-              (*_txDumpSE? "\t" : ""), _txDumpSE + 1);
+$   _TX_UNEXPECTED ("\a"
+                    "std::terminate(): Неперехваченное исключение в функции main() или в деструкторе, "
+                    "или другая фатальная ошибка C++."
+                    "%s"
+                    "Используйте try/catch блоки, перехватывайте catch (...), проверяйте вызовы виртуальных функций, "
+                    "разбирайтесь, в чем дело.\n\n"
+                    "С помощью std::set_terminate() вы можете сами обработать эту ошибку." _
+                    _txDumpSE + 1);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
 
 void _txOnUnexpected()
     {
-    if (!*_txDumpSE)
-        _txDumpExceptionCPP (_txDumpSE + 1, sizeof (_txDumpSE) - 2);
+    txOutputDebugPrintf ("\r" "%s - WARNING: %s() called", _TX_VERSION, __func__);
 
-    _txError (NULL, 0, NULL, 0,
-              "std::unexpected(): Необработанное исключение.\n\n"
-              "Проверьте свои catch-блоки. Перехватите catch (...). Если вы (зря) используете "
-              "спецификацию исключений для функций, проверьте, не нарушена ли она."
-              "%s"
-              "С помощью std::set_unexpected() вы можете сами обработать эту ошибку.",
-              _txDumpSE + 1);
+$1  if (!*_txDumpSE)
+        { $ _txDumpExceptionCPP (_txDumpSE + 1, sizeof (_txDumpSE) - 2); }
+
+$   _TX_UNEXPECTED ("std::unexpected(): Необработанное исключение.\n\n"
+                    "Проверьте свои catch-блоки. Перехватите catch (...). Если вы (зря) используете "
+                    "спецификацию исключений для функций, проверьте, не нарушена ли она."
+                    "%s"
+                    "С помощью std::set_unexpected() вы можете сами обработать эту ошибку." _
+                    _txDumpSE + 1);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
 
-int _txOnMatherr (_exception* except)
+int _txOnMatherr (_exception* exc)
     {
-    #define GET_DESCR_(code, descr)  case (code): { sType = "(" #code "): " descr; break; }
+    txOutputDebugPrintf ("\r" "%s - WARNING: %s (0x%p) called", _TX_VERSION, __func__, exc);
 
-    const char* sType = "Неизвестный тип исключения";
+    #define GET_DESCR_(code, descr)  case (code): { $ sType = "(" #code "): " descr; break; }
 
-    switch (except->type)
+$1  const char* sType = "Неизвестный тип исключения";
+
+$   switch (exc->type)
         {
         GET_DESCR_ (_DOMAIN,    "Нарушение области определения");
         GET_DESCR_ (_SING,      "Сингулярность аргумента");
@@ -7985,10 +8047,9 @@ int _txOnMatherr (_exception* except)
 
     #undef GET_DESCR_
 
-    _txError (NULL, 0, NULL, 0,
-              "_matherr(): Математическая ошибка %d %s в функции %s (%lg, [%lg]). Она вернет значение %lg.\n\n"
-              "С помощью __setusermatherr() вы можете сами обработать эту ошибку.",
-              except->type, sType, except->name, except->arg1, except->arg2, except->retval);
+$   _TX_UNEXPECTED ("_matherr(): Математическая ошибка %d %s в функции %s (%lg, [%lg]). Она вернет значение %lg.\n\n"
+                    "С помощью __setusermatherr() вы можете сами обработать эту ошибку." _
+                    exc->type _ sType _ exc->name _ exc->arg1 _ exc->arg2 _ exc->retval);
 
     return 0;
     }
@@ -7997,25 +8058,29 @@ int _txOnMatherr (_exception* except)
 
 void _txOnNewHandlerAnsi()
     {
-    _txError (NULL, 0, NULL, 0,
-              "operator new: Ошибка выделения памяти.\n\n"
-              "С помощью std::set_new_handler() вы можете сами обработать эту ошибку "
-              "и где-нибудь найти недостающую память.");
+    txOutputDebugPrintf ("\r" "%s - WARNING: %s() called", _TX_VERSION, __func__);
+$1
+$   _TX_UNEXPECTED ("operator new: Ошибка выделения памяти.\n\n"
+                    "С помощью std::set_new_handler() вы можете сами обработать эту ошибку "
+                    "и где-нибудь найти недостающую память.");
 
-    throw std::bad_alloc();
+$   throw std::bad_alloc();
     }
 
 //-----------------------------------------------------------------------------------------------------------------
 
 void _txOnSecurityErrorAnsi (const char* msg, void* ptr, int code)
     {
-    if (code) errno = code;
+    txOutputDebugPrintf ("\r" "%s - WARNING: %s (%s, 0x%p, %d) called", _TX_VERSION, __func__, msg, ptr, code);
 
-    _txError (NULL, 0, NULL, 0,
-              "\a" "Ошибка переполнения буфера %d: %s в %.20s (0x%p). Ставьте ассерты!\n\n"
-                   "С помощью std::set_constraint_handler_s() вы можете сами обработать эту ошибку "
-                   "и постараться не выходить за границы массивов.",
-                   code, msg, (char*) ptr, ptr);
+$1  if (code)
+        { $ errno = code; }
+
+$   _TX_UNEXPECTED ("\a"
+                    "Ошибка переполнения буфера %d: %s в %.20s (0x%p). Ставьте ассерты!\n\n"
+                    "С помощью std::set_constraint_handler_s() вы можете сами обработать эту ошибку "
+                    "и постараться не выходить за границы массивов." _
+                    code _ msg _ (char*) ptr _ ptr);
     }
 
 //}
@@ -8031,40 +8096,47 @@ void _txOnSecurityErrorAnsi (const char* msg, void* ptr, int code)
 
 int _txOnNewHandler (size_t size)
     {
-    _txError (NULL, 0, NULL, 0,
-              "operator new: Ошибка выделения %llu байт памяти.\n\n"
-              "С помощью _set_new_handler() вы можете сами обработать эту ошибку "
-              "и где-нибудь найти недостающую память.", (unsigned long long) size);
+    txOutputDebugPrintf ("\r" "%s - WARNING: %s (0x%p) called", _TX_VERSION, __func__, (void*)(uintptr_t) size);
+$1
+$   _TX_UNEXPECTED ("operator new: Ошибка выделения %llu байт памяти.\n\n"
+                    "С помощью _set_new_handler() вы можете сами обработать эту ошибку "
+                    "и где-нибудь найти недостающую память." _ (unsigned long long) size);
 
-    throw std::bad_alloc();
-    return 0;
+$   throw std::bad_alloc();
+$   return 0;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
 
-void _txOnSecurityError (int code, void*)
+void _txOnSecurityError (int code, void* addr)
     {
-    _txError (NULL, 0, NULL, 0,
-              "\a" "Ошибка переполнения буфера %d (_SECERR_BUFFER_OVERRUN). Ставьте ассерты!\n\n"
-                   "С помощью _set_security_error_handler() вы можете сами обработать эту ошибку "
-                   "и более торжественно завершить программу. Ставьте же ассерты.", code);
+    txOutputDebugPrintf ("\r" "%s - WARNING: %s (%d, 0x%p) called", _TX_VERSION, __func__, code, addr);
+$1
+$   _TX_UNEXPECTED ("\a"
+                    "Ошибка переполнения буфера %d (_SECERR_BUFFER_OVERRUN). Ставьте ассерты!\n\n"
+                    "С помощью _set_security_error_handler() вы можете сами обработать эту ошибку "
+                    "и более торжественно завершить программу. Ставьте же ассерты." _ code);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
 
 void _txOnPureCall()
     {
-    _txError (NULL, 0, NULL, 0,
-              "\a" "Вызвана чисто виртуальная функция. Такое бывает, например, в конструкторах "
-                   "или деструкторах базовых классов - не вызывайте там таких функций.\n\n"
-                   "С помощью _set_purecall_handler() вы можете сами обработать эту ошибку "
-                   "и проверить свое знание С++ :)");
+    txOutputDebugPrintf ("\r" "%s - WARNING: %s() called", _TX_VERSION, __func__);
+$1
+$   _TX_UNEXPECTED ("\a"
+                    "Вызвана чисто виртуальная функция. Такое бывает, например, в конструкторах "
+                    "или деструкторах базовых классов - не вызывайте там таких функций.\n\n"
+                    "С помощью _set_purecall_handler() вы можете сами обработать эту ошибку "
+                    "и проверить свое знание С++ :)");
     }
 
 //-----------------------------------------------------------------------------------------------------------------
 
-void _txOnInvalidParam (const wchar_t* wExpr, const wchar_t* wFunc, const wchar_t* wFile, unsigned int line, uintptr_t)
+void _txOnInvalidParam (const wchar_t* wExpr, const wchar_t* wFunc, const wchar_t* wFile, unsigned int line, uintptr_t addr)
     {
+    txOutputDebugPrintf ("\r" "%s - WARNING: %s (%S, %S, %S, %d, 0x%p) called", _TX_VERSION, __func__, wExpr, wFunc, wFile, line, addr);
+
 $1  char expr [_TX_BUFSIZE/2] = "[Unknowm expr]",
          func [_TX_BUFSIZE/2] = "[Unknowm func]",
          file [MAX_PATH]      = "[Unknowm file]";
@@ -8073,9 +8145,9 @@ $   WideCharToMultiByte (_TX_CP, 0, wExpr, -1, expr, sizeof (expr) - 1, NULL, NU
 $   WideCharToMultiByte (_TX_CP, 0, wFunc, -1, func, sizeof (func) - 1, NULL, NULL);
 $   WideCharToMultiByte (_TX_CP, 0, wFile, -1, file, sizeof (file) - 1, NULL, NULL);
 
-$   _txError (file, line, func, 0,
-              "\a" "В функцию %s передан неверный параметр: неверно, что %s. Не надо так.\n\n"
-                   "С помощью _set_invalid_parameter_handler() вы можете сами обработать эту ошибку.", func, expr);
+$$  _txError (file, line, func, 0, "\a"
+              "В функцию %s передан неверный параметр: неверно, что %s. Не надо так.\n\n"
+              "С помощью _set_invalid_parameter_handler() вы можете сами обработать эту ошибку.", func, expr);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -8084,6 +8156,8 @@ $   _txError (file, line, func, 0,
 
 int _txOnRTCFailure (int type, const char* file, int line, const char* module, const char* format, ...)
     {
+    txOutputDebugPrintf ("\r" "%s - WARNING: %s (%d, %s, %d, %s, %s) called", _TX_VERSION, __func__, type, file, line, module, format);
+
 $1  static long running = 0;
 $   while (InterlockedExchange (&running, 1)) Sleep (0);
 
@@ -8115,8 +8189,8 @@ $   switch (type)
 
 $   const char* sError = _RTC_GetErrDesc (error);
 
-$   _txError (file, line, NULL, 0, "\a" "Сбой проверки выполнения машинного кода: %s %d (%s): %s в модуле %s.",
-              sType, error, sError, text, module);
+$$  _txError (file, line, NULL, 0, "\a"
+              "Сбой проверки выполнения машинного кода: %s %d (%s): %s в модуле %s.", sType, error, sError, text, module);
 
     // The code below will be never executed until the error above will stay fatal:
 
@@ -8142,13 +8216,55 @@ $   return 1;
 
 int _txOnAllocHook (int type, void* data, size_t size, int use, long request, const unsigned char* file, int line)
     {
-    UNREFERENCED_PARAMETER (type);    // Unreferenced parameter! Кто бы мог подумать?
-    UNREFERENCED_PARAMETER (data);    // Да ладно!
-    UNREFERENCED_PARAMETER (size);    // А то я не заметил
-    UNREFERENCED_PARAMETER (use);     // Все вы врёти!
-    UNREFERENCED_PARAMETER (request); // Выше было ровно одно употребление буквы "ё"
-    UNREFERENCED_PARAMETER (file);    // Выше было еще одно употребление
-    UNREFERENCED_PARAMETER (line);    // Этому параметру грустно, употребите его где-нибудь!
+    #if (_TX_ALLOW_TRACE +0 >= 4)
+
+    static _tx_thread recursive = 0;
+    if (recursive) return true;
+    recursive++;
+
+    #define GET_DESCR_(str, type)  case (type): { $ str = " (" #type ")"; break; }
+
+$1  const char* sType = "";
+$   const char* sUse  = "";
+
+$   switch (_BLOCK_TYPE (type))
+        {
+        GET_DESCR_ (sType, _HOOK_ALLOC);
+        GET_DESCR_ (sType, _HOOK_REALLOC);
+        GET_DESCR_ (sType, _HOOK_FREE);
+        default: $ break;
+        }
+
+$   switch (use)
+        {
+        GET_DESCR_ (sUse,  _NORMAL_BLOCK);
+        GET_DESCR_ (sUse,  _CRT_BLOCK);
+        GET_DESCR_ (sUse,  _CLIENT_BLOCK);
+        GET_DESCR_ (sUse,  _FREE_BLOCK);
+        GET_DESCR_ (sUse,  _IGNORE_BLOCK);
+        default: $ break;
+        }
+
+    #undef  GET_DESCR_
+
+$   _txTrace (file, line, NULL, "%*s"
+              "_txOnAllocHook (type = 0x%02X%s, subtype =0x%X, data = 0x%p, size = 0x%p, use = 0x%02X%s, request = %ld)",
+              12 - _txLoc::cur.inTX*2, "",
+              type, sType, _BLOCK_SUBTYPE (type), data, (void*) size, use, sUse, request);
+
+$   recursive--;
+
+    #else
+
+    UNREFERENCED_PARAMETER (type);
+    UNREFERENCED_PARAMETER (data);
+    UNREFERENCED_PARAMETER (size);
+    UNREFERENCED_PARAMETER (use);
+    UNREFERENCED_PARAMETER (request);
+    UNREFERENCED_PARAMETER (file);
+    UNREFERENCED_PARAMETER (line);
+
+    #endif
 
     return true;
     }
@@ -8193,31 +8309,39 @@ $1  _txPrevUEFilter = filter;
 long _txOnExceptionSEH (EXCEPTION_POINTERS* exc, const char func[])
     {
     assert (exc);
-    assert (func);
+    assert (exc->ExceptionRecord);
 
+    assert (func);
     assert (func[3] == 'V' || func[3] == 'U');
 
-    if (exc->ExceptionRecord->ExceptionCode == EXCEPTION_OUTPUT_DEBUG_STRING ||
-        exc->ExceptionRecord->ExceptionCode == EXCEPTION_THREAD_NAME         ||
-        exc->ExceptionRecord->ExceptionCode == EXCEPTION_BREAKPOINT && IsDebuggerPresent())
+    DWORD code = (exc && exc->ExceptionRecord)? exc->ExceptionRecord->ExceptionCode : 0;
+
+    if (code == EXCEPTION_OUTPUT_DEBUG_STRING ||
+        code == EXCEPTION_THREAD_NAME         ||
+        code == EXCEPTION_BREAKPOINT && IsDebuggerPresent())
         return EXCEPTION_CONTINUE_SEARCH;
 
-    if (((unsigned long long*) _txDumpExceptionObjJmp) [0]) longjmp (_txDumpExceptionObjJmp, 1);
+    txOutputDebugPrintf ("\r" "%s - WARNING: %s (0x%p (code 0x%08lX), %s) called", _TX_VERSION, __func__, exc, code, func);
 
-    _txLoc loc = _txCurLoc;
+$1  if (((unsigned long long*) _txDumpExceptionObjJmp) [0])
+        { $ longjmp (_txDumpExceptionObjJmp, 1); }
 
-$1  bool primaryException = ((func[3] == 'V' || (func[3] == 'U' && !*_txDumpSE)) &&
-                             !_TX_MSC__CXX_DETECT_RETHROW (exc->ExceptionRecord));
+    #ifdef _MSC_VER
+    if (code == EXCEPTION_STACK_OVERFLOW) { $ _resetstkoflw(); }
+    #endif
+
+$   bool primaryException = (func && exc)? ((func[3] == 'V' || (func[3] == 'U' && !*_txDumpSE)) &&
+                                            !_TX_MSC__CXX_DETECT_RETHROW (exc->ExceptionRecord)) : true;
 $   if (primaryException)
         {
 $       unsigned err = GetLastError();
 
-$       _txDumpExceptionSEH    (_txDumpSE,  (ptrdiff_t) sizeof (_txDumpSE)  - 1, exc->ExceptionRecord, func);
+$       _txDumpExceptionSEH (_txDumpSE,  (ptrdiff_t) sizeof (_txDumpSE)  - 1, exc->ExceptionRecord, func);
 
-$       if (exc->ExceptionRecord && exc->ExceptionRecord->ExceptionCode != EXCEPTION_STACK_OVERFLOW)
+$       if (code != EXCEPTION_STACK_OVERFLOW)
             {
-$           _tx_snprintf_s (_txTraceSE, (ptrdiff_t) sizeof (_txTraceSE) - 1, "%s",
-                            _txCaptureStackBackTrace (0, true, exc->ContextRecord));
+$           _tx_snprintf_s  (_txTraceSE, (ptrdiff_t) sizeof (_txTraceSE) - 1, "%s",
+                             _txCaptureStackBackTrace (0, true, exc->ContextRecord));
             }
 
 $       SetLastError (err);
@@ -8225,16 +8349,13 @@ $       SetLastError (err);
 
 $   if (_txDumpSE[0] == '\a')
         {
-$       _txCurLoc = loc;
-
-        _txError (NULL, 0, NULL, 0,
-                  "\a\t" "%s"
-                         "С помощью функции _set_se_translator() вы можете сами обработать эту ошибку.",
-                         _txDumpSE + 1);
+$       _TX_UNEXPECTED ("\a\t"
+                        "%s"
+                        "С помощью функции _set_se_translator() вы можете сами обработать эту ошибку." _
+                        _txDumpSE + 1);
         }
 
-$   _txCurLoc = loc;
-    return EXCEPTION_CONTINUE_SEARCH;
+$   return EXCEPTION_CONTINUE_SEARCH;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -8407,7 +8528,7 @@ $   if (code == EXCEPTION_CPP_GCC        ||
         code == EXCEPTION_CPP_GCC_FORCED ||
         code == EXCEPTION_CPP_MSC)
         {
-$       s += _txDumpExceptionCPP (what, size, code, params, info);
+$       s += _txDumpExceptionCPP (what, size, code, params, info);  // In this case, SEH info is not interesting
         }
 
 $   if (exc->ExceptionFlags & EXCEPTION_NONCONTINUABLE)
@@ -8598,7 +8719,7 @@ $   if (name &&
         strcmp (name, "std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*")                  == 0))
         { $ name = "std::string*"; }
 
-    if (name) { $ PRINT_ (" %s = " _ name); }
+    if (name) { $ PRINT_ (" %s" _ name); }
 
     #ifdef _GCC_VER
 $   free (typeName);
@@ -8608,12 +8729,12 @@ $   err = 0;
 $   if (mangledName && !setjmp (_txDumpExceptionObjJmp))
         {
         #define PRINT_VAL_(fmt, typ, ...)                                                                      \
-            else if (*type == typeid (      typ       )) { $ PRINT_ (#fmt _ (* (typ* ) object) __VA_ARGS__); } \
-            else if (*type == typeid (const typ       )) { $ PRINT_ (#fmt _ (* (typ* ) object) __VA_ARGS__); } \
-            else if (*type == typeid (      typ*      )) { $ PRINT_ (#fmt _ (**(typ**) object) __VA_ARGS__); } \
-            else if (*type == typeid (const typ*      )) { $ PRINT_ (#fmt _ (**(typ**) object) __VA_ARGS__); } \
-            else if (*type == typeid (      typ* const)) { $ PRINT_ (#fmt _ (**(typ**) object) __VA_ARGS__); } \
-            else if (*type == typeid (const typ* const)) { $ PRINT_ (#fmt _ (**(typ**) object) __VA_ARGS__); }
+            else if (*type == typeid (      typ       )) { $ PRINT_ (" = " #fmt _ (* (typ* ) object) __VA_ARGS__); } \
+            else if (*type == typeid (const typ       )) { $ PRINT_ (" = " #fmt _ (* (typ* ) object) __VA_ARGS__); } \
+            else if (*type == typeid (      typ*      )) { $ PRINT_ (" = " #fmt _ (**(typ**) object) __VA_ARGS__); } \
+            else if (*type == typeid (const typ*      )) { $ PRINT_ (" = " #fmt _ (**(typ**) object) __VA_ARGS__); } \
+            else if (*type == typeid (      typ* const)) { $ PRINT_ (" = " #fmt _ (**(typ**) object) __VA_ARGS__); } \
+            else if (*type == typeid (const typ* const)) { $ PRINT_ (" = " #fmt _ (**(typ**) object) __VA_ARGS__); }
 
         if (0) ;
         PRINT_VAL_ ("%s", char*)  PRINT_VAL_ ('%c', unsigned char)   PRINT_VAL_ (%s,   bool, ? "true" : "false")
@@ -8650,7 +8771,7 @@ $       err = 0;
         }
 
 $   if (err)
-        { $ PRINT_ ("???"); }
+        { $ PRINT_ (" = ???"); }
 
 $   PRINT_ ((object? "%sего адрес 0x%p." : "%sего адрес NULL.")_ ((typeName || mangledName)? ", " : "")_ object);
 
@@ -8667,61 +8788,63 @@ $   return s - what;
 //{          Stack trace and debug info access
 //-----------------------------------------------------------------------------------------------------------------
 
-const char* _txCaptureStackBackTrace (int framesToSkip /*= 0*/, bool readSource /*= true*/, CONTEXT* context /*= NULL*/)
+const char* _txCaptureStackBackTrace (int framesToSkip /*= 0*/, bool readSource /*= true*/,
+                                      CONTEXT* context /*= NULL*/, HANDLE thread /*= GetCurrentThread()*/)
     {
-    const int maxFrames = 62;  // MS says: < 63
-    static char trace [(MAX_PATH + 1024+1) * maxFrames] = "";
+$1  _txLocCur.trace = 0;
 
-    if (framesToSkip == -1) return trace;
+$   const int maxFrames = 62;  // MS says: < 63
+$   static char trace [(MAX_PATH + 1024+1) * maxFrames] = "";
 
-    static void* capture [maxFrames] = {};
-    int frames = _txStackWalk (framesToSkip, SIZEARR (capture), capture, NULL, context);
+    if (framesToSkip == -1) { $ return trace; }
 
-    memset (trace, 0, sizeof (trace));
-    char* s = trace;
+$   static void* capture [maxFrames] = {};
+$   int frames = _txStackWalk (framesToSkip + 1, SIZEARR (capture), capture, NULL, context, thread);
+
+$   memset (trace, 0, sizeof (trace));
+$   char* s = trace;
 
     #define PRINT_(msg)  s += _tx_snprintf_s (s, sizeof (trace) - 1 - 3 - (s-trace), msg)
 
-    for (int i = 0, n = 0; i < frames; i++)
+$   for (int i = 0, n = 0; i < frames; i++)
         {
-        void* addr = capture[i];
+$       void* addr = capture[i];
 
-        Win32::SYMBOL_INFO*     sym    = NULL;
-        Win32::IMAGEHLP_LINE64* line   = NULL;
-        const char*             module = NULL;
-        const char*             source = NULL;
-        bool                    inTX   = false;
+$       Win32::SYMBOL_INFO*     sym    = NULL;
+$       Win32::IMAGEHLP_LINE64* line   = NULL;
+$       const char*             module = NULL;
+$       const char*             source = NULL;
+$       bool                    inTX   = false;
 
-        const size_t callSz = 1 + sizeof (DWORD);  // sizeof (CALL instruction)
-        if (addr) inTX = _txSymGetFromAddr ((char*) addr - callSz, &sym, &line, &module);
+        if (addr) { $ inTX = _txSymGetFromAddr ((char*) addr - 1, &sym, &line, &module); }
 
-        if (readSource && !inTX) _txSymGetFromAddr ((void*) 1, NULL, NULL, NULL, &source, 2);
+        if (readSource && !inTX) { $ _txSymGetFromAddr ((void*) 1, NULL, NULL, NULL, &source, 2); }
 
-        int nl = 0;
-        while (s > trace && s[-1] == '\n') { s--; nl++; }
+$       int nl = 0;
+$       while (s > trace && s[-1] == '\n') { s--; nl++; }
 
-        PRINT_ ("%s#%2d 0x%p" _ ((n)? ((source || nl)? "\n\n" : "\n") : "")_ n _ addr);
-        n++;
+$       PRINT_ ("%s#%2d 0x%p" _ ((n)? ((source || nl)? "\n\n" : "\n") : "")_ n _ addr);
+$       n++;
 
-        if ((uintptr_t) addr ==  0)         { PRINT_ (" [Неверный фрейм]");        break; }
-        if ((uintptr_t) addr == -1)         { PRINT_ (" [Странный фрейм]");        break; }
-        if ((uintptr_t) addr == 0xBAADF00D) { PRINT_ (" [Мусор от LocalAlloc()]"); break; }
+        if ((uintptr_t) addr ==  0)         { $ PRINT_ (" [Неверный фрейм]");        break; }
+        if ((uintptr_t) addr == -1)         { $ PRINT_ (" [Странный фрейм]");        break; }
+        if ((uintptr_t) addr == 0xBAADF00D) { $ PRINT_ (" [Мусор от LocalAlloc()]"); break; }
 
-        if (module)                   PRINT_ (" in %s%s" _     module _ ((sym && *sym->Name)? "!" : ""));
-        if (sym  && *sym->Name)       PRINT_ ("%s" _           sym->Name);
-        if (line && line->FileName)   PRINT_ (" at %s" _       line->FileName);
-        if (line && line->LineNumber) PRINT_ (" (%u)" _        line->LineNumber);
-        if (source)                   PRINT_ (":\n\n" "%s\n" _ source);
+        if (module)                         { $ PRINT_ (" in %s%s"     _ module _ ((sym && *sym->Name)? "!" : "")); }
+        if (sym  && *sym->Name)             { $ PRINT_ ("%s"           _ sym->Name);                                }
+        if (line && line->FileName)         { $ PRINT_ (" at %s"       _ line->FileName);                           }
+        if (line && line->LineNumber)       { $ PRINT_ (" (%u)"        _ line->LineNumber);                         }
+        if (source)                         { $ PRINT_ (":\n\n" "%s\n" _ source);                                   }
 
-        if (sym && sym->Name && strcmp (sym->Name , "main") == 0) break;
+        if (sym && sym->Name && strcmp (sym->Name , "main") == 0) { $ break; }
         }
 
     #if defined (_MSC_VER)
     #pragma warning (disable: 28199)  // Using possibly uninitialized memory '*s'
     #endif
 
-    while (s > trace && s[-1] == '\n') s--;
-    *s = 0;
+$   while (s > trace && s[-1] == '\n') s--;
+$   *s = 0;
 
     #if defined (_MSC_VER)
     #pragma warning (default: 28199)  // Using possibly uninitialized memory '*s'
@@ -8729,9 +8852,9 @@ const char* _txCaptureStackBackTrace (int framesToSkip /*= 0*/, bool readSource 
 
     #undef PRINT_
 
-    s += _tx_snprintf_s (s, sizeof (trace) - 1 - (s-trace), "");
+$   s += _tx_snprintf_s (s, sizeof (trace) - 1 - (s-trace), "");
 
-    return trace;
+$   return trace;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -8741,22 +8864,24 @@ const char* _txCaptureStackBackTrace (int framesToSkip /*= 0*/, bool readSource 
 int _txStackWalk (int framesToSkip, size_t szCapture, void* capture[], unsigned long* backTraceHash,
                   CONTEXT* context /*= NULL*/, HANDLE thread /* = GetCurrentThread()*/)
     {
-    namespace MinGW = Win32::MinGW;
+$1  _txLocCur.trace = 0;
 
-    assert (capture);
+$   namespace MinGW = Win32::MinGW;
+
+$   assert (capture);
 
     if (!context)
-        return Win32::RtlCaptureStackBackTrace (framesToSkip, (DWORD) szCapture, capture, backTraceHash);
+        { $ return Win32::RtlCaptureStackBackTrace (framesToSkip + 1, (DWORD) szCapture, capture, backTraceHash); }
 
     #if   (defined (_M_X32) || defined (_M_IX86)) && !defined (_M_X64) && !defined (_WIN64)
 
-        unsigned cpu = IMAGE_FILE_MACHINE_I386;
-        Win32::STACKFRAME64 frame = {{ context->Eip }, {}, { context->Ebp }, { context->Esp }};
+$       unsigned cpu = IMAGE_FILE_MACHINE_I386;
+$       Win32::STACKFRAME64 frame = {{ context->Eip }, {}, { context->Ebp }, { context->Esp }};
 
     #elif (defined (_M_X64) || defined (_WIN64)) && !defined (_M_X32) && !defined (_M_IX86)
 
-        unsigned cpu = IMAGE_FILE_MACHINE_AMD64;
-        Win32::STACKFRAME64 frame = {{ context->Rip }, {}, { context->Rbp }, { context->Rsp }};
+$       unsigned cpu = IMAGE_FILE_MACHINE_AMD64;
+$       Win32::STACKFRAME64 frame = {{ context->Rip }, {}, { context->Rbp }, { context->Rsp }};
 
     #else
 
@@ -8770,42 +8895,40 @@ int _txStackWalk (int framesToSkip, size_t szCapture, void* capture[], unsigned 
 
     #endif
 
-    frame.AddrPC.Mode = frame.AddrStack.Mode = frame.AddrFrame.Mode = Win32::AddrModeFlat;
+$   frame.AddrPC.Mode = frame.AddrStack.Mode = frame.AddrFrame.Mode = Win32::AddrModeFlat;
 
-    HANDLE process = GetCurrentProcess();
+$   _txSymGetFromAddr ((void*) 1);
 
-    _txSymGetFromAddr ((void*) 1);
-
-    int n = 0;
-    for (n = -framesToSkip; n < (int) szCapture; n++)
+$   int n = 0;
+$   for (n = -framesToSkip; n < (int) szCapture; n++)
         {
-        DWORD64 prev = frame.AddrStack.Offset;
+$       DWORD64 prev = frame.AddrStack.Offset;
 
         // Я злой и страшный серый walk. Я в поросятах знаю talk.
 
-        if ((MinGW::StackWalk64)? !MinGW::StackWalk64 (cpu, process, thread, &frame, context,
+        if ((MinGW::StackWalk64)? !MinGW::StackWalk64 (cpu, GetCurrentProcess(), thread, &frame, context,
                                                        NULL, MinGW::SymFunctionTableAccess64, MinGW::SymGetModuleBase64, NULL) :
 
-            (Win32::StackWalk64)? !Win32::StackWalk64 (cpu, process, thread, &frame, context,
+            (Win32::StackWalk64)? !Win32::StackWalk64 (cpu, GetCurrentProcess(), thread, &frame, context,
                                                        NULL, Win32::SymFunctionTableAccess64, Win32::SymGetModuleBase64, NULL) :
             true)
             {
-            break;
+$           break;
             }
 
-        void* addr = (void*) frame.AddrPC.Offset;
+        if (n < 0) { $ continue; }
 
-        if (frame.AddrFrame.Offset == 0)   addr = 0;           // Bad frame
-        if (frame.AddrStack.Offset < prev) addr = (void*) -1;  // Strange frame
+$       void* addr = (void*) frame.AddrPC.Offset;
 
-        if (n < 0) continue;
+        if (frame.AddrFrame.Offset == 0)   { $ addr = 0;          }  // Bad frame
+        if (frame.AddrStack.Offset < prev) { $ addr = (void*) -1; }  // Strange frame
 
-        assert (0 <= n && n < (int) szCapture);
+$       assert (0 <= n && n < (int) szCapture);
 
-        capture[n] = (void*) frame.AddrPC.Offset;
+$       capture[n] = (void*) frame.AddrPC.Offset;
         }
 
-    return n;
+$   return n;
     }
 
 // Note that Rick and Carl are speaking near the C language block. "C block", Carl. See: http://knowyourmeme.com/memes/carl
@@ -8816,24 +8939,28 @@ bool _txSymGetFromAddr (void* addr, Win32::SYMBOL_INFO** symbol /*= NULL*/,
                         Win32::IMAGEHLP_LINE64** line /*= NULL*/, const char** module /*= NULL*/,
                         const char** source /*= NULL*/, int context /*= 2*/)
     {
-    namespace MinGW = Win32::MinGW;
+$1  _txLocCur.trace = 0;
 
-    static HANDLE process = NULL;
+$   namespace MinGW = Win32::MinGW;
 
-    #ifdef _DEBUG
-    char res[8] = "";
+$   static HANDLE process = NULL;
+$   bool done = false;
+
+    #if (_DEBUG+0 > 0)
+$   char res[10] = "";
     #endif
 
     #define CALL_(func, param)  ( (func)? ((func) param) : 0 )
 
-    if (!process)
+$   if (!process && addr)
         {
-        process = GetCurrentProcess();
+$       process = GetCurrentProcess();
 
-        DWORD options = SYMOPT_UNDNAME | SYMOPT_LOAD_LINES | SYMOPT_LOAD_ANYTHING | SYMOPT_INCLUDE_32BIT_MODULES |
+$       DWORD options = SYMOPT_UNDNAME | SYMOPT_LOAD_LINES | SYMOPT_LOAD_ANYTHING | SYMOPT_INCLUDE_32BIT_MODULES |
                         SYMOPT_DEFERRED_LOADS | SYMOPT_FAVOR_COMPRESSED | SYMOPT_FAIL_CRITICAL_ERRORS | SYMOPT_NO_PROMPTS;
-        #ifdef _DEBUG
-            options |= SYMOPT_DEBUG;
+
+        #if (_DEBUG+0 > 0)
+$           options |= SYMOPT_DEBUG;
             #define RES_(sym)       (strncat_s (res, sizeof (res) - 1, #sym, sizeof (res) - 1), 1)
             #define DBG_(msg, ...)  txOutputDebugPrintf ("DBGTXLP: " __TX_FILELINE__ " _txSymGetFromAddr(): err = 0x%03lX, " msg "\n", \
                                                         (DWORD) GetLastError(), ##__VA_ARGS__)
@@ -8842,202 +8969,236 @@ bool _txSymGetFromAddr (void* addr, Win32::SYMBOL_INFO** symbol /*= NULL*/,
             #define DBG_(msg, ...)  0
         #endif
 
-         SetLastError (0);
-         CALL_(MinGW::SymSetOptions, (options)) && RES_(o);
-         CALL_(Win32::SymSetOptions, (options)) && RES_(O);
+$        SetLastError (0);
+$        CALL_(MinGW::SymSetOptions, (options)) && RES_(o);
+$        CALL_(Win32::SymSetOptions, (options)) && RES_(O);
 
-         SetLastError (0);
-        (CALL_(MinGW::SymInitialize, (process, NULL, true)) && RES_(i)) || DBG_ ("MinGW::SymInitialize() failed");
-        (CALL_(Win32::SymInitialize, (process, NULL, true)) && RES_(I)) || DBG_ ("Win32::SymInitialize() failed");
+$        SetLastError (0);
+$       (CALL_(MinGW::SymInitialize, (process, NULL, true)) && RES_(i)) || DBG_ ("MinGW::SymInitialize() failed");
+$       (CALL_(Win32::SymInitialize, (process, NULL, true)) && RES_(I)) || DBG_ ("Win32::SymInitialize() failed");
+
+$       done = true;
         }
 
-    static DWORD64 mod = 0;
+$   static DWORD64 mod = 0;
 
-    if (module)
+$   if (module)
         {
-        static char sMod [MAX_PATH] = "";
-        memset (sMod, 0, sizeof (sMod));
+$       static char sMod [MAX_PATH] = "";
+$       memset (sMod, 0, sizeof (sMod));
 
-        SetLastError (0);
+$       SetLastError (0);
 
-        mod = 0;    mod = CALL_(MinGW::SymGetModuleBase64, (process, (uintptr_t) addr)); if (mod) (void) RES_(m);
-        if (!mod) { mod = CALL_(Win32::SymGetModuleBase64, (process, (uintptr_t) addr)); if (mod) (void) RES_(M); }
-        if (!mod) DBG_ ("SymGetModuleBase64() failed");
+        mod = 0;  { $ mod = CALL_(MinGW::SymGetModuleBase64, (process, (uintptr_t) addr)); if (mod) (void) RES_(m); }
+        if (!mod) { $ mod = CALL_(Win32::SymGetModuleBase64, (process, (uintptr_t) addr)); if (mod) (void) RES_(M); }
+        if (!mod) { $ DBG_ ("SymGetModuleBase64() failed"); }
 
-        GetModuleFileName ((HMODULE)(ptrdiff_t) mod, sMod, MAX_PATH);
+$       GetModuleFileName ((HMODULE)(ptrdiff_t) mod, sMod, MAX_PATH);
 
-        char* ext = strrchr (sMod, '.');
-        if (ext) _strlwr_s (ext, sizeof (sMod) - (ext-sMod));
+$       char* ext = strrchr (sMod, '.');
+        if (ext) { $ _strlwr_s (ext, sizeof (sMod) - (ext-sMod)); }
 
-        *module = sMod;
+$       *module = sMod;
+$       done = true;
         }
 
-    static char buffer [_TX_BUFSIZE] = "";
-    static Win32::SYMBOL_INFO* sym = (Win32::SYMBOL_INFO*) buffer;
+$   static char buffer [_TX_BUFSIZE] = "";
+$   static Win32::SYMBOL_INFO* sym = (Win32::SYMBOL_INFO*) buffer;
 
-    if (symbol)
+$   if (symbol)
         {
-        memset (buffer, 0, sizeof (buffer));
+$       memset (buffer, 0, sizeof (buffer));
 
-        sym->MaxNameLen   = sizeof (buffer) - sizeof (Win32::SYMBOL_INFO) - 1;
-        sym->SizeOfStruct = sizeof (Win32::SYMBOL_INFO);
-        unsigned long long ofs = 0;
+$       sym->MaxNameLen   = sizeof (buffer) - sizeof (Win32::SYMBOL_INFO) - 1;
+$       sym->SizeOfStruct = sizeof (Win32::SYMBOL_INFO);
+$       unsigned long long ofs = 0;
 
-        SetLastError (0);
-        (CALL_(MinGW::SymFromAddr, (process, (uintptr_t) addr, &ofs, sym)) && RES_(y)) ||
+$       SetLastError (0);
+$       (CALL_(MinGW::SymFromAddr, (process, (uintptr_t) addr, &ofs, sym)) && RES_(y)) ||
         (CALL_(Win32::SymFromAddr, (process, (uintptr_t) addr, &ofs, sym)) && RES_(Y)) ||
             DBG_ ("SymFromAddr (0x%p) failed", addr);
 
-        if (strcmp (sym->Name, "??") == 0) *sym->Name = 0;
+        if (strcmp (sym->Name, "??") == 0) { $ *sym->Name = 0; }
 
-        if (!*sym->Name && mod) _tx_snprintf_s (sym->Name, sym->MaxNameLen, "0x%p", (char*) addr - mod);
-
-        *symbol = sym;
+$       *symbol = sym;
+$       done = true;
         }
 
-    static Win32::IMAGEHLP_LINE64 line64 = { sizeof (line) };
+$   static Win32::IMAGEHLP_LINE64 line64 = { sizeof (line) };
 
-    if (line)
+$   if (line)
         {
-        memset (&line64, 0, sizeof (line64));
+$       memset (&line64, 0, sizeof (line64));
 
-        unsigned long ofs = 0;
+$       unsigned long ofs = 0;
 
-        SetLastError (0);
-        (CALL_(MinGW::SymGetLineFromAddr64, (process, (uintptr_t) addr, &ofs, &line64)) && RES_(l)) ||
+$       SetLastError (0);
+$       (CALL_(MinGW::SymGetLineFromAddr64, (process, (uintptr_t) addr, &ofs, &line64)) && RES_(l)) ||
         (CALL_(Win32::SymGetLineFromAddr64, (process, (uintptr_t) addr, &ofs, &line64)) && RES_(L)) ||
             DBG_ ("SymGetLineFromAddr64 (\"%s\") failed", (symbol? (*symbol)->Name : "(null)"));
 
-        *line = &line64;
+$       *line = &line64;
+$       done = true;
         }
 
-    if (source)
+$   if (source)
         {
-        static char buf [_TX_BUFSIZE] = "";
-        memset (buf, 0, sizeof (buf));
+$       static char buf [_TX_BUFSIZE] = "";
+$       memset (buf, 0, sizeof (buf));
 
-        if (line64.FileName && line64.LineNumber)
+$       if (line64.FileName && line64.LineNumber)
             {
-            _txReadText (buf, sizeof (buf) - 1, line64.FileName,
-                         line64.LineNumber - context, line64.LineNumber + context, line64.LineNumber);
+$           _txReadSource (buf, sizeof (buf) - 1, line64.FileName,
+                           line64.LineNumber - context, line64.LineNumber + context, line64.LineNumber);
 
-            *source = buf;
+$           *source = buf;
             }
 
-        if (!*source || !**source) *source = NULL;
+        if (!*source || !**source) { $ *source = NULL; }
 
-        if (*source) (void) RES_(S); else DBG_ ("_txReadText (\"%s\") failed", line64.FileName);
+        if (*source) { $ (void) RES_(S); }
+        else         { $ DBG_ ("_txReadSource (\"%s\") failed", line64.FileName); }
+
+$       done = true;
         }
 
-    if (!addr)
+$   if (!addr && process)
         {
-        SetLastError (0);
-        (CALL_(MinGW::SymCleanup, (process)) && RES_(u)) || DBG_ ("MinGW::SymCleanup() failed");
-        (CALL_(Win32::SymCleanup, (process)) && RES_(U)) || DBG_ ("Win32::SymCleanup() failed");
+$       SetLastError (0);
+$       (CALL_(MinGW::SymCleanup, (process)) && RES_(u)) || DBG_ ("MinGW::SymCleanup() failed");
+$       (CALL_(Win32::SymCleanup, (process)) && RES_(U)) || DBG_ ("Win32::SymCleanup() failed");
 
-        process = NULL;
+$       process = NULL;
+$       done = true;
         }
 
-    DBG_ ("res = %s", res);
+$   if (done) DBG_ ("res = \"%s\"", res);
 
     #undef CALL_
     #undef DBG_
 
-    if (symbol)
+$   if (symbol)
         {
-        if (strstr  (sym->Name, "::TX::")                                                 ||
+$       if (strstr  (sym->Name, "::TX::")                                                 ||
             strncmp (sym->Name, "_tx",  3) == 0 && isupper ((unsigned char) sym->Name[3]) ||
             strncmp (sym->Name,  "tx",  2) == 0 && isupper ((unsigned char) sym->Name[2]) ||
             strncmp (sym->Name, "_tx_", 4) == 0                                           ||
             strncmp (sym->Name,  "tx_", 3) == 0)
-            return true;
+            {
+$           return true;
+            }
 
-        if (!line || !line64.FileName) return false;
+$       if (!line || !line64.FileName) return false;
 
-        ptrdiff_t len = strlen (line64.FileName) - (sizeof (__FILE__) - 1);
+$       ptrdiff_t len = strlen (line64.FileName) - (sizeof (__FILE__) - 1);
 
-        return (len >= 0 && _stricmp (line64.FileName + len, __FILE__) == 0) &&
+$       return (len >= 0 && _stricmp (line64.FileName + len, __FILE__) == 0) &&
                (len == 0 || line64.FileName[len-1] == '/' || line64.FileName[len-1] == '\\');
         }
 
-    return false;
+$   return false;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
 
-ptrdiff_t _txReadText (char buf[], ptrdiff_t size, const char file[],
-                       int linStart /*= 0*/, int linEnd /*= INT_MIN*/, int linMark /*= INT_MIN*/)
+ptrdiff_t _txReadSource (char buf[], ptrdiff_t size, const char file[],
+                         int linStart /*= 0*/, int linEnd /*= INT_MIN*/, int linMark /*= INT_MIN*/)
     {
-    if (linStart < 1) linStart = 1;
-    if (linEnd == -1) linEnd   = INT_MAX;
+$1  _txLocCur.trace = 0;
 
-    FILE* f = NULL;
-    fopen_s (&f, file, "r");
-    if (!f) return 0;
+$   assert (buf);
 
-    int n = 1;
+    if (!file || !*file) { $ return 0; }
+
+    if (linStart < 1) { $ linStart = 1;       }
+    if (linEnd == -1) { $ linEnd   = INT_MAX; }
+
+$   FILE* f = NULL;
+$   fopen_s (&f, file, "r");
+    if (!f) { $ return 0; }
+
+$   int n = 1;
     while (!feof (f))
         {
-        if (n >= linStart) break;
+        if (n >= linStart) { $ break; }
         while (!feof (f) && fgetc (f) != '\n') ;
-        n++;
+$       n++;
         }
 
-    char* s = buf;
+$   char* s = buf;
 
     #define SZ_  ( size - 3 - (s - buf) )
 
-    while (!feof (f) && SZ_ > 0)
+$   while (!feof (f) && SZ_ > 0)
         {
-        if (n > linEnd || _txNOP (SZ_) < 0) break;
+        if (n > linEnd || _txNOP (SZ_) < 0) { $ break; }
 
         if (linMark != INT_MIN)
-            s += _tx_snprintf_s (s, SZ_, "%s%5d: ", ((n == linMark)? "=>" : "  "), n);
+            { $ s += _tx_snprintf_s (s, SZ_, "%s%5d: ", ((n == linMark)? "=>" : "  "), n); }
 
-        int c = 0;
-        while (!feof (f) && SZ_ > 0 && (c = fgetc (f)) != '\n') *s++ = (char) c;
-        if (c == EOF) s--;
+$       int c = 0;
+$       while (!feof (f) && SZ_ > 0 && (c = fgetc (f)) != '\n') *s++ = (char) c;
+        if (c == EOF) { $ s--; }
 
-        if (SZ_ > 0) *s++ = '\n';
-        n++;
+        if (SZ_ > 0) { $ *s++ = '\n'; }
+$       n++;
         }
 
     if (n <= linEnd && SZ_ <= 0)
-        s += _tx_snprintf_s (s, size - (s - buf), "...");
+        { $ s += _tx_snprintf_s (s, size - (s - buf), "..."); }
 
     #undef SZ_
 
-    fclose (f);
+$   fclose (f);
 
-    if (s > buf && s[-1] == '\n') s--;
-    *s = 0;
+    if (s > buf && s[-1] == '\n') { $ s--; }
+$   *s = 0;
 
-    return (s - buf);
+$   return (s - buf);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
 
-void _txTrace (const char file[], int line, const char func[], const char msg[] /*= NULL*/, ...)
+const char* _txCaptureStackBackTraceTX (int framesToSkip /*= 0*/, bool readSource /*= false*/)
     {
-    unsigned id = GetCurrentThreadId();
+$1  _txLocCur.trace = 0;
 
-    const char marks[2][2][3] = {{"uU", "cC"}, {"mM", "??"}};
+$   const int maxFrames = 62;  // TX says too: < 63
+$   static char trace [(MAX_PATH + 1024+1) * maxFrames] = "";
 
-    char mark = marks [id == _txMainThreadId] [id == _txCanvas_ThreadId] [(_txCurLoc.inTX > 0)];
+    if (framesToSkip == -1) { $ return trace; }
 
-    char msgStr[_TX_BUFSIZE] = "";
-    if (msg)
+$   memset (trace, 0, sizeof (trace));
+$   char* s = trace;
+
+    #define SZ_  ( sizeof (trace) - 1 - 3 - (s-trace) )
+
+$   const _txLoc* loc = &_txLocCur;
+
+$   for (int i = 0; loc && i < framesToSkip + 1; i++, loc = loc->prev) ;
+
+$   for (int i = -framesToSkip; loc && i < maxFrames; i++, loc = loc->prev)
         {
-        va_list arg; va_start (arg, msg);
-        _tx_vsnprintf_s (msgStr, sizeof (msgStr) - 1, msg, arg);
-        va_end (arg);
+        if (i < 0) { $ continue; }
+
+        if (loc->func || loc->file || loc->line)
+            {
+$           s += _tx_snprintf_s     (s, SZ_, "%s#%2d in %s at %s (%d)" _ (i? readSource? "\n\n" : "\n" : "")_
+                                     i, loc->func, loc->file, loc->line);
+
+$           if (readSource)
+                {
+$               s += _tx_snprintf_s (s, SZ_, ":\n\n");
+$               s += _txReadSource  (s, SZ_, loc->file, loc->line - 2, loc->line + 2, loc->line);
+                }
+            }
         }
 
-    txOutputDebugPrintf ("%s - 0x%p %c%c%c%c%c%c [%c] - %s (%d)  " "|%*s%s" "%s%s\n",
-                         _TX_VERSION, &_txInitialized,
-                         "cC"[_txConsole], "mM"[_txMain], "dD"[_txIsDll], "rR"[_txRunning], "eE"[_txExit], "tT"[_txCurLoc.trace],
-                         mark, (file? file : "(NULL file)"), line, (_txCurLoc.inTX - 1) * 2, "", (func? func : ""),
-                         (*msgStr? ": " : ""), msgStr);
+    #undef SZ_
+
+$   s += _tx_snprintf_s (s, sizeof (trace) - 1 - (s-trace), "");
+
+$   return trace;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -9061,7 +9222,8 @@ const char* _txReportError (const char file[], int line, const char func[], unsi
     bool noMsgBox = (msg && *msg == '\b')? (msg++, true) : false;
     bool fmtOnly  = (msg && *msg == '\f')? (msg++, true) : false;
 
-    const char* stkTrace = (traceSE && *_txTraceSE)? _txTraceSE : _txCaptureStackBackTrace (4, true);
+    const char* stkTrace = (traceSE && *_txTraceSE)? _txTraceSE : _txCaptureStackBackTrace (2, true);
+    const char*  txTrace = _txCaptureStackBackTraceTX (0, true);
 
     static char what[_TX_BIGBUFSIZE*10] = "";
     static char str [_TX_BIGBUFSIZE]    = "";
@@ -9082,9 +9244,9 @@ const char* _txReportError (const char file[], int line, const char func[], unsi
                VPRINT_ (msg _ args),
                 PRINT_ ("\n\n");
 
-                PRINT_ ("#%d: %s, Instance: 0x%p (%d-bit), Flags: %c%c%c%c%c%c, Thread: 0x%X%s" _
+                PRINT_ ("#%d: %s, Instance: 0x%p (%d-bit), Flags: %c%c%c%c%c%d, Thread: 0x%X%s" _
                         nCalls _ _TX_VERSION _ &_txInitialized _ (sizeof (void*) == 4)? 32 : 64 _
-                        "cC"[_txConsole]_ "mM"[_txMain]_ "dD"[_txIsDll]_ "rR"[_txRunning]_ "eE"[_txExit]_ "tT"[_txCurLoc.trace]_
+                        "cC"[_txConsole]_ "mM"[_txMain]_ "dD"[_txIsDll]_ "rR"[_txRunning]_ "eE"[_txExit]_ _txLocCur.trace _
                         threadId _ (threadId == _txMainThreadId)?    " (Main)"   :
                                    (threadId == _txCanvas_ThreadId)? " (Canvas)" : "");
 
@@ -9099,12 +9261,12 @@ const char* _txReportError (const char file[], int line, const char func[], unsi
     if (doserr) PRINT_ (", _doserrno: %lu (%s)" _ doserr _ (strerror_s (str, sizeof (str), doserr), str));
                 PRINT_ (". %s\n" _ ::std::uncaught_exception()? "std::uncaught_exception(): true." : "");
 
-    if (_txCurLoc.inTX > 0 && !(_txCurLoc.line == line && file && _stricmp (_txCurLoc.file, file) == 0))
-                PRINT_ ("From: %s (%d) %s.\n" _ _txCurLoc.file _ _txCurLoc.line _ _txCurLoc.func);
+    if (_txLocCur.inTX > 0 && !(_txLocCur.line == line && file && _stricmp (_txLocCur.file, file) == 0))
+                PRINT_ ("From: %s (%d) %s.\n" _ _txLocCur.file _ _txLocCur.line _ _txLocCur.func);
 
     #undef PRINT_
 
-$   txOutputDebugPrintf ("\r" "%s - %s", _TX_VERSION, what);
+    txOutputDebugPrintf ("\r" "%s - ERROR: %s", _TX_VERSION, what);
 
     if (fmtOnly) return what;
 
@@ -9128,17 +9290,30 @@ $   txOutputDebugPrintf ("\r" "%s - %s", _TX_VERSION, what);
     if (*_txLogName) do
         {
         FILE* log = NULL; fopen_s (&log, _txLogName, "a");
-        if (!log) break;
+        if (!log) { $ break; }
 
-        fprintf (log, "\n" "--------------------------------------------------\n"
-                           "%s\n"
-                           "--------------------------------------------------\n"
-                           "Трассировка стека:\n\n"
-                           "%s\n\n"
-                           "--------------------------------------------------\n"
-                           "%s\n\n"
-                           "--------------------------------------------------\n",
-                           what, stkTrace, _txAppInfo());
+        fprintf (log, "\n"     "--------------------------------------------------\n"
+                               "%s\n"
+                               "--------------------------------------------------\n"
+                               "Стек вызовов:\n\n"
+                               "%s\n",
+                               what, (*_txTraceSE? _txTraceSE : stkTrace));
+
+        #if defined (_TX_ALLOW_TRACE) || defined (_DEBUG)
+
+        if (txTrace && *txTrace)
+            {
+            fprintf (log, "\n" "--------------------------------------------------\n"
+                               "Стек вызовов TX:\n\n"
+                               "%s\n",
+                               txTrace);
+            }
+        #endif
+
+        fprintf (log, "\n"     "--------------------------------------------------\n"
+                               "%s\n\n"
+                               "--------------------------------------------------\n",
+                               _txAppInfo());
         fclose (log);
         break;
         }
@@ -9174,12 +9349,12 @@ int _txOnErrorReport (int type, char* text, int* ret)
        default:                                                      break;
        }
 
-$   txOutputDebugPrintf ("%s - %s", _TX_VERSION, text);
-
     if (strcmp (text, "Detected memory leaks!\n") == 0)  // Dirty, dirty hack. А что делать?
         {
         _txOnErrorReport (type, "\n" "Внимание: Обнаружены утечки памяти!\n\n", NULL);
         }
+
+    txOutputDebugPrintf ("\r" "%s - ERROR: %s", _TX_VERSION, what);
 
     DWORD n = 0;
     HANDLE err = GetStdHandle (STD_ERROR_HANDLE);
@@ -9206,6 +9381,31 @@ $   txOutputDebugPrintf ("%s - %s", _TX_VERSION, text);
     }
 
 #endif
+
+//-----------------------------------------------------------------------------------------------------------------
+
+void _txTrace (const char file[], int line, const char func[], const char msg[] /*= NULL*/, ...)
+    {
+    unsigned id = GetCurrentThreadId();
+
+    const char marks[2][2][3] = {{"uU", "cC"}, {"mM", "??"}};
+
+    char mark = marks [id == _txMainThreadId] [id == _txCanvas_ThreadId] [(_txLocCur.inTX > 0)];
+
+    char msgStr[_TX_BUFSIZE] = "";
+    if (msg)
+        {
+        va_list arg; va_start (arg, msg);
+        _tx_vsnprintf_s (msgStr, sizeof (msgStr) - 1, msg, arg);
+        va_end (arg);
+        }
+
+    txOutputDebugPrintf ("%s - 0x%p %c%c%c%c%c%d [%c] - %s (%5d)  " "|%*s%s" "%s%s\n",
+                         _TX_VERSION, &_txInitialized,
+                         "cC"[_txConsole], "mM"[_txMain], "dD"[_txIsDll], "rR"[_txRunning], "eE"[_txExit], _txLocCur.trace,
+                         mark, (file? file : "(NULL file)"), line, !!func * (_txLocCur.inTX - 1) * 2, "", (func? func : ""),
+                         ((*msgStr && func)? ": " : ""), msgStr);
+    }
 
 //-----------------------------------------------------------------------------------------------------------------
 
@@ -9293,11 +9493,9 @@ $1  static wchar_t textW   [_TX_BIGBUFSIZE * sizeof (wchar_t)] = L"[NULL text]";
 
 bool txNotifyIcon (unsigned flags, const char title[], const char format[], ...)
     {
-    _txLoc loc = _txCurLoc;
+$1  _txLocCur.trace = 0;
 
 $   _TX_IF_ARGUMENT_FAILED (format) return false;
-
-    _txCurLoc.trace = false;
 
 $   va_list arg; va_start (arg, format);
 $   bool ok = true;
@@ -9334,8 +9532,6 @@ $   (void)flags; (void)title;
     #endif
 
 $   va_end (arg);
-
-$   _txCurLoc = loc;
     return ok;
     }
 
@@ -10467,13 +10663,13 @@ void _txStackBackTrace (const char file[] /*= "?"*/, int line /*= 0*/, const cha
                         bool readSource /*= true*/)
     {
 $1  unsigned attr = txGetConsoleAttr();
-$   txSetConsoleAttr (0x0B); // LightCyan
+$   txSetConsoleAttr (0x0B);  // LightCyan
 
 $   printf ("\n" "--------------------------------------------------\n"
                  "Трассировка стека из %s (%d) %s:\n\n"
                  "%s\n\n"
                  "--------------------------------------------------\n\n",
-                 file, line, func, _txCaptureStackBackTrace (3, readSource));
+                 file, line, func, _txCaptureStackBackTrace (1, readSource));
 
 $   txSetConsoleAttr (attr);
     }
@@ -10961,6 +11157,98 @@ $   return pw;
 //=================================================================================================================
 
 #undef       $
+#undef       $1
+#undef       $$
+
+//}
+//=================================================================================================================
+
+//=================================================================================================================
+//{          TXAPI calls tracing
+//           Трассировка вызовов TXAPI
+//=================================================================================================================
+
+#define txAlphaBlend(...)           ({ _txLocCurSet(); txAlphaBlend          (__VA_ARGS__); })
+#define txArc(...)                  ({ _txLocCurSet(); txArc                 (__VA_ARGS__); })
+#define txAutoLock(...)             ({ _txLocCurSet(); txAutoLock            (__VA_ARGS__); })
+#define txBegin(...)                ({ _txLocCurSet(); txBegin               (__VA_ARGS__); })
+#define txBitBlt(...)               ({ _txLocCurSet(); txBitBlt              (__VA_ARGS__); })
+#define txChord(...)                ({ _txLocCurSet(); txChord               (__VA_ARGS__); })
+#define txCircle(...)               ({ _txLocCurSet(); txCircle              (__VA_ARGS__); })
+#define txClear(...)                ({ _txLocCurSet(); txClear               (__VA_ARGS__); })
+#define txClearConsole(...)         ({ _txLocCurSet(); txClearConsole        (__VA_ARGS__); })
+#define txColor(...)                ({ _txLocCurSet(); txColor               (__VA_ARGS__); })
+#define txCreateCompatibleDC(...)   ({ _txLocCurSet(); txCreateCompatibleDC  (__VA_ARGS__); })
+#define txCreateDIBSection(...)     ({ _txLocCurSet(); txCreateDIBSection    (__VA_ARGS__); })
+#define txCreateWindow(...)         ({ _txLocCurSet(); txCreateWindow        (__VA_ARGS__); })
+#define txDC(...)                   ({ _txLocCurSet(); txDC                  (__VA_ARGS__); })
+#define txDeleteDC(...)             ({ _txLocCurSet(); txDeleteDC            (__VA_ARGS__); })
+#define txDestroyWindow(...)        ({ _txLocCurSet(); txDestroyWindow       (__VA_ARGS__); })
+#define txDisableAutoPause(...)     ({ _txLocCurSet(); txDisableAutoPause    (__VA_ARGS__); })
+#define txDrawText(...)             ({ _txLocCurSet(); txDrawText            (__VA_ARGS__); })
+#define txDump(...)                 ({ _txLocCurSet(); txDump                (__VA_ARGS__); })
+#define txEllipse(...)              ({ _txLocCurSet(); txEllipse             (__VA_ARGS__); })
+#define txEnd(...)                  ({ _txLocCurSet(); txEnd                 (__VA_ARGS__); })
+#define txExtractColor(...)         ({ _txLocCurSet(); txExtractColor        (__VA_ARGS__); })
+#define txFillColor(...)            ({ _txLocCurSet(); txFillColor           (__VA_ARGS__); })
+#define txFloodFill(...)            ({ _txLocCurSet(); txFloodFill           (__VA_ARGS__); })
+#define txFontExist(...)            ({ _txLocCurSet(); txFontExist           (__VA_ARGS__); })
+#define txGetColor(...)             ({ _txLocCurSet(); txGetColor            (__VA_ARGS__); })
+#define txGetConsoleAttr(...)       ({ _txLocCurSet(); txGetConsoleAttr      (__VA_ARGS__); })
+#define txGetConsoleCursorPos(...)  ({ _txLocCurSet(); txGetConsoleCursorPos (__VA_ARGS__); })
+#define txGetConsoleFontSize(...)   ({ _txLocCurSet(); txGetConsoleFontSize  (__VA_ARGS__); })
+#define txGetExtent(...)            ({ _txLocCurSet(); txGetExtent           (__VA_ARGS__); })
+#define txGetExtentY(...)           ({ _txLocCurSet(); txGetExtentY          (__VA_ARGS__); })
+#define txGetFPS(...)               ({ _txLocCurSet(); txGetFPS              (__VA_ARGS__); })
+#define txGetFillColor(...)         ({ _txLocCurSet(); txGetFillColor        (__VA_ARGS__); })
+#define txGetModuleFileName(...)    ({ _txLocCurSet(); txGetModuleFileName   (__VA_ARGS__); })
+#define txGetPixel(...)             ({ _txLocCurSet(); txGetPixel            (__VA_ARGS__); })
+#define txGetTextExtent(...)        ({ _txLocCurSet(); txGetTextExtent       (__VA_ARGS__); })
+#define txGetTextExtentY(...)       ({ _txLocCurSet(); txGetTextExtentY      (__VA_ARGS__); })
+#define txHSL2RGB(...)              ({ _txLocCurSet(); txHSL2RGB             (__VA_ARGS__); })
+#define txInputBox(...)             ({ _txLocCurSet(); txInputBox            (__VA_ARGS__); })
+#define txLine(...)                 ({ _txLocCurSet(); txLine                (__VA_ARGS__); })
+#define txLoadImage(...)            ({ _txLocCurSet(); txLoadImage           (__VA_ARGS__); })
+#define txLock(...)                 ({ _txLocCurSet(); txLock                (__VA_ARGS__); })
+#define txMessageBox(...)           ({ _txLocCurSet(); txMessageBox          (__VA_ARGS__); })
+#define txMouseButtons(...)         ({ _txLocCurSet(); txMouseButtons        (__VA_ARGS__); })
+#define txMousePos(...)             ({ _txLocCurSet(); txMousePos            (__VA_ARGS__); })
+#define txMouseX(...)               ({ _txLocCurSet(); txMouseX              (__VA_ARGS__); })
+#define txMouseY(...)               ({ _txLocCurSet(); txMouseY              (__VA_ARGS__); })
+#define txNotifyIcon(...)           ({ _txLocCurSet(); txNotifyIcon          (__VA_ARGS__); })
+#define txOK(...)                   ({ _txLocCurSet(); txOK                  (__VA_ARGS__); })
+#define txOutputDebugPrintf(...)    ({ _txLocCurSet(); txOutputDebugPrintf   (__VA_ARGS__); })
+#define txPie(...)                  ({ _txLocCurSet(); txPie                 (__VA_ARGS__); })
+#define txPlaySound(...)            ({ _txLocCurSet(); txPlaySound           (__VA_ARGS__); })
+#define txPolygon(...)              ({ _txLocCurSet(); txPolygon             (__VA_ARGS__); })
+#define txQueryPerformance(...)     ({ _txLocCurSet(); txQueryPerformance    (__VA_ARGS__); })
+#define txRGB2HSL(...)              ({ _txLocCurSet(); txRGB2HSL             (__VA_ARGS__); })
+#define txRectangle(...)            ({ _txLocCurSet(); txRectangle           (__VA_ARGS__); })
+#define txSaveImage(...)            ({ _txLocCurSet(); txSaveImage           (__VA_ARGS__); })
+#define txSelectFont(...)           ({ _txLocCurSet(); txSelectFont          (__VA_ARGS__); })
+#define txSelectObject(...)         ({ _txLocCurSet(); txSelectObject        (__VA_ARGS__); })
+#define txSetColor(...)             ({ _txLocCurSet(); txSetColor            (__VA_ARGS__); })
+#define txSetConsoleAttr(...)       ({ _txLocCurSet(); txSetConsoleAttr      (__VA_ARGS__); })
+#define txSetConsoleCursorPos(...)  ({ _txLocCurSet(); txSetConsoleCursorPos (__VA_ARGS__); })
+#define txSetDefaults(...)          ({ _txLocCurSet(); txSetDefaults         (__VA_ARGS__); })
+#define txSetFillColor(...)         ({ _txLocCurSet(); txSetFillColor        (__VA_ARGS__); })
+#define txSetPixel(...)             ({ _txLocCurSet(); txSetPixel            (__VA_ARGS__); })
+#define txSetROP2(...)              ({ _txLocCurSet(); txSetROP2             (__VA_ARGS__); })
+#define txSetTextAlign(...)         ({ _txLocCurSet(); txSetTextAlign        (__VA_ARGS__); })
+#define txSetWindowsHook(...)       ({ _txLocCurSet(); txSetWindowsHook      (__VA_ARGS__); })
+#define txSleep(...)                ({ _txLocCurSet(); txSleep               (__VA_ARGS__); })
+#define txTextCursor(...)           ({ _txLocCurSet(); txTextCursor          (__VA_ARGS__); })
+#define txTextOut(...)              ({ _txLocCurSet(); txTextOut             (__VA_ARGS__); })
+#define txTransparentBlt(...)       ({ _txLocCurSet(); txTransparentBlt      (__VA_ARGS__); })
+#define txTriangle(...)             ({ _txLocCurSet(); txTriangle            (__VA_ARGS__); })
+#define txUnlock(...)               ({ _txLocCurSet(); txUnlock              (__VA_ARGS__); })
+#define txUpdateWindow(...)         ({ _txLocCurSet(); txUpdateWindow        (__VA_ARGS__); })
+#define txUseAlpha(...)             ({ _txLocCurSet(); txUseAlpha            (__VA_ARGS__); })
+#define txVersion(...)              ({ _txLocCurSet(); txVersion             (__VA_ARGS__); })
+#define txVersionNumber(...)        ({ _txLocCurSet(); txVersionNumber       (__VA_ARGS__); })
+#define txWindow(...)               ({ _txLocCurSet(); txWindow              (__VA_ARGS__); })
+#define tx_fpreset(...)             ({ _txLocCurSet(); tx_fpreset            (__VA_ARGS__); })
+#define _txStackBackTrace(...)      ({ _txLocCurSet(); _txStackBackTrace     (__VA_ARGS__); })
 
 //}
 //=================================================================================================================
