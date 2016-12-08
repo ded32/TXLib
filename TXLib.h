@@ -6,9 +6,9 @@
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 119 $
+//!          $Version: 00173a, Revision: 120 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2016-11-29 15:39:40 +0400 $
+//!          $Date: 2016-12-08 04:19:47 +0400 $
 //!
 //!          TX Library - компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -134,9 +134,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 119, 2016-11-29 15:39:40 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 119, 2016-11-29 15:39:40 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 119, 2016-11-29 15:39:40 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 120, 2016-12-08 04:19:47 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 120, 2016-12-08 04:19:47 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 120, 2016-12-08 04:19:47 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -389,6 +389,7 @@
     #pragma warning (disable: 4127)             // conditional expression is constant
     #pragma warning (disable: 4200)             // nonstandard extension used: zero-sized array in struct/union
     #pragma warning (disable: 4351)             // new behavior: elements of array will be default initialized
+    #pragma warning (disable: 4512)             // assignment operator could not be generated
     #pragma warning (disable: 4611)             // interaction between '_setjmp' and C++ object destruction is non-portable
     #pragma warning (disable: 4702)             // unreachable code
     #pragma warning (disable: 4481)             // nonstandard extension used: override specifier 'override'
@@ -400,7 +401,6 @@
         #define _MSC_VER_6                      // Flag the bad dog
 
         #pragma warning (disable: 4511)         // copy constructor could not be generated
-        #pragma warning (disable: 4512)         // assignment operator could not be generated
         #pragma warning (disable: 4514)         // unreferenced inline function has been removed
         #pragma warning (disable: 4663)         // C++ language change: to explicitly specialize class template
         #pragma warning (disable: 4710)         // function not inlined
@@ -4038,7 +4038,7 @@ void txDump (const void* address, const char name[] = "txDump()");
 
 #elif defined (__STDC_VERSION__) && (__STDC_VERSION__ >= 199901)
     #define __TX_FUNCTION__   __func__
-
+    
 #elif defined (__PYTHON__)
     #error No Python. No. Using parseltongue languages can lead you to Slytherin.
 
@@ -4047,6 +4047,11 @@ void txDump (const void* address, const char name[] = "txDump()");
 
 #endif
 
+#if !defined (__func__) && defined (__FUNCTION__)
+    #define __func__          __FUNCTION__
+
+#endif
+    
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
 //! @brief   Имя режима сборки
@@ -5509,12 +5514,14 @@ _TX_DLLIMPORT_OPT ("Kernel32", DWORD,    GetNumberOfConsoleFonts,    (void));
 _TX_DLLIMPORT_OPT ("Kernel32", bool,     GetCurrentConsoleFont,      (HANDLE con, bool maxWnd, CONSOLE_FONT_INFO*   curFont));
 _TX_DLLIMPORT_OPT ("Kernel32", bool,     GetCurrentConsoleFontEx,    (HANDLE con, bool maxWnd, CONSOLE_FONT_INFOEX* curFont));
 _TX_DLLIMPORT_OPT ("Kernel32", bool,     SetCurrentConsoleFontEx,    (HANDLE con, bool maxWnd, CONSOLE_FONT_INFOEX* curFont));
+_TX_DLLIMPORT_OPT ("Kernel32", void,     RtlCaptureContext,          (CONTEXT* contextRecord));
 _TX_DLLIMPORT_OPT ("Kernel32", USHORT,   RtlCaptureStackBackTrace,   (DWORD framesToSkip, DWORD framesToCapture, void** backTrace, DWORD* hash));
 _TX_DLLIMPORT_OPT ("Kernel32", void*,    AddVectoredExceptionHandler,(unsigned long firstHandler, PVECTORED_EXCEPTION_HANDLER handler));
 _TX_DLLIMPORT_OPT ("Kernel32", bool,     GetModuleHandleEx,          (DWORD flags, const char moduleName[], HMODULE* module));
 _TX_DLLIMPORT_OPT ("Kernel32", bool,     IsWow64Process,             (HANDLE process, int* isWow64Process));
 _TX_DLLIMPORT_OPT ("Kernel32", bool,     Wow64GetThreadContext,      (HANDLE thread, WOW64_CONTEXT* context));
 _TX_DLLIMPORT_OPT ("Kernel32", bool,     SetThreadStackGuarantee,    (unsigned long* stackSize));
+
 
 _TX_DLLIMPORT     ("OLE32",    HRESULT,  CoInitialize,               (void*));
 _TX_DLLIMPORT     ("OLE32",    HRESULT,  CoCreateInstance,           (REFCLSID clsId, IUnknown*, DWORD, REFIID iId, PVOID* value));
@@ -8220,7 +8227,7 @@ int _txOnAllocHook (int type, void* data, size_t size, int use, long request, co
     {
     #if (_TX_ALLOW_TRACE +0 >= 4)
 
-    static _tx_thread recursive = 0;
+    static _tx_thread int recursive = 0;
     if (recursive) return true;
     recursive++;
 
@@ -8249,9 +8256,9 @@ $   switch (use)
 
     #undef  GET_DESCR_
 
-$   _txTrace (file, line, NULL, "%*s"
+$   _txTrace ((const char*) file, line, NULL, "%*s"
               "_txOnAllocHook (type = 0x%02X%s, subtype =0x%X, data = 0x%p, size = 0x%p, use = 0x%02X%s, request = %ld)",
-              12 - _txLoc::cur.inTX*2, "",
+              12 - _txLocCur.inTX*2, "",
               type, sType, _BLOCK_SUBTYPE (type), data, (void*) size, use, sUse, request);
 
 $   recursive--;
@@ -8291,8 +8298,6 @@ long WINAPI _txVectoredExceptionHandler (EXCEPTION_POINTERS* exc)
 
 long WINAPI _txUnhandledExceptionFilter (EXCEPTION_POINTERS* exc)
     {
-    unsigned code = exc->ExceptionRecord->ExceptionCode;
-
     long res = _txOnExceptionSEH (exc, "_txUnhandledExceptionFilter");
 
     if (_txPrevUEFilter)
@@ -8303,7 +8308,7 @@ long WINAPI _txUnhandledExceptionFilter (EXCEPTION_POINTERS* exc)
             }
         else
             {
-            *(unsigned long long*) _txDumpExceptionObjJmp = 0;
+$1          *(unsigned long long*) _txDumpExceptionObjJmp = 0;
 
             _TX_UNEXPECTED ("\t\a"
                             "%s"
@@ -8750,32 +8755,33 @@ $   free (typeName);
     #endif
 
 $   err = 0;
-$   if (mangledName && setjmp (_txDumpExceptionObjJmp) == 0)
-        {
-        #define PRINT_VAL_(fmt, typ, ...)                                                                      \
-            else if (*type == typeid (      typ       )) { $ PRINT_ (" = " #fmt _ (* (typ* ) object) __VA_ARGS__); } \
-            else if (*type == typeid (const typ       )) { $ PRINT_ (" = " #fmt _ (* (typ* ) object) __VA_ARGS__); } \
-            else if (*type == typeid (      typ*      )) { $ PRINT_ (" = " #fmt _ (**(typ**) object) __VA_ARGS__); } \
-            else if (*type == typeid (const typ*      )) { $ PRINT_ (" = " #fmt _ (**(typ**) object) __VA_ARGS__); } \
-            else if (*type == typeid (      typ* const)) { $ PRINT_ (" = " #fmt _ (**(typ**) object) __VA_ARGS__); } \
-            else if (*type == typeid (const typ* const)) { $ PRINT_ (" = " #fmt _ (**(typ**) object) __VA_ARGS__); }
-
-        if (0) ;
-        PRINT_VAL_ ("%s", char*)  PRINT_VAL_ ('%c', unsigned char)   PRINT_VAL_ (%s,   bool, ? "true" : "false")
-        PRINT_VAL_ ( %d,  int)    PRINT_VAL_ ( %u,  unsigned int)    PRINT_VAL_ (%g,   float)
-        PRINT_VAL_ ( %hd, short)  PRINT_VAL_ ( %hu, unsigned short)  PRINT_VAL_ (%lg,  double)
-        PRINT_VAL_ ( %ld, long)   PRINT_VAL_ ( %lu, unsigned long)   PRINT_VAL_ ('%c', char)
-        PRINT_VAL_ ("%s", std::string, .c_str())
-
-        else if (std::exception* e = dynamic_cast <std::exception*> ( (std::exception* ) object))
+$   if (mangledName)
+        if (setjmp (_txDumpExceptionObjJmp) == 0)
             {
-$           PRINT_ (", what(): \"%s\"" _ e->what());
+            #define PRINT_VAL_(fmt, typ, ...)                                                                            \
+                else if (*type == typeid (      typ       )) { $ PRINT_ (" = " #fmt _ (* (typ* ) object) __VA_ARGS__); } \
+                else if (*type == typeid (const typ       )) { $ PRINT_ (" = " #fmt _ (* (typ* ) object) __VA_ARGS__); } \
+                else if (*type == typeid (      typ*      )) { $ PRINT_ (" = " #fmt _ (**(typ**) object) __VA_ARGS__); } \
+                else if (*type == typeid (const typ*      )) { $ PRINT_ (" = " #fmt _ (**(typ**) object) __VA_ARGS__); } \
+                else if (*type == typeid (      typ* const)) { $ PRINT_ (" = " #fmt _ (**(typ**) object) __VA_ARGS__); } \
+                else if (*type == typeid (const typ* const)) { $ PRINT_ (" = " #fmt _ (**(typ**) object) __VA_ARGS__); }
+
+            if (0) ;
+            PRINT_VAL_ ("%s", char*)  PRINT_VAL_ ('%c', unsigned char)   PRINT_VAL_ (%s,   bool, ? "true" : "false")
+            PRINT_VAL_ ( %d,  int)    PRINT_VAL_ ( %u,  unsigned int)    PRINT_VAL_ (%g,   float)
+            PRINT_VAL_ ( %hd, short)  PRINT_VAL_ ( %hu, unsigned short)  PRINT_VAL_ (%lg,  double)
+            PRINT_VAL_ ( %ld, long)   PRINT_VAL_ ( %lu, unsigned long)   PRINT_VAL_ ('%c', char)
+            PRINT_VAL_ ("%s", std::string, .c_str())
+
+            else if (std::exception* e = dynamic_cast <std::exception*> ( (std::exception* ) object))
+                {
+$               PRINT_ (", what(): \"%s\"" _ e->what());
+                }
+            else
+                { $ err = 1; }
             }
         else
-            { $ err = 1; }
-        }
-    else
-        { $ err = 1; }
+            { $ err = 2; }
 
 $   *(unsigned long long*) _txDumpExceptionObjJmp = 0;
 
@@ -8885,7 +8891,7 @@ $   return trace;
 
 // Stack WALKING if the program is DEAD. Dead, Carl!
 
-int _txStackWalk (int framesToSkip, size_t szCapture, void* capture[], unsigned long* backTraceHash,
+int _txStackWalk (int framesToSkip, size_t szCapture, void* capture[], unsigned long* /*!!! backTraceHash*/,
                   CONTEXT* context /*= NULL*/, HANDLE thread /* = GetCurrentThread()*/)
     {
 $1  _txLocCur.trace = 0;
@@ -8894,48 +8900,84 @@ $   namespace MinGW = Win32::MinGW;
 
 $   assert (capture);
 
-    if (!context)
+$   int cpu = 0;
+
+$   Win32::STACKFRAME64 frame = {};
+$   frame.AddrPC.Mode = frame.AddrStack.Mode = frame.AddrFrame.Mode = Win32::AddrModeFlat;
+
+$   CONTEXT ctx = {};
+$   ctx.ContextFlags |= CONTEXT_FULL;
+
+$   int isWow64 = 0;
+$   Win32::IsWow64Process (GetCurrentProcess(), &isWow64);
+    
+$   if (context)
         {
-$       return Win32::RtlCaptureStackBackTrace (framesToSkip + 1, (DWORD) szCapture, capture, backTraceHash);
+$       ctx = *context;
+        }
+    else
+        {
+$       //!!! return Win32::RtlCaptureStackBackTrace (framesToSkip + 1, (DWORD) szCapture, capture, backTraceHash);
+
+$       assert (Win32::RtlCaptureContext);
+$       Win32::RtlCaptureContext (&ctx);
         }
 
-    #if   (defined (_M_X32) || defined (_M_IX86)) && !defined (_M_X64) && !defined (_WIN64)
+    #if   (defined (_M_X64) || defined (_WIN64)) && !defined (_M_X32) && !defined (_M_IX86)
 
-$       unsigned cpu = IMAGE_FILE_MACHINE_I386;
-$       Win32::STACKFRAME64 frame = {{ context->Eip }, {}, { context->Ebp }, { context->Esp }};
+$   if (isWow64)
+        {
+$       Win32::WOW64_CONTEXT wow64ctx = {};
+$       wow64ctx.ContextFlags |= WOW64_CONTEXT_FULL;
 
-    #elif (defined (_M_X64) || defined (_WIN64)) && !defined (_M_X32) && !defined (_M_IX86)
+$       if (!Win32::Wow64GetThreadContext (thread, &wow64ctx))  // In WINE, after EXIT_PROCESS_DEBUG_EVENT
+            { $ return 0; }
 
-$       unsigned cpu = IMAGE_FILE_MACHINE_AMD64;
-$       Win32::STACKFRAME64 frame = {{ context->Rip }, {}, { context->Rbp }, { context->Rsp }};
+$       cpu = IMAGE_FILE_MACHINE_I386;
+
+$       frame.AddrPC.Offset    = wow64ctx.Eip;
+$       frame.AddrStack.Offset = wow64ctx.Esp;
+$       frame.AddrFrame.Offset = wow64ctx.Ebp;
+        }
+    else
+        {
+$       cpu = IMAGE_FILE_MACHINE_AMD64;
+
+$       frame.AddrPC.Offset    = ctx.Rip;
+$       frame.AddrStack.Offset = ctx.Rbp;
+$       frame.AddrFrame.Offset = ctx.Rsp;
+        }
+
+    #elif (defined (_M_X32) || defined (_M_IX86)) && !defined (_M_X64) && !defined (_WIN64)
+
+        {
+$       cpu = IMAGE_FILE_MACHINE_I386;
+
+$       frame.AddrPC.Offset    = ctx.Eip;
+$       frame.AddrStack.Offset = ctx.Ebp;
+$       frame.AddrFrame.Offset = ctx.Esp;
+        }
 
     #else
-
-    #ifdef __GNUC__
-    #error
-    #error --------------------------------------------------------------------------------------------------------
-    #endif
-    #error TXLib.h: CPU architecture is not properly defined (either _M_X32/_M_IX86 or _M_X64/_WIN64).
-    #error --------------------------------------------------------------------------------------------------------
-    #error
+        #error TXLib.h: CPU architecture is not properly defined (either _M_X32/_M_IX86 or _M_X64/_WIN64).
 
     #endif
-
-$   frame.AddrPC.Mode = frame.AddrStack.Mode = frame.AddrFrame.Mode = Win32::AddrModeFlat;
+    
+$   assert (cpu);
 
 $   _txSymGetFromAddr ((void*) 1);
 
-$   int n = 0;
+$   int  n = 0;
 $   for (n = -framesToSkip; n < (int) szCapture; n++)
         {
 $       DWORD64 prev = frame.AddrStack.Offset;
 
         // Я злой и страшный серый walk. Я в поросятах знаю talk.
 
-        if ((MinGW::StackWalk64)? !MinGW::StackWalk64 (cpu, GetCurrentProcess(), thread, &frame, context,
+        if ((MinGW::StackWalk64)? !MinGW::StackWalk64 (cpu, GetCurrentProcess(), thread, &frame, &ctx,
                                                        NULL, MinGW::SymFunctionTableAccess64, MinGW::SymGetModuleBase64, NULL) :
-
-            (Win32::StackWalk64)? !Win32::StackWalk64 (cpu, GetCurrentProcess(), thread, &frame, context,
+                      
+            (Win32::StackWalk64)? !Win32::StackWalk64 (cpu, GetCurrentProcess(), thread, &frame, &ctx,
                                                        NULL, Win32::SymFunctionTableAccess64, Win32::SymGetModuleBase64, NULL) :
             true)
             {
@@ -9389,7 +9431,7 @@ int _txOnErrorReport (int type, char* text, int* ret)
         _txOnErrorReport (type, "\n" "Внимание: Обнаружены утечки памяти!\n\n", NULL);
         }
 
-    txOutputDebugPrintf ("\r" "%s - ERROR: %s", _TX_VERSION, what);
+    txOutputDebugPrintf ("\r" "%s - ERROR: %s", _TX_VERSION, text);
 
     DWORD n = 0;
     HANDLE err = GetStdHandle (STD_ERROR_HANDLE);
@@ -9462,19 +9504,21 @@ int txOutputDebugPrintf (const char format[], ...)
     char str[_TX_BIGBUFSIZE] = "";
 
     va_list arg; va_start (arg, format);
-    int n = (int) _tx_vsnprintf_s (str, sizeof (str) - 1, format, arg);
+    int n = (int) _tx_vsnprintf_s (str, sizeof (str) - 1-1, format, arg);
     va_end (arg);
 
-    struct __ { static void trimSpaces (char str[])
+    struct __ { static int trimSpaces (char str[])
         {
         char *dst = str, *src = str;
 
         for (char d = ' '; d; src++)
             if (isspace ((unsigned char)(*src))) { if (d != ' ') *dst++ = d = ' '; }
             else                                                 *dst++ = d = *src;
+        
+        return (int) (dst - str - 1);
         }};
 
-    if (options & compr)  __::trimSpaces (str);
+    if (options & compr)  n = __::trimSpaces (str);
 
     OutputDebugString (str);
 
@@ -10710,11 +10754,11 @@ $1  unsigned attr = txGetConsoleAttr();
 $   txSetConsoleAttr (0x0B);  // LightCyan
 
 $   printf ("\n" "--------------------------------------------------\n"
-                 "Трассировка стека из %s (%d) %s:\n\n"
+                 "Трассировка стека из \"%s\" at %s (%d):\n\n"
                  "%s\n\n"
                  "--------------------------------------------------\n\n",
-                 file, line, func, _txCaptureStackBackTrace (1, readSource));
-
+                 func, file, line, _txCaptureStackBackTrace (1, readSource));
+                 
 $   txSetConsoleAttr (attr);
     }
 
@@ -11208,96 +11252,6 @@ $   return pw;
 //=================================================================================================================
 
 //=================================================================================================================
-//{          TXAPI calls tracing
-//           Трассировка вызовов TXAPI
-//=================================================================================================================
-
-#define txAlphaBlend(...)           ({ _txLocCurSet(); txAlphaBlend          (__VA_ARGS__); })
-#define txArc(...)                  ({ _txLocCurSet(); txArc                 (__VA_ARGS__); })
-#define txAutoLock(...)             ({ _txLocCurSet(); txAutoLock            (__VA_ARGS__); })
-#define txBegin(...)                ({ _txLocCurSet(); txBegin               (__VA_ARGS__); })
-#define txBitBlt(...)               ({ _txLocCurSet(); txBitBlt              (__VA_ARGS__); })
-#define txChord(...)                ({ _txLocCurSet(); txChord               (__VA_ARGS__); })
-#define txCircle(...)               ({ _txLocCurSet(); txCircle              (__VA_ARGS__); })
-#define txClear(...)                ({ _txLocCurSet(); txClear               (__VA_ARGS__); })
-#define txClearConsole(...)         ({ _txLocCurSet(); txClearConsole        (__VA_ARGS__); })
-#define txColor(...)                ({ _txLocCurSet(); txColor               (__VA_ARGS__); })
-#define txCreateCompatibleDC(...)   ({ _txLocCurSet(); txCreateCompatibleDC  (__VA_ARGS__); })
-#define txCreateDIBSection(...)     ({ _txLocCurSet(); txCreateDIBSection    (__VA_ARGS__); })
-#define txCreateWindow(...)         ({ _txLocCurSet(); txCreateWindow        (__VA_ARGS__); })
-#define txDC(...)                   ({ _txLocCurSet(); txDC                  (__VA_ARGS__); })
-#define txDeleteDC(...)             ({ _txLocCurSet(); txDeleteDC            (__VA_ARGS__); })
-#define txDestroyWindow(...)        ({ _txLocCurSet(); txDestroyWindow       (__VA_ARGS__); })
-#define txDisableAutoPause(...)     ({ _txLocCurSet(); txDisableAutoPause    (__VA_ARGS__); })
-#define txDrawText(...)             ({ _txLocCurSet(); txDrawText            (__VA_ARGS__); })
-#define txDump(...)                 ({ _txLocCurSet(); txDump                (__VA_ARGS__); })
-#define txEllipse(...)              ({ _txLocCurSet(); txEllipse             (__VA_ARGS__); })
-#define txEnd(...)                  ({ _txLocCurSet(); txEnd                 (__VA_ARGS__); })
-#define txExtractColor(...)         ({ _txLocCurSet(); txExtractColor        (__VA_ARGS__); })
-#define txFillColor(...)            ({ _txLocCurSet(); txFillColor           (__VA_ARGS__); })
-#define txFloodFill(...)            ({ _txLocCurSet(); txFloodFill           (__VA_ARGS__); })
-#define txFontExist(...)            ({ _txLocCurSet(); txFontExist           (__VA_ARGS__); })
-#define txGetColor(...)             ({ _txLocCurSet(); txGetColor            (__VA_ARGS__); })
-#define txGetConsoleAttr(...)       ({ _txLocCurSet(); txGetConsoleAttr      (__VA_ARGS__); })
-#define txGetConsoleCursorPos(...)  ({ _txLocCurSet(); txGetConsoleCursorPos (__VA_ARGS__); })
-#define txGetConsoleFontSize(...)   ({ _txLocCurSet(); txGetConsoleFontSize  (__VA_ARGS__); })
-#define txGetExtent(...)            ({ _txLocCurSet(); txGetExtent           (__VA_ARGS__); })
-#define txGetExtentY(...)           ({ _txLocCurSet(); txGetExtentY          (__VA_ARGS__); })
-#define txGetFPS(...)               ({ _txLocCurSet(); txGetFPS              (__VA_ARGS__); })
-#define txGetFillColor(...)         ({ _txLocCurSet(); txGetFillColor        (__VA_ARGS__); })
-#define txGetModuleFileName(...)    ({ _txLocCurSet(); txGetModuleFileName   (__VA_ARGS__); })
-#define txGetPixel(...)             ({ _txLocCurSet(); txGetPixel            (__VA_ARGS__); })
-#define txGetTextExtent(...)        ({ _txLocCurSet(); txGetTextExtent       (__VA_ARGS__); })
-#define txGetTextExtentY(...)       ({ _txLocCurSet(); txGetTextExtentY      (__VA_ARGS__); })
-#define txHSL2RGB(...)              ({ _txLocCurSet(); txHSL2RGB             (__VA_ARGS__); })
-#define txInputBox(...)             ({ _txLocCurSet(); txInputBox            (__VA_ARGS__); })
-#define txLine(...)                 ({ _txLocCurSet(); txLine                (__VA_ARGS__); })
-#define txLoadImage(...)            ({ _txLocCurSet(); txLoadImage           (__VA_ARGS__); })
-#define txLock(...)                 ({ _txLocCurSet(); txLock                (__VA_ARGS__); })
-#define txMessageBox(...)           ({ _txLocCurSet(); txMessageBox          (__VA_ARGS__); })
-#define txMouseButtons(...)         ({ _txLocCurSet(); txMouseButtons        (__VA_ARGS__); })
-#define txMousePos(...)             ({ _txLocCurSet(); txMousePos            (__VA_ARGS__); })
-#define txMouseX(...)               ({ _txLocCurSet(); txMouseX              (__VA_ARGS__); })
-#define txMouseY(...)               ({ _txLocCurSet(); txMouseY              (__VA_ARGS__); })
-#define txNotifyIcon(...)           ({ _txLocCurSet(); txNotifyIcon          (__VA_ARGS__); })
-#define txOK(...)                   ({ _txLocCurSet(); txOK                  (__VA_ARGS__); })
-#define txOutputDebugPrintf(...)    ({ _txLocCurSet(); txOutputDebugPrintf   (__VA_ARGS__); })
-#define txPie(...)                  ({ _txLocCurSet(); txPie                 (__VA_ARGS__); })
-#define txPlaySound(...)            ({ _txLocCurSet(); txPlaySound           (__VA_ARGS__); })
-#define txPolygon(...)              ({ _txLocCurSet(); txPolygon             (__VA_ARGS__); })
-#define txQueryPerformance(...)     ({ _txLocCurSet(); txQueryPerformance    (__VA_ARGS__); })
-#define txRGB2HSL(...)              ({ _txLocCurSet(); txRGB2HSL             (__VA_ARGS__); })
-#define txRectangle(...)            ({ _txLocCurSet(); txRectangle           (__VA_ARGS__); })
-#define txSaveImage(...)            ({ _txLocCurSet(); txSaveImage           (__VA_ARGS__); })
-#define txSelectFont(...)           ({ _txLocCurSet(); txSelectFont          (__VA_ARGS__); })
-#define txSelectObject(...)         ({ _txLocCurSet(); txSelectObject        (__VA_ARGS__); })
-#define txSetColor(...)             ({ _txLocCurSet(); txSetColor            (__VA_ARGS__); })
-#define txSetConsoleAttr(...)       ({ _txLocCurSet(); txSetConsoleAttr      (__VA_ARGS__); })
-#define txSetConsoleCursorPos(...)  ({ _txLocCurSet(); txSetConsoleCursorPos (__VA_ARGS__); })
-#define txSetDefaults(...)          ({ _txLocCurSet(); txSetDefaults         (__VA_ARGS__); })
-#define txSetFillColor(...)         ({ _txLocCurSet(); txSetFillColor        (__VA_ARGS__); })
-#define txSetPixel(...)             ({ _txLocCurSet(); txSetPixel            (__VA_ARGS__); })
-#define txSetROP2(...)              ({ _txLocCurSet(); txSetROP2             (__VA_ARGS__); })
-#define txSetTextAlign(...)         ({ _txLocCurSet(); txSetTextAlign        (__VA_ARGS__); })
-#define txSetWindowsHook(...)       ({ _txLocCurSet(); txSetWindowsHook      (__VA_ARGS__); })
-#define txSleep(...)                ({ _txLocCurSet(); txSleep               (__VA_ARGS__); })
-#define txTextCursor(...)           ({ _txLocCurSet(); txTextCursor          (__VA_ARGS__); })
-#define txTextOut(...)              ({ _txLocCurSet(); txTextOut             (__VA_ARGS__); })
-#define txTransparentBlt(...)       ({ _txLocCurSet(); txTransparentBlt      (__VA_ARGS__); })
-#define txTriangle(...)             ({ _txLocCurSet(); txTriangle            (__VA_ARGS__); })
-#define txUnlock(...)               ({ _txLocCurSet(); txUnlock              (__VA_ARGS__); })
-#define txUpdateWindow(...)         ({ _txLocCurSet(); txUpdateWindow        (__VA_ARGS__); })
-#define txUseAlpha(...)             ({ _txLocCurSet(); txUseAlpha            (__VA_ARGS__); })
-#define txVersion(...)              ({ _txLocCurSet(); txVersion             (__VA_ARGS__); })
-#define txVersionNumber(...)        ({ _txLocCurSet(); txVersionNumber       (__VA_ARGS__); })
-#define txWindow(...)               ({ _txLocCurSet(); txWindow              (__VA_ARGS__); })
-#define tx_fpreset(...)             ({ _txLocCurSet(); tx_fpreset            (__VA_ARGS__); })
-#define _txStackBackTrace(...)      ({ _txLocCurSet(); _txStackBackTrace     (__VA_ARGS__); })
-
-//}
-//=================================================================================================================
-
-//=================================================================================================================
 //{          Experimental Debugging macros
 //! @name    Экспериментальные отладочные макросы
 //=================================================================================================================
@@ -11555,6 +11509,100 @@ template <typename T, int N> inline
     }
 
 //! @endcond
+
+#endif
+
+//}
+//=================================================================================================================
+
+//=================================================================================================================
+//{          TXAPI calls tracing
+//           Трассировка вызовов TXAPI
+//=================================================================================================================
+
+#if defined (_GCC_VER)  //!!!
+
+#define txAlphaBlend(...)           ({ _txLocCurSet(); txAlphaBlend          (__VA_ARGS__); })
+#define txArc(...)                  ({ _txLocCurSet(); txArc                 (__VA_ARGS__); })
+#define txAutoLock(...)             ({ _txLocCurSet(); txAutoLock            (__VA_ARGS__); })
+#define txBegin(...)                ({ _txLocCurSet(); txBegin               (__VA_ARGS__); })
+#define txBitBlt(...)               ({ _txLocCurSet(); txBitBlt              (__VA_ARGS__); })
+#define txChord(...)                ({ _txLocCurSet(); txChord               (__VA_ARGS__); })
+#define txCircle(...)               ({ _txLocCurSet(); txCircle              (__VA_ARGS__); })
+#define txClear(...)                ({ _txLocCurSet(); txClear               (__VA_ARGS__); })
+#define txClearConsole(...)         ({ _txLocCurSet(); txClearConsole        (__VA_ARGS__); })
+#define txColor(...)                ({ _txLocCurSet(); txColor               (__VA_ARGS__); })
+#define txCreateCompatibleDC(...)   ({ _txLocCurSet(); txCreateCompatibleDC  (__VA_ARGS__); })
+#define txCreateDIBSection(...)     ({ _txLocCurSet(); txCreateDIBSection    (__VA_ARGS__); })
+#define txCreateWindow(...)         ({ _txLocCurSet(); txCreateWindow        (__VA_ARGS__); })
+#define txDC(...)                   ({ _txLocCurSet(); txDC                  (__VA_ARGS__); })
+#define txDeleteDC(...)             ({ _txLocCurSet(); txDeleteDC            (__VA_ARGS__); })
+#define txDestroyWindow(...)        ({ _txLocCurSet(); txDestroyWindow       (__VA_ARGS__); })
+#define txDisableAutoPause(...)     ({ _txLocCurSet(); txDisableAutoPause    (__VA_ARGS__); })
+#define txDrawText(...)             ({ _txLocCurSet(); txDrawText            (__VA_ARGS__); })
+#define txDump(...)                 ({ _txLocCurSet(); txDump                (__VA_ARGS__); })
+#define txEllipse(...)              ({ _txLocCurSet(); txEllipse             (__VA_ARGS__); })
+#define txEnd(...)                  ({ _txLocCurSet(); txEnd                 (__VA_ARGS__); })
+#define txExtractColor(...)         ({ _txLocCurSet(); txExtractColor        (__VA_ARGS__); })
+#define txFillColor(...)            ({ _txLocCurSet(); txFillColor           (__VA_ARGS__); })
+#define txFloodFill(...)            ({ _txLocCurSet(); txFloodFill           (__VA_ARGS__); })
+#define txFontExist(...)            ({ _txLocCurSet(); txFontExist           (__VA_ARGS__); })
+#define txGetColor(...)             ({ _txLocCurSet(); txGetColor            (__VA_ARGS__); })
+#define txGetConsoleAttr(...)       ({ _txLocCurSet(); txGetConsoleAttr      (__VA_ARGS__); })
+#define txGetConsoleCursorPos(...)  ({ _txLocCurSet(); txGetConsoleCursorPos (__VA_ARGS__); })
+#define txGetConsoleFontSize(...)   ({ _txLocCurSet(); txGetConsoleFontSize  (__VA_ARGS__); })
+#define txGetExtent(...)            ({ _txLocCurSet(); txGetExtent           (__VA_ARGS__); })
+#define txGetExtentY(...)           ({ _txLocCurSet(); txGetExtentY          (__VA_ARGS__); })
+#define txGetFPS(...)               ({ _txLocCurSet(); txGetFPS              (__VA_ARGS__); })
+#define txGetFillColor(...)         ({ _txLocCurSet(); txGetFillColor        (__VA_ARGS__); })
+#define txGetModuleFileName(...)    ({ _txLocCurSet(); txGetModuleFileName   (__VA_ARGS__); })
+#define txGetPixel(...)             ({ _txLocCurSet(); txGetPixel            (__VA_ARGS__); })
+#define txGetTextExtent(...)        ({ _txLocCurSet(); txGetTextExtent       (__VA_ARGS__); })
+#define txGetTextExtentY(...)       ({ _txLocCurSet(); txGetTextExtentY      (__VA_ARGS__); })
+#define txHSL2RGB(...)              ({ _txLocCurSet(); txHSL2RGB             (__VA_ARGS__); })
+#define txInputBox(...)             ({ _txLocCurSet(); txInputBox            (__VA_ARGS__); })
+#define txLine(...)                 ({ _txLocCurSet(); txLine                (__VA_ARGS__); })
+#define txLoadImage(...)            ({ _txLocCurSet(); txLoadImage           (__VA_ARGS__); })
+#define txLock(...)                 ({ _txLocCurSet(); txLock                (__VA_ARGS__); })
+#define txMessageBox(...)           ({ _txLocCurSet(); txMessageBox          (__VA_ARGS__); })
+#define txMouseButtons(...)         ({ _txLocCurSet(); txMouseButtons        (__VA_ARGS__); })
+#define txMousePos(...)             ({ _txLocCurSet(); txMousePos            (__VA_ARGS__); })
+#define txMouseX(...)               ({ _txLocCurSet(); txMouseX              (__VA_ARGS__); })
+#define txMouseY(...)               ({ _txLocCurSet(); txMouseY              (__VA_ARGS__); })
+#define txNotifyIcon(...)           ({ _txLocCurSet(); txNotifyIcon          (__VA_ARGS__); })
+#define txOK(...)                   ({ _txLocCurSet(); txOK                  (__VA_ARGS__); })
+#define txOutputDebugPrintf(...)    ({ _txLocCurSet(); txOutputDebugPrintf   (__VA_ARGS__); })
+#define txPie(...)                  ({ _txLocCurSet(); txPie                 (__VA_ARGS__); })
+#define txPlaySound(...)            ({ _txLocCurSet(); txPlaySound           (__VA_ARGS__); })
+#define txPolygon(...)              ({ _txLocCurSet(); txPolygon             (__VA_ARGS__); })
+#define txQueryPerformance(...)     ({ _txLocCurSet(); txQueryPerformance    (__VA_ARGS__); })
+#define txRGB2HSL(...)              ({ _txLocCurSet(); txRGB2HSL             (__VA_ARGS__); })
+#define txRectangle(...)            ({ _txLocCurSet(); txRectangle           (__VA_ARGS__); })
+#define txSaveImage(...)            ({ _txLocCurSet(); txSaveImage           (__VA_ARGS__); })
+#define txSelectFont(...)           ({ _txLocCurSet(); txSelectFont          (__VA_ARGS__); })
+#define txSelectObject(...)         ({ _txLocCurSet(); txSelectObject        (__VA_ARGS__); })
+#define txSetColor(...)             ({ _txLocCurSet(); txSetColor            (__VA_ARGS__); })
+#define txSetConsoleAttr(...)       ({ _txLocCurSet(); txSetConsoleAttr      (__VA_ARGS__); })
+#define txSetConsoleCursorPos(...)  ({ _txLocCurSet(); txSetConsoleCursorPos (__VA_ARGS__); })
+#define txSetDefaults(...)          ({ _txLocCurSet(); txSetDefaults         (__VA_ARGS__); })
+#define txSetFillColor(...)         ({ _txLocCurSet(); txSetFillColor        (__VA_ARGS__); })
+#define txSetPixel(...)             ({ _txLocCurSet(); txSetPixel            (__VA_ARGS__); })
+#define txSetROP2(...)              ({ _txLocCurSet(); txSetROP2             (__VA_ARGS__); })
+#define txSetTextAlign(...)         ({ _txLocCurSet(); txSetTextAlign        (__VA_ARGS__); })
+#define txSetWindowsHook(...)       ({ _txLocCurSet(); txSetWindowsHook      (__VA_ARGS__); })
+#define txSleep(...)                ({ _txLocCurSet(); txSleep               (__VA_ARGS__); })
+#define txTextCursor(...)           ({ _txLocCurSet(); txTextCursor          (__VA_ARGS__); })
+#define txTextOut(...)              ({ _txLocCurSet(); txTextOut             (__VA_ARGS__); })
+#define txTransparentBlt(...)       ({ _txLocCurSet(); txTransparentBlt      (__VA_ARGS__); })
+#define txTriangle(...)             ({ _txLocCurSet(); txTriangle            (__VA_ARGS__); })
+#define txUnlock(...)               ({ _txLocCurSet(); txUnlock              (__VA_ARGS__); })
+#define txUpdateWindow(...)         ({ _txLocCurSet(); txUpdateWindow        (__VA_ARGS__); })
+#define txUseAlpha(...)             ({ _txLocCurSet(); txUseAlpha            (__VA_ARGS__); })
+#define txVersion(...)              ({ _txLocCurSet(); txVersion             (__VA_ARGS__); })
+#define txVersionNumber(...)        ({ _txLocCurSet(); txVersionNumber       (__VA_ARGS__); })
+#define txWindow(...)               ({ _txLocCurSet(); txWindow              (__VA_ARGS__); })
+#define tx_fpreset(...)             ({ _txLocCurSet(); tx_fpreset            (__VA_ARGS__); })
+#define _txStackBackTrace(...)      ({ _txLocCurSet(); _txStackBackTrace     (__VA_ARGS__); })
 
 #endif
 
