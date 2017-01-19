@@ -6,9 +6,9 @@
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 121 $
+//!          $Version: 00173a, Revision: 122 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2016-12-10 11:56:15 +0400 $
+//!          $Date: 2017-01-19 12:31:31 +0400 $
 //!
 //!          TX Library - компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -134,9 +134,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 121, 2016-12-10 11:56:15 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 121, 2016-12-10 11:56:15 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 121, 2016-12-10 11:56:15 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 122, 2017-01-19 12:31:31 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 122, 2017-01-19 12:31:31 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 122, 2017-01-19 12:31:31 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -347,9 +347,9 @@
     #define MINGW_HAS_SECURE_API       1
     #endif
 
-    #ifndef __USE_MINGW_ANSI_STDIO
-    #define __USE_MINGW_ANSI_STDIO     1
-    #endif
+//!!! #ifndef __USE_MINGW_ANSI_STDIO
+//!!! #define __USE_MINGW_ANSI_STDIO     1      scanf ("%lg", &[double]) failure
+//!!! #endif
 
     #define _TX_CHECK_FORMAT( arg )    __attribute__ (( format (printf, (arg), (arg)+1) ))
 
@@ -525,15 +525,16 @@ namespace std { enum nomeow_t { nomeow }; }     // Vital addition to the C++ sta
 #include <float.h>
 #include <limits.h>
 
-#include <map>
 #include <vector>
 #include <string>
+#include <map>
 #include <iostream>
 #include <algorithm>
 #include <exception>
 #include <stdexcept>
 
 #include <windows.h>
+#include <windowsx.h>
 #include <tlhelp32.h>
 #include <shellapi.h>
 
@@ -815,7 +816,7 @@ inline int txGetExtentY (HDC dc = txDC (true));
 //! @ingroup Drawing
 //! @brief   Возвращает дескриптор окна рисования
 //!
-//! @return  Дескриптор (системный номер, handler) окна холста
+//! @return  Дескриптор (системный номер, handler) окна холста.
 //!
 //! @see     txDC(), txLock(), txUnlock(), txGDI()
 //!
@@ -2260,15 +2261,14 @@ bool txDeleteDC (HDC* dc);
 //!          txDeleteDC (background_FromTXLibHelp);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
+//! @{
 
 bool txBitBlt (HDC destImage,   double xDest,       double yDest,       double width, double height,
                HDC sourceImage, double xSource = 0, double ySource = 0, DWORD rOp = SRCCOPY);
-
-//! @cond INTERNAL
 inline
-bool txBitBlt (HDC destImage,   double xDest,       double yDest,
+bool txBitBlt (                 double xDest,       double yDest,
                HDC sourceImage, double xSource = 0, double ySource = 0);
-//! @endcond
+//! @}
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -2321,15 +2321,14 @@ bool txBitBlt (HDC destImage,   double xDest,       double yDest,
 //!          txDeleteDC (superman_FromTXLibHelp);  // So pity :( But he was only a copy from TXLib Help.
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
+//! @{
 
 bool txTransparentBlt (HDC destImage,   double xDest,       double yDest,       double width, double height,
                        HDC sourceImage, double xSource = 0, double ySource = 0, COLORREF transColor = TX_BLACK);
-
-//! @cond INTERNAL
 inline
-bool txTransparentBlt (HDC destImage,   double xDest, double yDest,
+bool txTransparentBlt (                 double xDest, double yDest,
                        HDC sourceImage, COLORREF transColor = TX_BLACK);
-//! @endcond
+//! @}
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -2429,16 +2428,15 @@ bool txTransparentBlt (HDC destImage,   double xDest, double yDest,
 //!          return batman_FromTXLibHelp;        // ...and there he comes -- in TXLib copy form
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
+//! @{
 
 bool txAlphaBlend (HDC destImage,   double xDest,       double yDest,       double width, double height,
                    HDC sourceImage, double xSource = 0, double ySource = 0, double alpha = 1.0,
                    unsigned format = AC_SRC_ALPHA);
-
-//! @cond INTERNAL
 inline
-bool txAlphaBlend (HDC destImage,   double xDest, double yDest,
+bool txAlphaBlend (                 double xDest, double yDest,
                    HDC sourceImage, double alpha = 1.0);
-//! @endcond
+//! @}
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -3546,6 +3544,12 @@ double txSqr (double x)
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
 //! @brief   <i>Еще парочка макросов.</i>
+//!
+//!          @c please увеличивает вероятность успешного выполнения кода*.
+//!
+//!          @c meow - ...просто мяу :)
+//!
+//! @note    <small>* Это шутка :)</small>
 //!
 //! @usage @code
 //!          #include "TXLib.h"
@@ -4938,7 +4942,7 @@ struct txDialog
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-    ptrdiff_t dialogBox (const Layout* layout = NULL, size_t bufsize = 0);
+    intptr_t dialogBox (const Layout* layout = NULL, size_t bufsize = 0);
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @brief   Запускает диалоговое окно.
@@ -4955,7 +4959,7 @@ struct txDialog
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-    ptrdiff_t dialogBox (WORD resource);
+    intptr_t dialogBox (WORD resource);
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @brief   Закрытые конструктор копирования и оператор присваивания.
@@ -4969,8 +4973,8 @@ struct txDialog
 //! Настоящая диалоговая функция (не txDialog::dialogProc(), т.к. функция окна in32 должна быть статической).
 //}----------------------------------------------------------------------------------------------------------------
 
-    private:
-    static ptrdiff_t CALLBACK dialogProc__ (HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam);
+    protected:
+    static ptrdiff_t CALLBACK DialogProc_ (HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 //{----------------------------------------------------------------------------------------------------------------
 //! Текущий макет диалога.
@@ -4993,6 +4997,16 @@ struct txDialog
 //! @ingroup Misc
 //! @brief   Заголовок карты сообщений (Message Map).
 //!
+//! @par     Раскрывается в
+//! @code
+//!          virtual int dialogProc (HWND _wnd, UINT _msg, WPARAM _wParam, LPARAM _lParam) override
+//!              {
+//!              int _result = txDialog::dialogProc (_wnd, _msg, _wParam, _lParam);
+//!
+//!              switch (_msg)
+//!                  {
+//! @endcode
+//!
 //! @see     TX_BEGIN_MESSAGE_MAP(), TX_END_MESSAGE_MAP, TX_HANDLE(), TX_COMMAND_MAP, txDialog::dialogProc(), txDialog
 //!
 //! @usage @code
@@ -5005,7 +5019,7 @@ struct txDialog
 #define TX_BEGIN_MESSAGE_MAP()                                                                 \
     virtual int dialogProc (HWND _wnd, UINT _msg, WPARAM _wParam, LPARAM _lParam) _tx_override \
         {                                                                                      \
-        (void)_wnd; (void)_msg; (void)_wParam; (void)_lParam;                                  \
+        int _result = txDialog::dialogProc (_wnd, _msg, _wParam, _lParam); (void) _result;     \
                                                                                                \
         switch (_msg)                                                                          \
             {                                                                                  \
@@ -5017,6 +5031,12 @@ struct txDialog
 //!
 //! @param   id  Идентификатор сообщения
 //!
+//! @par     Раскрывается в
+//! @code
+//!                  break;
+//!                  case (id):
+//! @endcode
+//!
 //! @see     TX_BEGIN_MESSAGE_MAP(), TX_END_MESSAGE_MAP, TX_HANDLE(), TX_COMMAND_MAP, txDialog::dialogProc(), txDialog
 //!
 //! @usage @code
@@ -5026,14 +5046,23 @@ struct txDialog
 //! @hideinitializer
 //}----------------------------------------------------------------------------------------------------------------
 
-#define TX_HANDLE( id )                                                            \
-            break;                                                                 \
+#define TX_HANDLE( id )                                                                        \
+            break;                                                                             \
             case (id):
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
 //! @brief   Начало карты команд (Command map) в карте сообщений.
 //!
+//! @par     Раскрывается в
+//! @code
+//!                  }  // Конец switch (_msg)
+//!
+//!              if (_msg == WM_COMMAND)
+//!                  switch (LOWORD (_wParam))
+//!                      {
+//! @endcode
+//!
 //! @see     TX_BEGIN_MESSAGE_MAP(), TX_END_MESSAGE_MAP, TX_HANDLE(), TX_COMMAND_MAP, txDialog::dialogProc(), txDialog
 //!
 //! @usage @code
@@ -5043,18 +5072,26 @@ struct txDialog
 //! @hideinitializer
 //}----------------------------------------------------------------------------------------------------------------
 
-#define TX_COMMAND_MAP                                                             \
-            default: break;                                                        \
-            }                                                                      \
-                                                                                   \
-        if (_msg == WM_COMMAND) switch (LOWORD (_wParam))                          \
-            {                                                                      \
+#define TX_COMMAND_MAP                                                                         \
+            default: break;                                                                    \
+            }                                                                                  \
+                                                                                               \
+        if (_msg == WM_COMMAND) switch (LOWORD (_wParam))                                      \
+            {                                                                                  \
             case 0:
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
 //! @brief   Завершитель карты сообщений.
 //!
+//! @par     Раскрывается в
+//! @code
+//!                  }  // Конец switch (_msg) или switch (LOWORD (_wParam))
+//!
+//!              return FALSE;
+//!              }
+//! @endcode
+//!
 //! @see     TX_BEGIN_MESSAGE_MAP(), TX_END_MESSAGE_MAP, TX_HANDLE(), TX_COMMAND_MAP, txDialog::dialogProc(), txDialog
 //!
 //! @usage @code
@@ -5064,11 +5101,11 @@ struct txDialog
 //! @hideinitializer
 //}----------------------------------------------------------------------------------------------------------------
 
-#define TX_END_MESSAGE_MAP                                                         \
-            default: break;                                                        \
-            }                                                                      \
-                                                                                   \
-        return FALSE;                                                              \
+#define TX_END_MESSAGE_MAP                                                                     \
+            default: break;                                                                    \
+            }                                                                                  \
+                                                                                               \
+        return FALSE;                                                                          \
         }
 
 //! @}
@@ -5938,7 +5975,7 @@ bool             _txCreateShortcut (const char shortcutName[],
 void*            _tx_DLGTEMPLATE_Create (void* globalMem, size_t bufsize, DWORD style, DWORD exStyle,
                                          WORD controls, short x, short y, short cx, short cy,
                                          const char caption[], const char font[], WORD fontsize,
-                                         HANDLE menu);
+                                         const char menu[]);
 
 void*            _tx_DLGTEMPLATE_Add    (void* dlgTemplatePtr, size_t bufsize, DWORD style, DWORD exStyle,
                                          short x, short y, short cx, short cy,
@@ -6292,11 +6329,11 @@ HWND txCreateWindow (double sizeX, double sizeY, bool centered /*= true*/)
     {
 $1  if (!_txInitialized) _txInitialized = _txInitialize();
 
-$   if (txWindow())
+$   if (HWND wnd = txWindow())
         {
 $       SetLastErrorEx (ERROR_INVALID_DATA, 0);
 $       _TX_ON_DEBUG (TX_ERROR ("\a" "Окно рисования уже создано"));
-$       return txWindow();
+$       return wnd;
         }
 
 $   if (!_txIsDll)
@@ -6366,7 +6403,7 @@ $   _txBuffer_Select (Win32::GetStockObject (WHITE_BRUSH), dc) asserted;
 $   _txBuffer_Select (Win32::CreateFont (szCon.cy/szTxt.cy, szCon.cx/szTxt.cx,
                                          0, 0, FW_REGULAR, FALSE, FALSE, FALSE,
                                          RUSSIAN_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
-                                         DEFAULT_QUALITY, DEFAULT_PITCH, _txConsoleFont),
+                                         DEFAULT_QUALITY, FIXED_PITCH, _txConsoleFont),
                       dc) asserted;
 
 $  (Win32::SetTextColor      (dc, TX_WHITE) != CLR_INVALID) asserted;
@@ -6510,7 +6547,7 @@ void _txCleanup()
     if (!_txInitialized) return;
     else _txInitialized = false;
 
-$1  //!!! txSleep (_txWindowUpdateInterval);
+$1  txSleep (_txWindowUpdateInterval);
 
 $   _txRunning = false;
 $   _txConsole_IsBlinking = false;
@@ -9562,7 +9599,7 @@ int txOutputDebugPrintf (const char format[], ...)
 
     OutputDebugString (str);
 
-    if (options & print)  fprintf (stderr, "%s\n", str);
+    if (options & print)  fprintf (stderr, "%s", str);
 
     if (options & msgbox) txMessageBox (str, "Оказывается, что", MB_ICONEXCLAMATION);
 
@@ -9716,13 +9753,14 @@ $1  time_t timeT     = time (NULL) - clock()/CLOCKS_PER_SEC;
                     "See license on: http://txlib.ru\n\n"
 
                     "TXLib file:" "\t" __FILE__ "\n"
-                    "Compiled:"   "\t" __DATE__ " " __TIME__ ", " _TX_BUILDMODE ", " __TX_COMPILER__ "\n"
+                    "Compiled:"   "\t" __DATE__ " " __TIME__ ", " __TX_COMPILER__ ", %d-bit, " _TX_BUILDMODE "\n"
                     "Started:"    "\t" "%.6s %.4s %.8s\n\n"
 
                     "Run file:"   "\t" "%s\n"
                     "Directory:"  "\t" "%s",
 
-                    timeS + 4, timeS + 20, timeS + 11,  // These offsets are ANSI standardized
+                    (sizeof (void*) == sizeof (DWORD))? 32 : 64,
+                    timeS + 4, timeS + 20, timeS + 11,              // These offsets are ANSI standardized
                     txGetModuleFileName(),
                     _getcwd (cwd, sizeof (cwd) - 1));
 
@@ -10095,7 +10133,11 @@ $   if (!strchr (text, '\n')) format |= DT_SINGLELINE;
 
 $   unsigned prev = txSetTextAlign (TA_LEFT | TA_TOP | TA_NOUPDATECP, dc);
 
-    if (Win32::DrawText) { $ txGDI ((Win32::DrawText (dc, text, -1, &r, format)), dc) asserted; Win32::GetPixel (dc, 0, 0); }
+    if (Win32::DrawText)
+        {
+$       txGDI ((Win32::DrawText (dc, text, -1, &r, format)), dc) asserted;
+$       Win32::GetPixel (dc, 0, 0);
+        }
 
 $   txSetTextAlign (prev, dc);
 
@@ -10116,7 +10158,7 @@ $   HFONT font = txFontExist (name)?
                      Win32::CreateFont (ROUND (sizeY), ROUND ((sizeX >= 0)? sizeX : sizeY/3),
                                         ROUND (angle*10), 0, bold, italic, underline, strikeout,
                                         RUSSIAN_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
-                                        DEFAULT_QUALITY, FIXED_PITCH, name)
+                                        DEFAULT_QUALITY, DEFAULT_PITCH, name)
                      :
                      (HFONT) Win32::GetStockObject (SYSTEM_FIXED_FONT);
 
@@ -10787,7 +10829,7 @@ $   unsigned x = 0;
 $   unsigned attr = txGetConsoleAttr();
 
 $   txSetConsoleAttr (0x0F);
-$   printf ("\n%8.8s ", name? name : "");
+$   printf ("\n%*.*s ", sizeof (address) * 2, sizeof (address) * 2, name? name : "");
 
 $   txSetConsoleAttr (0x0E);
 $   for (x = 0; x < 16; x++) printf ("%02X ", x);
@@ -11123,18 +11165,18 @@ $1  return ::std::swap (layout_, layout), layout;
 
 //-----------------------------------------------------------------------------------------------------------------
 
-ptrdiff_t txDialog::dialogBox (WORD resourceID)
+intptr_t txDialog::dialogBox (WORD resourceID)
     {
 $1  const char* resName = (char*)(uintptr_t) resourceID;
 
 $   if (!FindResource (NULL, resName, RT_DIALOG)) return TX_DEBUG_ERROR ("Не найден ресурс диалога %d" _ resourceID), 0;
 
-$   return DialogBoxParam (NULL, resName, NULL, dialogProc__, (LPARAM) this);
+$   return DialogBoxParam (NULL, resName, NULL, DialogProc_, (LPARAM) this);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
 
-ptrdiff_t txDialog::dialogBox (const txDialog::Layout* layout /*= NULL*/, size_t bufsize /*= 0*/)
+intptr_t txDialog::dialogBox (const txDialog::Layout* layout /*= NULL*/, size_t bufsize /*= 0*/)
     {
 $1  if (!layout)  layout = layout_;
 $   if (!layout)  return TX_DEBUG_ERROR ("Не установлен динамический шаблон диалога"), 0;
@@ -11164,7 +11206,8 @@ $       ptr = _tx_DLGTEMPLATE_Add (ptr, bufsize - ((char*)ptr - (char*)tmpl),
         }
 
 $   tmpl->cdit = (unsigned short) (i-1);
-$   uintptr_t res = DialogBoxIndirectParam (NULL, tmpl, NULL, dialogProc__, (LPARAM) this);
+
+$   intptr_t res = DialogBoxIndirectParam (NULL, tmpl, NULL, DialogProc_, (LPARAM) this);
 
 $   GlobalFree (tmpl);
 
@@ -11173,34 +11216,36 @@ $   return res;
 
 //-----------------------------------------------------------------------------------------------------------------
 
-int txDialog::dialogProc (HWND, UINT, WPARAM, LPARAM)
+int txDialog::dialogProc (HWND wnd, UINT msg, WPARAM wParam, LPARAM)
     {
-$1  return FALSE;
-    }
-
-//-----------------------------------------------------------------------------------------------------------------
-
-ptrdiff_t CALLBACK txDialog::dialogProc__ (HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam)
-    {
-$1  static txDialog* this__ = NULL;
-
-$   if (msg == WM_INITDIALOG) this__ = (txDialog*) lParam;
-$   if (!this__) return FALSE;
-
-$   switch (msg)
+$1  switch (msg)
         {
-        case WM_INITDIALOG: $ SetForegroundWindow (wnd);         break;
+        case WM_INITDIALOG: $ SetForegroundWindow (wnd);
+                            $ break;
 
         case WM_COMMAND:    $ switch (LOWORD (wParam))
             {
             case IDOK:
-            case IDCANCEL:  $ SetForegroundWindow (txWindow());
-                            $ EndDialog (wnd, (uintptr_t) this__); break;
+            case IDCANCEL:  $ SetForegroundWindow (txWindow()? txWindow() : Win32::GetConsoleWindow());
+                            $ EndDialog (wnd, (uintptr_t) this);
+                            $ break;
+
             default:        $ break;
             }
 
         default:            $ break;
         }
+
+$   return FALSE;
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+ptrdiff_t CALLBACK txDialog::DialogProc_ (HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam)
+    {
+$1  static txDialog* this__ = NULL;
+$   if (msg == WM_INITDIALOG) this__ = (txDialog*) lParam;
+$   if (!this__) return FALSE;
 
 $   return this__-> dialogProc (wnd, msg, wParam, lParam);
     }
@@ -11209,7 +11254,7 @@ $   return this__-> dialogProc (wnd, msg, wParam, lParam);
 
 void* _tx_DLGTEMPLATE_Create (void* globalMem, size_t bufsize, DWORD style, DWORD exStyle,
                               WORD controls, short x, short y, short cx, short cy,
-                              const char caption[], const char font[], WORD fontsize, HANDLE menu)
+                              const char caption[], const char font[], WORD fontsize, const char menu[])
     {
 $1  _TX_IF_ARGUMENT_FAILED (globalMem) return NULL;
 
@@ -11225,21 +11270,29 @@ $   tmpl->y     = y;
 $   tmpl->cx    = cx;
 $   tmpl->cy    = cy;
 
-$   *pw++ = (WORD)(uintptr_t) NULL;
-$   *pw++ = (WORD)(uintptr_t) menu;
+$   if (menu > (const char*) 0xFFFF)
+        {
+$       pw  += MultiByteToWideChar  (_TX_CP, 0, (menu?    menu    : ""), -1, (wchar_t*) pw,
+                                    (int) (bufsize? bufsize - ((char*)pw - (char*)globalMem) : 0xFFFF));
+        }
+else
+        {
+$       *pw++ = (WORD)(uintptr_t) (menu? 0xFFFF : NULL);
+$       *pw++ = (WORD)(uintptr_t)  menu;
+        }
 
 $   if (caption)
         {
-$       pw  += MultiByteToWideChar   (_TX_CP, 0, caption? caption : "", -1, (wchar_t*) pw,
-                                     (int) (bufsize? bufsize - ((char*)pw - (char*)globalMem) : 0xFFFF));
+$       pw  += MultiByteToWideChar  (_TX_CP, 0, (caption? caption : ""), -1, (wchar_t*) pw,
+                                    (int) (bufsize? bufsize - ((char*)pw - (char*)globalMem) : 0xFFFF));
         }
 
 $   if (style & DS_SETFONT)
-         {
-$        *pw++ = fontsize;
-$         pw  += MultiByteToWideChar (_TX_CP, 0, font?    font    : "", -1, (wchar_t*) pw,
-                                     (int) (bufsize? bufsize - ((char*)pw - (char*)globalMem) : 0xFFFF));
-         }
+        {
+$       *pw++ = fontsize;
+$        pw  += MultiByteToWideChar (_TX_CP, 0, (font?    font    : ""), -1, (wchar_t*) pw,
+                                    (int) (bufsize? bufsize - ((char*)pw - (char*)globalMem) : 0xFFFF));
+        }
 
 $   return pw;
     }
