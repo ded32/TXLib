@@ -6,9 +6,9 @@
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 122 $
+//!          $Version: 00173a, Revision: 123 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2017-01-19 12:31:31 +0400 $
+//!          $Date: 2017-02-14 14:54:32 +0400 $
 //!
 //!          TX Library - компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -134,9 +134,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 122, 2017-01-19 12:31:31 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 122, 2017-01-19 12:31:31 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 122, 2017-01-19 12:31:31 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 123, 2017-02-14 14:54:32 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 123, 2017-02-14 14:54:32 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 123, 2017-02-14 14:54:32 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -393,9 +393,10 @@
     #pragma warning (disable: 4702)             // unreachable code
     #pragma warning (disable: 4481)             // nonstandard extension used: override specifier 'override'
 
+
     #define _tx_thread                 __declspec (thread)
 
-    #if  (_MSC_VER == 1200)                     // MSVC 6 (1998)
+    #if (_MSC_VER == 1200)                      // MSVC 6 (1998)
 
         #define _MSC_VER_6                      // Flag the bad dog
 
@@ -538,33 +539,34 @@ namespace std { enum nomeow_t { nomeow }; }     // Vital addition to the C++ sta
 #include <tlhelp32.h>
 #include <shellapi.h>
 
-#if defined (_MSC_VER)
-#pragma warning (disable: 4091)                 // 'typedef ': ignored on left of '' when no variable is declared
-#pragma warning (disable: 6001)                 // Uninitialized variable usage "*ppidls"
-#endif
+#if defined (_GCC_VER)
 
 #include <shlobj.h>
 
-#if defined (_MSC_VER)
-#pragma warning (default: 4091)                 // 'typedef ': ignored on left of '' when no variable is declared
-#pragma warning (default: 6001)                 // Uninitialized variable usage "*ppidls"
-#endif
-
-#if defined (_GCC_VER)
 #include <cxxabi.h>
 #include <unwind.h>
+
 #endif
 
 #if defined (_MSC_VER)
+
 #pragma warning (disable: 4005)                 // '...': macro redefinition
+#pragma warning (disable: 4091)                 // 'typedef ': ignored on left of '' when no variable is declared
+#pragma warning (disable: 6001)                 // Uninitialized variable usage "*ppidls"
+
+#include <shlobj.h>
 
 #include <new.h>
+
 #include <ntstatus.h>
 #include <crtdbg.h>
 #include <rtcapi.h>
 #include <dbghelp.h>
 
 #pragma warning (default: 4005)                 // '...': macro redefinition
+#pragma warning (default: 4091)                 // 'typedef ': ignored on left of '' when no variable is declared
+#pragma warning (default: 6001)                 // Uninitialized variable usage "*ppidls"
+
 #endif
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -961,6 +963,7 @@ const COLORREF
 #endif
 
 //! @cond INTERNAL
+#define TX_GREY       TX_GRAY
 #define TX_DARKGREY   TX_DARKGRAY
 #define TX_LIGHTGREY  TX_LIGHTGRAY
 //! @endcond
@@ -1006,11 +1009,14 @@ COLORREF RGB (int red, int green, int blue);
 //!
 //! @return  Перо, созданное при установке цвета. При ошибке возвращается NULL.
 //!
-//! @see     txColor(), txGetColor(), txFillColor(), txGetFillColor(), txColors, RGB()
+//! @see     txSetFillColor(), txGetColor(), txGetFillColor(), txColors, RGB()
 //!
 //! @usage @code
 //!          txSetColor (TX_RED);
 //!          txSetColor (RGB (255, 128, 0), 5);
+//!
+//!          txSetColor (RGB (255, 255, 0));   // Красный + зеленый = желтый
+//!          txSetColor (RGB (255, 128, 64));  // Нечто оранжевое
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
@@ -1019,6 +1025,8 @@ HPEN txSetColor (COLORREF color, double thickness = 1, HDC dc = txDC (true));
 //! @cond INTERNAL
 #define txSetColour txSetColor
 //! @endcond
+
+//! @cond INTERNAL
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1030,15 +1038,12 @@ HPEN txSetColor (COLORREF color, double thickness = 1, HDC dc = txDC (true));
 //!
 //! @return  Цвет RGB, соответствующий указанной комбинации основных цветов. При ошибке возвращается CLR_INVALID.
 //!
-//! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor()
-//!
-//! @usage @code
-//!          txColor (1.0, 1.0, 0.0);   // Красный + зеленый = желтый
-//!          txColor (1.0, 0.5, 0.25);  // Нечто оранжевое
-//! @endcode
+//! @see     txSetColor(), txSetFillColor(), txGetColor(), txGetFillColor()
 //}----------------------------------------------------------------------------------------------------------------
 
 COLORREF txColor (double red, double green, double blue);
+
+//! @endcond
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1048,7 +1053,7 @@ COLORREF txColor (double red, double green, double blue);
 //!
 //! @return  Текущий цвет линий и текста, см. txColors, RGB()
 //!
-//! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors, RGB()
+//! @see     txSetColor(), txSetFillColor(), txGetFillColor(), txColors, RGB()
 //!
 //! @usage @code
 //!          COLORREF color = txGetColor();
@@ -1066,7 +1071,7 @@ COLORREF txGetColor (HDC dc = txDC (true));
 //!
 //! @return  Кисть, созданная при установке цвета. При ошибке возвращается NULL.
 //!
-//! @see     txFillColor(), txGetFillColor(), txColor(), txGetColor(), txColors, RGB()
+//! @see     txSetColor(), txGetFillColor(), txGetColor(), txColors, RGB()
 //!
 //! @usage @code
 //!          txSetFillColor (TX_RED);
@@ -1080,6 +1085,8 @@ HBRUSH txSetFillColor (COLORREF color, HDC dc = txDC (true));
 #define txSetFillColour txSetFillColor
 //! @endcond
 
+//! @cond INTERNAL
+
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
 //! @brief   Устанавливает текущий цвет заполнения фигур.
@@ -1090,14 +1097,12 @@ HBRUSH txSetFillColor (COLORREF color, HDC dc = txDC (true));
 //!
 //! @return  Цвет RGB, соответствующий указанной комбинации основных цветов. При ошибке возвращается CLR_INVALID.
 //!
-//! @see     txSetFillColor(), txGetFillColor(), txSetColor(), txGetColor()
-//!
-//! @usage @code
-//!          txFillColor (1.0, 0.5, 0.25);
-//! @endcode
+//! @see     txSetFillColor(), txSetColor(), txGetFillColor(), txGetColor()
 //}----------------------------------------------------------------------------------------------------------------
 
 COLORREF txFillColor (double red, double green, double blue);
+
+//! @endcond
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1107,7 +1112,7 @@ COLORREF txFillColor (double red, double green, double blue);
 //!
 //! @return  Текущий цвет заполнения фигур, см. txColors, RGB()
 //!
-//! @see     txSetFillColor(), txGetFillColor(), txSetColor(), txGetColor(), txColors, RGB()
+//! @see     txSetFillColor(), txSetColor(), txGetColor(), txColors, RGB()
 //!
 //! @usage @code
 //!          COLORREF color = txGetFillColor();
@@ -1273,7 +1278,7 @@ COLORREF txHSL2RGB (COLORREF hslColor);
 //!
 //! @return  Если операция была успешна - true, иначе - false.
 //!
-//! @see     txSetFillColor(), txFillColor(), txGetFillColor(), txColors, RGB()
+//! @see     txSetFillColor(), txGetFillColor(), txColors, RGB()
 //!
 //! @usage @code
 //!          txSetFillColor (TX_BLUE);  // Кто-то хотел синий фон?
@@ -1294,7 +1299,7 @@ bool txClear (HDC dc = txDC (true));
 //!
 //! @return  Если операция была успешна - true, иначе - false.
 //!
-//! @see     txPixel(), txGetPixel(), txColors, RGB()
+//! @see     txGetPixel(), txColors, RGB()
 //!
 //! @usage @code
 //!          txSetPixel (100, 100, TX_LIGHTRED);  // Красная точка! http://www.google.ru/search?q=коты+и+красная+точка
@@ -1304,6 +1309,8 @@ bool txClear (HDC dc = txDC (true));
 //}----------------------------------------------------------------------------------------------------------------
 
 inline bool txSetPixel (double x, double y, COLORREF color, HDC dc = txDC (true));
+
+//! @cond INTERNAL
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1327,6 +1334,8 @@ inline bool txSetPixel (double x, double y, COLORREF color, HDC dc = txDC (true)
 
 inline bool txPixel (double x, double y, double red, double green, double blue, HDC dc = txDC (true));
 
+//! @endcond
+
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
 //! @brief   Возвращает текущий цвет точки (пикселя) на экране.
@@ -1337,7 +1346,7 @@ inline bool txPixel (double x, double y, double red, double green, double blue, 
 //!
 //! @return  Текущий цвет пикселя, см. txColors, RGB()
 //!
-//! @see     txSetPixel(), txPixel(), txColors, RGB()
+//! @see     txSetPixel(), txColors, RGB()
 //!
 //! @usage @code
 //!          COLORREF color = txGetPixel (100, 200);
@@ -1582,7 +1591,7 @@ bool txFloodFill (double x, double y, COLORREF color = TX_TRANSPARENT, DWORD mod
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
-//! @brief   Функция, которая должна бы рисовать треугольник.
+//! @brief   Функция, которая <i>должна бы</i> рисовать треугольник.
 //!
 //! @param   x1     X-координата 1 точки
 //! @param   y1     Y-координата 1 точки
@@ -2207,15 +2216,15 @@ bool txDeleteDC (HDC* dc);
 //! @ingroup Drawing
 //! @brief   Копирует изображение с одного холста (контекста рисования, DC) на другой.
 //!
-//! @param   dest    Контекст назначения (куда копировать). Если NULL, то копирует в окно TXLib
-//! @param   xDest   X-координата верхнего левого угла изображения-приемника
-//! @param   yDest   Y-координата верхнего левого угла изображения-приемника
-//! @param   width   Ширина копируемого изображения. Если <= 0, то автоматически берется из размера источника
-//! @param   height  Высота копируемого изображения. Если <= 0, то автоматически берется из размера источника
-//! @param   src     Контекст источника (откуда копировать)
-//! @param   xSrc    X-координата верхнего левого угла изображения-источника
-//! @param   ySrc    Y-координата верхнего левого угла изображения-источника
-//! @param   rOp     Растровая операция копирования
+//! @param   destImage       Контекст назначения (куда копировать). Если NULL, то копирует в окно TXLib
+//! @param   xDest           X-координата верхнего левого угла изображения-приемника
+//! @param   yDest           Y-координата верхнего левого угла изображения-приемника
+//! @param   width           Ширина копируемого изображения. Если <= 0, то автоматически берется из размера источника
+//! @param   height          Высота копируемого изображения. Если <= 0, то автоматически берется из размера источника
+//! @param   sourceImage     Контекст источника (откуда копировать)
+//! @param   xSource         X-координата верхнего левого угла изображения-источника
+//! @param   ySource         Y-координата верхнего левого угла изображения-источника
+//! @param   rOp             Растровая операция копирования
 //!
 //! @return  Если операция была успешна - true, иначе - false.
 //!
@@ -2266,23 +2275,23 @@ bool txDeleteDC (HDC* dc);
 bool txBitBlt (HDC destImage,   double xDest,       double yDest,       double width, double height,
                HDC sourceImage, double xSource = 0, double ySource = 0, DWORD rOp = SRCCOPY);
 inline
-bool txBitBlt (                 double xDest,       double yDest,
-               HDC sourceImage, double xSource = 0, double ySource = 0);
+bool txBitBlt (double xDest, double yDest, HDC sourceImage, double xSource = 0, double ySource = 0);
+
 //! @}
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
 //! @brief   Копирует изображение с одного холста (контекста рисования, DC) на другой с учетом прозрачности.
 //!
-//! @param   dest        Контекст назначения (куда копировать). Если NULL, то копирует в окно TXLib
-//! @param   xDest       X-координата верхнего левого угла изображения-приемника
-//! @param   yDest       Y-координата верхнего левого угла изображения-приемника
-//! @param   width       Ширина копируемого изображения. Если <= 0, то автоматически берется из размера источника
-//! @param   height      Высота копируемого изображения. Если <= 0, то автоматически берется из размера источника
-//! @param   src         Контекст источника (откуда копировать)
-//! @param   xSrc        X-координата верхнего левого угла изображения-источника, должна быть в пределах размера источника
-//! @param   ySrc        Y-координата верхнего левого угла изображения-источника, должна быть в пределах размера источника
-//! @param   transColor  Цвет, который будет считаться прозрачным
+//! @param   destImage       Контекст назначения (куда копировать). Если NULL, то копирует в окно TXLib
+//! @param   xDest           X-координата верхнего левого угла изображения-приемника
+//! @param   yDest           Y-координата верхнего левого угла изображения-приемника
+//! @param   width           Ширина копируемого изображения. Если <= 0, то автоматически берется из размера источника
+//! @param   height          Высота копируемого изображения. Если <= 0, то автоматически берется из размера источника
+//! @param   sourceImage     Контекст источника (откуда копировать)
+//! @param   xSource         X-координата верхнего левого угла изображения-источника, должна быть в пределах размера источника
+//! @param   ySource         Y-координата верхнего левого угла изображения-источника, должна быть в пределах размера источника
+//! @param   transColor      Цвет, который будет считаться прозрачным
 //!
 //! @return  Если операция была успешна - true, иначе - false.
 //!
@@ -2326,26 +2335,26 @@ bool txBitBlt (                 double xDest,       double yDest,
 bool txTransparentBlt (HDC destImage,   double xDest,       double yDest,       double width, double height,
                        HDC sourceImage, double xSource = 0, double ySource = 0, COLORREF transColor = TX_BLACK);
 inline
-bool txTransparentBlt (                 double xDest, double yDest,
-                       HDC sourceImage, COLORREF transColor = TX_BLACK);
+bool txTransparentBlt (double xDest, double yDest, HDC sourceImage, COLORREF transColor = TX_BLACK);
+
 //! @}
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
 //! @brief   Копирует изображение с одного холста (контекста рисования, DC) на другой с учетом полупрозрачности.
 //!
-//! @param   dest    Контекст назначения (куда копировать). Если NULL, то копирует в окно TXLib
-//! @param   xDest   X-координата верхнего левого угла изображения-приемника
-//! @param   yDest   Y-координата верхнего левого угла изображения-приемника
-//! @param   width   Ширина копируемого изображения. Если <= 0, то автоматически берется из размера источника
-//! @param   height  Высота копируемого изображения. Если <= 0, то автоматически берется из размера источника
-//! @param   src     Контекст источника (откуда копировать). Должен иметь 32-битовый формат и альфа-канал (см. ниже)
-//! @param   xSrc    X-координата верхнего левого угла изображения-источника
-//! @param   ySrc    Y-координата верхнего левого угла изображения-источника
-//! @param   alpha   Общая прозрачность изображения, в дополнение к альфа-каналу (0 - все прозрачно, 1 - использовать
-//!                  только альфа-канал)
-//! @param   format  Если нужно учитывать альфа-канал источника (например, в загруженных картинках), то AC_SRC_ALPHA,
-//!                  иначе 0 (например, если холст источника создан с помощью txCreateCompatibleDC, см. ниже)
+//! @param   destImage       Контекст назначения (куда копировать). Если NULL, то копирует в окно TXLib
+//! @param   xDest           X-координата верхнего левого угла изображения-приемника
+//! @param   yDest           Y-координата верхнего левого угла изображения-приемника
+//! @param   width           Ширина копируемого изображения. Если <= 0, то автоматически берется из размера источника
+//! @param   height          Высота копируемого изображения. Если <= 0, то автоматически берется из размера источника
+//! @param   sourceImage     Контекст источника (откуда копировать). Должен иметь 32-битовый формат и альфа-канал (см. ниже)
+//! @param   xSource         X-координата верхнего левого угла изображения-источника
+//! @param   ySource         Y-координата верхнего левого угла изображения-источника
+//! @param   alpha           Общая прозрачность изображения, в дополнение к альфа-каналу (0 - все прозрачно, 1 - использовать
+//!                          только альфа-канал)
+//! @param   format          Если нужно учитывать альфа-канал источника (например, в загруженных картинках), то AC_SRC_ALPHA,
+//!                          иначе 0 (например, если холст источника создан с помощью txCreateCompatibleDC, см. ниже)
 //!
 //! @return  Если операция была успешна - true, иначе - false.
 //!
@@ -2434,8 +2443,8 @@ bool txAlphaBlend (HDC destImage,   double xDest,       double yDest,       doub
                    HDC sourceImage, double xSource = 0, double ySource = 0, double alpha = 1.0,
                    unsigned format = AC_SRC_ALPHA);
 inline
-bool txAlphaBlend (                 double xDest, double yDest,
-                   HDC sourceImage, double alpha = 1.0);
+bool txAlphaBlend (double xDest, double yDest, HDC sourceImage, double alpha = 1.0);
+
 //! @}
 
 //{----------------------------------------------------------------------------------------------------------------
@@ -2830,7 +2839,7 @@ inline unsigned txMouseButtons();
 //!          либо @nn
 //!          <tt>colors = colorText | (colorBackground \<\< 4)</tt> @nn
 //!          Цвета атрибутов @b не имеют никакого отношения к цветам рисования, задаваемыми @ref txColors "TX_..."
-//!          константами, RGB(), txSetColor(), txColor(), txSetFillColor() и т.д. Значения цветов см. ниже.
+//!          константами, RGB(), txSetColor(), txSetFillColor() и т.д. Значения цветов см. ниже.
 //!
 //! @title   Значения цветов атрибутов
 //! @table   @tr  Dec @td @c Hex @td                 @td Dec  @td @c Hex @td
@@ -9496,15 +9505,21 @@ int _txOnErrorReport (int type, char* text, int* ret)
        default:                                                      break;
        }
 
-    if (strcmp (text, "Detected memory leaks!\n") == 0)  // Dirty, dirty hack. А что делать?
+    const char startReport[] = "Detected memory leaks!\n",
+                 endReport[] = "Object dump complete.\n";
+
+    if (strcmp (text, startReport) == 0)  // Dirty, dirty hack. А что делать?
         {
-        _txOnErrorReport (type, "\n", NULL);
+        _txOnErrorReport (type, _TX_VERSION " - ERROR: ",                NULL);
         _txOnErrorReport (type, "Внимание: Обнаружены утечки памяти!\n", NULL);
-        _txOnErrorReport (type, "\n", NULL);
+        _txOnErrorReport (type, "\n",                                    NULL);
         }
 
-    txOutputDebugPrintf ("%s - ERROR: %s", _TX_VERSION, text);
-
+    size_t len = strlen (text);
+    if (text [len-1] != '\n')               txOutputDebugPrintf ("%s",                text);
+    else if (strcmp (text, endReport) != 0) txOutputDebugPrintf ("%s" "%s - ERROR: ", text, _TX_VERSION);
+    else                                    txOutputDebugPrintf ("%s\n",              text);
+        
     DWORD n = 0;
     HANDLE err = GetStdHandle (STD_ERROR_HANDLE);
     WriteFile (err, text, (DWORD) strlen (text), &n, NULL);
@@ -10133,7 +10148,7 @@ $   if (!strchr (text, '\n')) format |= DT_SINGLELINE;
 
 $   unsigned prev = txSetTextAlign (TA_LEFT | TA_TOP | TA_NOUPDATECP, dc);
 
-    if (Win32::DrawText)
+$   if (Win32::DrawText)
         {
 $       txGDI ((Win32::DrawText (dc, text, -1, &r, format)), dc) asserted;
 $       Win32::GetPixel (dc, 0, 0);
@@ -11635,91 +11650,93 @@ template <typename T, int N> inline
 //=================================================================================================================
 //! @cond INTERNAL
 
-#if defined (_GCC_VER)                 // Sorry, MSVC sucks... :(
-
-#define txAlphaBlend(...)              ({ _txLocCurSet(); txAlphaBlend          (__VA_ARGS__); })
-#define txArc(...)                     ({ _txLocCurSet(); txArc                 (__VA_ARGS__); })
-#define txAutoLock(...)                ({ _txLocCurSet(); txAutoLock            (__VA_ARGS__); })
-#define txBegin(...)                   ({ _txLocCurSet(); txBegin               (__VA_ARGS__); })
-#define txBitBlt(...)                  ({ _txLocCurSet(); txBitBlt              (__VA_ARGS__); })
-#define txChord(...)                   ({ _txLocCurSet(); txChord               (__VA_ARGS__); })
-#define txCircle(...)                  ({ _txLocCurSet(); txCircle              (__VA_ARGS__); })
-#define txClear(...)                   ({ _txLocCurSet(); txClear               (__VA_ARGS__); })
-#define txClearConsole(...)            ({ _txLocCurSet(); txClearConsole        (__VA_ARGS__); })
-#define txColor(...)                   ({ _txLocCurSet(); txColor               (__VA_ARGS__); })
-#define txCreateCompatibleDC(...)      ({ _txLocCurSet(); txCreateCompatibleDC  (__VA_ARGS__); })
-#define txCreateDIBSection(...)        ({ _txLocCurSet(); txCreateDIBSection    (__VA_ARGS__); })
-#define txCreateWindow(...)            ({ _txLocCurSet(); txCreateWindow        (__VA_ARGS__); })
-#define txDC(...)                      ({ _txLocCurSet(); txDC                  (__VA_ARGS__); })
-#define txDeleteDC(...)                ({ _txLocCurSet(); txDeleteDC            (__VA_ARGS__); })
-#define txDestroyWindow(...)           ({ _txLocCurSet(); txDestroyWindow       (__VA_ARGS__); })
-#define txDisableAutoPause(...)        ({ _txLocCurSet(); txDisableAutoPause    (__VA_ARGS__); })
-#define txDrawText(...)                ({ _txLocCurSet(); txDrawText            (__VA_ARGS__); })
-#define txDump(...)                    ({ _txLocCurSet(); txDump                (__VA_ARGS__); })
-#define txEllipse(...)                 ({ _txLocCurSet(); txEllipse             (__VA_ARGS__); })
-#define txEnd(...)                     ({ _txLocCurSet(); txEnd                 (__VA_ARGS__); })
-#define txExtractColor(...)            ({ _txLocCurSet(); txExtractColor        (__VA_ARGS__); })
-#define txFillColor(...)               ({ _txLocCurSet(); txFillColor           (__VA_ARGS__); })
-#define txFloodFill(...)               ({ _txLocCurSet(); txFloodFill           (__VA_ARGS__); })
-#define txFontExist(...)               ({ _txLocCurSet(); txFontExist           (__VA_ARGS__); })
-#define txGetColor(...)                ({ _txLocCurSet(); txGetColor            (__VA_ARGS__); })
-#define txGetConsoleAttr(...)          ({ _txLocCurSet(); txGetConsoleAttr      (__VA_ARGS__); })
-#define txGetConsoleCursorPos(...)     ({ _txLocCurSet(); txGetConsoleCursorPos (__VA_ARGS__); })
-#define txGetConsoleFontSize(...)      ({ _txLocCurSet(); txGetConsoleFontSize  (__VA_ARGS__); })
-#define txGetExtent(...)               ({ _txLocCurSet(); txGetExtent           (__VA_ARGS__); })
-#define txGetExtentY(...)              ({ _txLocCurSet(); txGetExtentY          (__VA_ARGS__); })
-#define txGetFPS(...)                  ({ _txLocCurSet(); txGetFPS              (__VA_ARGS__); })
-#define txGetFillColor(...)            ({ _txLocCurSet(); txGetFillColor        (__VA_ARGS__); })
-#define txGetModuleFileName(...)       ({ _txLocCurSet(); txGetModuleFileName   (__VA_ARGS__); })
-#define txGetPixel(...)                ({ _txLocCurSet(); txGetPixel            (__VA_ARGS__); })
-#define txGetTextExtent(...)           ({ _txLocCurSet(); txGetTextExtent       (__VA_ARGS__); })
-#define txGetTextExtentY(...)          ({ _txLocCurSet(); txGetTextExtentY      (__VA_ARGS__); })
-#define txHSL2RGB(...)                 ({ _txLocCurSet(); txHSL2RGB             (__VA_ARGS__); })
-#define txInputBox(...)                ({ _txLocCurSet(); txInputBox            (__VA_ARGS__); })
-#define txLine(...)                    ({ _txLocCurSet(); txLine                (__VA_ARGS__); })
-#define txLoadImage(...)               ({ _txLocCurSet(); txLoadImage           (__VA_ARGS__); })
-#define txLock(...)                    ({ _txLocCurSet(); txLock                (__VA_ARGS__); })
-#define txMessageBox(...)              ({ _txLocCurSet(); txMessageBox          (__VA_ARGS__); })
-#define txMouseButtons(...)            ({ _txLocCurSet(); txMouseButtons        (__VA_ARGS__); })
-#define txMousePos(...)                ({ _txLocCurSet(); txMousePos            (__VA_ARGS__); })
-#define txMouseX(...)                  ({ _txLocCurSet(); txMouseX              (__VA_ARGS__); })
-#define txMouseY(...)                  ({ _txLocCurSet(); txMouseY              (__VA_ARGS__); })
-#define txNotifyIcon(...)              ({ _txLocCurSet(); txNotifyIcon          (__VA_ARGS__); })
-#define txOK(...)                      ({ _txLocCurSet(); txOK                  (__VA_ARGS__); })
-#define txOutputDebugPrintf(...)       ({ _txLocCurSet(); txOutputDebugPrintf   (__VA_ARGS__); })
-#define txPie(...)                     ({ _txLocCurSet(); txPie                 (__VA_ARGS__); })
-#define txPlaySound(...)               ({ _txLocCurSet(); txPlaySound           (__VA_ARGS__); })
-#define txPolygon(...)                 ({ _txLocCurSet(); txPolygon             (__VA_ARGS__); })
-#define txQueryPerformance(...)        ({ _txLocCurSet(); txQueryPerformance    (__VA_ARGS__); })
-#define txRGB2HSL(...)                 ({ _txLocCurSet(); txRGB2HSL             (__VA_ARGS__); })
-#define txRectangle(...)               ({ _txLocCurSet(); txRectangle           (__VA_ARGS__); })
-#define txSaveImage(...)               ({ _txLocCurSet(); txSaveImage           (__VA_ARGS__); })
-#define txSelectFont(...)              ({ _txLocCurSet(); txSelectFont          (__VA_ARGS__); })
-#define txSelectObject(...)            ({ _txLocCurSet(); txSelectObject        (__VA_ARGS__); })
-#define txSetColor(...)                ({ _txLocCurSet(); txSetColor            (__VA_ARGS__); })
-#define txSetConsoleAttr(...)          ({ _txLocCurSet(); txSetConsoleAttr      (__VA_ARGS__); })
-#define txSetConsoleCursorPos(...)     ({ _txLocCurSet(); txSetConsoleCursorPos (__VA_ARGS__); })
-#define txSetDefaults(...)             ({ _txLocCurSet(); txSetDefaults         (__VA_ARGS__); })
-#define txSetFillColor(...)            ({ _txLocCurSet(); txSetFillColor        (__VA_ARGS__); })
-#define txSetPixel(...)                ({ _txLocCurSet(); txSetPixel            (__VA_ARGS__); })
-#define txSetROP2(...)                 ({ _txLocCurSet(); txSetROP2             (__VA_ARGS__); })
-#define txSetTextAlign(...)            ({ _txLocCurSet(); txSetTextAlign        (__VA_ARGS__); })
-#define txSetWindowsHook(...)          ({ _txLocCurSet(); txSetWindowsHook      (__VA_ARGS__); })
-#define txSleep(...)                   ({ _txLocCurSet(); txSleep               (__VA_ARGS__); })
-#define txTextCursor(...)              ({ _txLocCurSet(); txTextCursor          (__VA_ARGS__); })
-#define txTextOut(...)                 ({ _txLocCurSet(); txTextOut             (__VA_ARGS__); })
-#define txTransparentBlt(...)          ({ _txLocCurSet(); txTransparentBlt      (__VA_ARGS__); })
-#define txTriangle(...)                ({ _txLocCurSet(); txTriangle            (__VA_ARGS__); })
-#define txUnlock(...)                  ({ _txLocCurSet(); txUnlock              (__VA_ARGS__); })
-#define txUpdateWindow(...)            ({ _txLocCurSet(); txUpdateWindow        (__VA_ARGS__); })
-#define txUseAlpha(...)                ({ _txLocCurSet(); txUseAlpha            (__VA_ARGS__); })
-#define txVersion(...)                 ({ _txLocCurSet(); txVersion             (__VA_ARGS__); })
-#define txVersionNumber(...)           ({ _txLocCurSet(); txVersionNumber       (__VA_ARGS__); })
-#define txWindow(...)                  ({ _txLocCurSet(); txWindow              (__VA_ARGS__); })
-#define tx_fpreset(...)                ({ _txLocCurSet(); tx_fpreset            (__VA_ARGS__); })
-#define _txStackBackTrace(...)         ({ _txLocCurSet(); _txStackBackTrace     (__VA_ARGS__); })
-
+#if defined (_MSC_VER)
+#undef  _txLocCurSet
+#define _txLocCurSet()                 __txLocCurSet (__FILE__, __LINE__, NULL)
 #endif
+
+#define txAlphaBlend(...)              ( _txLocCurSet(), txAlphaBlend          (__VA_ARGS__) )
+#define txArc(...)                     ( _txLocCurSet(), txArc                 (__VA_ARGS__) )
+#define txAutoLock(...)                ( _txLocCurSet(), txAutoLock            (__VA_ARGS__) )
+#define txBegin(...)                   ( _txLocCurSet(), txBegin               (__VA_ARGS__) )
+#define txBitBlt(...)                  ( _txLocCurSet(), txBitBlt              (__VA_ARGS__) )
+#define txChord(...)                   ( _txLocCurSet(), txChord               (__VA_ARGS__) )
+#define txCircle(...)                  ( _txLocCurSet(), txCircle              (__VA_ARGS__) )
+#define txClear(...)                   ( _txLocCurSet(), txClear               (__VA_ARGS__) )
+#define txClearConsole(...)            ( _txLocCurSet(), txClearConsole        (__VA_ARGS__) )
+#define txColor(...)                   ( _txLocCurSet(), txColor               (__VA_ARGS__) )
+#define txCreateCompatibleDC(...)      ( _txLocCurSet(), txCreateCompatibleDC  (__VA_ARGS__) )
+#define txCreateDIBSection(...)        ( _txLocCurSet(), txCreateDIBSection    (__VA_ARGS__) )
+#define txCreateWindow(...)            ( _txLocCurSet(), txCreateWindow        (__VA_ARGS__) )
+#define txDC(...)                      ( _txLocCurSet(), txDC                  (__VA_ARGS__) )
+#define txDeleteDC(...)                ( _txLocCurSet(), txDeleteDC            (__VA_ARGS__) )
+#define txDestroyWindow(...)           ( _txLocCurSet(), txDestroyWindow       (__VA_ARGS__) )
+#define txDisableAutoPause(...)        ( _txLocCurSet(), txDisableAutoPause    (__VA_ARGS__) )
+#define txDrawText(...)                ( _txLocCurSet(), txDrawText            (__VA_ARGS__) )
+#define txDump(...)                    ( _txLocCurSet(), txDump                (__VA_ARGS__) )
+#define txEllipse(...)                 ( _txLocCurSet(), txEllipse             (__VA_ARGS__) )
+#define txEnd(...)                     ( _txLocCurSet(), txEnd                 (__VA_ARGS__) )
+#define txExtractColor(...)            ( _txLocCurSet(), txExtractColor        (__VA_ARGS__) )
+#define txFillColor(...)               ( _txLocCurSet(), txFillColor           (__VA_ARGS__) )
+#define txFloodFill(...)               ( _txLocCurSet(), txFloodFill           (__VA_ARGS__) )
+#define txFontExist(...)               ( _txLocCurSet(), txFontExist           (__VA_ARGS__) )
+#define txGetColor(...)                ( _txLocCurSet(), txGetColor            (__VA_ARGS__) )
+#define txGetConsoleAttr(...)          ( _txLocCurSet(), txGetConsoleAttr      (__VA_ARGS__) )
+#define txGetConsoleCursorPos(...)     ( _txLocCurSet(), txGetConsoleCursorPos (__VA_ARGS__) )
+#define txGetConsoleFontSize(...)      ( _txLocCurSet(), txGetConsoleFontSize  (__VA_ARGS__) )
+#define txGetExtent(...)               ( _txLocCurSet(), txGetExtent           (__VA_ARGS__) )
+#define txGetExtentY(...)              ( _txLocCurSet(), txGetExtentY          (__VA_ARGS__) )
+#define txGetFPS(...)                  ( _txLocCurSet(), txGetFPS              (__VA_ARGS__) )
+#define txGetFillColor(...)            ( _txLocCurSet(), txGetFillColor        (__VA_ARGS__) )
+#define txGetModuleFileName(...)       ( _txLocCurSet(), txGetModuleFileName   (__VA_ARGS__) )
+#define txGetPixel(...)                ( _txLocCurSet(), txGetPixel            (__VA_ARGS__) )
+#define txGetTextExtent(...)           ( _txLocCurSet(), txGetTextExtent       (__VA_ARGS__) )
+#define txGetTextExtentY(...)          ( _txLocCurSet(), txGetTextExtentY      (__VA_ARGS__) )
+#define txHSL2RGB(...)                 ( _txLocCurSet(), txHSL2RGB             (__VA_ARGS__) )
+#define txInputBox(...)                ( _txLocCurSet(), txInputBox            (__VA_ARGS__) )
+#define txLine(...)                    ( _txLocCurSet(), txLine                (__VA_ARGS__) )
+#define txLoadImage(...)               ( _txLocCurSet(), txLoadImage           (__VA_ARGS__) )
+#define txLock(...)                    ( _txLocCurSet(), txLock                (__VA_ARGS__) )
+#define txMessageBox(...)              ( _txLocCurSet(), txMessageBox          (__VA_ARGS__) )
+#define txMouseButtons(...)            ( _txLocCurSet(), txMouseButtons        (__VA_ARGS__) )
+#define txMousePos(...)                ( _txLocCurSet(), txMousePos            (__VA_ARGS__) )
+#define txMouseX(...)                  ( _txLocCurSet(), txMouseX              (__VA_ARGS__) )
+#define txMouseY(...)                  ( _txLocCurSet(), txMouseY              (__VA_ARGS__) )
+#define txNotifyIcon(...)              ( _txLocCurSet(), txNotifyIcon          (__VA_ARGS__) )
+#define txOK(...)                      ( _txLocCurSet(), txOK                  (__VA_ARGS__) )
+#define txOutputDebugPrintf(...)       ( _txLocCurSet(), txOutputDebugPrintf   (__VA_ARGS__) )
+#define txPie(...)                     ( _txLocCurSet(), txPie                 (__VA_ARGS__) )
+#define txPixel(...)                   ( _txLocCurSet(), txPixel               (__VA_ARGS__) )
+#define txPlaySound(...)               ( _txLocCurSet(), txPlaySound           (__VA_ARGS__) )
+#define txPolygon(...)                 ( _txLocCurSet(), txPolygon             (__VA_ARGS__) )
+#define txQueryPerformance(...)        ( _txLocCurSet(), txQueryPerformance    (__VA_ARGS__) )
+#define txRGB2HSL(...)                 ( _txLocCurSet(), txRGB2HSL             (__VA_ARGS__) )
+#define txRectangle(...)               ( _txLocCurSet(), txRectangle           (__VA_ARGS__) )
+#define txSaveImage(...)               ( _txLocCurSet(), txSaveImage           (__VA_ARGS__) )
+#define txSelectFont(...)              ( _txLocCurSet(), txSelectFont          (__VA_ARGS__) )
+#define txSelectObject(...)            ( _txLocCurSet(), txSelectObject        (__VA_ARGS__) )
+#define txSetColor(...)                ( _txLocCurSet(), txSetColor            (__VA_ARGS__) )
+#define txSetConsoleAttr(...)          ( _txLocCurSet(), txSetConsoleAttr      (__VA_ARGS__) )
+#define txSetConsoleCursorPos(...)     ( _txLocCurSet(), txSetConsoleCursorPos (__VA_ARGS__) )
+#define txSetDefaults(...)             ( _txLocCurSet(), txSetDefaults         (__VA_ARGS__) )
+#define txSetFillColor(...)            ( _txLocCurSet(), txSetFillColor        (__VA_ARGS__) )
+#define txSetPixel(...)                ( _txLocCurSet(), txSetPixel            (__VA_ARGS__) )
+#define txSetROP2(...)                 ( _txLocCurSet(), txSetROP2             (__VA_ARGS__) )
+#define txSetTextAlign(...)            ( _txLocCurSet(), txSetTextAlign        (__VA_ARGS__) )
+#define txSetWindowsHook(...)          ( _txLocCurSet(), txSetWindowsHook      (__VA_ARGS__) )
+#define txSleep(...)                   ( _txLocCurSet(), txSleep               (__VA_ARGS__) )
+#define txTextCursor(...)              ( _txLocCurSet(), txTextCursor          (__VA_ARGS__) )
+#define txTextOut(...)                 ( _txLocCurSet(), txTextOut             (__VA_ARGS__) )
+#define txTransparentBlt(...)          ( _txLocCurSet(), txTransparentBlt      (__VA_ARGS__) )
+#define txTriangle(...)                ( _txLocCurSet(), txTriangle            (__VA_ARGS__) )
+#define txUnlock(...)                  ( _txLocCurSet(), txUnlock              (__VA_ARGS__) )
+#define txUpdateWindow(...)            ( _txLocCurSet(), txUpdateWindow        (__VA_ARGS__) )
+#define txUseAlpha(...)                ( _txLocCurSet(), txUseAlpha            (__VA_ARGS__) )
+#define txVersion(...)                 ( _txLocCurSet(), txVersion             (__VA_ARGS__) )
+#define txVersionNumber(...)           ( _txLocCurSet(), txVersionNumber       (__VA_ARGS__) )
+#define txWindow(...)                  ( _txLocCurSet(), txWindow              (__VA_ARGS__) )
+#define tx_fpreset(...)                ( _txLocCurSet(), tx_fpreset            (__VA_ARGS__) )
+#define _txStackBackTrace(...)         ( _txLocCurSet(), _txStackBackTrace     (__VA_ARGS__) )
 
 //! @endcond
 //}
