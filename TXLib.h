@@ -6,9 +6,9 @@
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 123 $
+//!          $Version: 00173a, Revision: 124 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2017-02-14 14:54:32 +0400 $
+//!          $Date: 2017-02-23 19:31:46 +0400 $
 //!
 //!          TX Library - компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -134,9 +134,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 123, 2017-02-14 14:54:32 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 123, 2017-02-14 14:54:32 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 123, 2017-02-14 14:54:32 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 124, 2017-02-23 19:31:46 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 124, 2017-02-23 19:31:46 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 124, 2017-02-23 19:31:46 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -348,7 +348,7 @@
     #endif
 
 //!!! #ifndef __USE_MINGW_ANSI_STDIO
-//!!! #define __USE_MINGW_ANSI_STDIO     1      scanf ("%lg", &[double]) failure
+//!!! #define __USE_MINGW_ANSI_STDIO     1      printf ("%lg", &[double]) failure
 //!!! #endif
 
     #define _TX_CHECK_FORMAT( arg )    __attribute__ (( format (printf, (arg), (arg)+1) ))
@@ -683,17 +683,27 @@ HWND txCreateWindow (double sizeX, double sizeY, bool centered = true);
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
-//! @brief   Возвращает дескриптор контекста рисования основного холста
+//! @brief   Возвращает холст (дескриптор контекста рисования, HDC), связанный с окном TXLib.
 //!
-//! @param   forced  Если дескриптор равен NULL (например, если окно TXLib не создано), то сообщает об ошибке.
+//! @param   forced  Если HDC, связанный с окном TXlib, NULL (например, если окно TXLib не создано), то выдается
+//!                  сообщение об ошибке.
 //!
 //! @return  Дескриптор (системный номер, handler) контекста рисования (device context, DC) холста (HDC).
+//!
+//! @note    Возвращаемый дескриптор - @b не оконный контекст рисования окна TXLib. TXLib реализует двойную
+//!          буферизацию. Все рисовательные действия происходят со скрытым HDC, находящемся в памяти, и его
+//!          содержимое периодически автоматически копируется на экран. Это иногда приводит к мерцанию.
+//!          Автоматическое копирование можно выключить функцией txBegin() и обратно включить функцией txEnd(),
+//!          в этом случае содержимое окна можно перерисовать функциями txRedrawWindow() или txSleep().
+//!
+//!          Дополнительную информацию об автоматическом обновлении см. в функциях txBegin(), txEnd(), txUpdateWindow(),
+//!          txRedrawWindow() и txSleep().
 //!
 //! @note    HDC возвращается в виде ссылки, что позволяет подменить его. Перед подменой надо сохранить старый
 //!          дескриптор или освободить его с помощью txDeleteDC(). До подмены рисование должно быть заблокировано
 //!          с помощью txLock() и после подмены разблокировано с помощью txUnlock().
 //!
-//! @see     txWindow(), txLock(), txUnlock(), txGDI()
+//! @see     txWindow(), txBegin(), txEnd(), txLock(), txUnlock(), txGDI()
 //!
 //! @usage @code
 //!          txBitBlt (txDC(),   0,   0, 100, 100, txDC(), 0, 0);
@@ -2216,7 +2226,7 @@ bool txDeleteDC (HDC* dc);
 //! @ingroup Drawing
 //! @brief   Копирует изображение с одного холста (контекста рисования, DC) на другой.
 //!
-//! @param   destImage       Контекст назначения (куда копировать). Если NULL, то копирует в окно TXLib
+//! @param   destImage       Контекст назначения (куда копировать). Для копирования в окно TXLib укажите txDC()
 //! @param   xDest           X-координата верхнего левого угла изображения-приемника
 //! @param   yDest           Y-координата верхнего левого угла изображения-приемника
 //! @param   width           Ширина копируемого изображения. Если <= 0, то автоматически берется из размера источника
@@ -2283,7 +2293,7 @@ bool txBitBlt (double xDest, double yDest, HDC sourceImage, double xSource = 0, 
 //! @ingroup Drawing
 //! @brief   Копирует изображение с одного холста (контекста рисования, DC) на другой с учетом прозрачности.
 //!
-//! @param   destImage       Контекст назначения (куда копировать). Если NULL, то копирует в окно TXLib
+//! @param   destImage       Контекст назначения (куда копировать). Для копирования в окно TXLib укажите txDC()
 //! @param   xDest           X-координата верхнего левого угла изображения-приемника
 //! @param   yDest           Y-координата верхнего левого угла изображения-приемника
 //! @param   width           Ширина копируемого изображения. Если <= 0, то автоматически берется из размера источника
@@ -2343,7 +2353,7 @@ bool txTransparentBlt (double xDest, double yDest, HDC sourceImage, COLORREF tra
 //! @ingroup Drawing
 //! @brief   Копирует изображение с одного холста (контекста рисования, DC) на другой с учетом полупрозрачности.
 //!
-//! @param   destImage       Контекст назначения (куда копировать). Если NULL, то копирует в окно TXLib
+//! @param   destImage       Контекст назначения (куда копировать). Для копирования в окно TXLib укажите txDC()
 //! @param   xDest           X-координата верхнего левого угла изображения-приемника
 //! @param   yDest           Y-координата верхнего левого угла изображения-приемника
 //! @param   width           Ширина копируемого изображения. Если <= 0, то автоматически берется из размера источника
@@ -2485,8 +2495,8 @@ HDC txUseAlpha (HDC dc);
 //! @brief   Сохраняет в файл изображение в формате BMP.
 //!
 //! @param   filename    Имя файла с расширением "BMP", куда будет записано изображение в формате BMP
-//! @param   dc          Дескриптор холста, изображение которого сохраняется в файл. Если NULL, сохраняется изображение
-//!                      окна TXLib.
+//! @param   dc          Дескриптор холста, изображение которого сохраняется в файл. Если txDC(),
+//!                      сохраняется изображение окна TXLib.
 //!
 //! @return  Если операция была успешна - true, иначе - false.
 //!
@@ -2508,7 +2518,7 @@ HDC txUseAlpha (HDC dc);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-bool txSaveImage (const char filename[], HDC dc = txDC());
+bool txSaveImage (const char filename[], HDC dc = txDC (true));
 
 //! @}
 //}
@@ -2530,7 +2540,7 @@ bool txSaveImage (const char filename[], HDC dc = txDC());
 //! @note    <b>Перед началом задержки изображение в окне обязательно обновится,</b> даже если рисование
 //!          заблокировано через txBegin().
 //!
-//! @see     txBegin(), txEnd(), txUpdateWindow()
+//! @see     txBegin(), txEnd(), txUpdateWindow(), txDC()
 //!
 //! @usage @code
 //!          txSleep (500); // ПП: Поспать Полсекунды
@@ -2538,6 +2548,37 @@ bool txSaveImage (const char filename[], HDC dc = txDC());
 //}----------------------------------------------------------------------------------------------------------------
 
 double txSleep (double time);
+
+//{----------------------------------------------------------------------------------------------------------------
+//! @ingroup Drawing
+//! @brief   Обновляет изображение в окне TXLib вручную.
+//!
+//!          TXLib реализует двойную буферизацию. Все рисовательные действия происходят со скрытым HDC, находящемся
+//!          в памяти, и его содержимое периодически автоматически копируется на экран. Это иногда приводит к мерцанию.
+//!          Автоматическое копирование можно выключить функцией txBegin() и обратно включить функцией txEnd(),
+//!          в этом случае содержимое окна можно перерисовать функциями txRedrawWindow() или txSleep().
+//!
+//!          Дополнительную информацию об автоматическом обновлении см. в функциях txBegin(), txEnd(), txUpdateWindow(),
+//!          txSleep().
+//!
+//! @note    Реализация этой функции неэффективна. Чтобы сделать более эффективную реализацию, посмотрите исходный текст
+//!          txRedrawWindow() и сделайте лучше. Либо напишите свою, более быструю библиотеку на основе Win32 GDI, GDI
+//!          Plus, OpenGL, DirectX, SDL или SFML.
+//!
+//! @see     txWindow(), txBegin(), txEnd(), txLock(), txUnlock(), txGDI()
+//!
+//! @usage @code
+//!          txBegin();                // Выключаем автоматическое обновление экрана
+//!
+//!          txCircle (100, 100, 50);  // Рисуем - изображение не появляется
+//!
+//!          Sleep (3000);             // не txSleep()! txSleep() сама обновит изображение на экране
+//!
+//!          txRedrawWindow();         // Обновляем экран вручную - изображение появляется
+//! @endcode
+//}----------------------------------------------------------------------------------------------------------------
+
+inline void txRedrawWindow();
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -2554,7 +2595,7 @@ double txSleep (double time);
 //!
 //! @return  Значение счетчика блокировки (если 0, то рисование разблокировано).
 //!
-//! @see     txEnd(), txSleep(), txUpdateWindow(), txTextCursor()
+//! @see     txEnd(), txSleep(), txUpdateWindow(), txDC(), txTextCursor()
 //!
 //! @usage @code
 //!          txBegin();                        // Здесь изображение "замерзнет"
@@ -2575,11 +2616,11 @@ inline int txBegin();
 //! @warning Если txBegin() вызывалась несколько раз, то для снятия блокировки требуется столько же раз вызвать
 //!          txEnd().
 //!
-//! @note    Если нажата клавиша Alt+PrintScreen, то блокировка временно отменяется.
-//!
 //! @return  Значение счетчика блокировки (если 0, то рисование разблокировано).
 //!
-//! @see     txBegin(), txSleep(), txUpdateWindow(), txTextCursor()
+//! @note    Если нажата клавиша Alt+PrintScreen, то блокировка временно отменяется.
+//!
+//! @see     txBegin(), txSleep(), txUpdateWindow(), txDC(), txTextCursor()
 //!
 //! @usage @code
 //!          txBegin();                        // Здесь изображение "замерзнет"
@@ -2605,9 +2646,9 @@ inline int txEnd();
 //!          замерзания картинки", txUpdateWindow() позволяет явно установить или снять блокировку автоматического
 //!          обновления экрана.
 //!
-//!          Более полную информацию о блокировке см. в функциях txBegin(), txEnd() и txSleep().
+//!          Более полную информацию о блокировке см. в функциях txBegin(), txEnd(), txSleep() и txDC().
 //!
-//! @see     txBegin(), txEnd(), txSleep(), txUpdateWindow(), txTextCursor(), txLock(), txUnlock(), txGDI()
+//! @see     txBegin(), txEnd(), txSleep(), txUpdateWindow(), txDC(), txTextCursor(), txLock(), txUnlock(), txGDI()
 //!
 //! @usage @code
 //!          txUpdateWindow (false);
@@ -6054,14 +6095,20 @@ ptrdiff_t        _tx_vsnprintf_s   (char stream[], ptrdiff_t size, const char fo
 // These are macros for __FILE__ and __LINE__ to work properly.
 
 #if !defined (NDEBUG)
-    #define  _TX_IF_ARGUMENT_FAILED( cond )    if (!assert (cond) && (SetLastErrorEx (ERROR_BAD_ARGUMENTS, 0),   1))
+    #define  _TX_IF_ARGUMENT_FAILED( cond )    if (!assert (cond)             && (SetLastErrorEx (ERROR_BAD_ARGUMENTS, 0), 1))
 
-    #define  _TX_IF_TXWINDOW_FAILED            if (       !txOK() && (SetLastErrorEx (ERROR_INVALID_DATA,  0),   1) && \
-                                                  (TX_ERROR ("\a" "Окно рисования не создано или не в порядке"), 1))
+    #define  _TX_IF_TXWINDOW_FAILED            if (!txOK()                    && (SetLastErrorEx (ERROR_INVALID_DATA,  0), 1) && \
+                                                  (TX_ERROR ("\a" "Окно рисования не создано или не в порядке."), 1))
+
+    #define  _TX_IF_HDC_FAILED( dc )           if (!Win32::GetObjectType (dc) && (SetLastErrorEx (ERROR_INVALID_DATA,  0), 1) && \
+                                                  (TX_ERROR ("Параметр \"%s\" неверен. Возможно, эта картинка не загружена, "    \
+                                                             "холст не создан или уже уничтожен." _ #dc), 1))
 #else
-    #define  _TX_IF_ARGUMENT_FAILED( cond )    if (!       (cond) && (SetLastErrorEx (ERROR_BAD_ARGUMENTS, 0),   1))
+    #define  _TX_IF_ARGUMENT_FAILED( cond )    if (!(cond)                    && (SetLastErrorEx (ERROR_BAD_ARGUMENTS, 0), 1))
 
-    #define  _TX_IF_TXWINDOW_FAILED            if (       !txOK() && (SetLastErrorEx (ERROR_INVALID_DATA,  0),   1))
+    #define  _TX_IF_TXWINDOW_FAILED            if (!txOK()                    && (SetLastErrorEx (ERROR_INVALID_DATA,  0), 1))
+
+    #define  _TX_IF_HDC_FAILED( dc )           if (!Win32::GetObjectType (dc) && (SetLastErrorEx (ERROR_INVALID_DATA,  0), 1))
 
 #endif
 
@@ -6617,6 +6664,8 @@ $   if (_txMain && _txConsole)
         { $ _txConsole_Detach (waitableParent && !externTerm); }
 
 $   _txSymGetFromAddr (NULL);
+
+$   _fcloseall();
 
     _TX_ON_DEBUG (OutputDebugString ("\n");
                   OutputDebugString (_TX_VERSION " - FINISHED: " _TX_MODULE "\n");
@@ -7638,7 +7687,7 @@ $   return !!FreeConsole();
 
 bool _txConsole_Draw (HDC dc)
     {
-$1  _TX_IF_ARGUMENT_FAILED (dc) return false;
+$1  _TX_IF_HDC_FAILED (dc) return false;
 
 $   HANDLE out = GetStdHandle (STD_OUTPUT_HANDLE);
 
@@ -7919,6 +7968,8 @@ bool _txBuffer_Delete (HDC* dc)
 $1  _TX_IF_ARGUMENT_FAILED (dc) return false;
 $   if (!*dc) return false;
 
+$   _TX_IF_HDC_FAILED (*dc) return false;
+
 $   if (!Win32::GetObjectType (Win32::GetCurrentObject (*dc, OBJ_BITMAP))) return false;
 
 $   txAutoLock _lock;
@@ -7942,7 +7993,7 @@ $   return true;
 bool _txBuffer_Select (HGDIOBJ obj, HDC dc /*= txDC()*/)
     {
 $1  _TX_IF_ARGUMENT_FAILED (obj) return false;
-$   _TX_IF_ARGUMENT_FAILED (dc)  return false;
+$   _TX_IF_HDC_FAILED      (dc)  return false;
 
 $   if (!Win32::GetObjectType (obj)) TX_DEBUG_ERROR ("Invalid GDI object type");
 
@@ -9519,7 +9570,7 @@ int _txOnErrorReport (int type, char* text, int* ret)
     if (text [len-1] != '\n')               txOutputDebugPrintf ("%s",                text);
     else if (strcmp (text, endReport) != 0) txOutputDebugPrintf ("%s" "%s - ERROR: ", text, _TX_VERSION);
     else                                    txOutputDebugPrintf ("%s\n",              text);
-        
+
     DWORD n = 0;
     HANDLE err = GetStdHandle (STD_ERROR_HANDLE);
     WriteFile (err, text, (DWORD) strlen (text), &n, NULL);
@@ -9810,10 +9861,14 @@ inline unsigned txVersionNumber()
 
 POINT txGetExtent (HDC dc /*= txDC (true)*/)
     {
-$1  BITMAP bmap = {0};
+$1  POINT err = {-1, -1};
+
+$   _TX_IF_HDC_FAILED (dc) return err;
+
+$   BITMAP bmap = {0};
 $   txGDI (Win32::GetObject (Win32::GetCurrentObject (dc, OBJ_BITMAP), sizeof (bmap), &bmap), dc) asserted;
 
-$   POINT size = { bmap.bmWidth, bmap.bmHeight };
+$   POINT  size = { bmap.bmWidth, bmap.bmHeight };
 $   return size;
     }
 
@@ -9821,7 +9876,7 @@ $   return size;
 
 int txGetExtentX (HDC dc /*= txDC (true)*/)
     {
-    return txGetExtent (dc).x;
+    return txGetExtent (dc) .x;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -9871,7 +9926,7 @@ $   return _txCanvas_Window == NULL;
 
 HPEN txSetColor (COLORREF color, double thickness /*= 1*/, HDC dc /*= txDC (true)*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (dc) return NULL;
+$1  _TX_IF_HDC_FAILED (dc) return NULL;
 
 $   HPEN pen = Win32::CreatePen ((color == TX_TRANSPARENT? PS_NULL : PS_SOLID), ROUND (thickness), color);
 
@@ -9906,7 +9961,7 @@ $   return txSetColor (color)? color : CLR_INVALID;
 
 COLORREF txGetColor (HDC dc /*= txDC (true)*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (dc) return CLR_INVALID;
+$1  _TX_IF_HDC_FAILED (dc) return CLR_INVALID;
 
 $   HGDIOBJ obj = txGDI ((Win32::GetCurrentObject (dc, OBJ_PEN)), dc);
 $   assert (obj); if (!obj) return CLR_INVALID;
@@ -9923,7 +9978,7 @@ $   return (size == sizeof (LOGPEN))? buf.LogPen.lopnColor : buf.extLogPen.elpCo
 
 HBRUSH txSetFillColor (COLORREF color, HDC dc /*= txDC (true)*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (dc) return NULL;
+$1  _TX_IF_HDC_FAILED (dc) return NULL;
 
 $   HBRUSH brush = (color == TX_TRANSPARENT)? (HBRUSH) Win32::GetStockObject (HOLLOW_BRUSH) : Win32::CreateSolidBrush (color);
 
@@ -9947,7 +10002,7 @@ $   return txSetFillColor (color)? color : CLR_INVALID;
 
 COLORREF txGetFillColor (HDC dc /*= txDC (true)*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (dc) return CLR_INVALID;
+$1  _TX_IF_HDC_FAILED (dc) return CLR_INVALID;
 
 $   HGDIOBJ obj = txGDI ((Win32::GetCurrentObject (dc, OBJ_BRUSH)), dc);
 $   assert (obj); if (!obj) return CLR_INVALID;
@@ -9962,7 +10017,7 @@ $   return buf.lbColor;
 
 bool txSetROP2 (int mode /*= R2_COPYPEN*/, HDC dc /*= txDC (true)*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (dc) return false;
+$1  _TX_IF_HDC_FAILED (dc) return false;
 
 $   return txGDI (!!(Win32::SetROP2 (dc, mode)), dc);
     }
@@ -9971,7 +10026,7 @@ $   return txGDI (!!(Win32::SetROP2 (dc, mode)), dc);
 
 bool txClear (HDC dc /*= txDC (true)*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (dc) return false;
+$1  _TX_IF_HDC_FAILED (dc) return false;
 
 $   POINT size = txGetExtent (dc);
 $   return txGDI (!!(Win32::PatBlt (dc, 0, 0, size.x, size.y, PATCOPY)), dc);
@@ -9981,7 +10036,7 @@ $   return txGDI (!!(Win32::PatBlt (dc, 0, 0, size.x, size.y, PATCOPY)), dc);
 
 inline bool txSetPixel (double x, double y, COLORREF color, HDC dc /*= txDC (true)*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (dc) return false;
+$1  _TX_IF_HDC_FAILED (dc) return false;
 
 $   txGDI ((Win32::SetPixel (dc, ROUND (x), ROUND (y), color)), dc);
 
@@ -10003,7 +10058,7 @@ $   return txSetPixel (x, y, RGB (ROUND (red * 255), ROUND (green * 255), ROUND 
 
 inline COLORREF txGetPixel (double x, double y, HDC dc /*= txDC (true)*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (dc) return CLR_INVALID;
+$1  _TX_IF_HDC_FAILED (dc) return CLR_INVALID;
 
 $   return txGDI ((Win32::GetPixel (dc, ROUND (x), ROUND (y))), dc);
     }
@@ -10012,7 +10067,7 @@ $   return txGDI ((Win32::GetPixel (dc, ROUND (x), ROUND (y))), dc);
 
 bool txLine (double x0, double y0, double x1, double y1, HDC dc /*= txDC (true)*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (dc) return false;
+$1  _TX_IF_HDC_FAILED (dc) return false;
 
 $   txGDI ((Win32::MoveToEx (dc, ROUND (x0), ROUND (y0), NULL)), dc) asserted;
 $   txGDI ((Win32::LineTo   (dc, ROUND (x1), ROUND (y1)      )), dc) asserted;
@@ -10024,7 +10079,7 @@ $   return true;
 
 bool txRectangle (double x0, double y0, double x1, double y1, HDC dc /*= txDC (true)*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (dc) return false;
+$1  _TX_IF_HDC_FAILED (dc) return false;
 
 $   txGDI ((Win32::Rectangle (dc, ROUND (x0), ROUND (y0), ROUND (x1), ROUND (y1))), dc) asserted;
 
@@ -10035,8 +10090,8 @@ $   return true;
 
 bool txPolygon (const POINT points[], int numPoints, HDC dc /*= txDC (true)*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (dc)     return false;
-$   _TX_IF_ARGUMENT_FAILED (points) return false;
+$1  _TX_IF_ARGUMENT_FAILED (points) return false;
+$   _TX_IF_HDC_FAILED      (dc)     return false;
 
 $   return txGDI (!!(Win32::Polygon (dc, points, numPoints)), dc);
     }
@@ -10045,7 +10100,7 @@ $   return txGDI (!!(Win32::Polygon (dc, points, numPoints)), dc);
 
 bool txEllipse (double x0, double y0, double x1, double y1, HDC dc /*= txDC (true)*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (dc) return false;
+$1  _TX_IF_HDC_FAILED (dc) return false;
 
 $   txGDI ((Win32::Ellipse (dc, ROUND (x0), ROUND (y0), ROUND (x1), ROUND (y1))), dc) asserted;
 
@@ -10063,7 +10118,7 @@ $1  return txEllipse (x-r, y-r, x+r, y+r);
 
 bool txArc (double x0, double y0, double x1, double y1, double startAngle, double totalAngle, HDC dc /*= txDC (true)*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (dc) return false;
+$1  _TX_IF_HDC_FAILED (dc) return false;
 
 $   POINT center = { ROUND ((x0 + x1) /2), ROUND ((y0 + y1) /2) };
 
@@ -10079,7 +10134,7 @@ $   return txGDI (!!(Win32::Arc (dc, ROUND (x0), ROUND (y0), ROUND (x1), ROUND (
 
 bool txPie (double x0, double y0, double x1, double y1, double startAngle, double totalAngle, HDC dc /*= txDC (true)*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (dc) return false;
+$1  _TX_IF_HDC_FAILED (dc) return false;
 
 $   POINT center = { ROUND ((x0 + x1) /2), ROUND ((y0 + y1) /2) };
 
@@ -10095,7 +10150,7 @@ $   return txGDI (!!(Win32::Pie (dc, ROUND (x0), ROUND (y0), ROUND (x1), ROUND (
 
 bool txChord (double x0, double y0, double x1, double y1, double startAngle, double totalAngle, HDC dc /*= txDC (true)*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (dc) return false;
+$1  _TX_IF_HDC_FAILED (dc) return false;
 
 $   POINT center = { ROUND ((x0 + x1) /2), ROUND ((y0 + y1) /2) };
 
@@ -10112,7 +10167,7 @@ $   return txGDI (!!(Win32::Chord (dc, ROUND (x0), ROUND (y0), ROUND (x1), ROUND
 bool txFloodFill (double x, double y,
                   COLORREF color /*= TX_TRANSPARENT*/, DWORD mode /*= FLOODFILLSURFACE*/, HDC dc /*= txDC (true)*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (dc) return false;
+$1  _TX_IF_HDC_FAILED (dc) return false;
 
 $   if (color == TX_TRANSPARENT) color = txGetPixel (x, y, dc);
 
@@ -10123,8 +10178,8 @@ $   return txGDI (!!(Win32::ExtFloodFill (dc, ROUND (x), ROUND (y), color, mode)
 
 bool txTextOut (double x, double y, const char text[], HDC dc /*= txDC (true)*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (dc)   return false;
-$   _TX_IF_ARGUMENT_FAILED (text) return false;
+$1  _TX_IF_ARGUMENT_FAILED (text) return false;
+$   _TX_IF_HDC_FAILED      (dc)   return false;
 
 $   int len = (int) strlen (text);
 $   txGDI (!!(Win32::TextOut (dc, ROUND (x), ROUND (y), text, len)), dc) asserted;
@@ -10139,8 +10194,8 @@ bool txDrawText (double x0, double y0, double x1, double y1, const char text[],
                  unsigned format /*= DT_CENTER | DT_VCENTER | DT_WORDBREAK | DT_WORD_ELLIPSIS*/,
                  HDC dc /*= txDC (true)*/)
 {
-$1  _TX_IF_ARGUMENT_FAILED (dc)   return false;
-$   _TX_IF_ARGUMENT_FAILED (text) return false;
+$1  _TX_IF_ARGUMENT_FAILED (text) return false;
+$   _TX_IF_HDC_FAILED      (dc)   return false;
 
 $   RECT r = { ROUND (x0), ROUND (y0), ROUND (x1), ROUND (y1) };
 
@@ -10166,8 +10221,8 @@ HFONT txSelectFont (const char name[], double sizeY, double sizeX /*= -1*/,
                     bool strikeout /*= false*/, double angle /*= 0*/,
                     HDC dc /*= txDC (true)*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (dc)   return NULL;
-$   _TX_IF_ARGUMENT_FAILED (name) return NULL;
+$1  _TX_IF_ARGUMENT_FAILED (name) return NULL;
+$   _TX_IF_HDC_FAILED      (dc)   return false;
 
 $   HFONT font = txFontExist (name)?
                      Win32::CreateFont (ROUND (sizeY), ROUND ((sizeX >= 0)? sizeX : sizeY/3),
@@ -10186,10 +10241,10 @@ $   return font;
 
 SIZE txGetTextExtent (const char text[], HDC dc /*= txDC (true)*/)
     {
-$1  SIZE size = {0};
+$1  SIZE size = {-1, -1};
 
-$   _TX_IF_ARGUMENT_FAILED (dc)   return size;
 $   _TX_IF_ARGUMENT_FAILED (text) return size;
+$   _TX_IF_HDC_FAILED      (dc)   return size;
 
 $   txGDI ((Win32::GetTextExtentPoint32 (dc, text, (int) strlen (text), &size)), dc) asserted;
 
@@ -10214,7 +10269,7 @@ $1  return txGetTextExtent (text, dc) .cy;
 
 unsigned txSetTextAlign (unsigned align /*= TA_CENTER | TA_BASELINE*/, HDC dc /*= txDC (true)*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (dc) return 0;
+$1  _TX_IF_HDC_FAILED (dc) return 0;
 
 $   return txGDI ((Win32::SetTextAlign (dc, align)), dc);
     }
@@ -10254,7 +10309,7 @@ $   return txGDI ((Win32::EnumFontFamiliesEx (NULL, &font, tools::enumFonts, (LP
 bool txSelectObject (HGDIOBJ obj, HDC dc /*= txDC (true)*/)
     {
 $1  _TX_IF_ARGUMENT_FAILED (obj) return false;
-$   _TX_IF_ARGUMENT_FAILED (dc)  return false;
+$   _TX_IF_HDC_FAILED      (dc)  return false;
 
 $   return _txBuffer_Select (obj, dc);
     }
@@ -10359,9 +10414,8 @@ $   return txDeleteDC (&dc);
 bool txBitBlt (HDC destImage,   double xDest, double yDest, double width, double height,
                HDC sourceImage, double xSource /*= 0*/, double ySource /*= 0*/, DWORD rOp /*= SRCCOPY*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (sourceImage != NULL) return false;
-
-$   if (!destImage) destImage = txDC();
+$1  _TX_IF_HDC_FAILED (destImage)   return false;
+$   _TX_IF_HDC_FAILED (sourceImage) return false;
 
 $   if (width <= 0 || height <= 0)
         {
@@ -10376,10 +10430,9 @@ $   return txGDI (!!(Win32::BitBlt (destImage,   ROUND (xDest),   ROUND (yDest),
 
 //-----------------------------------------------------------------------------------------------------------------
 
-inline bool txBitBlt (HDC destImage, double xDest, double yDest, HDC sourceImage,
-                      double xSource /*= 0*/, double ySource /*= 0*/)
+inline bool txBitBlt (double xDest, double yDest, HDC sourceImage, double xSource /*= 0*/, double ySource /*= 0*/)
     {
-$1  return txBitBlt (destImage, xDest, yDest, 0, 0, sourceImage, xSource, ySource);
+$1  return txBitBlt (txDC(), xDest, yDest, 0, 0, sourceImage, xSource, ySource);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -10387,9 +10440,8 @@ $1  return txBitBlt (destImage, xDest, yDest, 0, 0, sourceImage, xSource, ySourc
 bool txTransparentBlt (HDC destImage,   double xDest, double yDest, double width, double height,
                        HDC sourceImage, double xSource /*= 0*/, double ySource /*= 0*/, COLORREF transColor /*= TX_BLACK*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (sourceImage != NULL) return false;
-
-$   if (!destImage) destImage = txDC();
+$1  _TX_IF_HDC_FAILED (destImage)   return false;
+$   _TX_IF_HDC_FAILED (sourceImage) return false;
 
 $   if (width <= 0 || height <= 0)
         {
@@ -10418,9 +10470,9 @@ $       ok &= txGDI (!!(Win32::BitBlt         (destImage,   ROUND (xDest),   ROU
 
 //-----------------------------------------------------------------------------------------------------------------
 
-inline bool txTransparentBlt (HDC destImage, double xDest, double yDest, HDC sourceImage, COLORREF transColor /*= TX_BLACK*/)
+inline bool txTransparentBlt (double xDest, double yDest, HDC sourceImage, COLORREF transColor /*= TX_BLACK*/)
     {
-$1  return txTransparentBlt (destImage, xDest, yDest, 0, 0, sourceImage, 0, 0, transColor);
+$1  return txTransparentBlt (txDC(), xDest, yDest, 0, 0, sourceImage, 0, 0, transColor);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -10429,9 +10481,8 @@ bool txAlphaBlend (HDC destImage,   double xDest, double yDest, double width, do
                    HDC sourceImage, double xSource /*= 0*/, double ySource /*= 0*/, double alpha /*= 1.0*/,
                    unsigned format /*= AC_SRC_ALPHA*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (sourceImage != NULL) return false;
-
-$   if (!destImage) destImage = txDC();
+$1  _TX_IF_HDC_FAILED (destImage)   return false;
+$   _TX_IF_HDC_FAILED (sourceImage) return false;
 
 $   if (width <= 0 || height <= 0)
         {
@@ -10465,16 +10516,16 @@ $   return ok;
 
 //-----------------------------------------------------------------------------------------------------------------
 
-inline bool txAlphaBlend (HDC destImage, double xDest, double yDest, HDC sourceImage, double alpha /*= 1.0*/)
+inline bool txAlphaBlend (double xDest, double yDest, HDC sourceImage, double alpha /*= 1.0*/)
     {
-$1  return txAlphaBlend (destImage, xDest, yDest, 0, 0, sourceImage, 0, 0, alpha);
+$1  return txAlphaBlend (txDC(), xDest, yDest, 0, 0, sourceImage, 0, 0, alpha);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
 
 HDC txUseAlpha (HDC image)
     {
-$1  _TX_IF_ARGUMENT_FAILED (image != NULL) return NULL;
+$1  _TX_IF_HDC_FAILED (image) return NULL;
 
 $   HBITMAP bitmap = (HBITMAP) Win32::GetCurrentObject (image, OBJ_BITMAP); assert (bitmap);
 
@@ -10526,7 +10577,7 @@ $   return image;
 bool txSaveImage (const char filename[], HDC dc /*= txDC()*/)
     {
 $1  _TX_IF_ARGUMENT_FAILED (filename) return false;
-$   _TX_IF_ARGUMENT_FAILED (dc)       return false;
+$   _TX_IF_HDC_FAILED      (dc)       return false;
 
 $   POINT size = txGetExtent (dc);
 
@@ -10557,6 +10608,13 @@ $   delete[] buf;
 $   buf = NULL;
 
 $   return ok;
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+inline void txRedrawWindow()
+    {
+$1  txSleep (0);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -11712,6 +11770,7 @@ template <typename T, int N> inline
 #define txQueryPerformance(...)        ( _txLocCurSet(), txQueryPerformance    (__VA_ARGS__) )
 #define txRGB2HSL(...)                 ( _txLocCurSet(), txRGB2HSL             (__VA_ARGS__) )
 #define txRectangle(...)               ( _txLocCurSet(), txRectangle           (__VA_ARGS__) )
+#define txRedrawWindow(...)            ( _txLocCurSet(), txRedrawWindow        (__VA_ARGS__) )
 #define txSaveImage(...)               ( _txLocCurSet(), txSaveImage           (__VA_ARGS__) )
 #define txSelectFont(...)              ( _txLocCurSet(), txSelectFont          (__VA_ARGS__) )
 #define txSelectObject(...)            ( _txLocCurSet(), txSelectObject        (__VA_ARGS__) )
