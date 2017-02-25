@@ -6,9 +6,9 @@
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 124 $
+//!          $Version: 00173a, Revision: 125 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2017-02-23 19:31:46 +0400 $
+//!          $Date: 2017-02-25 06:01:10 +0400 $
 //!
 //!          TX Library - компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -118,7 +118,7 @@
 //! @code
 //!            #define _TX_VERSION "TXLib [Version: 1.72a, Revision 50]"                 //
 //!            #define _TX_AUTHOR  "Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru)"  //  ПРИМЕР
-//!            #define _TX_VER     0x172a0000                                            //
+//!            #define _TX_VER      0x172a0000                                           //
 //! @endcode
 //!            Эти константы автоматически обновляются при изменении версии.
 //!
@@ -134,9 +134,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 124, 2017-02-23 19:31:46 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 124, 2017-02-23 19:31:46 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 124, 2017-02-23 19:31:46 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 125, 2017-02-25 06:01:10 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 125, 2017-02-25 06:01:10 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 125, 2017-02-25 06:01:10 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -2883,19 +2883,22 @@ inline unsigned txMouseButtons();
 //!          константами, RGB(), txSetColor(), txSetFillColor() и т.д. Значения цветов см. ниже.
 //!
 //! @title   Значения цветов атрибутов
-//! @table   @tr  Dec @td @c Hex @td                 @td Dec  @td @c Hex @td
+//! @table   @tr  Dec @td @c Hex @td                              @td Dec  @td @c Hex @td
 //!          @tbr
-//!          @tr  0 = @td @c 0x0 @td = Черный,       @td  8 = @td @c 0x8 @td = Темно-серый,
-//!          @tr  1 = @td @c 0x1 @td = Синий,        @td  9 = @td @c 0x9 @td = Светло-синий,
-//!          @tr  2 = @td @c 0x2 @td = Зеленый,      @td 10 = @td @c 0xA @td = Светло-зеленый,
-//!          @tr  3 = @td @c 0x3 @td = Сине-зеленый, @td 11 = @td @c 0xB @td = Светло-сине-зеленый,
-//!          @tr  4 = @td @c 0x4 @td = Красный,      @td 12 = @td @c 0xC @td = Светло-красный,
-//!          @tr  5 = @td @c 0x5 @td = Малиновый,    @td 13 = @td @c 0xD @td = Светло-малиновый,
-//!          @tr  6 = @td @c 0x6 @td = Темно-желтый, @td 14 = @td @c 0xE @td = Желтый,
-//!          @tr  7 = @td @c 0x7 @td = Серый,        @td 15 = @td @c 0xF @td = Белый.
+//!          @tr  0 = @td @c 0x0 @td = BLACK      (Черный),       @td  8 = @td @c 0x8 @td = DARKGRAY     (Темно-серый),
+//!          @tr  1 = @td @c 0x1 @td = BLUE       (Синий),        @td  9 = @td @c 0x9 @td = LIGHTBLUE    (Светло-синий),
+//!          @tr  2 = @td @c 0x2 @td = GREEN      (Зеленый),      @td 10 = @td @c 0xA @td = LIGHTGREEN   (Светло-зеленый),
+//!          @tr  3 = @td @c 0x3 @td = CYAN       (Сине-зеленый), @td 11 = @td @c 0xB @td = LIGHTCYAN    (Светло-сине-зеленый),
+//!          @tr  4 = @td @c 0x4 @td = RED        (Красный),      @td 12 = @td @c 0xC @td = LIGHTRED     (Светло-красный),
+//!          @tr  5 = @td @c 0x5 @td = MAGENTA    (Малиновый),    @td 13 = @td @c 0xD @td = LIGHTMAGENTA (Светло-малиновый),
+//!          @tr  6 = @td @c 0x6 @td = DARKYELLOW (Темно-желтый), @td 14 = @td @c 0xE @td = YELLOW       (Желтый),
+//!          @tr  7 = @td @c 0x7 @td = LIGHTGRAY  (Светло-серый), @td 15 = @td @c 0xF @td = WHITE        (Белый).
 //! @endtable
 //!
-//!          В шестнадцатеричной системе счисления атрибуты задавать можно проще: если нужен, скажем, желтый цвет
+//!          Цвета букв образуются соединением слов @c FOREGROUND_\<название цвета\>, например, @c FOREGROUND_WHITE. @nn
+//!          Цвета фона образуются соединением слов @c BACKGROUND_\<название цвета\>, например, @c BACKGROUND_CYAN.
+//!
+//!          В шестнадцатеричной системе счисления атрибуты задавать так: если нужен, скажем, желтый цвет
 //!          на синем фоне, то его код будет @c 0x1e (старшая цифра - старшие 4 бита - это цвет фона, младшая
 //!          цифра - младшие 4 бита - это цвет текста).
 //!
@@ -2903,12 +2906,12 @@ inline unsigned txMouseButtons();
 //!          txGetConsoleFontSize(), txClearConsole()
 //!
 //! @usage @code
-//!          txSetConsoleAttr (0x1E);
+//!          txSetConsoleAttr (FOREGROUND_YELLOW | BACKGROUND_BLUE);
 //!          printf ("А в небе 0x1 есть город 0xE");  // (c) Б. Гребенщиков
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-bool txSetConsoleAttr (unsigned colors = 0x07);
+bool txSetConsoleAttr (unsigned colors = 0x07 /*FOREGROUND_LIGHTGRAY*/);
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -4457,6 +4460,30 @@ const unsigned _TX_BUFSIZE                =  1024,
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Technical
+//! @brief   Максимальное количество исключений в программе.
+//}----------------------------------------------------------------------------------------------------------------
+//!@{
+
+#if !defined (_TX_EXCEPTIONS_LIMIT)
+    #define   _TX_EXCEPTIONS_LIMIT          (LONG_MAX - 1)
+#endif
+
+#if !defined (_TX_FATAL_EXCEPTIONS_LIMIT)
+    #define   _TX_FATAL_EXCEPTIONS_LIMIT    16
+#endif
+
+//!@}
+//{----------------------------------------------------------------------------------------------------------------
+//! @ingroup Technical
+//! @brief   Если определено, не исключать адреса без отладочной информации из трассировок стека.
+//}----------------------------------------------------------------------------------------------------------------
+
+#ifdef FOR_DOXYGEN_ONLY
+#define       _TX_FULL_STACKTRACE
+#endif
+
+//{----------------------------------------------------------------------------------------------------------------
+//! @ingroup Technical
 //! @brief   Список запускающих программ, которые ждут нажатия клавиши после завершения процесса TXLib.
 //!
 //!          Если программа перечислена в списке и TXLib запущена из нее, то при завершении TXLib указанная
@@ -4479,6 +4506,7 @@ const unsigned _TX_BUFSIZE                =  1024,
                                           "starter.exe:eclipse.exe, "               /* Eclipse 4     */ \
                                           "starter.exe:javaw.exe, "                 /* Eclipse 3     */ \
                                           "consolepauser.exe:devcpp.exe"            /* Dev-Cpp       */
+#endif
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Technical
@@ -4502,10 +4530,8 @@ const unsigned _TX_BUFSIZE                =  1024,
 //}----------------------------------------------------------------------------------------------------------------
 
 #if !defined (_TX_ALLOW_KILL_PARENT)            // DISCLAIMER: Я не призываю к убийству родителей!
-#define       _TX_ALLOW_KILL_PARENT       true  //             Это технический термин.
+    #define   _TX_ALLOW_KILL_PARENT       true  //             Это технический термин.
 #endif                                          //             г-дам юристам привет.
-
-#endif
 
 //! @}
 //}
@@ -5685,6 +5711,34 @@ typedef void*   (__stdcall *PFUNCTION_TABLE_ACCESS_ROUTINE64) (HANDLE process, D
 typedef DWORD64 (__stdcall *PGET_MODULE_BASE_ROUTINE64)       (HANDLE process, DWORD64 address);
 typedef DWORD64 (__stdcall *PTRANSLATE_ADDRESS_ROUTINE64)     (HANDLE process, HANDLE thread, ADDRESS64* address);
 
+#define FOREGROUND_BLACK         ( 0                                                         )
+#define FOREGROUND_CYAN          ( FOREGROUND_BLUE       | FOREGROUND_GREEN                  )
+#define FOREGROUND_MAGENTA       ( FOREGROUND_BLUE       | FOREGROUND_RED                    )
+#define FOREGROUND_DARKYELLOW    ( FOREGROUND_GREEN      | FOREGROUND_RED                    )
+#define FOREGROUND_LIGHTGRAY     ( FOREGROUND_BLUE       | FOREGROUND_GREEN | FOREGROUND_RED )
+#define FOREGROUND_DARKGRAY      (                         FOREGROUND_INTENSITY              )
+#define FOREGROUND_LIGHTBLUE     ( FOREGROUND_BLUE       | FOREGROUND_INTENSITY              )
+#define FOREGROUND_LIGHTGREEN    ( FOREGROUND_GREEN      | FOREGROUND_INTENSITY              )
+#define FOREGROUND_LIGHTCYAN     ( FOREGROUND_CYAN       | FOREGROUND_INTENSITY              )
+#define FOREGROUND_LIGHTRED      ( FOREGROUND_RED        | FOREGROUND_INTENSITY              )
+#define FOREGROUND_LIGHTMAGENTA  ( FOREGROUND_MAGENTA    | FOREGROUND_INTENSITY              )
+#define FOREGROUND_YELLOW        ( FOREGROUND_DARKYELLOW | FOREGROUND_INTENSITY              )
+#define FOREGROUND_WHITE         ( FOREGROUND_DARKGRAY   | FOREGROUND_INTENSITY              )
+
+#define BACKGROUND_BLACK         ( 0                                                         )
+#define BACKGROUND_CYAN          ( BACKGROUND_BLUE       | BACKGROUND_GREEN                  )
+#define BACKGROUND_MAGENTA       ( BACKGROUND_BLUE       | BACKGROUND_RED                    )
+#define BACKGROUND_DARKYELLOW    ( BACKGROUND_GREEN      | BACKGROUND_RED                    )
+#define BACKGROUND_GRAY          ( BACKGROUND_BLUE       | BACKGROUND_GREEN | BACKGROUND_RED )
+#define BACKGROUND_DARKGRAY      (                         BACKGROUND_INTENSITY              )
+#define BACKGROUND_LIGHTBLUE     ( BACKGROUND_BLUE       | BACKGROUND_INTENSITY              )
+#define BACKGROUND_LIGHTGREEN    ( BACKGROUND_GREEN      | BACKGROUND_INTENSITY              )
+#define BACKGROUND_LIGHTCYAN     ( BACKGROUND_CYAN       | BACKGROUND_INTENSITY              )
+#define BACKGROUND_LIGHTRED      ( BACKGROUND_RED        | BACKGROUND_INTENSITY              )
+#define BACKGROUND_LIGHTMAGENTA  ( BACKGROUND_MAGENTA    | BACKGROUND_INTENSITY              )
+#define BACKGROUND_LIGHTYELLOW   ( BACKGROUND_DARKYELLOW | BACKGROUND_INTENSITY              )
+#define BACKGROUND_WHITE         ( BACKGROUND_DARKGRAY   | BACKGROUND_INTENSITY              )
+
 } // namespace Win32
 
 #ifdef _MSC_VER_6
@@ -5895,6 +5949,8 @@ _TX_DLLIMPORT_OPT ("MSImg32",  bool,     AlphaBlend,                 (HDC dest, 
 
 _TX_DLLIMPORT     ("Kernel32", void,     ExitProcess,                (unsigned retcode));
 _TX_DLLIMPORT     ("Kernel32", bool,     TerminateProcess,           (HANDLE process, unsigned retcode));
+_TX_DLLIMPORT_OPT ("Kernel32", void,     FatalExit,                  (int retcode));
+_TX_DLLIMPORT_OPT ("Kernel32", void,     FatalAppExitA,              (unsigned action, const char message[]));
 _TX_DLLIMPORT     ("Kernel32", HWND,     GetConsoleWindow,           (void));
 _TX_DLLIMPORT_OPT ("Kernel32", bool,     SetConsoleFont,             (HANDLE con, DWORD fontIndex));
 _TX_DLLIMPORT_OPT ("Kernel32", DWORD,    GetNumberOfConsoleFonts,    (void));
@@ -6057,7 +6113,9 @@ int              _txOnErrorReport       (int type, char* message, int* ret);
 
 void             _txOnCExit();
 void             _txOnExit              (int      retcode);
+void             _txOnFatalExit         (int      retcode);
 void             _txOnExitProcess       (unsigned retcode);
+void             _txOnFatalAppExitA     (unsigned action, const char message[]);
 bool             _txOnTerminateProcess  (HANDLE process, unsigned retcode);
 LPTOP_LEVEL_EXCEPTION_FILTER WINAPI _txOnSetUnhandledExceptionFilter (LPTOP_LEVEL_EXCEPTION_FILTER filter);
 
@@ -6186,6 +6244,8 @@ volatile WNDPROC             _txAltWndProc               = NULL;    // Альтернат
 
 _tx_thread _txLoc            _txLocCur                   = {};      // Execution point tracking and trace state, see "$" macro
 
+long                         _txSENumber                 = 0;       // SEH exceptions sequental number
+long                         _txSEFatalNumber            = 0;       // SEH fatal exceptions sequental number
 char                         _txDumpSE [_TX_BUFSIZE]     = "";      // SEH dump data area
 char                         _txTraceSE[_TX_HUGEBUFSIZE] = "";      // Stack trace data area
 
@@ -6193,7 +6253,9 @@ LPTOP_LEVEL_EXCEPTION_FILTER _txPrevUEFilter             = NULL;    // Previous 
 
 jmp_buf                      _txDumpExceptionObjJmp      = {0};     // Hook for _txDumpExceptionObj
 
-volatile PROC                _txForceImportThese[]       = { (PROC) ::TerminateProcess, (PROC) ::ExitProcess, (PROC) ::exit };
+volatile PROC                _txForceImportThese[]       = { (PROC) ::TerminateProcess, (PROC) ::ExitProcess,
+                                                             (PROC) ::FatalExit,        (PROC) ::FatalAppExitA,
+                                                             (PROC) ::exit };
 
 const unsigned               _txSystemMessage[]          = { 0x776F656D, 0x5E2E2E5E };  // A very system messages
 
@@ -6317,6 +6379,8 @@ $   _txCanvas_UserDCs = new ::std::vector <HDC>;
 
 $   _txSetProcAddress ("ExitProcess",                 (PROC) _txOnExitProcess,                 "KERNEL32.DLL");
 $   _txSetProcAddress ("TerminateProcess",            (PROC) _txOnTerminateProcess,            "KERNEL32.DLL");
+$   _txSetProcAddress ("FatalExit",                   (PROC) _txOnFatalExit,                   "KERNEL32.DLL");
+$   _txSetProcAddress ("FatalAppExitA",               (PROC) _txOnFatalAppExitA,               "KERNEL32.DLL");
 $   _txSetProcAddress ("UnhandledExceptionFilter",    (PROC) _txUnhandledExceptionFilter,      "KERNEL32.DLL", true);
 $   _txSetProcAddress ("SetUnhandledExceptionFilter", (PROC) _txOnSetUnhandledExceptionFilter, "KERNEL32.DLL");
 $   _txSetProcAddress ("exit",                        (PROC) _txOnExit);
@@ -6326,7 +6390,7 @@ $   atexit (_txCleanup);
 
 $   if (_txConsole)
         {
-$       txSetConsoleAttr (0x07);
+$       txSetConsoleAttr (FOREGROUND_LIGHTGRAY);
 
 $       tx_fpreset();
 $       srand ((unsigned) time (NULL));
@@ -6496,9 +6560,9 @@ $   short delta = (short) (con.dwCursorPosition.Y - con.srWindow.Top);
 $   con.srWindow.Top    = (short) (con.srWindow.Top    + delta);
 $   con.srWindow.Bottom = (short) (con.srWindow.Bottom + delta);
 
-$   SMALL_RECT src  = {0, 0, (short) (con.dwSize.X - 1), (short) (con.dwSize.Y - 1) };
-$   CHAR_INFO  fill = {{' '}, 0x07};        // Fill with spaces, light-gray on black
-$   COORD      dest = {0, (short) -delta};  // New UL-corner of src, scroll up
+$   SMALL_RECT src  = { 0, 0, (short) (con.dwSize.X - 1), (short) (con.dwSize.Y - 1) };
+$   CHAR_INFO  fill = { {' '}, FOREGROUND_LIGHTGRAY };
+$   COORD      dest = { 0, (short) -delta };  // New UL-corner of src, scroll up
 
 $   con.dwCursorPosition.X = 0;
 $   con.dwCursorPosition.Y = (short) (con.dwCursorPosition.Y - delta);
@@ -6537,7 +6601,6 @@ void _txOnCExit()
 $1  _txCleanup();
 
     if (Win32::_cexit) { $ Win32::_cexit(); }
-    return;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -6549,7 +6612,6 @@ void _txOnExit (int retcode)
 $1  _txCleanup();
 
     Win32::exit (retcode);
-    return;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -6561,7 +6623,6 @@ void _txOnExitProcess (unsigned retcode)
 $1  _txCleanup();
 
     Win32::ExitProcess (retcode);
-    return;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -6573,6 +6634,34 @@ bool _txOnTerminateProcess (HANDLE process, unsigned retcode)
 $1  _txCleanup();
 
     return Win32::TerminateProcess (process, retcode);
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+void _txOnFatalExit (int retcode)
+    {
+    txOutputDebugPrintf ("%s - WARNING: %s (%u) called\n", _TX_VERSION, __func__, retcode);
+
+$1  _txCleanup();
+
+    if (Win32::FatalExit) Win32::FatalExit (retcode);
+
+    txOutputDebugPrintf ("%s - WARNING: Win32::FatalExit() failure, calling Win32::TerminateProcess\n", _TX_VERSION, __func__);
+    Win32::TerminateProcess (GetCurrentProcess(), retcode);
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+void _txOnFatalAppExitA (unsigned action, const char message[])
+    {
+    txOutputDebugPrintf ("%s - WARNING: %s (%u, \"%s\") called\n", _TX_VERSION, __func__, action, message);
+
+$1  _txCleanup();
+
+    if (Win32::FatalAppExitA) Win32::FatalAppExitA (action, message);
+
+    txOutputDebugPrintf ("%s - WARNING: Win32::FatalExit() failure, calling Win32::TerminateProcess\n", _TX_VERSION, __func__);
+    Win32::TerminateProcess (GetCurrentProcess(), EXIT_FAILURE);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -6603,7 +6692,7 @@ void _txCleanup()
     if (!_txInitialized) return;
     else _txInitialized = false;
 
-$1  txSleep (_txWindowUpdateInterval);
+$1  //!!! txSleep (_txWindowUpdateInterval);
 
 $   _txRunning = false;
 $   _txConsole_IsBlinking = false;
@@ -6621,7 +6710,7 @@ $   bool waitableParent = !externTerm && _txIsParentWaitable (&parent);
 
 $   if (_txConsole)
         {
-$       if (_txMain) txSetConsoleAttr (0x07);
+$       if (_txMain) txSetConsoleAttr (FOREGROUND_LIGHTGRAY);
 $       if (console) EnableWindow (console, true);
         }
 
@@ -7865,7 +7954,8 @@ $       if (!dataList) _TX_FAIL;
 $       Win32::NT_CONSOLE_PROPS props =
           {{sizeof (props), NT_CONSOLE_PROPS_SIG},
 
-            0x07, 0xF5,                                 // wFillAttribute, wPopupFillAttribute
+            FOREGROUND_LIGHTGRAY,                       // wFillAttribute
+            FOREGROUND_MAGENTA | BACKGROUND_WHITE,      // wPopupFillAttribute
            {bufSize.X, bufSize.Y},                      // dwScreenBufferSize
            {wndSize.X, wndSize.Y},                      // dwWindowSize
            {wndOrg.X,  wndOrg.Y},                       // dwWindowOrigin
@@ -7877,7 +7967,7 @@ $       Win32::NT_CONSOLE_PROPS props =
             0,  1, 1, 0,                                // bFullScreen, bQuickEdit, bInsertMode, bAutoPosition
             50, 4, 0,                                   // uHistoryBufferSize, uNumberOfHistoryBuffers, bHistoryNoDup
 
-           {0x000000, 0x800000, 0x008000, 0x808000, 0x000080, 0x800080, 0x008080, 0xC0C0C0,
+           {0x000000, 0x800000, 0x008000, 0x808000, 0x000080, 0x800080, 0x008080, 0xC0C0C0,  // Palette
             0x808080, 0xFF0000, 0x00FF00, 0xFFFF00, 0x0000FF, 0xFF00FF, 0x00FFFF, 0xFFFFFF}
             };
 
@@ -8119,7 +8209,7 @@ $   if (!*_txDumpSE)
 
 $   _TX_UNEXPECTED ("\t\a"
                     "std::terminate(): Неперехваченное исключение в функции main() или в деструкторе, "
-                    "или другая фатальная ошибка C++."
+                    "или другая фатальная ошибка C++. "
                     "%s"
                     "Используйте try/catch блоки, перехватывайте catch (...), проверяйте вызовы виртуальных функций, "
                     "разбирайтесь, в чем дело.\n\n"
@@ -8466,7 +8556,8 @@ long _txOnExceptionSEH (EXCEPTION_POINTERS* exc, const char func[])
     assert (func);
     assert (func[3] == 'V' || func[3] == 'U');
 
-    DWORD code = (exc && exc->ExceptionRecord)? exc->ExceptionRecord->ExceptionCode : 0;
+    DWORD code = (exc && exc->ExceptionRecord)? exc->ExceptionRecord->ExceptionCode    : 0;
+    void* addr = (exc && exc->ExceptionRecord)? exc->ExceptionRecord->ExceptionAddress : NULL;
 
     if (code == EXCEPTION_OUTPUT_DEBUG_STRING   ||
         code == EXCEPTION_OUTPUT_DEBUG_STRING_W ||
@@ -8474,7 +8565,10 @@ long _txOnExceptionSEH (EXCEPTION_POINTERS* exc, const char func[])
         code == EXCEPTION_BREAKPOINT && IsDebuggerPresent())
         return EXCEPTION_CONTINUE_SEARCH;
 
-    txOutputDebugPrintf ("%s - WARNING: %s (code 0x%08lX) called\n", _TX_VERSION, func, code);
+    _txSENumber++;
+    if (HIBYTE (HIWORD (code)) == 0xC0) _txSEFatalNumber++;
+
+    txOutputDebugPrintf ("%s - WARNING: #%d: %s (code 0x%08lX, addr 0x%p) called\n", _TX_VERSION, _txSENumber, func, code, addr);
 
 $1  if (*(unsigned long long*) _txDumpExceptionObjJmp)
         {
@@ -8493,14 +8587,30 @@ $   if (primaryException)
         {
 $       unsigned err = GetLastError();
 
-$       _txDumpExceptionSEH (_txDumpSE,  (ptrdiff_t) sizeof (_txDumpSE)  - 1, exc->ExceptionRecord, func);
+$       const char* stackTrace = _txCaptureStackBackTrace (0, true, exc->ContextRecord);
 
-$       _tx_snprintf_s      (_txTraceSE, (ptrdiff_t) sizeof (_txTraceSE) - 1, "%s", _txCaptureStackBackTrace (0, true, exc->ContextRecord));
+$       _txDumpExceptionSEH (_txDumpSE,  (ptrdiff_t) sizeof (_txDumpSE)  - 1, exc->ExceptionRecord, func);
+$       _tx_snprintf_s      (_txTraceSE, (ptrdiff_t) sizeof (_txTraceSE) - 1, "%s", stackTrace);
+
+$       static _tx_thread DWORD prevCode = 0;
+$       static _tx_thread void* prevAddr = NULL;
+
+$       if (code != prevCode && addr != prevAddr &&
+            !strstr (_txDumpSE, "Объект исключения C++:"))
+            {
+$           SetLastError (err);
+$           _TX_UNEXPECTED ("\t\b" "%s" _ _txDumpSE + 1);  // In fact, this is warning
+
+$           prevCode = code;
+$           prevAddr = addr;
+            }
 
 $       SetLastError (err);
         }
 
-$   if (_txDumpSE[0] == '\a')
+$   if (_txDumpSE[0]     == '\a'                   ||
+        _txSENumber      >= _TX_EXCEPTIONS_LIMIT+0 ||
+        _txSEFatalNumber >= _TX_FATAL_EXCEPTIONS_LIMIT+0)
         {
 $       _TX_UNEXPECTED ("\a\t"
                         "%s"
@@ -8592,11 +8702,11 @@ $   switch (code)
 $   if (sDescr)
         {
 $       PRINT_ ("%s\n\n"
-                "Исключение %s" _ sDescr _ sCode);
+                "#%d: Исключение %s" _ sDescr _ _txSENumber _ sCode);
         }
     else
         {
-$       PRINT_ ("\a");
+$       PRINT_ ("\a#%d: " _ _txSENumber);
 $       s += FormatMessage (FORMAT_MESSAGE_FROM_HMODULE | FORMAT_MESSAGE_IGNORE_INSERTS,
                             GetModuleHandle ("NTDLL.DLL"), code, MAKELANGID (LANG_NEUTRAL, SUBLANG_DEFAULT),
                             s, (DWORD) (size - (s-what)), NULL) - 2;
@@ -8674,20 +8784,18 @@ $       if (ext) _strlwr_s (ext, sizeof (sModule) - 1 - (ext - sModule));
         else    { $ PRINT_ (" в модуле 0x%p" _ module); }
         }
 
-$   PRINT_ (". Спасибо %s(), что сообщил. Люблю его <3" _ func);
+$   PRINT_ (".");
 
-$   if (code == EXCEPTION_CPP_GCC        ||
-        code == EXCEPTION_CPP_GCC_UNWIND ||
-        code == EXCEPTION_CPP_GCC_FORCED ||
-        code == EXCEPTION_CPP_MSC)
-        {
-$       s += _txDumpExceptionCPP (what, size, code, params, info);  // In this case, SEH info is not interesting
-        }
+$   if (_txSENumber >= _TX_EXCEPTIONS_LIMIT+0)
+        { $ PRINT_ (" Дополнительно, превышен лимит исключений _TX_EXCEPTIONS_LIMIT (%ld)."        _ _TX_EXCEPTIONS_LIMIT+0); }
+
+$   if (_txSEFatalNumber >= _TX_FATAL_EXCEPTIONS_LIMIT+0)
+        { $ PRINT_ (" Также превышен лимит фатальных исключений _TX_FATAL_EXCEPTIONS_LIMIT (%ld)." _ _TX_FATAL_EXCEPTIONS_LIMIT+0); }
+
+$   PRINT_ (" Спасибо %s(), что сообщил. Люблю его <3" _ func);
 
 $   if (exc->ExceptionFlags & EXCEPTION_NONCONTINUABLE)
-        {
-$       PRINT_ ("\n\n" "Ой, всё (EXCEPTION_NONCONTINUABLE).");
-        }
+        { $ PRINT_ ("\n\n" "Ой, всё (EXCEPTION_NONCONTINUABLE)."); }
 
 $   if (exc->ExceptionRecord)
         {
@@ -8695,9 +8803,18 @@ $       PRINT_ ("\n\n" "Причина:" "\n\n");
 $       s += _txDumpExceptionSEH (s, size - (s-what), exc->ExceptionRecord, func);
         }
 
+$   if (code == EXCEPTION_CPP_GCC        ||
+        code == EXCEPTION_CPP_GCC_UNWIND ||
+        code == EXCEPTION_CPP_GCC_FORCED ||
+        code == EXCEPTION_CPP_MSC)
+        {
+$       s += _txDumpExceptionCPP (s,    size - (s-what), code, params, info);
+        }
+
     #undef PRINT_
 
-$   s += _tx_snprintf_s (s, size - (s-what), "\n\n");
+$   while (s > what && s[-1] == '\n') s--;
+$   if (s > what) s += _tx_snprintf_s (s, size - (s-what), "\n\n");
 
 $   return s - what;
     }
@@ -8831,6 +8948,7 @@ $           txOutputDebugPrintf ("ERROR: Wrong call to %s: Unknown exception cod
 $           break;
         }
 
+$   while (s > what && s[-1] == '\n') s--;
 $   if (s > what) s += _tx_snprintf_s (s, size - (s - what), "\n\n");
 
 $   return (s - what);
@@ -8848,7 +8966,7 @@ $   static size_t szObj = 0;    szObj = sizeObj;
 
     #define PRINT_(msg)  s += _tx_snprintf_s (s, size - (s - what), msg)
 
-$   PRINT_ (" \n\n" "Объект исключения C++:");
+$   PRINT_ ("\n\n" "Объект исключения C++:");
 
 $   const char* mangledName = (type)? type->name() : NULL;
 
@@ -8970,14 +9088,20 @@ $       const char*             module = NULL;
 $       const char*             source = NULL;
 $       bool                    inTX   = false;
 
-        if (addr) { $ inTX = _txSymGetFromAddr ((char*) addr - 1, &sym, &line, &module); }
-
-        if (readSource && !inTX) { $ _txSymGetFromAddr ((void*) 1, NULL, NULL, NULL, &source, 2); }
+        if (addr)                { $ inTX = _txSymGetFromAddr ((char*) addr - 1, &sym, &line, &module);          }
+        if (readSource && !inTX) { $        _txSymGetFromAddr ((void*) 1,        NULL, NULL,  NULL, &source, 2); }
 
 $       int nl = 0;
 $       while (s > trace && s[-1] == '\n') { s--; nl++; }
 
-$       PRINT_ ("%s#%2d 0x%p" _ ((n)? ((source || nl)? "\n\n" : "\n") : "")_ n _ addr);
+        #if !defined (_TX_FULL_STACKTRACE)
+
+$       if (! (sym && *sym->Name || line && (line->FileName && *line->FileName || line->LineNumber)))
+            { $ continue; }
+
+        #endif
+
+$       PRINT_ ("%s#%2d 0x%p" _ ((n)? ((source || nl)? "\n\n" : "\n") : "")_ i _ addr);
 $       n++;
 
         if ((uintptr_t) addr ==  0)         { $ PRINT_ (" [Неверный фрейм]");        break; }
@@ -9059,7 +9183,7 @@ $       if (!Win32::Wow64GetThreadContext (thread, &wow64ctx))  // In WINE, afte
 
 $       cpu = IMAGE_FILE_MACHINE_I386;
 
-$       frame.AddrPC.Offset    = wow64ctx.Eip;
+$       frame.AddrPC   .Offset = wow64ctx.Eip;
 $       frame.AddrStack.Offset = wow64ctx.Esp;
 $       frame.AddrFrame.Offset = wow64ctx.Ebp;
         }
@@ -9067,7 +9191,7 @@ $       frame.AddrFrame.Offset = wow64ctx.Ebp;
         {
 $       cpu = IMAGE_FILE_MACHINE_AMD64;
 
-$       frame.AddrPC.Offset    = ctx.Rip;
+$       frame.AddrPC   .Offset = ctx.Rip;
 $       frame.AddrStack.Offset = ctx.Rbp;
 $       frame.AddrFrame.Offset = ctx.Rsp;
         }
@@ -9077,7 +9201,7 @@ $       frame.AddrFrame.Offset = ctx.Rsp;
         {
 $       cpu = IMAGE_FILE_MACHINE_I386;
 
-$       frame.AddrPC.Offset    = ctx.Eip;
+$       frame.AddrPC   .Offset = ctx.Eip;
 $       frame.AddrStack.Offset = ctx.Ebp;
 $       frame.AddrFrame.Offset = ctx.Esp;
         }
@@ -9421,8 +9545,14 @@ const char* _txProcessError (const char file[], int line, const char func[], uns
         else break;
         }
 
-    const char* stkTrace = ((options & traceSE) && *_txTraceSE)? _txTraceSE : _txCaptureStackBackTrace (2, true);
-    const char*  txTrace = _txCaptureStackBackTraceTX (0, true);
+    const char* stkTrace = NULL;
+    const char*  txTrace = NULL;
+
+    if (!(options & fmtOnly))
+        {
+        stkTrace = ((options & traceSE) && *_txTraceSE)? _txTraceSE : _txCaptureStackBackTrace   (2, true);
+        txTrace  =                                                    _txCaptureStackBackTraceTX (0, true);
+        }
 
     static char what[_TX_BIGBUFSIZE*10] = "";
     static char str [_TX_BIGBUFSIZE]    = "";
@@ -9440,10 +9570,11 @@ const char* _txProcessError (const char file[], int line, const char func[], uns
                 PRINT_ (",\n\n");
 
     if (msg)    PRINT_ ("%s: " _ (file || line || func)? "Сообщение" : "ВНЕЗАПНО"),
-               VPRINT_ (msg _ args),
-                PRINT_ ("\n\n");
+               VPRINT_ (msg _ args);
 
-                PRINT_ ("#%d: %s, Instance: 0x%p (%d-bit), Flags: %c%c%c%c%c%d, Thread: 0x%X%s" _
+    while (s > what && s[-1] == '\n') s--;
+
+                PRINT_ ("\n\n" "#%d: %s, Instance: 0x%p (%d-bit), Flags: %c%c%c%c%c%d, Thread: 0x%X%s" _
 
                         nCalls _ _TX_VERSION _ &_txInitialized _ (sizeof (void*) == 4)? 32 : 64 _
 
@@ -9473,7 +9604,7 @@ const char* _txProcessError (const char file[], int line, const char func[], uns
     if (options & fmtOnly) return what;
 
     unsigned restore = txGetConsoleAttr();
-    txSetConsoleAttr ((options & isFatal)? 0x0D /* LightMagenta */ : 0x0C /* LightRed */);
+    txSetConsoleAttr ((options & isFatal)? FOREGROUND_LIGHTMAGENTA : FOREGROUND_LIGHTRED);
     if (color) txSetConsoleAttr (color);
 
     printf (              "\n" "--------------------------------------------------\n"
@@ -9526,13 +9657,14 @@ const char* _txProcessError (const char file[], int line, const char func[], uns
 
     if (!(options & noMsgBox))
         {
-        txSleep (0);
+        txSleep (_txWindowUpdateInterval);
         txMessageBox (what, (isFatal? "Фатальная ошибка" : "Ошибка в программе"), MB_ICONSTOP | MB_SYSTEMMODAL);
         }
 
     if ((options & isFatal) && !IsDebuggerPresent())
         {
-        ::exit (EXIT_FAILURE);
+        ::FatalExit (EXIT_FAILURE);
+        ::exit      (EXIT_FAILURE);
         }
 
     return what;
@@ -9550,9 +9682,9 @@ int _txOnErrorReport (int type, char* text, int* ret)
 
     switch (type)
        {
-       case _CRT_WARN:   txSetConsoleAttr (0x0B); /* LightCyan    */ break;
-       case _CRT_ERROR:  txSetConsoleAttr (0x0D); /* LightMagenta */ break;
-       case _CRT_ASSERT: txSetConsoleAttr (0x0E); /* Yellow       */ break;
+       case _CRT_WARN:   txSetConsoleAttr (FOREGROUND_LIGHTCYAN);    break;
+       case _CRT_ERROR:  txSetConsoleAttr (FOREGROUND_LIGHTMAGENTA); break;
+       case _CRT_ASSERT: txSetConsoleAttr (FOREGROUND_YELLOW);       break;
        default:                                                      break;
        }
 
@@ -9820,12 +9952,18 @@ $1  time_t timeT     = time (NULL) - clock()/CLOCKS_PER_SEC;
 
                     "TXLib file:" "\t" __FILE__ "\n"
                     "Compiled:"   "\t" __DATE__ " " __TIME__ ", " __TX_COMPILER__ ", %d-bit, " _TX_BUILDMODE "\n"
+                    "Runtime:"    "\t" "%s\n"
                     "Started:"    "\t" "%.6s %.4s %.8s\n\n"
 
                     "Run file:"   "\t" "%s\n"
                     "Directory:"  "\t" "%s",
 
                     (sizeof (void*) == sizeof (DWORD))? 32 : 64,
+    #ifdef _GCC_VER
+                    __mingw_get_crt_info(),
+    #else
+                    "Microsoft Visual Studio Runtime",
+    #endif
                     timeS + 4, timeS + 20, timeS + 11,              // These offsets are ANSI standardized
                     txGetModuleFileName(),
                     _getcwd (cwd, sizeof (cwd) - 1));
@@ -10731,7 +10869,7 @@ $   return _txMouseButtons;
 
 //-----------------------------------------------------------------------------------------------------------------
 
-bool txSetConsoleAttr (unsigned color /*= 0x07*/)
+bool txSetConsoleAttr (unsigned color /*= FOREGROUND_LIGHTGRAY*/)
     {
     return !!SetConsoleTextAttribute (GetStdHandle (STD_OUTPUT_HANDLE), (WORD) color);
     }
@@ -10901,20 +11039,21 @@ $   unsigned x = 0;
 
 $   unsigned attr = txGetConsoleAttr();
 
-$   txSetConsoleAttr (0x0F);
-$   printf ("\n%*.*s ", sizeof (address) * 2, sizeof (address) * 2, name? name : "");
+$   txSetConsoleAttr (FOREGROUND_WHITE);
+$   printf ("\n%*.*s ", (int) sizeof (address) * 2, (int) sizeof (address) * 2, ((name)? name : ""));
 
-$   txSetConsoleAttr (0x0E);
+$   txSetConsoleAttr (FOREGROUND_YELLOW);
 $   for (x = 0; x < 16; x++) printf ("%02X ", x);
 $   for (x = 0; x < 16; x++) printf ("%X",    x);
 
 $   for (int y = 0; y < 16; y++, p += 16)
         {
-        txSetConsoleAttr (0x0E);
+        txSetConsoleAttr (FOREGROUND_YELLOW);
         printf ("\n" "%8p ", p);
 
-        for (x = 0; x < 16; x++) { txSetConsoleAttr (0x0A + x/4%2); printf ("%02X ", p[x]); }
-        for (x = 0; x < 16; x++) { txSetConsoleAttr (0x0A + x/4%2); printf ("%c", (isprint (p[x]) && !iscntrl (p[x]))? p[x] : '.'); }
+        int color = FOREGROUND_LIGHTGREEN;
+        for (x = 0; x < 16; x++) { txSetConsoleAttr (color + x/4%2); printf ("%02X ", p[x]); }
+        for (x = 0; x < 16; x++) { txSetConsoleAttr (color + x/4%2); printf ("%c", (isprint (p[x]) && !iscntrl (p[x]))? p[x] : '.'); }
         }
 
 $   txSetConsoleAttr (attr);
@@ -10927,7 +11066,7 @@ void _txStackBackTrace (const char file[] /*= "?"*/, int line /*= 0*/, const cha
                         bool readSource /*= true*/)
     {
 $1  unsigned attr = txGetConsoleAttr();
-$   txSetConsoleAttr (0x0B);  // LightCyan
+$   txSetConsoleAttr (FOREGROUND_LIGHTCYAN);
 
 $   printf ("\n" "--------------------------------------------------\n"
                  "Трассировка стека из \"%s\" at %s (%d):\n\n"
@@ -11547,35 +11686,35 @@ $   return pw;
 
 #define $s         _txSaveConsoleAttr __txSaveConsoleAttr;
 
-#define $T         txSetConsoleAttr (0x00);
-#define $B         txSetConsoleAttr (0x01);
-#define $G         txSetConsoleAttr (0x02);
-#define $C         txSetConsoleAttr (0x03);
-#define $R         txSetConsoleAttr (0x04);
-#define $M         txSetConsoleAttr (0x05);
-#define $Y         txSetConsoleAttr (0x06);
-#define $d         txSetConsoleAttr (0x07);
-#define $D         txSetConsoleAttr (0x08);
-#define $b         txSetConsoleAttr (0x09);
-#define $g         txSetConsoleAttr (0x0a);
-#define $c         txSetConsoleAttr (0x0b);
-#define $r         txSetConsoleAttr (0x0c);
-#define $m         txSetConsoleAttr (0x0d);
-#define $y         txSetConsoleAttr (0x0e);
-#define $t         txSetConsoleAttr (0x0f);
+#define $T         txSetConsoleAttr (FOREGROUND_BLACK        | BACKGROUND_BLACK);
+#define $B         txSetConsoleAttr (FOREGROUND_BLUE         | BACKGROUND_BLACK);
+#define $G         txSetConsoleAttr (FOREGROUND_GREEN        | BACKGROUND_BLACK);
+#define $C         txSetConsoleAttr (FOREGROUND_CYAN         | BACKGROUND_BLACK);
+#define $R         txSetConsoleAttr (FOREGROUND_RED          | BACKGROUND_BLACK);
+#define $M         txSetConsoleAttr (FOREGROUND_MAGENTA      | BACKGROUND_BLACK);
+#define $Y         txSetConsoleAttr (FOREGROUND_DARKYELLOW   | BACKGROUND_BLACK);
+#define $d         txSetConsoleAttr (FOREGROUND_LIGHTGRAY    | BACKGROUND_BLACK);
+#define $D         txSetConsoleAttr (FOREGROUND_DARKGRAY     | BACKGROUND_BLACK);
+#define $b         txSetConsoleAttr (FOREGROUND_LIGHTBLUE    | BACKGROUND_BLACK);
+#define $g         txSetConsoleAttr (FOREGROUND_LIGHTGREEN   | BACKGROUND_BLACK);
+#define $c         txSetConsoleAttr (FOREGROUND_LIGHTCYAN    | BACKGROUND_BLACK);
+#define $r         txSetConsoleAttr (FOREGROUND_LIGHTRED     | BACKGROUND_BLACK);
+#define $m         txSetConsoleAttr (FOREGROUND_LIGHTMAGENTA | BACKGROUND_BLACK);
+#define $y         txSetConsoleAttr (FOREGROUND_YELLOW       | BACKGROUND_BLACK);
+#define $t         txSetConsoleAttr (FOREGROUND_WHITE        | BACKGROUND_BLACK);
 
-#define $i         txSetConsoleAttr (0x1b);
-#define $I         txSetConsoleAttr (0x1e);
-#define $a         txSetConsoleAttr (0x2a);
-#define $A         txSetConsoleAttr (0x2e);
-#define $e         txSetConsoleAttr (0x4f);
-#define $E         txSetConsoleAttr (0x4e);
-#define $w         txSetConsoleAttr (0x5d);
-#define $W         txSetConsoleAttr (0x5e);
-#define $f         txSetConsoleAttr (0xc0);
-#define $F         txSetConsoleAttr (0xc5);
-#define $l         txSetConsoleAttr (0x80);
-#define $L         txSetConsoleAttr (0x87);
+#define $i         txSetConsoleAttr (FOREGROUND_LIGHTCYAN    | BACKGROUND_BLUE);
+#define $I         txSetConsoleAttr (FOREGROUND_YELLOW       | BACKGROUND_BLUE);
+#define $a         txSetConsoleAttr (FOREGROUND_LIGHTGREEN   | BACKGROUND_GREEN);
+#define $A         txSetConsoleAttr (FOREGROUND_YELLOW       | BACKGROUND_GREEN);
+#define $e         txSetConsoleAttr (FOREGROUND_WHITE        | BACKGROUND_RED);
+#define $E         txSetConsoleAttr (FOREGROUND_YELLOW       | BACKGROUND_RED);
+#define $w         txSetConsoleAttr (FOREGROUND_LIGHTMAGENTA | BACKGROUND_MAGENTA);
+#define $W         txSetConsoleAttr (FOREGROUND_YELLOW       | BACKGROUND_MAGENTA);
+#define $f         txSetConsoleAttr (FOREGROUND_BLACK        | BACKGROUND_LIGHTRED);
+#define $F         txSetConsoleAttr (FOREGROUND_MAGENTA      | BACKGROUND_LIGHTRED);
+#define $l         txSetConsoleAttr (FOREGROUND_BLACK        | BACKGROUND_DARKGRAY);
+#define $L         txSetConsoleAttr (FOREGROUND_LIGHTGRAY    | BACKGROUND_DARKGRAY);
 
 //-----------------------------------------------------------------------------------------------------------------
 
