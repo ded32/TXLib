@@ -6,9 +6,9 @@
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 126 $
+//!          $Version: 00173a, Revision: 127 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2017-04-01 23:54:05 +0400 $
+//!          $Date: 2017-04-03 17:00:17 +0400 $
 //!
 //!          TX Library - компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -134,9 +134,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 126, 2017-04-01 23:54:05 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 126, 2017-04-01 23:54:05 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 126, 2017-04-01 23:54:05 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 127, 2017-04-03 17:00:17 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 127, 2017-04-03 17:00:17 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 127, 2017-04-03 17:00:17 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -6176,24 +6176,37 @@ ptrdiff_t        _tx_snprintf_s    (char stream[], ptrdiff_t size, const char fo
 ptrdiff_t        _tx_vsnprintf_s   (char stream[], ptrdiff_t size, const char format[], va_list arg);
 
 //-----------------------------------------------------------------------------------------------------------------
-// These are macros for __FILE__ and __LINE__ to work properly.
+// There are macros for __FILE__ and __LINE__ to work properly.
 
 #if !defined (NDEBUG)
-    #define  _TX_IF_ARGUMENT_FAILED( cond )    if (!assert (cond)             && (SetLastErrorEx (ERROR_BAD_ARGUMENTS, 0), 1))
+    #define  _TX_ARGUMENT_FAILED( cond )       ( !(cond) &&                                          \
+                                                     (SetLastErrorEx (ERROR_BAD_ARGUMENTS, 0), 1) && \
+                                                     (assert (cond), true) )
 
-    #define  _TX_IF_TXWINDOW_FAILED            if (!txOK()                    && (SetLastErrorEx (ERROR_INVALID_DATA,  0), 1) && \
-                                                  (TX_ERROR ("\a" "Окно рисования не создано или не в порядке."), 1))
+    #define  _TX_TXWINDOW_FAILED()             ( !txOK() &&                                          \
+                                                     (SetLastErrorEx (ERROR_INVALID_DATA,  0), 1) && \
+                                                     (TX_ERROR ("\a" "Окно рисования не создано или не в порядке."), 1) )
 
-    #define  _TX_IF_HDC_FAILED( dc )           if (!Win32::GetObjectType (dc) && (SetLastErrorEx (ERROR_INVALID_DATA,  0), 1) && \
-                                                  (TX_ERROR (     "Параметр \"%s\" неверен. Возможно, эта картинка не загружена, "    \
-                                                                  "холст не создан или уже уничтожен." _ #dc),    1))
+    #define  _TX_HDC_FAILED( dc )              ( !Win32::GetObjectType (dc) &&                       \
+                                                     (SetLastErrorEx (ERROR_INVALID_DATA,  0), 1) && \
+                                                     (TX_ERROR ("Параметр \"%s\" неверен. Возможно, этот холст не создан, " \
+                                                                "или уже уничтожен, или не загрузилась картинка." _ #dc), 1) )
+
+    #define _TX_DEFAULT_HDC_FAILED(dc)         ( (!(dc) &&                                           \
+                                                     _TX_TXWINDOW_FAILED()) || _TX_HDC_FAILED (dc) )
+
 #else
-    #define  _TX_IF_ARGUMENT_FAILED( cond )    if (!(cond)                    && (SetLastErrorEx (ERROR_BAD_ARGUMENTS, 0), 1))
+    #define  _TX_ARGUMENT_FAILED( cond )       ( !(cond) &&                                          \
+                                                     (SetLastErrorEx (ERROR_BAD_ARGUMENTS, 0), 1) )
 
-    #define  _TX_IF_TXWINDOW_FAILED            if (!txOK()                    && (SetLastErrorEx (ERROR_INVALID_DATA,  0), 1))
+    #define  _TX_TXWINDOW_FAILED()             ( !txOK() &&                                          \
+                                                     (SetLastErrorEx (ERROR_INVALID_DATA,  0), 1) )
 
-    #define  _TX_IF_HDC_FAILED( dc )           if (!Win32::GetObjectType (dc) && (SetLastErrorEx (ERROR_INVALID_DATA,  0), 1))
+    #define  _TX_HDC_FAILED( dc )              ( !Win32::GetObjectType (dc) &&                       \
+                                                     (SetLastErrorEx (ERROR_INVALID_DATA,  0), 1) )
 
+    #define _TX_DEFAULT_HDC_FAILED(dc)         ( (!(dc) &&                                           \
+                                                     (SetLastErrorEx (ERROR_INVALID_DATA,  0), 1) )
 #endif
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -6443,8 +6456,8 @@ $   return 1;
 
 FARPROC _txDllImport (const char dllFileName[], const char funcName[], bool required /*= true*/)
     {
-    _TX_IF_ARGUMENT_FAILED (!dllFileName  || *dllFileName) return NULL;
-    _TX_IF_ARGUMENT_FAILED ( funcName     && *funcName)    return NULL;
+    if (_TX_ARGUMENT_FAILED (dllFileName && *dllFileName)) return NULL;
+    if (_TX_ARGUMENT_FAILED (funcName    && *funcName))    return NULL;
 
     char dllName[MAX_PATH] = "", dllArch[MAX_PATH] = "";
     const char* arch = (dllFileName? strchr (dllFileName, '*') : NULL);
@@ -7014,7 +7027,7 @@ $   return inDll;
 
 bool _txKillProcess (DWORD pid)
     {
-$1  _TX_IF_ARGUMENT_FAILED (pid) return false;
+$1  if (_TX_ARGUMENT_FAILED (pid)) return false;
 
 $   HANDLE token = INVALID_HANDLE_VALUE;
 $   OpenProcessToken (GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &token) asserted;
@@ -7048,8 +7061,8 @@ $1  _txLocCur.trace = 0;
 
 $   if (debug) printf ("_txSetProcAddress (%s, 0x%p, %s, 0x%p):\n", funcName, newFunc, dllName, module);
 
-$   _TX_IF_ARGUMENT_FAILED (funcName) return NULL;
-$   _TX_IF_ARGUMENT_FAILED (newFunc)  return NULL;
+$   if (_TX_ARGUMENT_FAILED (funcName)) return NULL;
+$   if (_TX_ARGUMENT_FAILED (newFunc))  return NULL;
 
 $   if (!module) module = GetModuleHandle (NULL);
 $   if (!module) return NULL;
@@ -7175,7 +7188,7 @@ unsigned WINAPI _txCanvas_ThreadProc (void* data)
     {
 $1  _txCanvas_ThreadId = GetCurrentThreadId();
 
-$   _TX_IF_ARGUMENT_FAILED (data) return false;
+$   if (_TX_ARGUMENT_FAILED (data)) return false;
 
 $   unsigned long stackSize = _TX_STACKSIZE;
 $   _TX_CALL (Win32::SetThreadStackGuarantee, (&stackSize));
@@ -7244,7 +7257,7 @@ $   return true;
 
 HWND _txCanvas_CreateWindow (SIZE* size)
     {
-$1  _TX_IF_ARGUMENT_FAILED (size) return NULL;
+$1  if (_TX_ARGUMENT_FAILED (size)) return NULL;
 
 $   static char className[_TX_BUFSIZE] = "";
 $   _tx_snprintf_s (className, sizeof (className) - 1, "/*---[TXLib]-------------------------- "
@@ -7323,7 +7336,7 @@ $   return oldCount;
 
 HICON _txCreateTXIcon (int size)
     {
-$1  _TX_IF_ARGUMENT_FAILED (size == 32 || size == 16) return NULL;
+$1  if (_TX_ARGUMENT_FAILED (size == 32 || size == 16)) return NULL;
 
 $   const unsigned char image32 [32*32+1] =
         "00000000000000000000000000000000""0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0""0F0000000000000000000000000000F0""0F0000000000000000000000000000F0"
@@ -7442,7 +7455,7 @@ $   return DefWindowProc (wnd, msg, wpar, lpar);
 
 bool _txCanvas_OnCREATE (HWND wnd)
     {
-$1  _TX_IF_ARGUMENT_FAILED (wnd) return false;
+$1  if (_TX_ARGUMENT_FAILED (wnd)) return false;
 
 $   _txCanvas_BackBuf[0] = _txBuffer_Create (wnd); assert (_txCanvas_BackBuf[0]);
 $   _txCanvas_BackBuf[1] = _txBuffer_Create (wnd); assert (_txCanvas_BackBuf[1]);
@@ -7460,7 +7473,7 @@ $   return true;
 
 bool _txCanvas_OnDESTROY (HWND wnd)
     {
-$1  _TX_IF_ARGUMENT_FAILED (wnd) return false;
+$1  if (_TX_ARGUMENT_FAILED (wnd)) return false;
 
     // Инициируем остановку цикла сообщений
 
@@ -7509,7 +7522,7 @@ $   return true;
 
 bool _txCanvas_OnCLOSE (HWND wnd)
     {
-$1  _TX_IF_ARGUMENT_FAILED (wnd && _txCanvas_OK()) return false;
+$1  if (_TX_ARGUMENT_FAILED (wnd && _txCanvas_OK())) return false;
 
 $   if (_txMain && _txRunning &&
         txMessageBox ("Функция main() не завершена. Программа все еще работает. Прервать аварийно?\n\n"
@@ -7522,7 +7535,7 @@ $   return true;
 
 bool _txCanvas_OnTIMER (HWND wnd, WPARAM)
     {
-$1  _TX_IF_ARGUMENT_FAILED (wnd) return false;
+$1  if (_TX_ARGUMENT_FAILED (wnd)) return false;
 
 $   if (_txCanvas_RefreshLock > 0 || !_txRunning) return false;
 
@@ -7536,7 +7549,7 @@ $   return true;
 
 bool _txCanvas_OnPAINT (HWND wnd)
     {
-$1  _TX_IF_ARGUMENT_FAILED (wnd && _txCanvas_OK()) return false;
+$1  if (_TX_ARGUMENT_FAILED (wnd && _txCanvas_OK())) return false;
 
 $   bool forceRedraw   = GetAsyncKeyState (VK_MENU)  && GetAsyncKeyState (VK_CONTROL) &&
                          GetAsyncKeyState (VK_SHIFT) && GetAsyncKeyState (VK_SNAPSHOT);
@@ -7619,7 +7632,7 @@ $   return true;
 
 bool _txCanvas_OnMOUSEMOVE (HWND, WPARAM buttons, LPARAM coords)
     {
-$1  _TX_IF_ARGUMENT_FAILED (_txCanvas_OK()) return false;
+$1  if (_TX_ARGUMENT_FAILED (_txCanvas_OK())) return false;
 
 $   _txMousePos.x   = LOWORD (coords);
 $   _txMousePos.y   = HIWORD (coords);
@@ -7632,7 +7645,7 @@ $   return true;
 
 bool _txCanvas_OnCmdCONSOLE (HWND wnd, WPARAM cmd)
     {
-$1  _TX_IF_ARGUMENT_FAILED (wnd) return false;
+$1  if (_TX_ARGUMENT_FAILED (wnd)) return false;
 
 $   HWND console = Win32::GetConsoleWindow();
 $   if (!console) return false;
@@ -7813,7 +7826,7 @@ $   return !!FreeConsole();
 
 bool _txConsole_Draw (HDC dc)
     {
-$1  _TX_IF_HDC_FAILED (dc) return false;
+$1  if (_TX_HDC_FAILED (dc)) return false;
 
 $   HANDLE out = GetStdHandle (STD_OUTPUT_HANDLE);
 
@@ -7965,8 +7978,8 @@ bool _txCreateShortcut (const char shortcutName[],
                         const char description[] /*= NULL*/, int cmdShow /*= SW_SHOWNORMAL*/, const char iconFile[] /*= NULL*/, int iconIndex /*= 0*/,
                         int fontSize /*= 0*/, COORD bufSize /*= ZERO (COORD)*/, COORD wndSize /*= ZERO (COORD)*/, COORD wndOrg /*=ZERO (COORD)*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (shortcutName && *shortcutName) return false;
-$   _TX_IF_ARGUMENT_FAILED (fileToLink   && *fileToLink)   return false;
+$1  if (_TX_ARGUMENT_FAILED (shortcutName && *shortcutName)) return false;
+$   if (_TX_ARGUMENT_FAILED (fileToLink   && *fileToLink))   return false;
 
 $   IShellLink* shellLink = NULL;
 $   Win32::IShellLinkDataList* dataList = NULL;
@@ -8093,10 +8106,10 @@ $   return dc;
 
 bool _txBuffer_Delete (HDC* dc)
     {
-$1  _TX_IF_ARGUMENT_FAILED (dc) return false;
+$1  if (_TX_ARGUMENT_FAILED (dc)) return false;
 $   if (!*dc) return false;
 
-$   _TX_IF_HDC_FAILED (*dc) return false;
+$   if (_TX_HDC_FAILED (*dc)) return false;
 
 $   if (!Win32::GetObjectType (Win32::GetCurrentObject (*dc, OBJ_BITMAP))) return false;
 
@@ -8120,8 +8133,8 @@ $   return true;
 
 bool _txBuffer_Select (HGDIOBJ obj, HDC dc /*= txDC()*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (obj) return false;
-$   _TX_IF_HDC_FAILED      (dc)  return false;
+$1  if (_TX_ARGUMENT_FAILED (obj)) return false;
+$   if (_TX_HDC_FAILED      (dc))  return false;
 
 $   if (!Win32::GetObjectType (obj)) TX_DEBUG_ERROR ("Invalid GDI object type");
 
@@ -9902,7 +9915,7 @@ bool txNotifyIcon (unsigned flags, const char title[], const char format[], ...)
     {
 $1  _txLocCur.trace = 0;
 
-$   _TX_IF_ARGUMENT_FAILED (format) return false;
+$   if (_TX_ARGUMENT_FAILED (format)) return false;
 
 $   va_list arg; va_start (arg, format);
 $   bool ok = true;
@@ -10043,11 +10056,25 @@ inline unsigned txVersionNumber()
 
 //-----------------------------------------------------------------------------------------------------------------
 
+inline HWND txWindow()
+    {
+$1  return _txCanvas_Window;
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+inline HDC& txDC()
+    {
+$1  return _txCanvas_BackBuf[0];
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
 POINT txGetExtent (HDC dc /*= txDC()*/)
     {
 $1  POINT err = {-1, -1};
 
-$   _TX_IF_HDC_FAILED (dc) return err;
+$   if (_TX_DEFAULT_HDC_FAILED (dc)) return err;
 
 $   BITMAP bmap = {0};
 $   txGDI (Win32::GetObject (Win32::GetCurrentObject (dc, OBJ_BITMAP), sizeof (bmap), &bmap), dc) asserted;
@@ -10068,20 +10095,6 @@ int txGetExtentX (HDC dc /*= txDC()*/)
 int txGetExtentY (HDC dc /*= txDC()*/)
     {
     return txGetExtent (dc) .y;
-    }
-
-//-----------------------------------------------------------------------------------------------------------------
-
-inline HDC& txDC()
-    {
-$1  return _txCanvas_BackBuf[0];
-    }
-
-//-----------------------------------------------------------------------------------------------------------------
-
-inline HWND txWindow()
-    {
-$1  return _txCanvas_Window;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -10108,7 +10121,7 @@ $   return _txCanvas_Window == NULL;
 
 HPEN txSetColor (COLORREF color, double thickness /*= 1*/, HDC dc /*= txDC()*/)
     {
-$1  _TX_IF_HDC_FAILED (dc) return NULL;
+$1  if (_TX_DEFAULT_HDC_FAILED (dc)) return NULL;
 
 $   HPEN pen = Win32::CreatePen ((color == TX_TRANSPARENT? PS_NULL : PS_SOLID), ROUND (thickness), color);
 
@@ -10143,7 +10156,7 @@ $   return txSetColor (color)? color : CLR_INVALID;
 
 COLORREF txGetColor (HDC dc /*= txDC()*/)
     {
-$1  _TX_IF_HDC_FAILED (dc) return CLR_INVALID;
+$1  if (_TX_DEFAULT_HDC_FAILED (dc)) return CLR_INVALID;
 
 $   HGDIOBJ obj = txGDI ((Win32::GetCurrentObject (dc, OBJ_PEN)), dc);
 $   assert (obj); if (!obj) return CLR_INVALID;
@@ -10160,7 +10173,7 @@ $   return (size == sizeof (LOGPEN))? buf.LogPen.lopnColor : buf.extLogPen.elpCo
 
 HBRUSH txSetFillColor (COLORREF color, HDC dc /*= txDC()*/)
     {
-$1  _TX_IF_HDC_FAILED (dc) return NULL;
+$1  if (_TX_DEFAULT_HDC_FAILED (dc)) return NULL;
 
 $   HBRUSH brush = (color == TX_TRANSPARENT)? (HBRUSH) Win32::GetStockObject (HOLLOW_BRUSH) : Win32::CreateSolidBrush (color);
 
@@ -10184,7 +10197,7 @@ $   return txSetFillColor (color)? color : CLR_INVALID;
 
 COLORREF txGetFillColor (HDC dc /*= txDC()*/)
     {
-$1  _TX_IF_HDC_FAILED (dc) return CLR_INVALID;
+$1  if (_TX_DEFAULT_HDC_FAILED (dc)) return CLR_INVALID;
 
 $   HGDIOBJ obj = txGDI ((Win32::GetCurrentObject (dc, OBJ_BRUSH)), dc);
 $   assert (obj); if (!obj) return CLR_INVALID;
@@ -10199,7 +10212,7 @@ $   return buf.lbColor;
 
 bool txSetROP2 (int mode /*= R2_COPYPEN*/, HDC dc /*= txDC()*/)
     {
-$1  _TX_IF_HDC_FAILED (dc) return false;
+$1  if (_TX_DEFAULT_HDC_FAILED (dc)) return false;
 
 $   return txGDI (!!(Win32::SetROP2 (dc, mode)), dc);
     }
@@ -10208,7 +10221,7 @@ $   return txGDI (!!(Win32::SetROP2 (dc, mode)), dc);
 
 bool txClear (HDC dc /*= txDC()*/)
     {
-$1  _TX_IF_HDC_FAILED (dc) return false;
+$1  if (_TX_DEFAULT_HDC_FAILED (dc)) return false;
 
 $   POINT size = txGetExtent (dc);
 $   return txGDI (!!(Win32::PatBlt (dc, 0, 0, size.x, size.y, PATCOPY)), dc);
@@ -10218,7 +10231,7 @@ $   return txGDI (!!(Win32::PatBlt (dc, 0, 0, size.x, size.y, PATCOPY)), dc);
 
 inline bool txSetPixel (double x, double y, COLORREF color, HDC dc /*= txDC()*/)
     {
-$1  _TX_IF_HDC_FAILED (dc) return false;
+$1  if (_TX_DEFAULT_HDC_FAILED (dc)) return false;
 
 $   txGDI ((Win32::SetPixel (dc, ROUND (x), ROUND (y), color)), dc);
 
@@ -10240,7 +10253,7 @@ $   return txSetPixel (x, y, RGB (ROUND (red * 255), ROUND (green * 255), ROUND 
 
 inline COLORREF txGetPixel (double x, double y, HDC dc /*= txDC()*/)
     {
-$1  _TX_IF_HDC_FAILED (dc) return CLR_INVALID;
+$1  if (_TX_DEFAULT_HDC_FAILED (dc)) return CLR_INVALID;
 
 $   return txGDI ((Win32::GetPixel (dc, ROUND (x), ROUND (y))), dc);
     }
@@ -10249,7 +10262,7 @@ $   return txGDI ((Win32::GetPixel (dc, ROUND (x), ROUND (y))), dc);
 
 bool txLine (double x0, double y0, double x1, double y1, HDC dc /*= txDC()*/)
     {
-$1  _TX_IF_HDC_FAILED (dc) return false;
+$1  if (_TX_DEFAULT_HDC_FAILED (dc)) return false;
 
 $   txGDI ((Win32::MoveToEx (dc, ROUND (x0), ROUND (y0), NULL)), dc) asserted;
 $   txGDI ((Win32::LineTo   (dc, ROUND (x1), ROUND (y1)      )), dc) asserted;
@@ -10261,7 +10274,7 @@ $   return true;
 
 bool txRectangle (double x0, double y0, double x1, double y1, HDC dc /*= txDC()*/)
     {
-$1  _TX_IF_HDC_FAILED (dc) return false;
+$1  if (_TX_DEFAULT_HDC_FAILED (dc)) return false;
 
 $   txGDI ((Win32::Rectangle (dc, ROUND (x0), ROUND (y0), ROUND (x1), ROUND (y1))), dc) asserted;
 
@@ -10272,8 +10285,8 @@ $   return true;
 
 bool txPolygon (const POINT points[], int numPoints, HDC dc /*= txDC()*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (points) return false;
-$   _TX_IF_HDC_FAILED      (dc)     return false;
+$1  if (_TX_ARGUMENT_FAILED    (points)) return false;
+$   if (_TX_DEFAULT_HDC_FAILED (dc))     return false;
 
 $   return txGDI (!!(Win32::Polygon (dc, points, numPoints)), dc);
     }
@@ -10282,7 +10295,7 @@ $   return txGDI (!!(Win32::Polygon (dc, points, numPoints)), dc);
 
 bool txEllipse (double x0, double y0, double x1, double y1, HDC dc /*= txDC()*/)
     {
-$1  _TX_IF_HDC_FAILED (dc) return false;
+$1  if (_TX_DEFAULT_HDC_FAILED (dc)) return false;
 
 $   txGDI ((Win32::Ellipse (dc, ROUND (x0), ROUND (y0), ROUND (x1), ROUND (y1))), dc) asserted;
 
@@ -10300,7 +10313,7 @@ $1  return txEllipse (x-r, y-r, x+r, y+r);
 
 bool txArc (double x0, double y0, double x1, double y1, double startAngle, double totalAngle, HDC dc /*= txDC()*/)
     {
-$1  _TX_IF_HDC_FAILED (dc) return false;
+$1  if (_TX_DEFAULT_HDC_FAILED (dc)) return false;
 
 $   POINT center = { ROUND ((x0 + x1) /2), ROUND ((y0 + y1) /2) };
 
@@ -10316,7 +10329,7 @@ $   return txGDI (!!(Win32::Arc (dc, ROUND (x0), ROUND (y0), ROUND (x1), ROUND (
 
 bool txPie (double x0, double y0, double x1, double y1, double startAngle, double totalAngle, HDC dc /*= txDC()*/)
     {
-$1  _TX_IF_HDC_FAILED (dc) return false;
+$1  if (_TX_DEFAULT_HDC_FAILED (dc)) return false;
 
 $   POINT center = { ROUND ((x0 + x1) /2), ROUND ((y0 + y1) /2) };
 
@@ -10332,7 +10345,7 @@ $   return txGDI (!!(Win32::Pie (dc, ROUND (x0), ROUND (y0), ROUND (x1), ROUND (
 
 bool txChord (double x0, double y0, double x1, double y1, double startAngle, double totalAngle, HDC dc /*= txDC()*/)
     {
-$1  _TX_IF_HDC_FAILED (dc) return false;
+$1  if (_TX_DEFAULT_HDC_FAILED (dc)) return false;
 
 $   POINT center = { ROUND ((x0 + x1) /2), ROUND ((y0 + y1) /2) };
 
@@ -10349,7 +10362,7 @@ $   return txGDI (!!(Win32::Chord (dc, ROUND (x0), ROUND (y0), ROUND (x1), ROUND
 bool txFloodFill (double x, double y,
                   COLORREF color /*= TX_TRANSPARENT*/, DWORD mode /*= FLOODFILLSURFACE*/, HDC dc /*= txDC()*/)
     {
-$1  _TX_IF_HDC_FAILED (dc) return false;
+$1  if (_TX_DEFAULT_HDC_FAILED (dc)) return false;
 
 $   if (color == TX_TRANSPARENT) color = txGetPixel (x, y, dc);
 
@@ -10360,8 +10373,8 @@ $   return txGDI (!!(Win32::ExtFloodFill (dc, ROUND (x), ROUND (y), color, mode)
 
 bool txTextOut (double x, double y, const char text[], HDC dc /*= txDC()*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (text) return false;
-$   _TX_IF_HDC_FAILED      (dc)   return false;
+$1  if (_TX_ARGUMENT_FAILED    (text)) return false;
+$   if (_TX_DEFAULT_HDC_FAILED (dc))   return false;
 
 $   int len = (int) strlen (text);
 $   txGDI (!!(Win32::TextOut (dc, ROUND (x), ROUND (y), text, len)), dc) asserted;
@@ -10376,8 +10389,8 @@ bool txDrawText (double x0, double y0, double x1, double y1, const char text[],
                  unsigned format /*= DT_CENTER | DT_VCENTER | DT_WORDBREAK | DT_WORD_ELLIPSIS*/,
                  HDC dc /*= txDC()*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (text) return false;
-$   _TX_IF_HDC_FAILED      (dc)   return false;
+$1  if (_TX_ARGUMENT_FAILED    (text)) return false;
+$   if (_TX_DEFAULT_HDC_FAILED (dc))   return false;
 
 $   RECT r = { ROUND (x0), ROUND (y0), ROUND (x1), ROUND (y1) };
 
@@ -10411,8 +10424,8 @@ HFONT txSelectFont (const char name[], double sizeY, double sizeX /*= -1*/,
                     bool strikeout /*= false*/, double angle /*= 0*/,
                     HDC dc /*= txDC()*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (name) return NULL;
-$   _TX_IF_HDC_FAILED      (dc)   return NULL;
+$1  if (_TX_ARGUMENT_FAILED    (name)) return NULL;
+$   if (_TX_DEFAULT_HDC_FAILED (dc))   return NULL;
 
 $   HFONT font = txFontExist (name)?
                      Win32::CreateFont (ROUND (sizeY), ROUND ((sizeX >= 0)? sizeX : sizeY/3),
@@ -10433,8 +10446,8 @@ SIZE txGetTextExtent (const char text[], HDC dc /*= txDC()*/)
     {
 $1  SIZE size = {-1, -1};
 
-$   _TX_IF_ARGUMENT_FAILED (text) return size;
-$   _TX_IF_HDC_FAILED      (dc)   return size;
+$   if (_TX_ARGUMENT_FAILED    (text)) return size;
+$   if (_TX_DEFAULT_HDC_FAILED (dc))   return size;
 
 $   txGDI ((Win32::GetTextExtentPoint32 (dc, text, (int) strlen (text), &size)), dc) asserted;
 
@@ -10459,7 +10472,7 @@ $1  return txGetTextExtent (text, dc) .cy;
 
 unsigned txSetTextAlign (unsigned align /*= TA_CENTER | TA_BASELINE*/, HDC dc /*= txDC()*/)
     {
-$1  _TX_IF_HDC_FAILED (dc) return 0;
+$1  if (_TX_DEFAULT_HDC_FAILED (dc)) return false;
 
 $   return txGDI ((Win32::SetTextAlign (dc, align)), dc);
     }
@@ -10468,7 +10481,7 @@ $   return txGDI ((Win32::SetTextAlign (dc, align)), dc);
 
 LOGFONT* txFontExist (const char name[])
     {
-$1  _TX_IF_ARGUMENT_FAILED (name) return NULL;
+$1  if (_TX_ARGUMENT_FAILED (name)) return NULL;
 
 $   static LOGFONT font = {0};
 $   font.lfCharSet = DEFAULT_CHARSET;
@@ -10478,8 +10491,8 @@ $   struct tools
         {
         static int CALLBACK enumFonts (const LOGFONT* fnt, const TEXTMETRIC*, DWORD, LPARAM data)
             {
-$           _TX_IF_ARGUMENT_FAILED (fnt)  return 0;
-$           _TX_IF_ARGUMENT_FAILED (data) return 0;
+$           if (_TX_ARGUMENT_FAILED (fnt))  return 0;
+$           if (_TX_ARGUMENT_FAILED (data)) return 0;
 
             #ifndef __STRICT_ANSI__
 $           return _strnicmp (fnt->lfFaceName, ((LOGFONT*)data)->lfFaceName, LF_FACESIZE);
@@ -10498,8 +10511,8 @@ $   return txGDI ((Win32::EnumFontFamiliesEx (NULL, &font, tools::enumFonts, (LP
 
 bool txSelectObject (HGDIOBJ obj, HDC dc /*= txDC()*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (obj) return false;
-$   _TX_IF_HDC_FAILED      (dc)  return false;
+$1  if (_TX_ARGUMENT_FAILED    (obj)) return false;
+$   if (_TX_DEFAULT_HDC_FAILED (dc))  return false;
 
 $   return _txBuffer_Select (obj, dc);
     }
@@ -10547,8 +10560,7 @@ $1  return txCreateDIBSection (sizeX, sizeY, (RGBQUAD**) pixels);
 
 HDC txLoadImage (const char filename[], unsigned imageFlags /*= IMAGE_BITMAP*/, unsigned loadFlags /*= LR_LOADFROMFILE*/)
     {
-$1  _TX_IF_TXWINDOW_FAILED                         return NULL;
-$   _TX_IF_ARGUMENT_FAILED (filename && *filename) return NULL;
+$1  if (_TX_ARGUMENT_FAILED (filename && *filename)) return NULL;
 
 $   HBITMAP image = (HBITMAP) Win32::LoadImage ((loadFlags & LR_LOADFROMFILE)? NULL : GetModuleHandle (NULL),
                                                  filename, imageFlags, 0, 0, loadFlags);
@@ -10574,8 +10586,7 @@ $   return dc;
 
 bool txDeleteDC (HDC* pdc)
     {
-$1  _TX_IF_TXWINDOW_FAILED       return false;
-$   _TX_IF_ARGUMENT_FAILED (pdc) return false;
+$1  if (_TX_ARGUMENT_FAILED (pdc)) return false;
 
 $   HDC  dc = *pdc;
 $   bool ok = _txBuffer_Delete (pdc);
@@ -10594,9 +10605,7 @@ $   return ok;
 
 bool txDeleteDC (HDC dc)
     {
-$1  _TX_IF_TXWINDOW_FAILED return false;
-
-$   return txDeleteDC (&dc);
+$1  return txDeleteDC (&dc);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -10604,8 +10613,8 @@ $   return txDeleteDC (&dc);
 bool txBitBlt (HDC destImage,   double xDest, double yDest, double width, double height,
                HDC sourceImage, double xSource /*= 0*/, double ySource /*= 0*/, DWORD rOp /*= SRCCOPY*/)
     {
-$1  _TX_IF_HDC_FAILED (destImage)   return false;
-$   _TX_IF_HDC_FAILED (sourceImage) return false;
+$1  if (_TX_HDC_FAILED (destImage))   return false;
+$   if (_TX_HDC_FAILED (sourceImage)) return false;
 
 $   if (width <= 0 || height <= 0)
         {
@@ -10622,7 +10631,9 @@ $   return txGDI (!!(Win32::BitBlt (destImage,   ROUND (xDest),   ROUND (yDest),
 
 inline bool txBitBlt (double xDest, double yDest, HDC sourceImage, double xSource /*= 0*/, double ySource /*= 0*/)
     {
-$1  return txBitBlt (txDC(), xDest, yDest, 0, 0, sourceImage, xSource, ySource);
+$1  if (_TX_TXWINDOW_FAILED()) return false;
+
+$   return txBitBlt (txDC(), xDest, yDest, 0, 0, sourceImage, xSource, ySource);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -10630,8 +10641,8 @@ $1  return txBitBlt (txDC(), xDest, yDest, 0, 0, sourceImage, xSource, ySource);
 bool txTransparentBlt (HDC destImage,   double xDest, double yDest, double width, double height,
                        HDC sourceImage, double xSource /*= 0*/, double ySource /*= 0*/, COLORREF transColor /*= TX_BLACK*/)
     {
-$1  _TX_IF_HDC_FAILED (destImage)   return false;
-$   _TX_IF_HDC_FAILED (sourceImage) return false;
+$1  if (_TX_HDC_FAILED (destImage))   return false;
+$   if (_TX_HDC_FAILED (sourceImage)) return false;
 
 $   if (width <= 0 || height <= 0)
         {
@@ -10662,7 +10673,9 @@ $       ok &= txGDI (!!(Win32::BitBlt         (destImage,   ROUND (xDest),   ROU
 
 inline bool txTransparentBlt (double xDest, double yDest, HDC sourceImage, COLORREF transColor /*= TX_BLACK*/)
     {
-$1  return txTransparentBlt (txDC(), xDest, yDest, 0, 0, sourceImage, 0, 0, transColor);
+$1  if (_TX_TXWINDOW_FAILED()) return false;
+
+$   return txTransparentBlt (txDC(), xDest, yDest, 0, 0, sourceImage, 0, 0, transColor);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -10671,8 +10684,8 @@ bool txAlphaBlend (HDC destImage,   double xDest, double yDest, double width, do
                    HDC sourceImage, double xSource /*= 0*/, double ySource /*= 0*/, double alpha /*= 1.0*/,
                    unsigned format /*= AC_SRC_ALPHA*/)
     {
-$1  _TX_IF_HDC_FAILED (destImage)   return false;
-$   _TX_IF_HDC_FAILED (sourceImage) return false;
+$1  if (_TX_HDC_FAILED (destImage))   return false;
+$   if (_TX_HDC_FAILED (sourceImage)) return false;
 
 $   if (width <= 0 || height <= 0)
         {
@@ -10708,14 +10721,16 @@ $   return ok;
 
 inline bool txAlphaBlend (double xDest, double yDest, HDC sourceImage, double alpha /*= 1.0*/)
     {
-$1  return txAlphaBlend (txDC(), xDest, yDest, 0, 0, sourceImage, 0, 0, alpha);
+$1  if (_TX_TXWINDOW_FAILED()) return false;
+
+$   return txAlphaBlend (txDC(), xDest, yDest, 0, 0, sourceImage, 0, 0, alpha);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
 
 HDC txUseAlpha (HDC image)
     {
-$1  _TX_IF_HDC_FAILED (image) return NULL;
+$1  if (_TX_HDC_FAILED (image)) return NULL;
 
 $   HBITMAP bitmap = (HBITMAP) Win32::GetCurrentObject (image, OBJ_BITMAP); assert (bitmap);
 
@@ -10766,8 +10781,8 @@ $   return image;
 
 bool txSaveImage (const char filename[], HDC dc /*= txDC()*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (filename) return false;
-$   _TX_IF_HDC_FAILED      (dc)       return false;
+$1  if (_TX_ARGUMENT_FAILED    (filename)) return false;
+$   if (_TX_DEFAULT_HDC_FAILED (dc))       return false;
 
 $   POINT size = txGetExtent (dc);
 
@@ -10891,7 +10906,9 @@ $   return value;
 
 inline POINT txMousePos()
     {
-$1  _TX_IF_TXWINDOW_FAILED return ZERO (POINT);
+$1  POINT err = {-1, -1};
+
+$   if (_TX_TXWINDOW_FAILED()) return err;
 
 $   return _txMousePos;
     }
@@ -10900,21 +10917,21 @@ $   return _txMousePos;
 
 inline int txMouseX()
     {
-$1  return _txMousePos.x;
+    return txMousePos() .x;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
 
 inline int txMouseY()
     {
-$1  return _txMousePos.y;
+    return txMousePos() .y;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
 
 inline unsigned txMouseButtons()
     {
-$1  _TX_IF_TXWINDOW_FAILED return 0;
+$1  if (_TX_TXWINDOW_FAILED()) return 0;
 
 $   return _txMouseButtons;
     }
@@ -11022,7 +11039,7 @@ $   return old;
 
 bool txPlaySound (const char filename[] /*= NULL*/, DWORD mode /*= SND_ASYNC*/)
     {
-$1  _TX_IF_ARGUMENT_FAILED (!(filename && !*filename)) return false;
+$1  if (_TX_ARGUMENT_FAILED (filename && *filename)) return false;
 
 $   mode |= SND_FILENAME | SND_NODEFAULT | SND_NOWAIT;
 $   if (mode & SND_LOOP) mode = (mode & ~SND_SYNC) | SND_ASYNC;
@@ -11352,8 +11369,8 @@ inline bool In (Tx x, Ta a, Tb b)
 
 inline bool In (const POINT& pt, const RECT& rect)
     {
-    _TX_IF_ARGUMENT_FAILED (&pt)   return 0;
-    _TX_IF_ARGUMENT_FAILED (&rect) return 0;
+    if (_TX_ARGUMENT_FAILED (&pt))   return 0;
+    if (_TX_ARGUMENT_FAILED (&rect)) return 0;
 
     return In (std::nomeow, pt.x, rect.left, rect.right) &&
            In (std::nomeow, pt.y, rect.top,  rect.bottom);
@@ -11363,8 +11380,8 @@ inline bool In (const POINT& pt, const RECT& rect)
 
 inline bool In (const COORD& pt, const SMALL_RECT& rect)
     {
-    _TX_IF_ARGUMENT_FAILED (&pt)   return 0;
-    _TX_IF_ARGUMENT_FAILED (&rect) return 0;
+    if (_TX_ARGUMENT_FAILED (&pt))   return 0;
+    if (_TX_ARGUMENT_FAILED (&rect)) return 0;
 
     return In (std::nomeow, pt.X, rect.Left, rect.Right) &&
            In (std::nomeow, pt.Y, rect.Top,  rect.Bottom);
@@ -11519,7 +11536,7 @@ void* _tx_DLGTEMPLATE_Create (void* globalMem, size_t bufsize, DWORD style, DWOR
                               WORD controls, short x, short y, short cx, short cy,
                               const char caption[], const char font[], WORD fontsize, const char menu[])
     {
-$1  _TX_IF_ARGUMENT_FAILED (globalMem) return NULL;
+$1  if (_TX_ARGUMENT_FAILED (globalMem)) return NULL;
 
 $   WORD* pw = (WORD*) globalMem;
 
@@ -11566,7 +11583,7 @@ void* _tx_DLGTEMPLATE_Add (void* dlgTemplatePtr, size_t bufsize, DWORD style, DW
                            short x, short y, short cx, short cy,
                            WORD id, const char wclass[], const char caption[])
     {
-$1  _TX_IF_ARGUMENT_FAILED (dlgTemplatePtr) return NULL;
+$1  if (_TX_ARGUMENT_FAILED (dlgTemplatePtr)) return NULL;
 
 $   WORD* pw = (LPWORD) dlgTemplatePtr;  // Force align at word boundary
 $   (ULONG&) pw  += 3;
