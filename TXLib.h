@@ -6,9 +6,9 @@
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 127 $
+//!          $Version: 00173a, Revision: 128 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2017-04-03 17:00:17 +0400 $
+//!          $Date: 2017-04-08 03:20:51 +0400 $
 //!
 //!          TX Library - компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -134,9 +134,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 127, 2017-04-03 17:00:17 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 127, 2017-04-03 17:00:17 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 127, 2017-04-03 17:00:17 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 128, 2017-04-08 03:20:51 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 128, 2017-04-08 03:20:51 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 128, 2017-04-08 03:20:51 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -384,13 +384,13 @@
 #if  defined (_MSC_VER)
 
     #pragma warning (disable: 4616)             // #pragma warning: warning number 'n' out of range, must be between '4001' and '4999'
-    #pragma warning (disable: 5032)             // detected #pragma warning (push) with no corresponding #pragma warning (pop)
+    #pragma warning (disable: 5032)             // Detected #pragma warning (push) with no corresponding #pragma warning (pop)
 
     #pragma warning (push, 4)                   // Set maximum warning level. This 'push' is to set the level only. It will NOT be popped.
 
-    #pragma warning (disable: 4514)             // unreferenced inline function has been removed
-    #pragma warning (disable: 4710)             // function not inlined
-    #pragma warning (disable: 4786)             // identifier was truncated to '255' characters in the debug information
+    #pragma warning (disable: 4514)             // Unreferenced inline function has been removed
+    #pragma warning (disable: 4710)             // Function not inlined
+    #pragma warning (disable: 4786)             // Identifier was truncated to '255' characters in the debug information
 
     // These warning settings for TXLib.h only and will be re-enabled at end of file:
 
@@ -398,13 +398,14 @@
 
     #pragma warning (disable: 4619)             // #pragma warning: there is no warning number 'n'
 
-    #pragma warning (disable: 4127)             // conditional expression is constant
-    #pragma warning (disable: 4200)             // nonstandard extension used: zero-sized array in struct/union
-    #pragma warning (disable: 4351)             // new behavior: elements of array will be default initialized
-    #pragma warning (disable: 4611)             // interaction between '_setjmp' and C++ object destruction is non-portable
-    #pragma warning (disable: 4702)             // unreachable code
-    #pragma warning (disable: 4481)             // nonstandard extension used: override specifier 'override'
-
+    #pragma warning (disable: 4127)             // Conditional expression is constant
+    #pragma warning (disable: 4200)             // Nonstandard extension used: zero-sized array in struct/union
+    #pragma warning (disable: 4351)             // New behavior: elements of array will be default initialized
+    #pragma warning (disable: 4611)             // Interaction between '_setjmp' and C++ object destruction is non-portable
+    #pragma warning (disable: 4702)             // Unreachable code
+    #pragma warning (disable: 4481)             // Nonstandard extension used: override specifier 'override'
+    #pragma warning (disable: 6269)             // Possibly incorrect order of operations: dereference ignored
+    #pragma warning (disable: 6326)             // Potential comparison of a constant with another constant
 
     #define _tx_thread                 __declspec (thread)
 
@@ -412,12 +413,12 @@
 
         #define _MSC_VER_6                      // Flag the bad dog
 
-        #pragma warning (disable: 4511)         // copy constructor could not be generated
-        #pragma warning (disable: 4512)         // assignment operator could not be generated
-        #pragma warning (disable: 4514)         // unreferenced inline function has been removed
+        #pragma warning (disable: 4511)         // Copy constructor could not be generated
+        #pragma warning (disable: 4512)         // Assignment operator could not be generated
+        #pragma warning (disable: 4514)         // Unreferenced inline function has been removed
         #pragma warning (disable: 4663)         // C++ language change: to explicitly specialize class template
-        #pragma warning (disable: 4710)         // function not inlined
-        #pragma warning (disable: 4786)         // identifier was truncated to '255' characters in the debug information
+        #pragma warning (disable: 4710)         // Function not inlined
+        #pragma warning (disable: 4786)         // Identifier was truncated to '255' characters in the debug information
 
         #if !defined (WINVER)
             #define   WINVER           0x0400   // MSVC 6: Defaults to Windows 95
@@ -433,9 +434,9 @@
 
     #if (_MSC_VER >= 1400)                      // MSVC 8 (2005) or greater
 
-        #pragma warning (disable: 26135)        // missing locking annotation
-        #pragma warning (disable: 28125)        // the function must be called from within a try/except block
-        #pragma warning (disable: 28159)        // consider using another function instead
+        #pragma warning (disable: 26135)        // Missing locking annotation
+        #pragma warning (disable: 28125)        // The function must be called from within a try/except block
+        #pragma warning (disable: 28159)        // Consider using another function instead
 
         #pragma setlocale              ("russian")  // Set source file encoding, see also _TX_CP
 
@@ -460,12 +461,12 @@
 
 #if  defined (__INTEL_COMPILER)
 
-    #pragma warning (disable:  174)             // remark: expression has no effect
-    #pragma warning (disable:  304)             // remark: access control not specified ("public" by default)
-    #pragma warning (disable:  444)             // remark: destructor for base class "..." is not virtual
-    #pragma warning (disable:  522)             // remark: function "..." redeclared "inline" after being called
-    #pragma warning (disable:  981)             // remark: operands are evaluated in unspecified order
-    #pragma warning (disable: 1684)             // conversion from pointer to same-sized integral type (potential portability problem)
+    #pragma warning (disable:  174)             // Remark: expression has no effect
+    #pragma warning (disable:  304)             // Remark: access control not specified ("public" by default)
+    #pragma warning (disable:  444)             // Remark: destructor for base class "..." is not virtual
+    #pragma warning (disable:  522)             // Remark: function "..." redeclared "inline" after being called
+    #pragma warning (disable:  981)             // Remark: operands are evaluated in unspecified order
+    #pragma warning (disable: 1684)             // Conversion from pointer to same-sized integral type (potential portability problem)
 
 #endif
 
@@ -488,8 +489,8 @@
 
 //-----------------------------------------------------------------------------------------------------------------
 
-#define _USE_MATH_DEFINES              1        // math.h's M_PI etc.
-#define __STDC_WANT_LIB_EXT1__         1        // string and output *_s functions
+#define _USE_MATH_DEFINES              1        // Math.h's M_PI etc.
+#define __STDC_WANT_LIB_EXT1__         1        // String and output *_s functions
 #define _SECURE_SCL                    1        // To enable checked STL iterators to throw an exception on incorrect use
 
 #if !( defined (_MSC_VER) && (1600 <= _MSC_VER && _MSC_VER <= 1899) )
@@ -3801,8 +3802,8 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
 //! @note    Если условие @c cond может быть вычислено уже во время компиляции как ложное, компилятор может
 //!          предупредить об этом (как о делении на 0).
 //! @note    <small>See: <a href=http://lars-lab.jpl.nasa.gov/JPL_Coding_Standard_C.pdf> "JPL Institutional Coding
-//!          Standard for the C Programming Language", Jet Propulsion Laboratory, California Institute of
-//!          Technology, JPL DOCID D-60411, Ver. 1.0, March 3, 2009</a>, page 15.</small>
+//!          Standard for the C Programming Language", Jet Propulsion Laboratory, California Institute of Technology,
+//!          JPL DOCID D-60411, Ver. 1.0, March 3, 2009</a>, page 15.</small>
 //!
 //! @see     asserted, verified, verify(), TX_ERROR(), TX_DEBUG_ERROR(), txOutputDebugPrintf(), txMessageBox(),
 //!          txNotifyIcon(), txStackBackTrace(), __TX_FILELINE__, __TX_FUNCTION__
@@ -3826,9 +3827,8 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
 
 #if !defined (NDEBUG)
     #undef  assert
-    #define assert( cond )    _txNOP ( !(cond)? (TX_ERROR ("\a" "ВНЕЗАПНО: Логическая ошибка: "    \
-                                                           "Неверно, что \"%s\"." TX_COMMA #cond), \
-                                                 0/(int)!!(cond)) : 1 )
+    #define assert( cond )    _txNOP ( !(cond)? (TX_ERROR ("\a" "ВНЕЗАПНО: Логическая ошибка: " \
+                                                           "Неверно, что \"%s\"." TX_COMMA #cond), 1/(int)!!(cond)) : 1 )
 #else
     #undef  assert
     #define assert( cond )    ((void) 1)
@@ -6205,7 +6205,7 @@ ptrdiff_t        _tx_vsnprintf_s   (char stream[], ptrdiff_t size, const char fo
     #define  _TX_HDC_FAILED( dc )              ( !Win32::GetObjectType (dc) &&                       \
                                                      (SetLastErrorEx (ERROR_INVALID_DATA,  0), 1) )
 
-    #define _TX_DEFAULT_HDC_FAILED(dc)         ( (!(dc) &&                                           \
+    #define _TX_DEFAULT_HDC_FAILED(dc)         ( !(dc) &&                                            \
                                                      (SetLastErrorEx (ERROR_INVALID_DATA,  0), 1) )
 #endif
 
@@ -6443,8 +6443,11 @@ $   if (_txConsole)
 $       txSetConsoleAttr (FOREGROUND_LIGHTGRAY);
 
 $       tx_fpreset();
+
 $       srand ((unsigned) time (NULL));
+
 $       SetLastError (0);
+$       errno = _doserrno = 0;
         }
 
 $   (void) Win32::RoundRect;  // Just to suppress "defined but not used" warning
@@ -8634,7 +8637,7 @@ $       longjmp (_txDumpExceptionObjJmp, 1);
 
 $   bool primaryException = (func && exc)? ((func[3] == 'V' || (func[3] == 'U' && !*_txDumpSE)) &&
                                             !_TX_MSC__CXX_DETECT_RETHROW (exc->ExceptionRecord)) : true;
-$   if (primaryException)
+$   if (primaryException && exc)
         {
 $       unsigned err = GetLastError();
 
@@ -11680,18 +11683,18 @@ $   return pw;
 //!          @endtable
 //!
 //! @title   Установка атрибутов символов консоли: @table
-//!          @tr @c $d @td Светло-серый     цвет @td @td @c $T @td Прозрачный      цвет
+//!          @tr @c $d @td Светло-серый     цвет @td @td @c $D @td Темно-серый     цвет
 //!          @tr @c $b @td Светло-синий     цвет @td @td @c $B @td Темно-синий     цвет
 //!          @tr @c $g @td Светло-зеленый   цвет @td @td @c $G @td Темно-зеленый   цвет
 //!          @tr @c $c @td Светло-бирюзовый цвет @td @td @c $C @td Темно-бирюзовый цвет
 //!          @tr @c $r @td Светло-красный   цвет @td @td @c $R @td Темно-красный   цвет
 //!          @tr @c $m @td Светло-малиновый цвет @td @td @c $M @td Темно-малиновый цвет
 //!          @tr @c $y @td Желтый           цвет @td @td @c $Y @td Темно-желтый    цвет
-//!          @tr @c $t @td Белый            цвет @td @td @c $D @td Темно-серый     цвет
+//!          @tr @c $h @td Белый            цвет @td @td @c $H @td Прозрачный      цвет
 //! @endtable
 //! @title @table
-//!          @tr @c $u @td Unit-test OK      @td Светло-зеленый   на зеленом        @td
-//!          @td @c $U @td Unit-test OK bold @td Желтый           на зеленом        @td
+//!          @tr @c $k @td OK                @td Светло-зеленый   на зеленом        @td
+//!          @td @c $K @td OK bold           @td Желтый           на зеленом        @td
 //!          @tr @c $i @td Information       @td Светло-синий     на синем          @td
 //!          @td @c $I @td Information bold  @td Желтый           на синем          @td
 //!          @tr @c $w @td Warning           @td Светло-малиновый на малиновом      @td
@@ -11704,7 +11707,15 @@ $   return pw;
 //!          @td @c $L @td Location bold     @td Светло-серый     на темно-сером    @td
 //! @endtable
 //! @title @table
-//!          @tr @c $s @td Запомнить атрибуты. При выходе из @c { блока кода @c } атрибуты восстанавливаются.
+//!          @tr @c $t (condition) @td Unit-Test      @td Светло-зеленый на зеленом @b или белый на красном,
+//!                                                       в зависимости от условия @c condition @td
+//!          @td @c $T (condition) @td Unit-Test bold @td Желтый на зеленом @b или желтый на красном,
+//!                                                       в зависимости от условия @c condition @td
+//! @endtable
+//! @title @table
+//!          @tr @c $s  @td Запомнить атрибуты. При выходе из @c { блока кода @c } атрибуты восстанавливаются.
+//!          @tr @c $s* @td Запомнить атрибуты и установить цвет (замените звездочку кодом цвета, см. выше).
+//!                         Пример: @c $sg - запомнить атрибуты и установить светло-зеленый цвет.
 //! @endtable
 //!
 //! <b>Что такое Unit-test?</b> А вот что: http://www.google.ru/search?q=Юнит-тестирование+C%2B%2B.
@@ -11727,7 +11738,9 @@ $   return pw;
 //!          $$( txCreateWindow (800, 600) );
 //!
 //!          $d  // default color
-//!          $$$( if ($(xy) < $(h)) { $s return $(h); } );
+//!          $$$( if ($(xy) < $(h)) { $sE return $(h); } );  // save color, print in error color, restore color
+//!
+//!          $t (h < 10) $(h);  // print unit-test result in OK color or error color
 //!
 //!          $$$$
 //! @endcode
@@ -11753,11 +11766,12 @@ $   return pw;
 #define $$$$       { txOutputDebugPrintf ("\f\n"); { $s $l txOutputDebugPrintf ("\f" "[%s (%d) %s]", __FILE__, __LINE__, __TX_FUNCTION__); } txOutputDebugPrintf ("\f\n"); }
 #define $$$$_      { txOutputDebugPrintf ("\f\n"); { $s $l txOutputDebugPrintf ("\f" "[%s]",         __func__);                            } txOutputDebugPrintf ("\f\n"); }
 
-#define $n         { ::std::cerr << "\n"; }
+#define $n         { ::std::cerr << "\n";   }
+#define $nn        { ::std::cerr << "\n\n"; }
 
 #define $s         _txSaveConsoleAttr __txSaveConsoleAttr;
 
-#define $T         txSetConsoleAttr (FOREGROUND_BLACK        | BACKGROUND_BLACK);
+#define $H         txSetConsoleAttr (FOREGROUND_BLACK        | BACKGROUND_BLACK);
 #define $B         txSetConsoleAttr (FOREGROUND_BLUE         | BACKGROUND_BLACK);
 #define $G         txSetConsoleAttr (FOREGROUND_GREEN        | BACKGROUND_BLACK);
 #define $C         txSetConsoleAttr (FOREGROUND_CYAN         | BACKGROUND_BLACK);
@@ -11772,12 +11786,12 @@ $   return pw;
 #define $r         txSetConsoleAttr (FOREGROUND_LIGHTRED     | BACKGROUND_BLACK);
 #define $m         txSetConsoleAttr (FOREGROUND_LIGHTMAGENTA | BACKGROUND_BLACK);
 #define $y         txSetConsoleAttr (FOREGROUND_YELLOW       | BACKGROUND_BLACK);
-#define $t         txSetConsoleAttr (FOREGROUND_WHITE        | BACKGROUND_BLACK);
+#define $h         txSetConsoleAttr (FOREGROUND_WHITE        | BACKGROUND_BLACK);
 
 #define $i         txSetConsoleAttr (FOREGROUND_LIGHTCYAN    | BACKGROUND_BLUE);
 #define $I         txSetConsoleAttr (FOREGROUND_YELLOW       | BACKGROUND_BLUE);
-#define $a         txSetConsoleAttr (FOREGROUND_LIGHTGREEN   | BACKGROUND_GREEN);
-#define $A         txSetConsoleAttr (FOREGROUND_YELLOW       | BACKGROUND_GREEN);
+#define $k         txSetConsoleAttr (FOREGROUND_LIGHTGREEN   | BACKGROUND_GREEN);
+#define $K         txSetConsoleAttr (FOREGROUND_YELLOW       | BACKGROUND_GREEN);
 #define $e         txSetConsoleAttr (FOREGROUND_WHITE        | BACKGROUND_RED);
 #define $E         txSetConsoleAttr (FOREGROUND_YELLOW       | BACKGROUND_RED);
 #define $w         txSetConsoleAttr (FOREGROUND_LIGHTMAGENTA | BACKGROUND_MAGENTA);
@@ -11786,6 +11800,42 @@ $   return pw;
 #define $F         txSetConsoleAttr (FOREGROUND_MAGENTA      | BACKGROUND_LIGHTRED);
 #define $l         txSetConsoleAttr (FOREGROUND_BLACK        | BACKGROUND_DARKGRAY);
 #define $L         txSetConsoleAttr (FOREGROUND_LIGHTGRAY    | BACKGROUND_DARKGRAY);
+
+#define $t(test)   txSetConsoleAttr ((test)? FOREGROUND_LIGHTGREEN | BACKGROUND_GREEN : FOREGROUND_WHITE  | BACKGROUND_RED)
+#define $T(test)   txSetConsoleAttr ((test)? FOREGROUND_YELLOW     | BACKGROUND_GREEN : FOREGROUND_YELLOW | BACKGROUND_RED)
+
+#define $sH        $s $H
+#define $sB        $s $B
+#define $sG        $s $G
+#define $sC        $s $C
+#define $sR        $s $R
+#define $sM        $s $M
+#define $sY        $s $Y
+#define $sd        $s $d
+#define $sD        $s $D
+#define $sb        $s $b
+#define $sg        $s $g
+#define $sc        $s $c
+#define $sr        $s $r
+#define $sm        $s $m
+#define $sy        $s $y
+#define $sh        $s $h
+
+#define $si        $s $i
+#define $sI        $s $I
+#define $sk        $s $k
+#define $sK        $s $K
+#define $se        $s $e
+#define $sE        $s $E
+#define $sw        $s $w
+#define $sW        $s $W
+#define $sf        $s $f
+#define $sF        $s $F
+#define $sl        $s $l
+#define $sL        $s $L
+
+#define $st(test)  $s $t
+#define $sT(test)  $s $T
 
 //-----------------------------------------------------------------------------------------------------------------
 
@@ -12074,13 +12124,13 @@ using ::std::string;
 
 #if defined (__INTEL_COMPILER)
 
-    #pragma warning (default:  174)    // remark: expression has no effect
-    #pragma warning (default:  304)    // remark: access control not specified ("public" by default)
-    #pragma warning (default:  444)    // remark: destructor for base class "..." is not virtual
-    #pragma warning (default:  522)    // remark: function redeclared "inline" after being called
-    #pragma warning (default: 1684)    // conversion from pointer to same-sized integral type (potential portability problem)
+    #pragma warning (default:  174)    // Remark: expression has no effect
+    #pragma warning (default:  304)    // Remark: access control not specified ("public" by default)
+    #pragma warning (default:  444)    // Remark: destructor for base class "..." is not virtual
+    #pragma warning (default:  522)    // Remark: function redeclared "inline" after being called
+    #pragma warning (default: 1684)    // Conversion from pointer to same-sized integral type (potential portability problem)
 
-    #pragma warning (disable:  981)    // remark: operands are evaluated in unspecified order
+    #pragma warning (disable:  981)    // Remark: operands are evaluated in unspecified order
 
 #endif
 
