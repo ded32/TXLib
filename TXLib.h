@@ -6,9 +6,9 @@
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 128 $
+//!          $Version: 00173a, Revision: 129 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2017-04-08 03:20:51 +0400 $
+//!          $Date: 2017-04-22 01:08:53 +0400 $
 //!
 //!          TX Library - компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -134,9 +134,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 128, 2017-04-08 03:20:51 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 128, 2017-04-08 03:20:51 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 128, 2017-04-08 03:20:51 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 129, 2017-04-22 01:08:53 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 129, 2017-04-22 01:08:53 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 129, 2017-04-22 01:08:53 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -686,10 +686,11 @@ namespace { namespace TX {                       // <<<<<<<<< The main code is h
 //!
 //! @warning Одновременное создание нескольких окон не потокобезопасно (not thread-safe). @nn
 //!          Многооконная программа на TXLib тормозит, да и однооконная тоже не отличается высокой скоростью. Чтобы
-//!          избавиться от этого, бросьте TXLib и используйте другие оконные библиотеки (<a href=http://qt-project.org>Qt</a>,
-//!          <a href=http://wxwidgets.org>wxWidgets</a>, <a href=http://gtk.org>GTK+</a> и т.д., см. также
-//!          <a href=http://libsdl.org>SDL</a>, <a href=http://opengl.org>OpenGL</a> и т.п.) или напишите свою.
-//!          Помните, что цель TXLib - облегчить первые шаги, но потом стать ненужной.
+//!          избавиться от этого, бросьте TXLib и используйте другие оконные библиотеки: <a href=http://qt-project.org>Qt</a>,
+//!          <a href=http://wxwidgets.org>wxWidgets</a>, <a href=http://gtk.org>GTK+</a> и т.д., или библиотеки,
+//!          специально разработанные для создания игр: <a href=http://sfml-dev.org>SFML</a>, <a href=http://libsdl.org>SDL</a>
+//!          и другие. Вы можете написать и свою собственную оконную библиотеку, основанную на <a href=http://opengl.org>OpenGL</a>
+//!          или DirectX. Помните, что цель TXLib - облегчить первые шаги, но потом стать ненужной.
 //!
 //! @see     txOK(), txWindow(), txDC(), _txWindowStyle, _txConsoleMode, _txConsoleFont, _txCursorBlinkInterval,
 //!          _txWindowUpdateInterval, _TX_NOINIT, _TX_ALLOW_TRACE, TX_TRACE
@@ -748,7 +749,7 @@ inline HDC& txDC();
 //!        - Шрифт - Системный шрифт, цвет белый (TX_WHITE)
 //!        - Растровая операция - копирование цвета (R2_COPYPEN)
 //!
-//! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors, RGB(), txSelectFont(), txSetROP2()
+//! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors, RGB(), txSelectFont()
 //!
 //! @usage @code
 //!          txSetDefaults();
@@ -1149,62 +1150,6 @@ COLORREF txFillColor (double red, double green, double blue);
 //}----------------------------------------------------------------------------------------------------------------
 
 COLORREF txGetFillColor (HDC dc = txDC());
-
-//{----------------------------------------------------------------------------------------------------------------
-//! @ingroup Drawing
-//! @brief   Устанавливает режим взаимодействия цветов при рисовании.
-//!
-//!          При рисовании графическая библиотека может не просто красить пиксели на экране, а смешивать цвета
-//!          экрана и текущие цвета линий и заполнения.
-//!
-//! @param   mode  Режим смешивания цветов
-//! @param   dc    Дескриптор контекста рисования (холста) для установки режима
-//!
-//! @return  Предыдущий режим взаимодействия цветов, см. txColors, RGB()
-//!
-//! @title   Режимы взаимодействия цветов:
-//! @table   @tr R2_COPYPEN     @td Пиксели = цвета кисти (самый нормальный режим :)
-//!          @tr R2_NOTCOPYPEN  @td Пиксели = ~кисть
-//!          @tbr
-//!          @tr R2_BLACK       @td Пиксели = черный цвет (цвет кисти игнорируется)
-//!          @tr R2_WHITE       @td Пиксели = белый  цвет (цвет кисти игнорируется)
-//!          @tr R2_NOT         @td Пиксели = ~пиксели    (цвет кисти игнорируется)
-//!          @tbr
-//!          @tr R2_XORPEN      @td Пиксели =    пиксели ^  кисть (удобный режим, cм. пример ниже)
-//!          @tr R2_NOTXORPEN   @td Пиксели = ~ (пиксели ^  кисть)
-//!          @tbr
-//!          @tr R2_MASKPEN     @td Пиксели =    пиксели &  кисть
-//!          @tr R2_NOTMASKPEN  @td Пиксели = ~ (пиксели &  кисть)
-//!          @tr R2_MASKNOTPEN  @td Пиксели =    пиксели & ~кисть
-//!          @tr R2_MASKPENNOT  @td Пиксели =   ~пиксели &  кисть
-//!          @tbr
-//!          @tr R2_MERGEPEN    @td Пиксели =    пиксели |  кисть
-//!          @tr R2_NOTMERGEPEN @td Пиксели = ~ (пиксели |  кисть)
-//!          @tr R2_MERGENOTPEN @td Пиксели =    пиксели | ~кисть
-//!          @tr R2_MERGEPENNOT @td Пиксели =   ~пиксели |  кисть
-//!          @tbr
-//!          @tr R2_NOP         @td Пиксели вообще не изменяются.
-//! @endtable
-//!
-//! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors, RGB(),
-//!          txLine(), txRectangle(), txPolygon(), txEllipse(), txCircle(), txArc(), txPie(), txChord()
-//!
-//! @usage @code
-//!          txSetColor (TX_WHITE, 5);       // При рисовании белым цветом в режиме
-//!          txSetROP2 (R2_XORPEN);          //   R2_XORPEN цвета на экране инвертируются
-//!
-//!          txLine (100, 100, 200, 200);    // Рисуем первый раз - линия появляется
-//!          txSleep (1000);
-//!          txLine (100, 100, 200, 200);    // Рисуем второй раз - линия исчезает (немного уличной магии)
-//!
-//!          txSetROP2 (R2_COPYPEN);         // Восстанавливаем нормальный режим
-//!          txLine (100, 100, 200, 200);    // Рисуем первый раз - линия появляется
-//!
-//!          txLine (100, 100, 200, 200);    // Рисуем первый раз - линия остается, кто бы мог подумать
-//! @endcode
-//}----------------------------------------------------------------------------------------------------------------
-
-bool txSetROP2 (int mode = R2_COPYPEN, HDC dc = txDC());
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -2253,33 +2198,12 @@ bool txDeleteDC (HDC* dc);
 //! @param   sourceImage     Контекст источника (откуда копировать)
 //! @param   xSource         X-координата верхнего левого угла изображения-источника
 //! @param   ySource         Y-координата верхнего левого угла изображения-источника
-//! @param   rOp             Растровая операция копирования
 //!
 //! @return  Если операция была успешна - true, иначе - false.
 //!
 //! @warning Если контексты источника равен NULL, то он не существует и копирование вызовет ошибку.
 //!          Наиболее частая причина - ошибка при загрузке файла изображения и отсутствие проверки на эту ошибку.
 //!          Пример с проверкой на правильность загрузки см. ниже.
-//!
-//! @title   Режимы копирования:
-//! @table   @tr SRCCOPY     @td Просто копирует :) - самый распространенный режим
-//!          @tbr
-//!          @tr BLACKNESS   @td Заполняет холст-приемник черным цветом (холст-источник игнорируется).
-//!          @tr WHITENESS   @td Заполняет холст-приемник белым цветом  (холст-источник игнорируется).
-//!          @tr DSTINVERT   @td Инвертирует цвета на холсте-приемнике  (холст-источник игнорируется).
-//!          @tr PATCOPY     @td Копирует цвет текущей кисти холста-приемника.
-//!          @tbr
-//!          @tr MERGECOPY   @td Приемник =   приемник & цвет текущей кисти источника.
-//!          @tr MERGEPAINT  @td Приемник = ~ приемник | источник
-//!          @tr NOTSRCCOPY  @td Приемник = ~ источник
-//!          @tr NOTSRCERASE @td Приемник = ~ (приемник | источник)
-//!          @tr PATINVERT   @td Приемник =  кисть приемника ^  приемник
-//!          @tr PATPAINT    @td Приемник = (кисть приемника | ~источник) | приемник
-//!          @tr SRCAND      @td Приемник =  приемник & источник
-//!          @tr SRCERASE    @td Приемник = ~приемник & источник
-//!          @tr SRCINVERT   @td Приемник =  приемник ^ источник
-//!          @tr SRCPAINT    @td Приемник =  приемник | источник
-//!          @endtable
 //!
 //! @see     txAlphaBlend(), txTransparentBlt(), txSaveImage(), txGetExtent(), txSetColor(), txGetColor(),
 //!          txSetFillColor(), txGetFillColor(), txColors, RGB(), txCreateDIBSection()
@@ -2302,7 +2226,7 @@ bool txDeleteDC (HDC* dc);
 //! @{
 
 bool txBitBlt (HDC destImage,   double xDest,       double yDest,       double width, double height,
-               HDC sourceImage, double xSource = 0, double ySource = 0, DWORD rOp = SRCCOPY);
+               HDC sourceImage, double xSource = 0, double ySource = 0);
 inline
 bool txBitBlt (double xDest, double yDest, HDC sourceImage, double xSource = 0, double ySource = 0);
 
@@ -2437,13 +2361,14 @@ bool txTransparentBlt (double xDest, double yDest, HDC sourceImage, COLORREF tra
 //!          регулировать только параметром @p alpha. Попиксельной прозрачности в этом случае не будет. См. пример
 //!          к функции txSaveImage().
 //!
-//!          Если изображение-источник создано с помощью txCreateDIBSection() или txLoadImage(), то txAlppaBlend()
+//!          Если изображение-источник создано с помощью txCreateDIBSection() или txLoadImage(), то txAlphaBlend()
 //!          может использовать как общую прозрачность, задачаемую параметром @p alpha, так и попиксельную прозрачность,
 //!          задаваемую альфа-каналом.
 //!
 //! @note    Стандартная функция AlphaBlend из Win32 API @b может масштабировать изображение. В txAlphaBlend это
 //!          @b убрано для упрощения использования. If you still need image scaling, use original function AlphaBlend
-//!          and don't mess with stupid TX-based tools. (See implementation of txAlphaBlend in TXLib.h).
+//!          and don't mess with stupid TX-based tools. (See implementation of txAlphaBlend in TXLib.h: open this file
+//!          in your editor and search for txAlphaBlend function definition.)
 //!
 //! @see     txBitBlt(), txTransparentBlt(), txLoadImage(), txCreateCompatibleDC(), txSaveImage(), txGetExtent(),
 //!          txCreateDIBSection(), txUseAlpha()
@@ -2454,6 +2379,8 @@ bool txTransparentBlt (double xDest, double yDest, HDC sourceImage, COLORREF tra
 //!
 //!          if (!batman_FromTXLibHelp)
 //!              txMessageBox ("Call to Batman failed because I copied it from TXLib Help", "Do save yourself");
+//!
+//!          txUseAlpha (batman_FromTXLibHelp);  // If image colors are not premultiplied, see above
 //!
 //!          // См. важный комментарий в примере к функции txLoadImage!
 //!
@@ -4575,7 +4502,7 @@ const unsigned _TX_BUFSIZE                =  1024,
 //!          В этом случае лучше пользоваться DbgView (см. выше) и запускать отлаживаемую программу отдельно,
 //!          а не из-под отладчика Visual Studio.
 //!
-//!          _TX_ALLOW_TRACE и TX_TRACE задаются перед включением TXLib.h в программу.
+//!          _TX_ALLOW_TRACE и TX_TRACE задаются @b перед включением TXLib.h в программу.
 //!
 //! @usage @code
 //!          // Для просмотра трассы запустить DbgView до запуска программы!
@@ -5746,7 +5673,7 @@ typedef DWORD64 (__stdcall *PTRANSLATE_ADDRESS_ROUTINE64)     (HANDLE process, H
 #define FOREGROUND_LIGHTRED      ( FOREGROUND_RED        | FOREGROUND_INTENSITY              )
 #define FOREGROUND_LIGHTMAGENTA  ( FOREGROUND_MAGENTA    | FOREGROUND_INTENSITY              )
 #define FOREGROUND_YELLOW        ( FOREGROUND_DARKYELLOW | FOREGROUND_INTENSITY              )
-#define FOREGROUND_WHITE         ( FOREGROUND_DARKGRAY   | FOREGROUND_INTENSITY              )
+#define FOREGROUND_WHITE         ( FOREGROUND_LIGHTGRAY  | FOREGROUND_INTENSITY              )
 
 #define BACKGROUND_BLACK         ( 0                                                         )
 #define BACKGROUND_CYAN          ( BACKGROUND_BLUE       | BACKGROUND_GREEN                  )
@@ -6541,7 +6468,7 @@ $   _txWaitFor (_txRunning, 30*_TX_TIMEOUT);
 $   if (!_txRunning)       return TX_DEBUG_ERROR ("\a" "Cannot create canvas window."),(HWND)NULL;
 $   if (!txOK())           return TX_DEBUG_ERROR ("\a" "Canvas window is not OK."),    (HWND)NULL;
 
-$   Sleep (100);
+//!!! $   Sleep (100);
 
 $   errno = 0; _doserrno = 0;
 $   SetLastError (0);
@@ -6770,6 +6697,8 @@ $       if (console) EnableWindow (console, true);
 $   if (_txMain && !externTerm && wnd != NULL)
         { $ _txSetFinishedText (wnd); }
 
+$   _flushall();
+
 $   if ((canvas? _txMain : (_txConsole && !waitableParent)) && !_txExit &&
         thread == _txMainThreadId)
         {
@@ -6792,7 +6721,7 @@ $   if (txWindow())
 $   _txWaitFor (!txWindow(), 5*_TX_TIMEOUT);
 
 $   if (!txWindow())
-        { $ DeleteCriticalSection (&_txCanvas_LockBackBuf); _txCanvas_LockBackBuf = ZERO (CRITICAL_SECTION); }
+        { $ DeleteCriticalSection (&_txCanvas_LockBackBuf); CRITICAL_SECTION zero = {0, -1}; _txCanvas_LockBackBuf = zero; }
 
 $   if (_txCanvas_Thread)
         { $ CloseHandle (_txCanvas_Thread) asserted; _txCanvas_Thread = NULL; }
@@ -6807,7 +6736,7 @@ $   if (_txMain && _txConsole)
 
 $   _txSymGetFromAddr (NULL);
 
-$   _fcloseall();
+$   _flushall();
 
     _TX_ON_DEBUG (OutputDebugString ("\n");
                   OutputDebugString (_TX_VERSION " - FINISHED: " _TX_MODULE "\n");
@@ -10213,15 +10142,6 @@ $   return buf.lbColor;
 
 //-----------------------------------------------------------------------------------------------------------------
 
-bool txSetROP2 (int mode /*= R2_COPYPEN*/, HDC dc /*= txDC()*/)
-    {
-$1  if (_TX_DEFAULT_HDC_FAILED (dc)) return false;
-
-$   return txGDI (!!(Win32::SetROP2 (dc, mode)), dc);
-    }
-
-//-----------------------------------------------------------------------------------------------------------------
-
 bool txClear (HDC dc /*= txDC()*/)
     {
 $1  if (_TX_DEFAULT_HDC_FAILED (dc)) return false;
@@ -10614,7 +10534,7 @@ $1  return txDeleteDC (&dc);
 //-----------------------------------------------------------------------------------------------------------------
 
 bool txBitBlt (HDC destImage,   double xDest, double yDest, double width, double height,
-               HDC sourceImage, double xSource /*= 0*/, double ySource /*= 0*/, DWORD rOp /*= SRCCOPY*/)
+               HDC sourceImage, double xSource /*= 0*/, double ySource /*= 0*/)
     {
 $1  if (_TX_HDC_FAILED (destImage))   return false;
 $   if (_TX_HDC_FAILED (sourceImage)) return false;
@@ -10627,7 +10547,7 @@ $       if (height <= 0) height = size.y;
         }
 
 $   return txGDI (!!(Win32::BitBlt (destImage,   ROUND (xDest),   ROUND (yDest),   ROUND (width), ROUND (height),
-                                    sourceImage, ROUND (xSource), ROUND (ySource), rOp)), destImage);
+                                    sourceImage, ROUND (xSource), ROUND (ySource), SRCCOPY)), destImage);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -11663,23 +11583,31 @@ $   return pw;
 //! @warning Эти макросы могут измениться в будущих версиях. @strike Чтобы вам повеселее жилось. @endstrike
 //!
 //! @title   Назначение: @table
-//!          @tr <tt> $ (var)  </tt>   @td Печать имени и значения переменной или выражения @c var.
-//!          @tr <tt> $_(var)  </tt>   @td То же, что и <tt>$(var),</tt> но без новой строки.
+//!          @tr <tt> $ (var)  </tt>        @td Печать имени и значения переменной или выражения @c var.
+//!          @tr <tt> $_(var)  </tt>        @td То же, что и <tt>$(var),</tt> но без новой строки.
 //!          @tbr
-//!          @tr <tt> $x (var) </tt>   @td Печать имени и значения переменной или выражения @c var в 16-ричной системе счисления.
-//!          @tr <tt> $x_(var) </tt>   @td То же, что и <tt>$x(var),</tt> но без новой строки.
+//!          @tr <tt> $x (var) </tt>        @td Печать имени и значения переменной или выражения @c var в 16-ричной системе счисления.
+//!          @tr <tt> $x_(var) </tt>        @td То же, что и <tt>$x(var),</tt> но без новой строки.
 //!          @tbr
-//!          @tr <tt> $$ (expr)  </tt> @td Печать выражения, его вычисление, печать и возврат значения. @n
-//!                                        Если выражение содержит оператор "запятая", не взятый в скобки,
-//!                                        необходимо окружать expr еще одной парой скобок.
-//!          @tr <tt> $$_(expr)  </tt> @td То же, что и <tt>$$(expr),</tt>  но вторая печать идет без новой строки.
+//!          @tr <tt> $v (var, cond) </tt>  @td То же, что и <tt>$(var),</tt> но различным цветом в зависимости от условия @c cond.
+//!          @tr <tt> $v_(var, cond) </tt>  @td То же, что и <tt>$v(var),</tt> но без новой строки.
 //!          @tbr
-//!          @tr <tt> $$$ (expr) </tt> @td То же, что и <tt>$$(expr),</tt>  но для операторов или блоков кода (без возврата значения).
-//!          @tr <tt> $$$_(expr) </tt> @td То же, что и <tt>$$$(expr),</tt> но вторая печать идет без новой строки.
+//!          @tr <tt> $$ (expr)  </tt>      @td Печать выражения, его вычисление, печать и возврат значения. @n
+//!                                             Если выражение содержит оператор "запятая", не взятый в скобки,
+//!                                             необходимо окружать expr еще одной парой скобок.
+//!          @tr <tt> $$_(expr)  </tt>      @td То же, что и <tt>$$(expr),</tt>  но вторая печать идет без новой строки.
 //!          @tbr
-//!          @tr <tt> $$$$  </tt>      @td Печать местоположения в коде.
-//!          @tr <tt> $$$$_ </tt>      @td Печать местоположения в коде (только имя функции).
-//!          @tr <tt> $n    </tt>      @td Перевод строки (печать @c '\\n').
+//!          @tr <tt> $$$ (expr) </tt>      @td То же, что и <tt>$$(expr),</tt>  но для операторов или блоков кода (без возврата значения).
+//!          @tr <tt> $$$_(expr) </tt>      @td То же, что и <tt>$$$(expr),</tt> но вторая печать идет без новой строки.
+//!          @tbr
+//!          @tr <tt> $$$$  </tt>           @td Печать местоположения в коде.
+//!          @tr <tt> $$$$_ </tt>           @td Печать местоположения в коде (только имя функции).
+//!          @tbr
+//!          @tr <tt> $test   (cond)</tt>   @td Печать результата юнит-теста различным цветом в зависимости от условия @c cond.
+//!          @tr <tt> $status (cond)</tt>   @td То же
+//!          @tbr
+//!          @tr <tt> $n    </tt>           @td Перевод строки (печать @c '\\n').
+//!          @tr <tt> $nn   </tt>           @td Пустая  строка (печать @c '\\n\\n').
 //!          @endtable
 //!
 //! @title   Установка атрибутов символов консоли: @table
@@ -11693,24 +11621,22 @@ $   return pw;
 //!          @tr @c $h @td Белый            цвет @td @td @c $H @td Прозрачный      цвет
 //! @endtable
 //! @title @table
-//!          @tr @c $k @td OK                @td Светло-зеленый   на зеленом        @td
-//!          @td @c $K @td OK bold           @td Желтый           на зеленом        @td
-//!          @tr @c $i @td Information       @td Светло-синий     на синем          @td
-//!          @td @c $I @td Information bold  @td Желтый           на синем          @td
-//!          @tr @c $w @td Warning           @td Светло-малиновый на малиновом      @td
-//!          @td @c $W @td Warning bold      @td Желтый           на малиновом      @td
-//!          @tr @c $e @td Error             @td Светло-красный   на красном        @td
-//!          @td @c $E @td Error bold        @td Желтый           на красном        @td
-//!          @tr @c $f @td Fatal             @td Черный           на светло-красном @td
-//!          @td @c $F @td Fatal bold        @td Малиновый        на светло-красном @td
-//!          @tr @c $l @td Location          @td Черный           на темно-сером    @td
-//!          @td @c $L @td Location bold     @td Светло-серый     на темно-сером    @td
+//!          @tr @c $k @td OK               @td Светло-зеленый   на зеленом        @td
+//!          @td @c $K @td OK bold          @td Желтый           на зеленом        @td
+//!          @tr @c $i @td Information      @td Светло-синий     на синем          @td
+//!          @td @c $I @td Information bold @td Желтый           на синем          @td
+//!          @tr @c $w @td Warning          @td Светло-малиновый на малиновом      @td
+//!          @td @c $W @td Warning bold     @td Желтый           на малиновом      @td
+//!          @tr @c $e @td Error            @td Светло-красный   на красном        @td
+//!          @td @c $E @td Error bold       @td Желтый           на красном        @td
+//!          @tr @c $f @td Fatal            @td Черный           на светло-красном @td
+//!          @td @c $F @td Fatal bold       @td Малиновый        на светло-красном @td
+//!          @tr @c $l @td Location         @td Черный           на темно-сером    @td
+//!          @td @c $L @td Location bold    @td Светло-серый     на темно-сером    @td
 //! @endtable
 //! @title @table
-//!          @tr @c $t (condition) @td Unit-Test      @td Светло-зеленый на зеленом @b или белый на красном,
-//!                                                       в зависимости от условия @c condition @td
-//!          @td @c $T (condition) @td Unit-Test bold @td Желтый на зеленом @b или желтый на красном,
-//!                                                       в зависимости от условия @c condition @td
+//!          @tr @c $t (cond) @td Юнит-тест @td Светло-зеленый @b или светло-красный,
+//!                                             в зависимости от условия @c cond
 //! @endtable
 //! @title @table
 //!          @tr @c $s  @td Запомнить атрибуты. При выходе из @c { блока кода @c } атрибуты восстанавливаются.
@@ -11718,7 +11644,7 @@ $   return pw;
 //!                         Пример: @c $sg - запомнить атрибуты и установить светло-зеленый цвет.
 //! @endtable
 //!
-//! <b>Что такое Unit-test?</b> А вот что: http://www.google.ru/search?q=Юнит-тестирование+C%2B%2B.
+//! <b>Что такое юнит-тест?</b> А вот что: http://www.google.ru/search?q=Юнит-тестирование+C%2B%2B.
 //! Это когда <b>ошибки ищутся сами.</b>
 //!
 //! @see     assert(), asserted, __TX_FILELINE__, __TX_FUNCTION__, TX_ERROR
@@ -11740,7 +11666,10 @@ $   return pw;
 //!          $d  // default color
 //!          $$$( if ($(xy) < $(h)) { $sE return $(h); } );  // save color, print in error color, restore color
 //!
-//!          $t (h < 10) $(h);  // print unit-test result in OK color or error color
+//!          $v (h, h < 10);  // print a result in success color or error color
+//!
+//!          bool testPositive = (h > 0);
+//!          $status (testPositive);  // print a unit-test result
 //!
 //!          $$$$
 //! @endcode
@@ -11751,91 +11680,110 @@ $   return pw;
 
 //! @cond INTERNAL
 
-#define $(var)     ( _txDump ((var),  "[" #var " = ", "]\n") )
-#define $_(var)    ( _txDump ((var),  "[" #var " = ", "] " ) )
+//-----------------------------------------------------------------------------------------------------------------
 
-#define $x(var)    ( _txDump ((var),  "[" #var " = ", "]\n", ::std::ios_base::showbase | ::std::ios_base::hex) )
-#define $x_(var)   ( _txDump ((var),  "[" #var " = ", "] ",  ::std::ios_base::showbase | ::std::ios_base::hex) )
+// This will never be documented. Read the source, Luke.
 
-#define $$(cmd)    ( ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n",  _txDump ((cmd),"\n[" __TX_FILELINE__ ": " #cmd ": ", ", DONE]\n\n") )
-#define $$_(cmd)   ( ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n",  _txDump ((cmd),  "[" __TX_FILELINE__ ": " #cmd ": ", ", DONE]\n\n") )
+#if defined (_DEBUG)
+    #define $debug
+#else
+    #define $debug  if (0)
+#endif
 
-#define $$$(cmd)   { ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n";  _txDumpSuffix ("\n[" __TX_FILELINE__ ": " #cmd " DONE]\n\n"); { cmd; } }
-#define $$$_(cmd)  { ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n";  _txDumpSuffix (  "[" __TX_FILELINE__ ": " #cmd " DONE]\n\n"); { cmd; } }
+//-----------------------------------------------------------------------------------------------------------------
 
-#define $$$$       { txOutputDebugPrintf ("\f\n"); { $s $l txOutputDebugPrintf ("\f" "[%s (%d) %s]", __FILE__, __LINE__, __TX_FUNCTION__); } txOutputDebugPrintf ("\f\n"); }
-#define $$$$_      { txOutputDebugPrintf ("\f\n"); { $s $l txOutputDebugPrintf ("\f" "[%s]",         __func__);                            } txOutputDebugPrintf ("\f\n"); }
+#define $H            txSetConsoleAttr (FOREGROUND_BLACK        | BACKGROUND_BLACK);
+#define $B            txSetConsoleAttr (FOREGROUND_BLUE         | BACKGROUND_BLACK);
+#define $G            txSetConsoleAttr (FOREGROUND_GREEN        | BACKGROUND_BLACK);
+#define $C            txSetConsoleAttr (FOREGROUND_CYAN         | BACKGROUND_BLACK);
+#define $R            txSetConsoleAttr (FOREGROUND_RED          | BACKGROUND_BLACK);
+#define $M            txSetConsoleAttr (FOREGROUND_MAGENTA      | BACKGROUND_BLACK);
+#define $Y            txSetConsoleAttr (FOREGROUND_DARKYELLOW   | BACKGROUND_BLACK);
+#define $d            txSetConsoleAttr (FOREGROUND_LIGHTGRAY    | BACKGROUND_BLACK);
+#define $D            txSetConsoleAttr (FOREGROUND_DARKGRAY     | BACKGROUND_BLACK);
+#define $b            txSetConsoleAttr (FOREGROUND_LIGHTBLUE    | BACKGROUND_BLACK);
+#define $g            txSetConsoleAttr (FOREGROUND_LIGHTGREEN   | BACKGROUND_BLACK);
+#define $c            txSetConsoleAttr (FOREGROUND_LIGHTCYAN    | BACKGROUND_BLACK);
+#define $r            txSetConsoleAttr (FOREGROUND_LIGHTRED     | BACKGROUND_BLACK);
+#define $m            txSetConsoleAttr (FOREGROUND_LIGHTMAGENTA | BACKGROUND_BLACK);
+#define $y            txSetConsoleAttr (FOREGROUND_YELLOW       | BACKGROUND_BLACK);
+#define $h            txSetConsoleAttr (FOREGROUND_WHITE        | BACKGROUND_BLACK);
 
-#define $n         { ::std::cerr << "\n";   }
-#define $nn        { ::std::cerr << "\n\n"; }
+#define $i            txSetConsoleAttr (FOREGROUND_LIGHTCYAN    | BACKGROUND_BLUE);
+#define $I            txSetConsoleAttr (FOREGROUND_YELLOW       | BACKGROUND_BLUE);
+#define $k            txSetConsoleAttr (FOREGROUND_LIGHTGREEN   | BACKGROUND_GREEN);
+#define $K            txSetConsoleAttr (FOREGROUND_YELLOW       | BACKGROUND_GREEN);
+#define $e            txSetConsoleAttr (FOREGROUND_WHITE        | BACKGROUND_RED);
+#define $E            txSetConsoleAttr (FOREGROUND_YELLOW       | BACKGROUND_RED);
+#define $w            txSetConsoleAttr (FOREGROUND_LIGHTMAGENTA | BACKGROUND_MAGENTA);
+#define $W            txSetConsoleAttr (FOREGROUND_YELLOW       | BACKGROUND_MAGENTA);
+#define $f            txSetConsoleAttr (FOREGROUND_BLACK        | BACKGROUND_LIGHTRED);
+#define $F            txSetConsoleAttr (FOREGROUND_MAGENTA      | BACKGROUND_LIGHTRED);
+#define $l            txSetConsoleAttr (FOREGROUND_BLACK        | BACKGROUND_DARKGRAY);
+#define $L            txSetConsoleAttr (FOREGROUND_LIGHTGRAY    | BACKGROUND_DARKGRAY);
 
-#define $s         _txSaveConsoleAttr __txSaveConsoleAttr;
+#define $t( cond )    txSetConsoleAttr ((cond)? FOREGROUND_LIGHTGREEN : FOREGROUND_LIGHTRED );
 
-#define $H         txSetConsoleAttr (FOREGROUND_BLACK        | BACKGROUND_BLACK);
-#define $B         txSetConsoleAttr (FOREGROUND_BLUE         | BACKGROUND_BLACK);
-#define $G         txSetConsoleAttr (FOREGROUND_GREEN        | BACKGROUND_BLACK);
-#define $C         txSetConsoleAttr (FOREGROUND_CYAN         | BACKGROUND_BLACK);
-#define $R         txSetConsoleAttr (FOREGROUND_RED          | BACKGROUND_BLACK);
-#define $M         txSetConsoleAttr (FOREGROUND_MAGENTA      | BACKGROUND_BLACK);
-#define $Y         txSetConsoleAttr (FOREGROUND_DARKYELLOW   | BACKGROUND_BLACK);
-#define $d         txSetConsoleAttr (FOREGROUND_LIGHTGRAY    | BACKGROUND_BLACK);
-#define $D         txSetConsoleAttr (FOREGROUND_DARKGRAY     | BACKGROUND_BLACK);
-#define $b         txSetConsoleAttr (FOREGROUND_LIGHTBLUE    | BACKGROUND_BLACK);
-#define $g         txSetConsoleAttr (FOREGROUND_LIGHTGREEN   | BACKGROUND_BLACK);
-#define $c         txSetConsoleAttr (FOREGROUND_LIGHTCYAN    | BACKGROUND_BLACK);
-#define $r         txSetConsoleAttr (FOREGROUND_LIGHTRED     | BACKGROUND_BLACK);
-#define $m         txSetConsoleAttr (FOREGROUND_LIGHTMAGENTA | BACKGROUND_BLACK);
-#define $y         txSetConsoleAttr (FOREGROUND_YELLOW       | BACKGROUND_BLACK);
-#define $h         txSetConsoleAttr (FOREGROUND_WHITE        | BACKGROUND_BLACK);
+#define $s            _txSaveConsoleAttr __txSavedConsoleAttrs;
 
-#define $i         txSetConsoleAttr (FOREGROUND_LIGHTCYAN    | BACKGROUND_BLUE);
-#define $I         txSetConsoleAttr (FOREGROUND_YELLOW       | BACKGROUND_BLUE);
-#define $k         txSetConsoleAttr (FOREGROUND_LIGHTGREEN   | BACKGROUND_GREEN);
-#define $K         txSetConsoleAttr (FOREGROUND_YELLOW       | BACKGROUND_GREEN);
-#define $e         txSetConsoleAttr (FOREGROUND_WHITE        | BACKGROUND_RED);
-#define $E         txSetConsoleAttr (FOREGROUND_YELLOW       | BACKGROUND_RED);
-#define $w         txSetConsoleAttr (FOREGROUND_LIGHTMAGENTA | BACKGROUND_MAGENTA);
-#define $W         txSetConsoleAttr (FOREGROUND_YELLOW       | BACKGROUND_MAGENTA);
-#define $f         txSetConsoleAttr (FOREGROUND_BLACK        | BACKGROUND_LIGHTRED);
-#define $F         txSetConsoleAttr (FOREGROUND_MAGENTA      | BACKGROUND_LIGHTRED);
-#define $l         txSetConsoleAttr (FOREGROUND_BLACK        | BACKGROUND_DARKGRAY);
-#define $L         txSetConsoleAttr (FOREGROUND_LIGHTGRAY    | BACKGROUND_DARKGRAY);
+#define $sH           $s $H
+#define $sB           $s $B
+#define $sG           $s $G
+#define $sC           $s $C
+#define $sR           $s $R
+#define $sM           $s $M
+#define $sY           $s $Y
+#define $sd           $s $d
+#define $sD           $s $D
+#define $sb           $s $b
+#define $sg           $s $g
+#define $sc           $s $c
+#define $sr           $s $r
+#define $sm           $s $m
+#define $sy           $s $y
+#define $sh           $s $h
 
-#define $t(test)   txSetConsoleAttr ((test)? FOREGROUND_LIGHTGREEN | BACKGROUND_GREEN : FOREGROUND_WHITE  | BACKGROUND_RED)
-#define $T(test)   txSetConsoleAttr ((test)? FOREGROUND_YELLOW     | BACKGROUND_GREEN : FOREGROUND_YELLOW | BACKGROUND_RED)
+#define $si           $s $i
+#define $sI           $s $I
+#define $sk           $s $k
+#define $sK           $s $K
+#define $se           $s $e
+#define $sE           $s $E
+#define $sw           $s $w
+#define $sW           $s $W
+#define $sf           $s $f
+#define $sF           $s $F
+#define $sl           $s $l
+#define $sL           $s $L
 
-#define $sH        $s $H
-#define $sB        $s $B
-#define $sG        $s $G
-#define $sC        $s $C
-#define $sR        $s $R
-#define $sM        $s $M
-#define $sY        $s $Y
-#define $sd        $s $d
-#define $sD        $s $D
-#define $sb        $s $b
-#define $sg        $s $g
-#define $sc        $s $c
-#define $sr        $s $r
-#define $sm        $s $m
-#define $sy        $s $y
-#define $sh        $s $h
+#define $st( cond )   $s $t (cond)
+#define $sT( cond )   $s $T (cond)
 
-#define $si        $s $i
-#define $sI        $s $I
-#define $sk        $s $k
-#define $sK        $s $K
-#define $se        $s $e
-#define $sE        $s $E
-#define $sw        $s $w
-#define $sW        $s $W
-#define $sf        $s $f
-#define $sF        $s $F
-#define $sl        $s $l
-#define $sL        $s $L
+#define $test(cond)   { if (!!(cond)) { $k std::cerr << #cond ": [PASSED]"; } else { $e std::cerr << #cond ": [FAILED]"; } $d; }
+#define $status(cond) $test (cond)
 
-#define $st(test)  $s $t
-#define $sT(test)  $s $T
+//=================================================================================================================
+
+#define $(var)        ( _txDump ((var),  "[" #var " = ", "]\n") )
+#define $_(var)       ( _txDump ((var),  "[" #var " = ", "] " ) )
+
+#define $x(var)       ( _txDump ((var),  "[" #var " = ", "]\n", ::std::ios_base::showbase | ::std::ios_base::hex) )
+#define $x_(var)      ( _txDump ((var),  "[" #var " = ", "] ",  ::std::ios_base::showbase | ::std::ios_base::hex) )
+
+#define $v(var,cond)  { { $st (cond); _txDump ((var),  "[" #var " = ", "]" ); } $n; }
+#define $v_(var,cond) {   $st (cond); _txDump ((var),  "[" #var " = ", "]" );       }
+
+#define $$(cmd)       ( ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n",  _txDump ((cmd),"\n[" __TX_FILELINE__ ": " #cmd ": ", ", DONE]\n\n") )
+#define $$_(cmd)      ( ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n",  _txDump ((cmd),  "[" __TX_FILELINE__ ": " #cmd ": ", ", DONE]\n\n") )
+
+#define $$$(cmd)      { ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n";  _txDumpSuffix ("\n[" __TX_FILELINE__ ": " #cmd " DONE]\n\n"); { cmd; } }
+#define $$$_(cmd)     { ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n";  _txDumpSuffix (  "[" __TX_FILELINE__ ": " #cmd " DONE]\n\n"); { cmd; } }
+
+#define $$$$          { txOutputDebugPrintf ("\f\n"); { $s $l txOutputDebugPrintf ("\f" "[%s (%d) %s]", __FILE__, __LINE__, __TX_FUNCTION__); } txOutputDebugPrintf ("\f\n"); }
+#define $$$$_         { txOutputDebugPrintf ("\f\n"); { $s $l txOutputDebugPrintf ("\f" "[%s]",         __func__);                            } txOutputDebugPrintf ("\f\n"); }
+
+#define $n            { ::std::cerr << "\n";   }
+#define $nn           { ::std::cerr << "\n\n"; }
 
 //-----------------------------------------------------------------------------------------------------------------
 
@@ -12040,7 +11988,6 @@ template <typename T, int N> inline
 #define txSetDefaults(...)             ( _txLocCurSet(), txSetDefaults         (__VA_ARGS__) )
 #define txSetFillColor(...)            ( _txLocCurSet(), txSetFillColor        (__VA_ARGS__) )
 #define txSetPixel(...)                ( _txLocCurSet(), txSetPixel            (__VA_ARGS__) )
-#define txSetROP2(...)                 ( _txLocCurSet(), txSetROP2             (__VA_ARGS__) )
 #define txSetTextAlign(...)            ( _txLocCurSet(), txSetTextAlign        (__VA_ARGS__) )
 #define txSetWindowsHook(...)          ( _txLocCurSet(), txSetWindowsHook      (__VA_ARGS__) )
 #define txSleep(...)                   ( _txLocCurSet(), txSleep               (__VA_ARGS__) )
