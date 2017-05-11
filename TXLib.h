@@ -1,14 +1,14 @@
 //=================================================================================================================
-//           [These sections are for folding control  in Code::Blocks]
-//{          [Best viewed with "Fold all on file open" option enabled]             [best screen width is 120 chars]
+//           [These sections are for folding control  in Code::Blocks]         [$Date: 2017-05-11 09:48:09 +0400 $]
+//{          [Best viewed with "Fold all on file open" option enabled]         [Best screen/page width = 120 chars]
 //=================================================================================================================
 //!
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 129 $
+//!          $Version: 00173a, Revision: 130 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2017-04-22 01:08:53 +0400 $
+//!          $Date: 2017-05-11 09:48:09 +0400 $
 //!
 //!          TX Library - компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -42,7 +42,7 @@
 //!          в папке Examples,</a> в папке Examples/Demo.
 //!
 //!       -  Если при установке происходят ошибки или запуск программы установки невозможен, скачайте
-//!          файл библиотеки @c \TXLib.h <a href=http://sf.net/projects/txlib/files/TXLib/TXLib.h/download>
+//!          файл библиотеки @c TXLib.h <a href=http://sf.net/projects/txlib/files/TXLib/TXLib.h/download>
 //!          отсюда (загрузка начнется автоматически)</a>, скопируйте его в свою рабочую папку
 //!          (где вы сохраняете свои программы). Скачайте систему помощи <tt>TXLib Help</tt>
 //!          <a href=http://sf.net/projects/txlib/files/TXLib/TXLib%20Help.chm/download>отсюда</a>
@@ -134,9 +134,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 129, 2017-04-22 01:08:53 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 129, 2017-04-22 01:08:53 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 129, 2017-04-22 01:08:53 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 130, 2017-05-11 09:48:09 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 130, 2017-05-11 09:48:09 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 130, 2017-05-11 09:48:09 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -172,13 +172,13 @@
 
 //-----------------------------------------------------------------------------------------------------------------
 
-#if !defined (WIN32) && !defined (__WIN32__) && !defined(_WIN32) && !defined(_WIN32_WINNT)
+#if !defined (WIN32) && !defined (__WIN32__) && !defined(_WIN32) && !defined(_WIN32_WINNT) && !defined (__CYGWIN__)
 
     #ifdef __GNUC__
     #error
     #error ---------------------------------------------------------------------------------------
     #endif
-    #error TXLib.h: Windows (MSVC/Win32 or GCC/MinGW) is the only supported system, sorry.
+    #error TXLib.h: Windows (MSVC/Win32 or GCC/MinGW or Cygwin) is the only supported OS, sorry.
     #error
     #error In Linux or MacOS, you should write your own TXLib and share it with your friends, or use wine.
     #error ---------------------------------------------------------------------------------------
@@ -367,8 +367,8 @@
     inline T _txNOP (T value)          { return value; }      // To suppress performance warnings in assert etc.
 
     // From MinGW\include\float.h which is replaced by MinGW\lib\gcc\i686-pc-mingw32\x.x.x\include\float.h
-    extern "C" __declspec (dllimport)  unsigned int __cdecl _controlfp (unsigned int unNew, unsigned int unMask);
-    extern "C"                         void         __cdecl _fpreset   (void);
+    extern "C" __declspec (dllimport)  unsigned __cdecl _controlfp (unsigned control, unsigned mask);
+    extern "C"                         void     __cdecl _fpreset   ();
 
 #else
 
@@ -376,6 +376,58 @@
     #define _TX_DEPRECATED
 
     #define _txNOP( value )            ( value )
+
+#endif
+
+//-----------------------------------------------------------------------------------------------------------------
+
+#if  defined (__clang__)
+
+    #define _CLANG_VER                 ( __clang_major__*100 + __clang_minor__*10 + __clang_patchlevel__ )
+
+    #pragma clang diagnostic warning   "-Wall"
+    #pragma clang diagnostic warning   "-Weffc++"
+    #pragma clang diagnostic warning   "-Wextra"
+
+    #pragma clang diagnostic warning   "-Wcast-qual"
+    #pragma clang diagnostic warning   "-Wchar-subscripts"
+    #pragma clang diagnostic warning   "-Wconversion"
+    #pragma clang diagnostic warning   "-Wctor-dtor-privacy"
+    #pragma clang diagnostic warning   "-Wempty-body"
+    #pragma clang diagnostic warning   "-Wfloat-equal"
+    #pragma clang diagnostic warning   "-Wformat-nonliteral"
+    #pragma clang diagnostic warning   "-Wformat-security"
+    #pragma clang diagnostic warning   "-Wformat"
+    #pragma clang diagnostic warning   "-Wmissing-declarations"
+    #pragma clang diagnostic warning   "-Wnon-virtual-dtor"
+    #pragma clang diagnostic warning   "-Woverloaded-virtual"
+    #pragma clang diagnostic warning   "-Wpacked"
+    #pragma clang diagnostic warning   "-Wpointer-arith"
+    #pragma clang diagnostic warning   "-Wredundant-decls"
+    #pragma clang diagnostic warning   "-Wshadow"
+    #pragma clang diagnostic warning   "-Wsign-promo"
+    #pragma clang diagnostic warning   "-Wstrict-aliasing"
+    #pragma clang diagnostic warning   "-Wstrict-overflow"
+    #pragma clang diagnostic warning   "-Wswitch-default"
+    #pragma clang diagnostic warning   "-Wswitch-enum"
+    #pragma clang diagnostic warning   "-Wunused"
+    #pragma clang diagnostic warning   "-Wvariadic-macros"
+
+    #pragma clang diagnostic ignored   "-Winvalid-source-encoding"
+
+    #pragma clang diagnostic push
+
+    #pragma clang diagnostic ignored   "-Wcast-align"
+    #pragma clang diagnostic ignored   "-Wmissing-braces"
+    #pragma clang diagnostic ignored   "-Wmissing-field-initializers"
+    #pragma clang diagnostic ignored   "-Wsign-compare"
+    #pragma clang diagnostic ignored   "-Wsign-conversion"
+    #pragma clang diagnostic ignored   "-Wundef"
+
+    #pragma clang diagnostic ignored   "-Wunknown-pragmas"
+    #pragma clang diagnostic ignored   "-Wstring-plus-int"
+    #pragma clang diagnostic ignored   "-Wunused-value"
+    #pragma clang diagnostic ignored   "-Wunused-function"
 
 #endif
 
@@ -425,7 +477,7 @@
         #endif
 
         #if !defined (NDEBUG)
-            #define _CRTDBG_MAP_ALLOC 1         // Set debug mode heap allocation
+            #define _CRTDBG_MAP_ALLOC  1        // Set debug mode heap allocation
         #endif
 
         #define AC_SRC_ALPHA           0x01     // Copied from Windows SDK 7.0a.
@@ -523,7 +575,7 @@ namespace std { enum nomeow_t { nomeow }; }     // Vital addition to the C++ sta
 //{          The Includes
 //-----------------------------------------------------------------------------------------------------------------
 
-#ifdef _MSC_VER_6
+#if defined (_MSC_VER_6)
     #pragma warning (push, 3)                   // MSVC 6: At level 4, some std headers emit warnings O_o
 #endif
 
@@ -533,12 +585,10 @@ namespace std { enum nomeow_t { nomeow }; }     // Vital addition to the C++ sta
 #include <stdlib.h>
 #include <stdarg.h>
 #include <stdio.h>
-#include <conio.h>
 #include <string.h>
 #include <io.h>
 #include <fcntl.h>
 #include <math.h>
-#include <direct.h>
 #include <process.h>
 #include <signal.h>
 #include <setjmp.h>
@@ -569,6 +619,19 @@ namespace std { enum nomeow_t { nomeow }; }     // Vital addition to the C++ sta
 
 #endif
 
+#if defined (__CYGWIN__)
+
+#include <stdarg.h>
+#include <unistd.h>
+#include <termios.h>
+
+#else
+
+#include <conio.h>
+#include <direct.h>
+
+#endif
+
 #if defined (_MSC_VER)
 
 #pragma warning (disable: 4005)                 // '...': macro redefinition
@@ -591,16 +654,19 @@ namespace std { enum nomeow_t { nomeow }; }     // Vital addition to the C++ sta
 #endif
 
 //-----------------------------------------------------------------------------------------------------------------
+//{          Compiler- and platform-specific
+//! @name    Адаптация к компиляторам и платформам
+//-----------------------------------------------------------------------------------------------------------------
 
-#ifdef _MSC_VER_6
+#if defined (_MSC_VER_6)
     #pragma warning (pop)                       // MSVC 6: Restore max level
 #endif
 
-#ifdef __STRICT_ANSI__UNDEFINED
+#if defined (__STRICT_ANSI__UNDEFINED)
     #define  __STRICT_ANSI__                    // Redefine back
 #endif
 
-#if !defined (_TRUNCATE)
+#if !defined (_TRUNCATE) || defined (__CYGWIN__)
 
     #define  strncpy_s( dest, sizeof_dest, src, count )  ( (void)(sizeof_dest), strncpy ((dest), (src), (count)) )
     #define  wcsncpy_s( dest, sizeof_dest, src, count )  ( (void)(sizeof_dest), wcsncpy ((dest), (src), (count)) )
@@ -613,7 +679,8 @@ namespace std { enum nomeow_t { nomeow }; }     // Vital addition to the C++ sta
     #define  ctime_s( buf, sizeof_buf, time    )         ( strncpy ((buf), ctime (time), (sizeof_buf)-1) )
     #define _controlfp_s( oldCtl, newCtl, mask )         ( *(oldCtl) = _controlfp (newCtl, mask), 0 )
 
-    #define _snprintf_s                                  _snprintf
+    #define _snprintf_s                                  snprintf
+    #define _vsnprintf_s( str, sz, trunc, format, arg )  _vsnprintf (str, sz, format, arg)
 
 #endif
 
@@ -622,6 +689,31 @@ namespace std { enum nomeow_t { nomeow }; }     // Vital addition to the C++ sta
     #define  getenv_s( sz, buf, sizeof_buf, name )       ( (void)(sz), strncpy ((buf), getenv (name), (sizeof_buf)-1) )
 
 #endif
+
+#if defined (__CYGWIN__)
+
+    #undef   __STRICT_ANSI__
+
+    typedef  void                                        _exception;
+
+    #define _O_TEXT                                      O_TEXT
+    #define _fdopen                                      fdopen
+    #define _flushall()                                  fflush (NULL)
+    #define _getcwd                                      getcwd
+    #define _stricmp                                     strcasecmp
+    #define _strlwr                                      strlwr
+    #define _strnicmp                                    strncasecmp
+    #define _unlink                                      unlink
+    #define _vsnprintf                                   vsnprintf
+
+    #define getch                                        _getch
+    #define putch                                        _putch
+    #define kbhit                                        _kbhit
+
+#endif
+
+//}
+//-----------------------------------------------------------------------------------------------------------------
 
 //}
 //-----------------------------------------------------------------------------------------------------------------
@@ -2177,7 +2269,6 @@ HDC txLoadImage (const char filename[], unsigned imageFlags = IMAGE_BITMAP, unsi
 //!          txDeleteDC (background_FromTXLibHelp);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
-//@ {
 
 bool txDeleteDC (HDC  dc);
 
@@ -2185,7 +2276,6 @@ bool txDeleteDC (HDC  dc);
 bool txDeleteDC (HDC* dc);
 //! @endcond
 
-//@ }
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
 //! @brief   Копирует изображение с одного холста (контекста рисования, DC) на другой.
@@ -2223,14 +2313,11 @@ bool txDeleteDC (HDC* dc);
 //!          txDeleteDC (background_FromTXLibHelp);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
-//! @{
 
-bool txBitBlt (HDC destImage,   double xDest,       double yDest,       double width, double height,
+bool txBitBlt (HDC destImage,   double xDest,       double yDest, double width, double height,
                HDC sourceImage, double xSource = 0, double ySource = 0);
 inline
 bool txBitBlt (double xDest, double yDest, HDC sourceImage, double xSource = 0, double ySource = 0);
-
-//! @}
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -2283,14 +2370,11 @@ bool txBitBlt (double xDest, double yDest, HDC sourceImage, double xSource = 0, 
 //!          txDeleteDC (superman_FromTXLibHelp);  // So pity :( But he was only a copy from TXLib Help.
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
-//! @{
 
 bool txTransparentBlt (HDC destImage,   double xDest,       double yDest,       double width, double height,
                        HDC sourceImage, double xSource = 0, double ySource = 0, COLORREF transColor = TX_BLACK);
 inline
 bool txTransparentBlt (double xDest, double yDest, HDC sourceImage, COLORREF transColor = TX_BLACK);
-
-//! @}
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -2393,15 +2477,12 @@ bool txTransparentBlt (double xDest, double yDest, HDC sourceImage, COLORREF tra
 //!          return batman_FromTXLibHelp;        // ...and there he comes -- in TXLib copy form
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
-//! @{
 
 bool txAlphaBlend (HDC destImage,   double xDest,       double yDest,       double width, double height,
                    HDC sourceImage, double xSource = 0, double ySource = 0, double alpha = 1.0,
                    unsigned format = AC_SRC_ALPHA);
 inline
 bool txAlphaBlend (double xDest, double yDest, HDC sourceImage, double alpha = 1.0);
-
-//! @}
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -3535,10 +3616,11 @@ double txSqr (double x)
 #define _TX_DESTROY_3D
 #endif
 
-#ifdef _TX_DESTROY_3D
+#if defined (_TX_DESTROY_3D)
 
     #define z  0                   // Читайте "Флатландию" Эбботта!
-    #endif
+
+#endif
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
@@ -3564,7 +3646,7 @@ double txSqr (double x)
 
 #define meow   ;
 
-#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#if defined (_MSC_VER) && (_MSC_VER >= 1400) && !defined (__clang__)
 #define мяу    meow
 #endif
 
@@ -3877,7 +3959,7 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
 
 // Variadic macros not supported in Strict ANSI mode and in MSVC prior to MSVC 8 (2005)
 
-#if defined (__STRICT_ANSI__) || defined (_MSC_VER) && (_MSC_VER < 1400)
+#if defined (__STRICT_ANSI__) || defined (_MSC_VER) && (_MSC_VER < 1400) || defined (FOR_DOXYGEN_ONLY)
     #define TX_ERROR( msg )   _txError (__FILE__, __LINE__, __TX_FUNCTION__, 0, msg)
 
 #else
@@ -3996,6 +4078,11 @@ void txDump (const void* address, const char name[] = "txDump()");
                                                     TX_QUOTE (__GNUC_MINOR__) "."  \
                                                     TX_QUOTE (__GNUC_PATCHLEVEL__) \
                               ", std="              TX_QUOTE (__cplusplus)
+#elif defined (__clang__)
+    #define __TX_COMPILER__   "Clang "              TX_QUOTE (__clang_major__) "."  \
+                                                    TX_QUOTE (__clang_minor__) "."  \
+                                                    TX_QUOTE (__clang_patchlevel__) \
+                              ", std="              TX_QUOTE (__cplusplus)
 #elif defined (_MSC_VER)
     #define __TX_COMPILER__   "MSVS "               TX_QUOTE (_MSC_VER)            \
                               ", std="              TX_QUOTE (__cplusplus)
@@ -4034,7 +4121,7 @@ void txDump (const void* address, const char name[] = "txDump()");
 //! @hideinitializer
 //}----------------------------------------------------------------------------------------------------------------
 
-#if defined (__GNUC__)
+#if defined (__GNUC__) || defined (__clang__)
     #define __TX_FUNCTION__   __PRETTY_FUNCTION__
 
 #elif defined (__FUNCSIG__)
@@ -4159,7 +4246,11 @@ void txDump (const void* address, const char name[] = "txDump()");
 //!              if (message == WM_MOVE) txMessageBox ("  I like to MOVe it, MOVe it", "TXLib 2 Real", MB_ICONINFORMATION);
 //!
 //!              static int i = 0;
-//!              if (i++ % 10 == 0) printf ("\b" "%c", "-\\|/" [i/10 % 4]);  // Прропппеллллерррр
+//!              if (i++ % 15 == 0)
+//!                  {
+//!                  char str[2] = {"-\\|/" [i/15 % 4]};  // Прропппеллллерррр
+//!                  SetWindowText (txWindow(), str);
+//!                  }
 //!
 //!              return 0;  // Продолжить обработку сообщения средствами TXLib
 //!              }
@@ -4829,14 +4920,14 @@ struct txDialog
     public:
     enum CONTROL
         {
-        DIALOG    = 0x00000000,                  //!< Начало описания диалога
-        BUTTON    = 0xFFFF0080,                  //!< Кнопка
-        EDIT      = 0xFFFF0081,                  //!< Редактируемый текст
-        STATIC    = 0xFFFF0082,                  //!< Нередактируемый элемент (текст, картинка и т.д.)
-        LISTBOX   = 0xFFFF0083,                  //!< Список с прокруткой
-        SCROLLBAR = 0xFFFF0084,                  //!< Полоса прокрутки
-        COMBOBOX  = 0xFFFF0085,                  //!< Комбинированный список
-        END       = 0x00000000                   //!< Конец описания диалога
+        DIALOG    = (int) 0x00000000,            //!< Начало описания диалога
+        BUTTON    = (int) 0xFFFF0080,            //!< Кнопка
+        EDIT      = (int) 0xFFFF0081,            //!< Редактируемый текст
+        STATIC    = (int) 0xFFFF0082,            //!< Нередактируемый элемент (текст, картинка и т.д.)
+        LISTBOX   = (int) 0xFFFF0083,            //!< Список с прокруткой
+        SCROLLBAR = (int) 0xFFFF0084,            //!< Полоса прокрутки
+        COMBOBOX  = (int) 0xFFFF0085,            //!< Комбинированный список
+        END       = (int) 0x00000000             //!< Конец описания диалога
         };
 
 //{----------------------------------------------------------------------------------------------------------------
@@ -5425,7 +5516,7 @@ namespace Win32 {
 
 #pragma pack (push, 1)
 
-#ifdef _MSC_VER_6
+#if defined (_MSC_VER_6)
 
 struct NOTIFYICONDATA
     {
@@ -5691,7 +5782,7 @@ typedef DWORD64 (__stdcall *PTRANSLATE_ADDRESS_ROUTINE64)     (HANDLE process, H
 
 } // namespace Win32
 
-#ifdef _MSC_VER_6
+#if defined (_MSC_VER_6)
 using namespace Win32;
 #endif
 
@@ -5929,6 +6020,8 @@ _TX_DLLIMPORT_OPT ("NTDLL",    char*,    wine_get_version,           (void));
 
 _TX_DLLIMPORT     ("MSVCRT",   void,     exit,                       (int retcode));
 _TX_DLLIMPORT_OPT ("MSVCRT",   void,     _cexit,                     (void));
+_TX_DLLIMPORT     ("MSVCRT",   unsigned, _fpreset,                   ());
+_TX_DLLIMPORT     ("MSVCRT",   unsigned, _controlfp,                 (unsigned control, unsigned mask));
 
 _TX_DLLIMPORT_OPT ("OpenGL32", HDC,         wglGetCurrentDC,         ());
 _TX_DLLIMPORT_OPT ("OpenGL32", unsigned,    glGetError,              (void));
@@ -5977,8 +6070,13 @@ _TX_DLLIMPORT_OPT ("MgwHelp*", bool,     StackWalk64,                (DWORD arch
 //! @{
 
 const int        _TX_CP                                   =   1251;        // Информация о локали
+
+#ifndef __CYGWIN__
 const char       _TX_LC_CTYPE[]                           =  "Russian";
 const wchar_t    _TX_LC_CTYPE_W[]                         = L"Russian_Russia.ACP";
+#else
+const char       _TX_LC_CTYPE[]                           =  "ru_RU.CP1251";
+#endif
 
 const int        _TX_IDM_ABOUT                            =   40000,       // Идентификаторы системного меню окна
                  _TX_IDM_CONSOLE                          =   40001;
@@ -6101,6 +6199,14 @@ PROC             _txSetProcAddress (const char funcName[], PROC newFunc, const c
 
 ptrdiff_t        _tx_snprintf_s    (char stream[], ptrdiff_t size, const char format[], ...);
 ptrdiff_t        _tx_vsnprintf_s   (char stream[], ptrdiff_t size, const char format[], va_list arg);
+
+#if defined (__CYGWIN__)
+
+int              _getch();
+int              _putch (int ch);
+int              _kbhit();
+
+#endif
 
 //-----------------------------------------------------------------------------------------------------------------
 // There are macros for __FILE__ and __LINE__ to work properly.
@@ -6293,8 +6399,8 @@ $       ::std::set_unexpected (_txOnUnexpected);
 $       ::std::set_terminate  (_txOnTerminate);
         #endif
 
-$       Win32::AddVectoredExceptionHandler (1, _txVectoredExceptionHandler);
-$       _txPrevUEFilter = SetUnhandledExceptionFilter (_txUnhandledExceptionFilter);
+$                  Win32::AddVectoredExceptionHandler (1, (PVECTORED_EXCEPTION_HANDLER)  _txVectoredExceptionHandler);
+$       _txPrevUEFilter = SetUnhandledExceptionFilter (   (LPTOP_LEVEL_EXCEPTION_FILTER) _txUnhandledExceptionFilter);
 
 $       std::set_new_handler (_txOnNewHandlerAnsi);
 
@@ -6306,10 +6412,13 @@ $       SetErrorMode (SEM_FAILCRITICALERRORS | SEM_NOGPFAULTERRORBOX);
 
 $       _set_printf_count_output (1);
 
-$       _CrtSetDbgFlag (_CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF | _CRTDBG_LEAK_CHECK_DF);
-$       _CrtSetAllocHook (_txOnAllocHook);
 $       _set_new_handler (_txOnNewHandler);
 $       _set_new_mode (1);
+
+        #if !defined (__clang__)
+
+$       _CrtSetDbgFlag (_CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF | _CRTDBG_LEAK_CHECK_DF);
+$       _CrtSetAllocHook (_txOnAllocHook);
 
 $       unsigned mode = _CRTDBG_MODE_FILE;
 $       if (_CrtSetReportHook2 (_CRT_RPTHOOK_INSTALL, _txOnErrorReport) > 0) mode = 0;
@@ -6320,6 +6429,8 @@ $       _CrtSetReportMode (_CRT_ASSERT, _CRTDBG_MODE_DEBUG | mode | _CRTDBG_MODE
 $       _CrtSetReportFile (_CRT_WARN,   _CRTDBG_FILE_STDERR);
 $       _CrtSetReportFile (_CRT_ERROR,  _CRTDBG_FILE_STDERR);
 $       _CrtSetReportFile (_CRT_ASSERT, _CRTDBG_FILE_STDERR);
+
+        #endif
 
 $       _set_abort_behavior (_WRITE_ABORT_MSG, _WRITE_ABORT_MSG);
 $       _set_abort_behavior (0,                _CALL_REPORTFAULT);
@@ -6338,11 +6449,11 @@ $       _set_security_error_handler (_txOnSecurityError);
 $       ::std::set_constraint_handler_s (_txOnSecurityErrorAnsi);
         #endif
 
-        #if defined (_MSC_VER) && (_MSC_VER >= 1900) || defined (_GCC_VER) && (_GCC_VER >= 530)
+        #if defined (_MSC_VER) && (_MSC_VER >= 1900) || defined (_GCC_VER) && (_GCC_VER >= 530) && !defined (__CYGWIN__)
 $       __setusermatherr (_txOnMatherr);
         #endif
 
-        #if defined (_MSC_VER) && (_MSC_VER >= 1 /*!!!*/) || defined (_GCC_VER) && (_GCC_VER >= 461)
+        #if defined (_MSC_VER) && (_MSC_VER >= 1 /*!!!*/) || defined (_GCC_VER) && (_GCC_VER >= 461) && !defined (__CYGWIN__)
 $       _set_error_mode (_OUT_TO_MSGBOX | _OUT_TO_STDERR);
         #endif
 
@@ -6374,7 +6485,11 @@ $       tx_fpreset();
 $       srand ((unsigned) time (NULL));
 
 $       SetLastError (0);
-$       errno = _doserrno = 0;
+$       errno = 0;
+
+        #if !defined (__CYGWIN__)
+$       _doserrno = 0;
+        #endif
         }
 
 $   (void) Win32::RoundRect;  // Just to suppress "defined but not used" warning
@@ -6453,7 +6568,7 @@ $   if (centered) { size.cx *= -1; size.cy *= -1; }
 
     // In Thread, where REAL creation lies...
 
-    #if !( defined (_MSC_VER) && (_MSC_VER < 1400) && !defined (_MT) )
+    #if !( defined (_MSC_VER) && (_MSC_VER < 1400) && !defined (_MT) ) && !defined (__CYGWIN__)
 $   unsigned id = 0;
 $   _txCanvas_Thread = (HANDLE) _beginthreadex (NULL, 0,                         _txCanvas_ThreadProc, &size, 0, &id);
     #else
@@ -6470,8 +6585,13 @@ $   if (!txOK())           return TX_DEBUG_ERROR ("\a" "Canvas window is not OK.
 
 //!!! $   Sleep (100);
 
-$   errno = 0; _doserrno = 0;
 $   SetLastError (0);
+
+$   errno = 0;
+
+    #if !defined (__CYGWIN__)
+$   _doserrno = 0;
+    #endif
 
 $   return txWindow();
     }
@@ -7324,7 +7444,7 @@ $   return icon;
 
 LRESULT CALLBACK _txCanvas_WndProc (HWND wnd, UINT msg, WPARAM wpar, LPARAM lpar)
     {
-#ifdef _TX_ALLOW_TRACE
+#if defined (_TX_ALLOW_TRACE)
 
     int inTX = _txLocCur.inTX++;
 
@@ -7696,7 +7816,10 @@ $   SetConsoleOutputCP (_TX_CP);  // 1251
     // языком, укажите опции в командной строке компилятора g++: -finput-charset=CP1251 -fexec-charset=CP1251.
 
 $   setlocale (LC_CTYPE, _TX_LC_CTYPE);                                    //  "Russian"
+
+    #ifndef __CYGWIN__
 $   if (!Win32::wine_get_version) _wsetlocale (LC_CTYPE, _TX_LC_CTYPE_W);  // L"Russian_Russia.ACP"
+    #endif
 
 $   static bool done = false;
 $   if (done) return console;
@@ -7710,9 +7833,19 @@ $   if (!Win32::wine_get_version)
 
     // Переоткрываем заново <s>Америку</s> потоки ввода-вывода, если subsystem != console
 
+    #ifndef __CYGWIN__
+
 $                    *stdin  = *_fdopen (_open_osfhandle ((DWORD)(uintptr_t) GetStdHandle (STD_INPUT_HANDLE),  _O_TEXT), "r");
 $   fflush (stdout); *stdout = *_fdopen (_open_osfhandle ((DWORD)(uintptr_t) GetStdHandle (STD_OUTPUT_HANDLE), _O_TEXT), "w");
 $   fflush (stderr); *stderr = *_fdopen (_open_osfhandle ((DWORD)(uintptr_t) GetStdHandle (STD_ERROR_HANDLE),  _O_TEXT), "w");
+
+    #else
+
+$                    *stdin  = *_fdopen (STDIN_FILENO,  "r");
+$   fflush (stdout); *stdout = *_fdopen (STDOUT_FILENO, "w");
+$   fflush (stderr); *stderr = *_fdopen (STDERR_FILENO, "w");
+
+    #endif
 
 $   setvbuf (stdin,  NULL, _IONBF, 0);
 $   setvbuf (stdout, NULL, _IONBF, 0);
@@ -8166,7 +8299,8 @@ $   fpe = 0;
     #undef GET_DESCR_
 
 $   signal (sig, (void(*)(int))_txOnSignal);
-$   _fpreset();
+
+$   Win32::_fpreset();
 
 $   _TX_UNEXPECTED ("\a\t"
                     "signal (%d, 0x%02X):%s%s "
@@ -8196,7 +8330,7 @@ $   _TX_UNEXPECTED ("\t\a"
                     "%s"
                     "Используйте try/catch блоки, перехватывайте catch (...), проверяйте вызовы виртуальных функций, "
                     "разбирайтесь, в чем дело.\n\n"
-                    "С помощью std::set_terminate() вы можете сами обработать эту ошибку." + !_txDumpSE _
+                    "С помощью std::set_terminate() вы можете сами обработать эту ошибку." + !*_txDumpSE _
                     _txDumpSE + 1);
     }
 
@@ -8223,9 +8357,11 @@ int _txOnMatherr (_exception* exc)
     {
     txOutputDebugPrintf ("%s - WARNING: %s (0x%p) called\n", _TX_VERSION, __func__, exc);
 
-    #define GET_DESCR_(code, descr)  case (code): { $ sType = "(" #code "): " descr; break; }
-
 $1  const char* sType = "Неизвестный тип исключения";
+
+    #if !defined (__CYGWIN__)
+
+    #define GET_DESCR_(code, descr)  case (code): { $ sType = "(" #code "): " descr; break; }
 
 $   switch (exc->type)
         {
@@ -8243,6 +8379,11 @@ $   switch (exc->type)
 $   _TX_UNEXPECTED ("_matherr(): Математическая ошибка %d %s в функции %s (%lg, [%lg]). Она вернет значение %lg.\n\n"
                     "С помощью __setusermatherr() вы можете сами обработать эту ошибку." _
                     exc->type _ sType _ exc->name _ exc->arg1 _ exc->arg2 _ exc->retval);
+    #else
+
+$   _TX_UNEXPECTED ("_matherr(): Математическая ошибка: %s." _ sType);
+
+    #endif
 
     return 0;
     }
@@ -8366,8 +8507,8 @@ $   for (int i = 0; i < nErrors; i++) *(errors? &errors[i] : &err) = _RTC_SetErr
 $   char text [_TX_BUFSIZE] = "";
 
 $   va_list arg; va_start (arg, format);
-$   _tx_vsnprintf_s (text, sizeof (text) - 1, format, arg);   // Get message from the vararg list
-$   _RTC_ErrorNumber error = va_arg (arg, _RTC_ErrorNumber);  // Get the RTC error number (note that arg changes)
+$   _tx_vsnprintf_s (text, sizeof (text) - 1, format, arg);                              // Get message from the vararg list
+$   _RTC_ErrorNumber error = (_RTC_ErrorNumber) va_arg (arg, int /*_RTC_ErrorNumber*/);  // Get the RTC error number
 $   va_end (arg);
 
 $   const char* sType = "type";
@@ -8389,13 +8530,13 @@ $$  _txError (file, line, NULL, 0, "\a"
 
     // Restore the RTC error types
 
-    #ifdef _MSC_VER
+    #if defined (_MSC_VER)
     #pragma warning (disable: 6385)  // Reading invalid data from 'errors': the readable size is 'n' bytes, but 'm' bytes may be read.
     #endif
 
 $   for (int i = 0; i < nErrors; i++) _RTC_SetErrorType ((_RTC_ErrorNumber) i, (errors? errors[i] : _CRT_ERROR));
 
-    #ifdef _MSC_VER
+    #if defined (_MSC_VER)
     #pragma warning (default: 6385)  // Reading invalid data from 'errors': the readable size is 'n' bytes, but 'm' bytes may be read.
     #endif
 
@@ -8512,7 +8653,7 @@ $1          *(unsigned long long*) _txDumpExceptionObjJmp = 0;
             _TX_UNEXPECTED ("\t\a"
                             "%s"
                             "С помощью функции _set_se_translator() вы можете сами обработать эту ошибку.\n\n"
-                            "Дополнительно: Сбой вызова стандартного обработчика неперехваченнных исключений SEH." + !_txDumpSE _
+                            "Дополнительно: Сбой вызова стандартного обработчика неперехваченнных исключений SEH." + !*_txDumpSE _
                             _txDumpSE + 1);
             }
         }
@@ -8526,7 +8667,8 @@ $1          *(unsigned long long*) _txDumpExceptionObjJmp = 0;
 LPTOP_LEVEL_EXCEPTION_FILTER WINAPI _txOnSetUnhandledExceptionFilter (LPTOP_LEVEL_EXCEPTION_FILTER filter)
     {
 $1  _txPrevUEFilter = filter;
-    return _txUnhandledExceptionFilter;
+
+    return (LPTOP_LEVEL_EXCEPTION_FILTER) _txUnhandledExceptionFilter;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -8545,7 +8687,7 @@ long _txOnExceptionSEH (EXCEPTION_POINTERS* exc, const char func[])
     if (code == DBG_PRINTEXCEPTION_C      ||
         code == DBG_PRINTEXCEPTION_WIDE_C ||
         code == DBG_THREAD_NAME           ||
-        code == EXCEPTION_BREAKPOINT && IsDebuggerPresent())
+       (code == EXCEPTION_BREAKPOINT && IsDebuggerPresent()))
         return EXCEPTION_CONTINUE_SEARCH;
 
     _txSENumber++;
@@ -8560,7 +8702,7 @@ $       longjmp (_txDumpExceptionObjJmp, 1);
 
     tx_fpreset();
 
-    #ifdef _MSC_VER
+    #if defined (_MSC_VER)
     if (code == EXCEPTION_STACK_OVERFLOW) { $ _resetstkoflw(); }
     #endif
 
@@ -8625,7 +8767,7 @@ $   char* s = what;
 $   const char* sCode  = NULL;
 $   const char* sDescr = NULL;
 
-    #define GET_DESCR_(code, descr)  case (code): { $ sCode = #code; sDescr = descr; break; }
+    #define GET_DESCR_(code, descr)  case ((unsigned long) code): { $ sCode = #code; sDescr = descr; break; }
 
 $   switch (code)
         {
@@ -8704,7 +8846,7 @@ $   Win32::IMAGEHLP_LINE64* line = NULL;
 
     if (addr) { $ _txSymGetFromAddr (addr, &sym, &line); }
 
-$   if (sym  && sym->Name      && *sym->Name)      PRINT_ (" в функции %s()" _ sym->Name);
+$   if (sym  &&                   *sym->Name)      PRINT_ (" в функции %s()" _ sym->Name);
 $   if (line && line->FileName && *line->FileName) PRINT_ (" в файле %s на строке %u" _ line->FileName _ line->LineNumber);
 
 $   if (code == EXCEPTION_ACCESS_VIOLATION ||
@@ -8955,7 +9097,7 @@ $   const char* mangledName = (type)? type->name() : NULL;
 $   char* typeName = NULL;
 $   int err = 1;
 
-    #ifdef _GCC_VER
+    #if defined (_GCC_VER)
 $   typeName = ::abi::__cxa_demangle (mangledName, 0, 0, &err);
     #endif
 
@@ -8974,12 +9116,13 @@ $   if (name &&
 
     if (name) { $ PRINT_ (" %s" _ name); }
 
-    #ifdef _GCC_VER
+    #if defined (_GCC_VER)
 $   free (typeName);
     #endif
 
 $   err = 0;
 $   if (mangledName)
+        {
         if (setjmp (_txDumpExceptionObjJmp) == 0)
             {
             #define PRINT_VAL_(fmt, typ, ...)                                                                            \
@@ -9006,6 +9149,7 @@ $               PRINT_ (", what(): \"%s\"" _ e->what());
             }
         else
             { $ err = 2; }
+        }
 
 $   *(unsigned long long*) _txDumpExceptionObjJmp = 0;
 
@@ -9078,7 +9222,7 @@ $       while (s > trace && s[-1] == '\n') { s--; nl++; }
 
         #if !defined (_TX_FULL_STACKTRACE)
 
-$       if (! (sym && *sym->Name || line && (line->FileName && *line->FileName || line->LineNumber)))
+$       if (! ((sym && *sym->Name) || (line && ((line->FileName && *line->FileName) || line->LineNumber))))
             { $ continue; }
 
         #endif
@@ -9096,7 +9240,7 @@ $       n++;
         if (line && line->LineNumber)       { $ PRINT_ (" (%u)"        _ line->LineNumber);                          }
         if (source)                         { $ PRINT_ (":\n\n" "%s\n" _ source);                                    }
 
-        if (sym && sym->Name && strcmp (sym->Name , "main") == 0) { $ break; }
+        if (sym && strcmp (sym->Name , "main") == 0) { $ break; }
         }
 
     #if defined (_MSC_VER)
@@ -9322,7 +9466,7 @@ $   if (line)
         {
 $       memset (&line64, 0, sizeof (line64));
 
-$       unsigned long ofs = 0;
+$       DWORD ofs = 0;
 
 $       SetLastError (0);
 $       (_TX_CALL (MinGW::SymGetLineFromAddr64, (process, (uintptr_t) addr, &ofs, &line64)) && RES_(l)) ||
@@ -9370,10 +9514,10 @@ $   if (done) DBG_("res = \"%s\"", res);
 
 $   if (symbol)
         {
-$       if (strstr  (sym->Name, "::TX::")                                                 ||
-            strncmp (sym->Name, "_tx",  3) == 0 && isupper ((unsigned char) sym->Name[3]) ||
-            strncmp (sym->Name,  "tx",  2) == 0 && isupper ((unsigned char) sym->Name[2]) ||
-            strncmp (sym->Name, "_tx_", 4) == 0                                           ||
+$       if (strstr  (sym->Name, "::TX::")                                                  ||
+           (strncmp (sym->Name, "_tx",  3) == 0 && isupper ((unsigned char) sym->Name[3])) ||
+           (strncmp (sym->Name,  "tx",  2) == 0 && isupper ((unsigned char) sym->Name[2])) ||
+            strncmp (sym->Name, "_tx_", 4) == 0                                            ||
             strncmp (sym->Name,  "tx_", 3) == 0)
             {
 $           return true;
@@ -9412,7 +9556,8 @@ $   int n = 1;
     while (!feof (f))
         {
         if (n >= linStart) { $ break; }
-        while (!feof (f) && fgetc (f) != '\n') ;
+        while (!feof (f) && fgetc (f) != '\n')
+            ;
 $       n++;
         }
 
@@ -9504,8 +9649,15 @@ const char* _txProcessError (const char file[], int line, const char func[], uns
     static int nCalls = 0; nCalls++;
 
     DWORD          winerr   = GetLastError();
+
     int            crterr   = errno;
+
+    #if !defined (__CYGWIN__)
     unsigned long  doserr   = _doserrno;
+    #else
+    unsigned long  doserr   = 0;
+    #endif
+
     unsigned       oglerr   = _TX_CALL (Win32::wglGetCurrentDC, ())? _TX_CALL (Win32::glGetError, ()) : 0;
 
     unsigned       threadId = GetCurrentThreadId();
@@ -9648,7 +9800,7 @@ const char* _txProcessError (const char file[], int line, const char func[], uns
                             MB_ICONSTOP | MB_SYSTEMMODAL | (!(options & isFatal)? MB_YESNO : 0));
         }
 
-    if ((options & isFatal) && !IsDebuggerPresent() || ret == IDYES)
+    if (((options & isFatal) && !IsDebuggerPresent()) || ret == IDYES)
         {
         ::FatalExit (EXIT_FAILURE);
         ::exit      (EXIT_FAILURE);
@@ -9682,9 +9834,9 @@ int _txOnErrorReport (int type, char* text, int* ret)
 
     if (strcmp (text, startReport) == 0)  // Dirty, dirty hack. А что делать?
         {
-        _txOnErrorReport (type, _TX_VERSION " - ERROR: ",                NULL);
-        _txOnErrorReport (type, "Внимание: Обнаружены утечки памяти!\n", NULL);
-        _txOnErrorReport (type, "\n",                                    NULL);
+        _txOnErrorReport (type, (char*) _TX_VERSION " - ERROR: ",                NULL);
+        _txOnErrorReport (type, (char*) "Внимание: Обнаружены утечки памяти!\n", NULL);
+        _txOnErrorReport (type, (char*) "\n",                                    NULL);
         }
 
     size_t len = strlen (text);
@@ -9717,113 +9869,6 @@ int _txOnErrorReport (int type, char* text, int* ret)
     }
 
 #endif
-
-//-----------------------------------------------------------------------------------------------------------------
-
-void _txTrace (const char file[], int line, const char func[], const char msg[] /*= NULL*/, ...)
-    {
-    unsigned id = GetCurrentThreadId();
-
-    const char marks[2][2][3] = {{"uU", "cC"}, {"mM", "??"}};
-
-    char mark = marks [id == _txMainThreadId] [id == _txCanvas_ThreadId] [(_txLocCur.inTX > 0)];
-
-    char msgStr[_TX_BUFSIZE] = "";
-    if (msg)
-        {
-        va_list arg; va_start (arg, msg);
-        _tx_vsnprintf_s (msgStr, sizeof (msgStr) - 1, msg, arg);
-        va_end (arg);
-        }
-
-    txOutputDebugPrintf ("%s - 0x%p %c%c%c%c%c%d [%c] - %-*s (%5d)  " "|%*s%s" "%s%s\n",
-
-                         _TX_VERSION, &_txInitialized,
-
-                         "cC"[_txConsole], "mM"[_txMain], "dD"[_txIsDll], "rR"[_txRunning], "eE"[_txExit], _txLocCur.trace, mark,
-
-                         sizeof (__FILE__) - 1, (file? file : "(NULL file)"), line,
-                         2 * (_txLocCur.inTX - 1) * !!func, "", (func? func : ""),
-
-                         ((*msgStr && func)? ": " : ""), msgStr);
-    }
-
-//-----------------------------------------------------------------------------------------------------------------
-
-int txOutputDebugPrintf (const char format[], ...)
-    {
-    if (!format) return 0;
-
-    enum { msgbox = 1, print = 2, compr = 4 };
-    int options = 0;
-
-    for (; format && *format; format++)
-        {
-        if      (*format == '\a') options |= msgbox;
-        else if (*format == '\f') options |= print;
-        else if (*format == '\r') options |= compr;
-        else break;
-        }
-
-    char str[_TX_BIGBUFSIZE] = "";
-
-    va_list arg; va_start (arg, format);
-    int n = (int) _tx_vsnprintf_s (str, sizeof (str) - 1-1, format, arg);
-    va_end (arg);
-
-    struct __ { static int trimSpaces (char str[])
-        {
-        char *dst = str, *src = str;
-
-        for (char d = ' '; d; src++)
-            if (isspace ((unsigned char)(*src))) { if (d != ' ') *dst++ = d = ' '; }
-            else                                                 *dst++ = d = *src;
-
-        return (int) (dst - str - 1);
-        }};
-
-    if (options & compr)  n = __::trimSpaces (str);
-
-    OutputDebugString (str);
-
-    if (options & print)  fprintf (stderr, "%s", str);
-
-    if (options & msgbox) txMessageBox (str, "Оказывается, что", MB_ICONEXCLAMATION);
-
-    return n;
-    }
-
-//-----------------------------------------------------------------------------------------------------------------
-
-ptrdiff_t _tx_snprintf_s (char stream[], ptrdiff_t size, const char format[], ...)
-    {
-    va_list arg; va_start (arg, format);
-    ptrdiff_t ret = _tx_vsnprintf_s (stream, size, format, arg);
-    va_end (arg);
-
-    return ret;
-    }
-
-//-----------------------------------------------------------------------------------------------------------------
-
-ptrdiff_t _tx_vsnprintf_s (char stream[], ptrdiff_t size, const char format[], va_list arg)
-    {
-    #if defined (_TRUNCATE)
-    ptrdiff_t ret = _vsnprintf_s (stream, size, _TRUNCATE, format, arg);
-    #else
-    ptrdiff_t ret = _vsnprintf   (stream, size,            format, arg);
-    #endif
-
-    if (ret < 0 && size >= 4)
-        {
-        const char ellipsis[] = "...";
-        size_t     szEllipsis = sizeof (ellipsis) - 1;
-
-        strncpy_s (stream + size - szEllipsis, szEllipsis+1, ellipsis, szEllipsis);
-        }
-
-    return (ret >= 0)? ret : size;
-    }
 
 //-----------------------------------------------------------------------------------------------------------------
 
@@ -9887,6 +9932,175 @@ $   va_end (arg);
     return ok;
     }
 
+//-----------------------------------------------------------------------------------------------------------------
+
+void _txTrace (const char file[], int line, const char func[], const char msg[] /*= NULL*/, ...)
+    {
+    unsigned id = GetCurrentThreadId();
+
+    const char marks[2][2][3] = {{"uU", "cC"}, {"mM", "??"}};
+
+    char mark = marks [id == _txMainThreadId] [id == _txCanvas_ThreadId] [(_txLocCur.inTX > 0)];
+
+    char msgStr[_TX_BUFSIZE] = "";
+    if (msg)
+        {
+        va_list arg; va_start (arg, msg);
+        _tx_vsnprintf_s (msgStr, sizeof (msgStr) - 1, msg, arg);
+        va_end (arg);
+        }
+
+    txOutputDebugPrintf ("%s - 0x%p %c%c%c%c%c%d [%c] - %-*s (%5d)  " "|%*s%s" "%s%s\n",
+
+                         _TX_VERSION, &_txInitialized,
+
+                         "cC"[_txConsole], "mM"[_txMain], "dD"[_txIsDll], "rR"[_txRunning], "eE"[_txExit], _txLocCur.trace, mark,
+
+                         sizeof (__FILE__) - 1, (file? file : "(NULL file)"), line,
+                         2 * (_txLocCur.inTX - 1) * !!func, "", (func? func : ""),
+
+                         ((*msgStr && func)? ": " : ""), msgStr);
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+int txOutputDebugPrintf (const char format[], ...)
+    {
+    if (!format) return 0;
+
+    enum { msgbox = 1, print = 2, compr = 4 };
+    int options = 0;
+
+    for (; format && *format; format++)
+        {
+        if      (*format == '\a') options |= msgbox;
+        else if (*format == '\f') options |= print;
+        else if (*format == '\r') options |= compr;
+        else break;
+        }
+
+    char text[_TX_BIGBUFSIZE] = "";
+
+    va_list arg; va_start (arg, format);
+    int n = (int) _tx_vsnprintf_s (text, sizeof (text) - 1-1, format, arg);
+    va_end (arg);
+
+    struct __ { static int trimSpaces (char str[])
+        {
+        char *dst = str, *src = str;
+
+        for (char d = ' '; d; src++)
+            if (isspace ((unsigned char)(*src))) { if (d != ' ') *dst++ = d = ' '; }
+            else                                                 *dst++ = d = *src;
+
+        return (int) (dst - str - 1);
+        }};
+
+    if (options & compr)  n = __::trimSpaces (text);
+
+    OutputDebugString (text);
+
+    if (options & print)  fprintf (stderr, "%s", text);
+
+    if (options & msgbox) txMessageBox (text, "Оказывается, что", MB_ICONEXCLAMATION);
+
+    return n;
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+ptrdiff_t _tx_snprintf_s (char stream[], ptrdiff_t size, const char format[], ...)
+    {
+    va_list arg; va_start (arg, format);
+    ptrdiff_t ret = _tx_vsnprintf_s (stream, size, format, arg);
+    va_end (arg);
+
+    return ret;
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+ptrdiff_t _tx_vsnprintf_s (char stream[], ptrdiff_t size, const char format[], va_list arg)
+    {
+    #if defined (_TRUNCATE)
+    ptrdiff_t ret = _vsnprintf_s (stream, size, _TRUNCATE, format, arg);
+    #else
+    ptrdiff_t ret = _vsnprintf   (stream, size,            format, arg);
+    #endif
+
+    if (ret < 0 && size >= 4)
+        {
+        const char ellipsis[] = "...";
+        size_t     szEllipsis = sizeof (ellipsis) - 1;
+
+        strncpy_s (stream + size - szEllipsis, szEllipsis+1, ellipsis, szEllipsis);
+        }
+
+    return (ret >= 0)? ret : size;
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+#if defined (__CYGWIN__)
+
+int _getch()
+    {
+    termios oldattr = {}; tcgetattr (STDIN_FILENO, &oldattr);
+
+    termios newattr = oldattr;
+    newattr.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr (STDIN_FILENO, TCSANOW, &newattr);
+
+    int ch = getchar();
+
+    tcsetattr (STDIN_FILENO, TCSANOW, &oldattr);
+
+    return ch;
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+int _putch (int ch)
+    {
+    termios old = {}; tcgetattr (STDOUT_FILENO, &old);
+
+    termios cur = old;
+    cur.c_lflag &= ~ICANON;
+    cur.c_lflag |=  ECHO;
+    tcsetattr (STDOUT_FILENO, TCSANOW, &cur);
+
+    putchar (ch);
+
+    tcsetattr (STDOUT_FILENO, TCSANOW, &old);
+
+    return ch;
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+int _kbhit()
+    {
+    termios old = {}; tcgetattr (STDIN_FILENO, &old);
+
+    termios cur = old;
+    cur.c_lflag &= ~(ICANON | ECHO);
+    cur.c_cc[VMIN]  = 1;
+    cur.c_cc[VTIME] = 0;
+
+    tcsetattr (STDIN_FILENO, TCSAFLUSH, &cur);
+
+    fd_set  fd = {}; FD_SET (STDIN_FILENO, &fd);
+    timeval tv = {};
+
+    int res = select (STDIN_FILENO + 1, &fd, NULL, NULL, &tv) && FD_ISSET (STDIN_FILENO, &fd);
+
+    tcsetattr (STDIN_FILENO, TCSAFLUSH, &old);
+
+    return res;
+    }
+
+#endif
+
 //}
 //-----------------------------------------------------------------------------------------------------------------
 
@@ -9948,6 +10162,8 @@ $1  time_t timeT     = time (NULL) - clock()/CLOCKS_PER_SEC;
 
     #if   defined (_MSC_VER)
                     "MSVC Runtime",
+    #elif defined (__CYGWIN__)
+                    "Cygwin Runtime",
     #elif defined (_GCC_VER) && defined (_WIN64)
                     __mingw_get_crt_info(),
     #else
@@ -11316,12 +11532,21 @@ void tx_fpreset()
     {
 $1  txAutoLock _lock;
 
-$   _fpreset();
+$   Win32::_fpreset();
 
-$   unsigned old87 = 0, new87 = 0x0008001C; // _EM_INVALID | _EM_DENORMAL | _EM_ZERODIVIDE | _EM_OVERFLOW | _EM_UNDERFLOW
+$   unsigned new87 = 0x0008001C;  // _EM_INVALID | _EM_DENORMAL | _EM_ZERODIVIDE | _EM_OVERFLOW | _EM_UNDERFLOW
 
+    #if !defined (__CYGWIN__)
+
+$   unsigned old87 = 0;
 $   if (_controlfp_s (&old87, 0, 0) == 0)
-        { $ (void) _controlfp_s (&old87, old87 & ~new87, 0x0008001F /* _MCW_EM */); }
+        { $ (void) _controlfp_s (&old87, old87  & ~new87, 0x0008001F); }  // _MCW_EM
+
+    #else
+
+$   Win32::_controlfp (Win32::_controlfp (0, 0) & ~new87, 0x0008001F);    // _MCW_EM
+
+    #endif
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -11329,10 +11554,12 @@ $   if (_controlfp_s (&old87, 0, 0) == 0)
 template <typename T>
 inline T zero()
 
-#ifdef _MSC_VER_6
+#if defined (_MSC_VER_6)
+
     { T __zero = {0}; return __zero; }
 
 #else
+
     { T __zero = { }; return __zero; }
 
 #endif
@@ -11374,7 +11601,7 @@ $1  const char* resName = (char*)(uintptr_t) resourceID;
 
 $   if (!FindResource (NULL, resName, RT_DIALOG)) return TX_DEBUG_ERROR ("Не найден ресурс диалога %d" _ resourceID), 0;
 
-$   return DialogBoxParam (NULL, resName, NULL, DialogProc_, (LPARAM) this);
+$   return DialogBoxParam (NULL, resName, NULL, (DLGPROC) DialogProc_, (LPARAM) this);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -11410,7 +11637,7 @@ $       ptr = _tx_DLGTEMPLATE_Add (ptr, bufsize - ((char*)ptr - (char*)tmpl),
 
 $   tmpl->cdit = (unsigned short) (i-1);
 
-$   intptr_t res = DialogBoxIndirectParam (NULL, tmpl, NULL, DialogProc_, (LPARAM) this);
+$   intptr_t res = DialogBoxIndirectParam (NULL, tmpl, NULL, (DLGPROC) DialogProc_, (LPARAM) this);
 
 $   GlobalFree (tmpl);
 
@@ -12061,6 +12288,12 @@ using ::std::string;
 
 #endif
 
+#if  defined (__clang__)
+
+    #pragma clang diagnostic pop
+
+#endif
+
 //-----------------------------------------------------------------------------------------------------------------
 
 #if defined (_MSC_VER)
@@ -12090,3 +12323,178 @@ using ::std::string;
 //=================================================================================================================
 // EOF
 //=================================================================================================================
+                                                                                                                   
+                                                                                                                   
+                                                                     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
