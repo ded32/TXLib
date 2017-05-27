@@ -1,14 +1,14 @@
 //=================================================================================================================
-//           [These sections are for folding control  in Code::Blocks]         [$Date: 2017-05-17 02:06:50 +0400 $]
+//           [These sections are for folding control  in Code::Blocks]         [$Date: 2017-05-27 19:49:59 +0400 $]
 //{          [Best viewed with "Fold all on file open" option enabled]         [Best screen/page width = 120 chars]
 //=================================================================================================================
 //!
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 131 $
+//!          $Version: 00173a, Revision: 132 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2017-05-17 02:06:50 +0400 $
+//!          $Date: 2017-05-27 19:49:59 +0400 $
 //!
 //!          TX Library -- компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -133,9 +133,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 131, 2017-05-17 02:06:50 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 131, 2017-05-17 02:06:50 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 131, 2017-05-17 02:06:50 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 132, 2017-05-27 19:49:59 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 132, 2017-05-27 19:49:59 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 132, 2017-05-27 19:49:59 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -2391,8 +2391,10 @@ inline bool txBitBlt (double xDest, double yDest, HDC sourceImage, double xSourc
 //! @warning Если контекст источника равен NULL, то он не существует и копирование вызовет ошибку.
 //!          Наиболее частая причина -- ошибка при загрузке файла изображения и отсутствие проверки на эту ошибку.
 //!          Пример с проверкой на правильность загрузки см. ниже. @nn
-//!          Изображение-источник и изображение-приемник не могут налагаться друг на друга. @nn
-//!          Если прямоугольник копируемой области не полностью лежит внутри изображения-источника, то функция
+//!
+//! @warning Изображение-источник и изображение-приемник не могут налагаться друг на друга. @nn
+//!
+//! @warning Если прямоугольник копируемой области не полностью лежит внутри изображения-источника, то функция
 //!          работать не будет. Такое бывает, если xSource или ySource отрицательны, или величина (xSource + width)
 //!          больше ширины изображения-источника, или величина (ySource + height) больше высоты изображения-источника.
 //!
@@ -2432,10 +2434,8 @@ bool txTransparentBlt (HDC destImage,   double xDest,       double yDest,       
 //! @ingroup Drawing
 //! @brief   Копирует изображение на экран с учетом прозрачности.
 //!
-//! @param   xDest        X-координата верхнего левого угла копируемого изображения.
-//! @param   yDest        Y-координата верхнего левого угла копируемого изображения.
-//! @param   width         Ширина копируемой области. <i>Если равна 0, то равна ширине изображения-источника.</i>
-//! @param   height        Высота копируемой области. <i>Если равна 0, то равна высоте изображения-источника.</i>
+//! @param   xDest         X-координата верхнего левого угла копируемого изображения.
+//! @param   yDest         Y-координата верхнего левого угла копируемого изображения.
 //! @param   sourceImage   Копируемое изображение.
 //! @param   transColor <i>Цвет, который будет считаться прозрачным. Необязателен. Если не указан, то TX_BLACK.</i>
 //!
@@ -2467,16 +2467,17 @@ inline bool txTransparentBlt (double xDest, double yDest, HDC sourceImage, COLOR
 //!
 //! @warning Если контекст источника равен NULL, то он не существует и копирование вызовет ошибку.
 //!          Наиболее частая причина -- ошибка при загрузке файла изображения и отсутствие проверки на эту ошибку.
-//!          Пример с проверкой на правильность загрузки см. ниже.
+//!          Пример с проверкой на правильность загрузки см. ниже. @nn
 //!
 //! @warning Изображение-источник и изображение-приемник не могут налагаться друг на друга. @nn
-//!          Если прямоугольник копируемой области не полностью лежит внутри изображения-источника, то функция
+//!
+//! @warning Если прямоугольник копируемой области не полностью лежит внутри изображения-источника, то функция
 //!          работать не будет. Такое бывает, если xSource или ySource отрицательны, или величина (xSource + width)
 //!          больше ширины изображения-источника, или величина (ySource + height) больше высоты изображения-источника.
 //!
 //! @note    Изображение-источник должно быть загружено с помощью txLoadImage() и иметь либо <b>32-битовый RGBA-формат,</b>
 //!          либо 24-битовый RGB-формат. Дополнительный канал <b>(A: альфа-канал)</b> 32-битового формата отвечает за
-//!          попиксельную прозрачность участков изображения: значение 0 для некоторого пикселя в этом канале означает
+//!          попиксельную прозрачность участков изображения: для каждого пикселя в этом канале значение 0 означает
 //!          его полную прозрачность, значение 255 -- полную непрозрачность, промежуточные значения -- полупрозрачность. @nn
 //!          24-битовый RGB-формат файлов (TrueColor) подразумевает, что попиксельной прозрачности нет и все пиксели
 //!          изображения имеют равную прозрачность, задающуюся параметром @c alpha. @nn
@@ -6663,7 +6664,7 @@ $1  if (!_txInitialized) _txInitialized = _txInitialize();
 $   if (HWND wnd = txWindow())
         {
 $       SetLastErrorEx (ERROR_INVALID_DATA, 0);
-$       _TX_ON_DEBUG (TX_ERROR ("\a" "Окно рисования уже создано"));
+$       _TX_ON_DEBUG (TX_ERROR ("\a" "Окно рисования уже создано!"));
 $       return wnd;
         }
 
@@ -7229,7 +7230,7 @@ PROC _txSetProcAddress (const char funcName[], PROC newFunc, const char dllName[
     {
 $1  _txLocCur.trace = 0;
 
-$   if (debug) printf ("_txSetProcAddress (%s, 0x%p, %s, 0x%p):\n", funcName, newFunc, dllName, module);
+$   if (debug) txOutputDebugPrintf ("_txSetProcAddress (%s, 0x%p, %s, 0x%p):\n", funcName, newFunc, dllName, module);
 
 $   if (_TX_ARGUMENT_FAILED (funcName)) return NULL;
 $   if (_TX_ARGUMENT_FAILED (newFunc))  return NULL;
@@ -7296,7 +7297,7 @@ $       for (thunk0 = RVA_ (IMAGE_THUNK_DATA*, desc->OriginalFirstThunk),
             impName = (char*) RVA_ (IMAGE_IMPORT_BY_NAME*, thunk0->u1.AddressOfData) -> Name;
             impPtr  = (void**)                            &thunk1->u1.Function;  // Should change it, so this is ptr
 
-            if (debug) printf ("[0x%p] %s!%s\n", *impPtr, impDll, impName);
+            if (debug) txOutputDebugPrintf ("[0x%p] %s!%s\n", *impPtr, impDll, impName);
 
             if ((oldFunc && (uintptr_t) oldFunc == (uintptr_t) *impPtr) ||
                 (impName && _stricmp (funcName, impName) == 0))
@@ -7309,9 +7310,8 @@ $       for (thunk0 = RVA_ (IMAGE_THUNK_DATA*, desc->OriginalFirstThunk),
 $       if (found) break;
         }
 
-    if (debug) printf ("_txSetProcAddress (%s, 0x%p, %s, 0x%p): %s\n\n",
-                       funcName, newFunc, dllName, module, (found? "FOUND" : "NOT found"));
-
+    if (debug) txOutputDebugPrintf ("_txSetProcAddress (%s, 0x%p, %s, 0x%p): %s\n\n",
+                                    funcName, newFunc, dllName, module, (found? "FOUND" : "NOT found"));
 $   if (!found) return NULL;
 
 $   DWORD rights = PAGE_READWRITE;
@@ -7364,7 +7364,7 @@ $   unsigned long stackSize = _TX_STACKSIZE;
 $   _TX_CALL (Win32::SetThreadStackGuarantee, (&stackSize));
 
 $   HWND wnd = _txCanvas_CreateWindow ((SIZE*) data);
-$   if (!txWindow()) return TX_DEBUG_ERROR ("\a" "Cannot create canvas"), 0;
+$   if (!txWindow()) return TX_DEBUG_ERROR ("\a" "Cannot create canvas!"), 0;
 
 $   HICON   icon32 = LoadIcon         (NULL, "_TX_ICON");
 $   HICON   icon16 = LoadIcon         (NULL, "_TX_ICONSM");
@@ -8932,8 +8932,8 @@ $   switch (code)
 
         GET_DESCR_ (EXCEPTION_CPP_MSC,                  " "  "Исключение С++, вызванное оператором throw.")
         GET_DESCR_ (EXCEPTION_CPP_GCC,                  " "  "Исключение С++, вызванное оператором throw.")
-        GET_DESCR_ (EXCEPTION_CPP_GCC_UNWIND,           "\a" "Исключение С++, вызванное во время раскрутки стека.")
-        GET_DESCR_ (EXCEPTION_CPP_GCC_FORCED,           "\a" "Исключение С++, вызванное нарушением магии.")
+        GET_DESCR_ (EXCEPTION_CPP_GCC_UNWIND,           " "  "Исключение С++, вызванное во время раскрутки стека (rethrow?).")
+        GET_DESCR_ (EXCEPTION_CPP_GCC_FORCED,           " "  "Исключение С++, вызванное нарушением магии.")
         GET_DESCR_ (EXCEPTION_CPP_BORLAND_BUILDER,      "\a" "Это скомпилилось под Билдер? O_O")
         GET_DESCR_ (EXCEPTION_CPP_BORLAND_DELPHI,       "\a" "Это же С++. Как это вышло?")
 
@@ -9764,21 +9764,21 @@ $   return trace;
 
 const char* _txProcessError (const char file[], int line, const char func[], unsigned color, const char msg[], va_list args)
     {
-    static int nCalls = 0; nCalls++;
+    static int      nCalls   = 0; nCalls++;
 
-    DWORD          winerr   = GetLastError();
+    DWORD           winerr   = GetLastError();
 
-    int            crterr   = errno;
+    int             crterr   = errno;
 
     #if !defined (__CYGWIN__)
-    unsigned long  doserr   = _doserrno;
+    unsigned long   doserr   = _doserrno;
     #else
-    unsigned long  doserr   = 0;
+    unsigned long   doserr   = 0;
     #endif
 
-    unsigned       oglerr   = _TX_CALL (Win32::wglGetCurrentDC, ())? _TX_CALL (Win32::glGetError, ()) : 0;
+    unsigned        oglerr   = _TX_CALL (Win32::wglGetCurrentDC, ())? _TX_CALL (Win32::glGetError, ()) : 0;
 
-    unsigned       threadId = GetCurrentThreadId();
+    unsigned        threadId = GetCurrentThreadId();
 
     enum { isFatal = 0x01, isWarning = 0x02, noMsgBox = 0x04, fmtOnly = 0x08, traceSE = 0x10 };
     unsigned options = 0;
@@ -9850,7 +9850,18 @@ const char* _txProcessError (const char file[], int line, const char func[], uns
 
     txOutputDebugPrintf ("\r" "%s - ERROR: %s\n", _TX_VERSION, what);
 
-    if (options & fmtOnly) return what;
+    if (options & fmtOnly)
+        {
+        SetLastError (winerr);
+
+        errno = crterr;
+
+        #if !defined (__CYGWIN__)
+        _doserrno = doserr;
+        #endif
+
+        return what;
+        }
 
     unsigned restore = txGetConsoleAttr();
     txSetConsoleAttr ((options & isFatal)? FOREGROUND_LIGHTMAGENTA : FOREGROUND_LIGHTRED);
@@ -9917,6 +9928,14 @@ const char* _txProcessError (const char file[], int line, const char func[], uns
                                                           "Ошибка в программе"),
                             MB_ICONSTOP | MB_SYSTEMMODAL | (!(options & isFatal)? MB_YESNO : 0));
         }
+
+    SetLastError (winerr);
+
+    errno = crterr;
+
+    #if !defined (__CYGWIN__)
+    _doserrno = doserr;
+    #endif
 
     if (((options & isFatal) && !IsDebuggerPresent()) || ret == IDYES)
         {
@@ -10649,6 +10668,8 @@ bool txDrawText (double x0, double y0, double x1, double y1, const char text[],
 $1  if (_TX_ARGUMENT_FAILED    (text)) return false;
 $   if (_TX_DEFAULT_HDC_FAILED (dc))   return false;
 
+#if !defined (NDEBUG)
+
 $   if (x0 > x1)
         {
 $       SetLastError (ERROR_INVALID_DATA);
@@ -10660,6 +10681,8 @@ $   if (y0 > y1)
 $       SetLastError (ERROR_INVALID_DATA);
 $       TX_ERROR ("Параметр y0 = %lg больше, чем y1 = %lg. Текст выводиться не будет." _ y0 _ y1);
         }
+
+#endif
 
 $   RECT r = { ROUND (x0), ROUND (y0), ROUND (x1), ROUND (y1) };
 
@@ -10916,6 +10939,8 @@ $   POINT size = txGetExtent (sourceImage);
 $   if (!width)  width  = size.x;
 $   if (!height) height = size.y;
 
+#if !defined (NDEBUG)
+
 $   if (!(0 <= xSource && xSource + width  <= size.x &&
           0 <= ySource && ySource + height <= size.y))
         {
@@ -10923,6 +10948,8 @@ $       SetLastError (ERROR_INVALID_DATA);
 $       TX_ERROR ("Прямоугольник копируемой области {%lg, %lg, %lg, %lg} не полностью лежит внутри изображения-источника {%d, %d, %d, %d}, "
                   "функция txTransparentBlt() работать не будет." _ xSource _ ySource _ xSource + width _ ySource + height _ 0 _ 0 _ size.x _ size.y);
         }
+
+#endif
 
 $   bool ok = (Win32::TransparentBlt != NULL);
 
@@ -10963,6 +10990,8 @@ $   POINT size = txGetExtent (sourceImage);
 $   if (!width)  width  = size.x;
 $   if (!height) height = size.y;
 
+#if !defined (NDEBUG)
+
 $   if (!(0 <= xSource && xSource + width  <= size.x &&
           0 <= ySource && ySource + height <= size.y))
         {
@@ -10971,11 +11000,13 @@ $       TX_ERROR ("Прямоугольник копируемой области {%lg, %lg, %lg, %lg} не полн
                   "функция txAlphaBlend() работать не будет." _ xSource _ ySource _ xSource + width _ ySource + height _ 0 _ 0 _ size.x _ size.y);
         }
 
+#endif
+
 $   if (alpha < 0) alpha = 0;
 $   if (alpha > 1) alpha = 1;
 
 $   BITMAP bmap = {0};
-$   Win32::GetObject (txGDI ((Win32::GetCurrentObject (sourceImage, OBJ_BRUSH)), sourceImage), sizeof (bmap), &bmap) asserted;
+$   Win32::GetObject (txGDI ((Win32::GetCurrentObject (sourceImage, OBJ_BITMAP)), sourceImage), sizeof (bmap), &bmap) asserted;
 
 $   BLENDFUNCTION blend = { AC_SRC_OVER, 0, (BYTE) ROUND (alpha * 255), (BYTE) ((bmap.bmBitsPixel == 32)? AC_SRC_ALPHA : 0) };
 
@@ -12488,10 +12519,79 @@ using ::std::string;
                                                                                                                    
                                                                                                                    
                                                                                                                    
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                             
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
