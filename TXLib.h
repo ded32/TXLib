@@ -1,14 +1,14 @@
 //=================================================================================================================
-//           [These sections are for folding control  in Code::Blocks]         [$Date: 2017-05-27 19:49:59 +0400 $]
+//           [These sections are for folding control  in Code::Blocks]         [$Date: 2017-06-03 03:55:54 +0400 $]
 //{          [Best viewed with "Fold all on file open" option enabled]         [Best screen/page width = 120 chars]
 //=================================================================================================================
 //!
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 132 $
+//!          $Version: 00173a, Revision: 133 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2017-05-27 19:49:59 +0400 $
+//!          $Date: 2017-06-03 03:55:54 +0400 $
 //!
 //!          TX Library -- компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -133,9 +133,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 132, 2017-05-27 19:49:59 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 132, 2017-05-27 19:49:59 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 132, 2017-05-27 19:49:59 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 133, 2017-06-03 03:55:54 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 133, 2017-06-03 03:55:54 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 133, 2017-06-03 03:55:54 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -413,6 +413,7 @@
     #pragma clang diagnostic push
 
     #pragma clang diagnostic ignored   "-Wcast-align"
+    #pragma clang diagnostic ignored   "-Wfloat-conversion"
     #pragma clang diagnostic ignored   "-Wmissing-braces"
     #pragma clang diagnostic ignored   "-Wmissing-field-initializers"
     #pragma clang diagnostic ignored   "-Wsign-compare"
@@ -539,6 +540,7 @@
 #define _USE_MATH_DEFINES              1        // Math.h's M_PI etc.
 #define __STDC_WANT_LIB_EXT1__         1        // String and output *_s functions
 #define _SECURE_SCL                    1        // Enable checked STL iterators to throw an exception on incorrect use
+#define _ITERATOR_DEBUG_LEVEL          2        // ...the same, for newer MSVCs
 
 #if defined (_MSC_VER) && defined (_DEBUG)
 
@@ -6113,6 +6115,7 @@ _TX_DLLIMPORT_OPT ("Kernel32", DWORD,    GetNumberOfConsoleFonts,    (void));
 _TX_DLLIMPORT_OPT ("Kernel32", bool,     GetCurrentConsoleFont,      (HANDLE con, bool maxWnd, CONSOLE_FONT_INFO*   curFont));
 _TX_DLLIMPORT_OPT ("Kernel32", bool,     GetCurrentConsoleFontEx,    (HANDLE con, bool maxWnd, CONSOLE_FONT_INFOEX* curFont));
 _TX_DLLIMPORT_OPT ("Kernel32", bool,     SetCurrentConsoleFontEx,    (HANDLE con, bool maxWnd, CONSOLE_FONT_INFOEX* curFont));
+_TX_DLLIMPORT_OPT ("Kernel32", bool,     SetDllDirectoryA,           (const char pathName[]));
 _TX_DLLIMPORT_OPT ("Kernel32", void,     RtlCaptureContext,          (CONTEXT* contextRecord));
 _TX_DLLIMPORT_OPT ("Kernel32", USHORT,   RtlCaptureStackBackTrace,   (DWORD framesToSkip, DWORD framesToCapture, void** backTrace, DWORD* hash));
 _TX_DLLIMPORT_OPT ("Kernel32", void*,    AddVectoredExceptionHandler,(unsigned long firstHandler, PVECTORED_EXCEPTION_HANDLER handler));
@@ -6120,7 +6123,6 @@ _TX_DLLIMPORT_OPT ("Kernel32", bool,     GetModuleHandleEx,          (DWORD flag
 _TX_DLLIMPORT_OPT ("Kernel32", bool,     IsWow64Process,             (HANDLE process, int* isWow64Process));
 _TX_DLLIMPORT_OPT ("Kernel32", bool,     Wow64GetThreadContext,      (HANDLE thread, WOW64_CONTEXT* context));
 _TX_DLLIMPORT_OPT ("Kernel32", bool,     SetThreadStackGuarantee,    (unsigned long* stackSize));
-
 
 _TX_DLLIMPORT     ("OLE32",    HRESULT,  CoInitialize,               (void*));
 _TX_DLLIMPORT     ("OLE32",    HRESULT,  CoCreateInstance,           (REFCLSID clsId, IUnknown*, DWORD, REFIID iId, PVOID* value));
@@ -6616,10 +6618,62 @@ $   return 1;
 
 //-----------------------------------------------------------------------------------------------------------------
 
+#if defined (_MSC_VER) && (_MSC_VER == 1800)
+#pragma warning (push)
+#pragma warning (disable: 6102)  // Using dllPaths[BYTE:1] from failed function call
+#endif
+
 FARPROC _txDllImport (const char dllFileName[], const char funcName[], bool required /*= true*/)
     {
     if (_TX_ARGUMENT_FAILED (dllFileName && *dllFileName)) return NULL;
     if (_TX_ARGUMENT_FAILED (funcName    && *funcName))    return NULL;
+
+    static char dllPaths [2][MAX_PATH] = {};
+
+    if (!*dllPaths[0] && Win32::SetDllDirectoryA)
+        {
+        const char regKey[]  = "Software\\TX Library";
+        const char regName[] = "ProductDir";
+        const char dllDir[]  = "\\Windows";
+
+        // dllPaths[0] is relative to the TX Setup directory stored in the Registry
+
+        char* path = dllPaths[0];
+
+        HKEY  key = NULL;
+        DWORD n   = 0;
+
+        bool ok = RegOpenKeyEx (HKEY_CURRENT_USER, regKey, 0, KEY_QUERY_VALUE, &key) == ERROR_SUCCESS;
+        if (!ok) key = NULL;
+
+        if (ok)
+            ok &= RegQueryValueEx (key, regName, NULL, NULL, NULL, &n)               == ERROR_SUCCESS;
+
+        if (ok && n < MAX_PATH)
+            ok &= RegQueryValueEx (key, regName, NULL, NULL, (BYTE*) path, &n)       == ERROR_SUCCESS;
+
+        if (key) RegCloseKey (key);
+        
+        strncat_s (path, MAX_PATH, dllDir, sizeof (dllDir) - 1);
+
+        // dllPaths[1] is a directory relative to TXib.h file used in compilation
+
+        path = dllPaths[1];
+
+        if (strchr (__FILE__, ':'))
+            {
+            strncpy_s (path, MAX_PATH, __FILE__, sizeof (__FILE__) - 1);
+            }
+        else
+            {
+            GetCurrentDirectory (MAX_PATH, path);
+            strncat_s (path, MAX_PATH, "\\" __FILE__, sizeof ("\\" __FILE__) - 1);
+            }
+
+        if (char* dir = strrchr (path, '\\')) *dir = 0;
+
+        strncat_s (path, MAX_PATH, dllDir, sizeof (dllDir) - 1);
+        }
 
     char dllName[MAX_PATH] = "", dllArch[MAX_PATH] = "";
     const char* arch = (dllFileName? strchr (dllFileName, '*') : NULL);
@@ -6641,8 +6695,16 @@ FARPROC _txDllImport (const char dllFileName[], const char funcName[], bool requ
     if (!dll) dll = GetModuleHandle (dllName);
     if (!dll) dll = GetModuleHandle (dllArch);
 
-    if (!dll) dll = LoadLibrary     (dllName);
-    if (!dll) dll = LoadLibrary     (dllArch);
+    for (size_t i = 0; i < SIZEARR (dllPaths) && !dll; i++)
+        {
+        if (Win32::SetDllDirectoryA) Win32::SetDllDirectoryA (dllPaths[i]);
+
+        if (!dll) dll = LoadLibrary (dllName);
+        if (!dll) dll = LoadLibrary (dllArch);
+
+        if (Win32::SetDllDirectoryA) Win32::SetDllDirectoryA (NULL);
+        else break;
+        }
 
     if (!dll && required)  TX_ERROR ("\a" "Cannot load library \"%s%s%s\"." _
                                      dllName _ (arch? "\" / \"" : "") _ dllArch);
@@ -6653,6 +6715,10 @@ FARPROC _txDllImport (const char dllFileName[], const char funcName[], bool requ
                                      funcName _ dllName _ (arch? "\" / \"" : "") _ dllArch);
     return addr;
     }
+
+#if defined (_MSC_VER) && (_MSC_VER == 1800)
+#pragma warning (pop)
+#endif
 
 //}
 //-----------------------------------------------------------------------------------------------------------------
@@ -11428,7 +11494,7 @@ $   for (x = 0; x < 16; x++) printf ("%X",    x);
 $   for (int y = 0; y < 16; y++, p += 16)
         {
         txSetConsoleAttr (FOREGROUND_YELLOW);
-        printf ("\n" "%0*p ", (int) sizeof (address) * 2, p);
+        printf ("\n" "%*p ", (int) sizeof (address) * 2, p);
 
         int color = FOREGROUND_LIGHTGREEN;
         for (x = 0; x < 16; x++) { txSetConsoleAttr (color + x/4%2); printf ("%02X ", p[x]); }
@@ -12519,80 +12585,14 @@ using ::std::string;
                                                                                                                    
                                                                                                                    
                                                                                                                    
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                               
 
 
 
