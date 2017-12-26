@@ -1,14 +1,14 @@
 //=================================================================================================================
-//           [These sections are for folding control  in Code::Blocks]         [$Date: 2017-06-03 03:55:54 +0400 $]
+//           [These sections are for folding control  in Code::Blocks]         [$Date: 2017-12-26 22:32:03 +0400 $]
 //{          [Best viewed with "Fold all on file open" option enabled]         [Best screen/page width = 120 chars]
 //=================================================================================================================
 //!
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 133 $
+//!          $Version: 00173a, Revision: 134 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2017-06-03 03:55:54 +0400 $
+//!          $Date: 2017-12-26 22:32:03 +0400 $
 //!
 //!          TX Library -- компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -133,9 +133,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 133, 2017-06-03 03:55:54 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 133, 2017-06-03 03:55:54 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 133, 2017-06-03 03:55:54 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 134, 2017-12-26 22:32:03 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 134, 2017-12-26 22:32:03 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 134, 2017-12-26 22:32:03 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -247,6 +247,7 @@
         #pragma GCC diagnostic warning "-Weffc++"
         #pragma GCC diagnostic warning "-Wextra"
 
+        #pragma GCC diagnostic warning "-Warray-bounds"
         #pragma GCC diagnostic warning "-Wcast-align"
         #pragma GCC diagnostic warning "-Wcast-qual"
         #pragma GCC diagnostic warning "-Wchar-subscripts"
@@ -256,7 +257,6 @@
         #pragma GCC diagnostic warning "-Wfloat-equal"
         #pragma GCC diagnostic warning "-Wformat-nonliteral"
         #pragma GCC diagnostic warning "-Wformat-security"
-        #pragma GCC diagnostic warning "-Wformat"
         #pragma GCC diagnostic warning "-Wlogical-op"
         #pragma GCC diagnostic warning "-Wmissing-declarations"
         #pragma GCC diagnostic warning "-Wnon-virtual-dtor"
@@ -268,7 +268,6 @@
         #pragma GCC diagnostic warning "-Wsign-promo"
         #pragma GCC diagnostic warning "-Wstrict-aliasing"
         #pragma GCC diagnostic warning "-Wstrict-null-sentinel"
-        #pragma GCC diagnostic warning "-Wstrict-overflow"
         #pragma GCC diagnostic warning "-Wswitch-default"
         #pragma GCC diagnostic warning "-Wswitch-enum"
         #pragma GCC diagnostic warning "-Wsync-nand"
@@ -283,29 +282,45 @@
         #pragma GCC diagnostic ignored "-Wunused-function"
 
         #if (_GCC_VER >= 461)
+        #pragma GCC diagnostic warning "-Wnonnull"
         #pragma GCC diagnostic warning "-Wsuggest-attribute=noreturn"
         #endif
 
-        #if (_GCC_VER >= 471)
-        #pragma GCC diagnostic ignored "-Wnarrowing"
-        #endif
-
         #if (_GCC_VER >= 472)
+        #pragma GCC diagnostic warning "-Wnarrowing"
         #pragma GCC diagnostic ignored "-Wliteral-suffix"
         #endif
 
         #if (_GCC_VER >= 481)
         #pragma GCC diagnostic warning "-Waggressive-loop-optimizations"
-        #pragma GCC diagnostic ignored "-Wvarargs"
+        #pragma GCC diagnostic warning "-Wvarargs"
         #endif
 
         #if (_GCC_VER >= 510)
         #pragma GCC diagnostic warning "-Wconditionally-supported"
+        #pragma GCC diagnostic warning "-Wformat=2"
         #pragma GCC diagnostic warning "-Wformat-signedness"
         #pragma GCC diagnostic warning "-Wopenmp-simd"
         #pragma GCC diagnostic warning "-Wsuggest-final-methods"
         #pragma GCC diagnostic warning "-Wsuggest-final-types"
         #pragma GCC diagnostic warning "-Wsuggest-override"
+        #pragma GCC diagnostic warning "-Wstrict-overflow=2"
+
+        #pragma GCC diagnostic warning "-Wlarger-than=8192"
+        #pragma GCC diagnostic warning "-Wstack-usage=8192"
+        #endif
+
+        #if (_GCC_VER >= 720)
+        #pragma GCC diagnostic warning "-Walloc-zero"
+        #pragma GCC diagnostic warning "-Walloca"
+        #pragma GCC diagnostic warning "-Walloca-larger-than=8192"
+        #pragma GCC diagnostic warning "-Wdangling-else"
+        #pragma GCC diagnostic warning "-Wduplicated-branches"
+        #pragma GCC diagnostic warning "-Wformat-overflow=2"
+        #pragma GCC diagnostic warning "-Wformat-truncation=2"
+        #pragma GCC diagnostic warning "-Wrestrict"
+        #pragma GCC diagnostic warning "-Wstringop-overflow=4"
+        #pragma GCC diagnostic warning "-Wvla-larger-than=8192"
         #endif
 
         // These warning settings for TXLib.h only and will be re-enabled at end of file:
@@ -570,7 +585,7 @@
 
 #endif
 
-namespace std { enum nomeow_t { nomeow }; }     // Vital addition to the C++ standard. Should contact C++ std committee.
+namespace std { enum nomeow_t { nomeow }; }     // Vital addition to the C++ standard. TODO: Should contact C++ std committee.
 
 //-----------------------------------------------------------------------------------------------------------------
 
@@ -1841,7 +1856,7 @@ void txDrawMan (int x, int y, int sizeX, int sizeY, COLORREF color, double handL
 //!          Цвет текста задается функцией txSetColor(), выравнивание -- txSetTextAlign().
 //!
 //! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors, RGB(),
-//!          txSelectFont(), txSetTextAign(), txGetTextExtent(), txGetTextExtentX(), txGetTextExtentY()
+//!          txSelectFont(), txSetTextAlign(), txGetTextExtent(), txGetTextExtentX(), txGetTextExtentY()
 //!
 //! @usage @code
 //!          txTextOut (100, 100, "Здесь могла бы быть Ваша реклама.");
@@ -2108,7 +2123,9 @@ HDC txCreateCompatibleDC (double sizeX, double sizeY, HBITMAP bitmap = NULL);
 //! @param   sizeY     Высота холста.
 //! @param   pixels <i>Указатель на переменную, которая будет использоваться для доступа к пикселям изображения.
 //!                    Необязателен. Эта переменная должна быть указателем на массив структур RGBQUAD, каждая
-//!                    из которых описывает цвет одного пикселя.</i>
+//!                    из которых описывает цвет одного пикселя. @b Не надо создавать самому этот массив!
+//!                    Его создаст txCreateDIBSection() и вернет через этот указательный параметр. Объявите
+//!                    только указатель и занулите его, потом его адрес передайте в функцию.</i>
 //!
 //! @return  Дескриптор созданного аппаратно-независимого холста (контекста рисования).
 //!
@@ -2124,7 +2141,9 @@ HDC txCreateCompatibleDC (double sizeX, double sizeY, HBITMAP bitmap = NULL);
 //!          Для прямого доступа к пикселям холста, как к массиву, надо объявить указатель на массив структур
 //!          RGBQUAD и передать адрес этого указателя в качестве третьего параметра функции txCreateDIBSection().
 //!          Она изменит значение этого указателя так, что он станет указывать на массив цветов пикселей холста.
-//!          Память под массив RGBQUAD выделять и освобождать @b не надо, этим занимается сама txCreateDIBSection().
+//!
+//! @note    Память под массив RGBQUAD выделять @b не надо и освобождать его @b не надо, этим занимается сама
+//!          txCreateDIBSection() вместе с txDeleteDC().
 //!
 //!          Массив @p pixels одномерный, но по сути он описывает двумерное изображение. Поэтому с ним надо
 //!          работать как с двумерным прямоугольным массивом, физически расположенным в одномерном массиве:
@@ -2154,10 +2173,10 @@ HDC txCreateCompatibleDC (double sizeX, double sizeY, HBITMAP bitmap = NULL);
 //!
 //!              HDC src = GetDC (HWND_DESKTOP);                       // Get HDC from Windows Desktop
 //!
-//!              RGBQUAD* buf = NULL;
+//!              RGBQUAD* buf = NULL;                                  // Do NOT actually create the array!
 //!              HDC dc = txCreateDIBSection (size.x, size.y, &buf);
-//!              assert (dc); assert (buf);
-//!
+//!              assert (dc); assert (buf);                            // Here, 'buf' points to an array created
+//!                                                                    // by txCreateDIBSection()
 //!              while (!GetAsyncKeyState (VK_ESCAPE))
 //!                  {
 //!                  txBitBlt (dc, 0, 0, size.x, size.y, src);
@@ -2216,7 +2235,7 @@ HDC txCreateDIBSection (double sizeX, double sizeY, COLORREF** pixels);
 //!          Если изображение не загружено (не найден файл, неверный формат файла и т.д.), то NULL.
 //!
 //! @warning Изображение загружается в автоматически создаваемый контекст рисования в памяти ("виртуальный холст"),
-//!          который затем будет нужно <b>обязательно удалить</b> при помощи txDeleteDC(). @n
+//!          который затем будет нужно <b>обязательно удалить</b> при помощи txDeleteDC(). @nn
 //!          <small>When the program will be shutting down, TXLib will try to delete DCs which were not deleted,
 //!          but this is not guaranteed.</small>
 //!
@@ -2362,8 +2381,10 @@ bool txBitBlt (HDC destImage,   double xDest,       double yDest, double width, 
 //! @param   xDest        X-координата верхнего левого угла копируемого изображения.
 //! @param   yDest        Y-координата верхнего левого угла копируемого изображения.
 //! @param   sourceImage  Копируемое изображение.
-//! @param   xSource   <i>X-координата верхнего левого угла изображения. Необязательна. Если не указана, то 0.</i>
-//! @param   ySource   <i>Y-координата верхнего левого угла изображения. Необязательна. Если не указана, то 0.</i>
+//! @param   xSource   <i>X-координата верхнего левого угла копируемой области внутри изображения-источника.
+//!                       Необязательна. Если не указана, то 0.</i>
+//! @param   ySource   <i>Y-координата верхнего левого угла копируемой области внутри изображения-источника.
+//!                       Необязательна. Если не указана, то 0.</i>
 //!
 //! @return  Если операция была успешна -- true, иначе -- false.
 //!
@@ -2440,13 +2461,18 @@ bool txTransparentBlt (HDC destImage,   double xDest,       double yDest,       
 //! @param   yDest         Y-координата верхнего левого угла копируемого изображения.
 //! @param   sourceImage   Копируемое изображение.
 //! @param   transColor <i>Цвет, который будет считаться прозрачным. Необязателен. Если не указан, то TX_BLACK.</i>
+//! @param   xSource    <i>X-координата верхнего левого угла копируемой области внутри изображения-источника.
+//!                        Необязательна. Если не указана, то 0.</i>
+//! @param   ySource    <i>Y-координата верхнего левого угла копируемой области внутри изображения-источника.
+//!                        Необязательна. Если не указана, то 0.</i>
 //!
 //! @return  Если операция была успешна -- true, иначе -- false.
 //!
 //! См. описание в функции txTransparentBlt() выше.
 //}----------------------------------------------------------------------------------------------------------------
 
-inline bool txTransparentBlt (double xDest, double yDest, HDC sourceImage, COLORREF transColor = TX_BLACK);
+inline bool txTransparentBlt (double xDest, double yDest, HDC sourceImage,
+                              COLORREF transColor = TX_BLACK, double xSource = 0, double ySource = 0);
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -2486,6 +2512,9 @@ inline bool txTransparentBlt (double xDest, double yDest, HDC sourceImage, COLOR
 //!          Пустое 32-битовое изображение-источник также может быть создано с помощью функции txCreateDIBSection(), а
 //!          24-битовое -- функцией txCreateCompatibleDC(). После создания на этом изображении можно рисовать, как на
 //!          основном окне TXLib, используя параметр @c dc функций рисования.
+//!
+//! @warning Если изображение имеет 32-битовый RGBA-формат, то его альфа-канал не должен быть полностью черным, иначе
+//!          txAlphaBlend() посчитает изображение полностью прозрачным и не выведет на экран ничего.
 //!
 //!          Если изображение-источник создано с помощью txCreateDIBSection() или txLoadImage(), то txAlphaBlend()
 //!          может использовать как общую прозрачность, задачаемую параметром @p alpha, так и попиксельную прозрачность,
@@ -2559,6 +2588,10 @@ bool txAlphaBlend (HDC destImage,   double xDest,       double yDest,       doub
 //! @param   xDest        X-координата верхнего левого угла копируемого изображения.
 //! @param   yDest        Y-координата верхнего левого угла копируемого изображения.
 //! @param   sourceImage  Копируемое изображение.
+//! @param   xSource    <i>X-координата верхнего левого угла копируемой области внутри изображения-источника.
+//!                        Необязательна. Если не указана, то 0.</i>
+//! @param   ySource    <i>Y-координата верхнего левого угла копируемой области внутри изображения-источника.
+//!                        Необязательна. Если не указана, то 0.</i>
 //! @param   alpha     <i>Общая прозрачность изображения, в дополнение к альфа-каналу (0 -- все прозрачно,
 //!                       1 -- использовать только альфа-канал). Необязательна. Если не указана, то 1.</i>
 //!
@@ -2567,7 +2600,8 @@ bool txAlphaBlend (HDC destImage,   double xDest,       double yDest,       doub
 //! См. описание в функции txAlphaBlend() выше.
 //}----------------------------------------------------------------------------------------------------------------
 
-inline bool txAlphaBlend (double xDest, double yDest, HDC sourceImage, double alpha = 1.0);
+inline bool txAlphaBlend (double xDest, double yDest, HDC sourceImage,
+                          double xSource = 0, double ySource = 0, double alpha = 1.0);
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -2651,7 +2685,9 @@ bool txSaveImage (const char filename[], HDC dc = txDC());
 //! @return  Реальное время задержки в миллисекундах.
 //!
 //! @note    <b>Перед началом задержки изображение в окне обязательно обновится,</b> даже если рисование
-//!          заблокировано через txBegin().
+//!          заблокировано через txBegin(). @nn
+//!          Более полную информацию об обновлении изображения окна см. в функции txBegin(). См. также txEnd(),
+//!          txRedrawWindow(), txUpdateWindow().
 //!
 //! @see     txBegin(), txEnd(), txUpdateWindow(), txDC()
 //!
@@ -2664,43 +2700,17 @@ double txSleep (double time = 0);
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
-//! @brief   Обновляет изображение в окне TXLib вручную.
+//! @brief   Блокирует обновление изображения окна, во избежание мигания.
+//!
+//!          Для снятия блокировки используется функция txEnd().
 //!
 //!          TXLib реализует двойную буферизацию. Все рисовательные действия происходят со скрытым HDC, находящемся
 //!          в памяти, и его содержимое периодически автоматически копируется на экран. Это иногда приводит к мерцанию.
 //!          Автоматическое копирование можно выключить функцией txBegin() и обратно включить функцией txEnd(),
 //!          в этом случае содержимое окна можно перерисовать функциями txRedrawWindow() или txSleep().
 //!
-//!          Дополнительную информацию об автоматическом обновлении см. в функциях txBegin(), txEnd(), txUpdateWindow(),
-//!          txSleep().
-//!
-//! @note    Реализация этой функции неэффективна. Чтобы сделать более эффективную реализацию, посмотрите исходный текст
-//!          txRedrawWindow() и сделайте лучше. Либо напишите свою, более быструю библиотеку на основе Win32 GDI, GDI
-//!          Plus, OpenGL, DirectX, SDL или SFML.
-//!
-//! @see     txWindow(), txBegin(), txEnd(), txLock(), txUnlock(), txGDI()
-//!
-//! @usage @code
-//!          txBegin();                // Выключаем автоматическое обновление экрана
-//!
-//!          txCircle (100, 100, 50);  // Рисуем -- изображение не появляется
-//!
-//!          Sleep (3000);             // не txSleep()! txSleep() сама обновит изображение на экране
-//!
-//!          txRedrawWindow();         // Обновляем экран вручную -- изображение появляется
-//! @endcode
-//}----------------------------------------------------------------------------------------------------------------
-
-inline void txRedrawWindow();
-
-//{----------------------------------------------------------------------------------------------------------------
-//! @ingroup Drawing
-//! @brief   Блокирует обновление изображения окна, во избежание мигания.
-//!
-//!          Для снятия блокировки используется функция txEnd().
-//!
-//!          Если в программе требуется задержка, то используйте функцию txSleep(), так как она автоматически
-//!          обновляет изображение, независимо от состояния блокировки.
+//!          Если в программе требуется задержка, то используйте функции txRedrawWindow() или txSleep(), так как они
+//!          автоматически обновляют изображение, независимо от состояния блокировки.
 //!
 //! @warning Избегайте блокирования на долгое время. Это может привести к дефектам изображения в окне.
 //!
@@ -2711,12 +2721,67 @@ inline void txRedrawWindow();
 //! @see     txEnd(), txSleep(), txUpdateWindow(), txDC(), txTextCursor()
 //!
 //! @usage @code
-//!          txBegin();                        // Здесь изображение "замерзнет"
+//!          txBegin();                             // Здесь изображение "замерзнет"
 //!          txSetFillColor (TX_WHITE);
-//!          txClear();                        // Это вызвало бы мигание без txBegin()
+//!          txClear();                             // Это вызвало бы мигание без txBegin()
 //!          txSetFillColor (TX_RED);
 //!          txRectangle (100, 100, 200, 200);
-//!          txEnd();                          // Здесь мы сразу увидим окончательный рисунок
+//!          txEnd();                               // Здесь мы сразу увидим окончательный рисунок
+//!
+//!          //
+//!          // Как правильно использовать блокировку обновления окна в циклах:
+//!          //
+//!
+//!          int x = 0, y = 0;
+//!
+//!          txBegin();                             // Отключаем автоматическое обновление окна
+//!
+//!          while (!GetAsyncKeyState (VK_ESCAPE))  // Цикл, пока не нажата клавиша ESCAPE
+//!              {
+//!              txSetFillColor (TX_BLACK);
+//!              txClear();                         // Очищаем окно
+//!
+//!              txSetFillColor (TX_DARKGRAY);      // Рисуем объект. По-нормальному это надо сделать в отдельной
+//!              txCircle (x, y, 50);               // функции. На экране это рисование пока не будет видно,
+//!              txSetFillColor (TX_LIGHTGRAY);     // из-за отключенного обновления и двойной буферизации.
+//!              txCircle (x, y, 30);
+//!              txSetFillColor (TX_WHITE);
+//!              txCircle (x, y, 10);
+//!
+//!              x += 5;                            // Изменяем координаты объекта
+//!              y += 5;
+//!
+//!              txSleep (50);                      // Делаем задержку. При этом изображение окна обновляется.
+//!              }
+//!
+//!          txEnd();                               // После цикла включаем автоматическое обновление окна
+//!
+//!          //
+//!          // Как *НЕ* правильно использовать блокировку:
+//!          //
+//!
+//!          txBegin();
+//!
+//!          while (!GetAsyncKeyState (VK_ESCAPE))
+//!              {
+//!              txSetFillColor (TX_BLACK);         // Очищаем окно
+//!              txClear();
+//!              txSleep (50);                      // Первая ошибка: окно обновляется в нелогичный момент,
+//!                                                 // когда оно только что очищено. Мы увидим только черный фон.
+//!
+//!              txSetFillColor (TX_DARKGRAY);      // Рисуем объект, но он не будет виден.
+//!              txCircle (x, y, 50);
+//!              txSetFillColor (TX_LIGHTGRAY);
+//!              txCircle (x, y, 30);
+//!              txSetFillColor (TX_WHITE);
+//!              txCircle (x, y, 10);
+//!
+//!              x += 5;
+//!              y += 5;
+//!
+//!              txEnd();                           // Вторая ошибка: при первом же обороте цикла отключается
+//!              }                                  // блокировка обновления, от чего изображение начинает мигать.
+//!
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
@@ -2730,6 +2795,9 @@ inline int txBegin();
 //!          txEnd().
 //!
 //! @return  Значение счетчика блокировки (если 0, то рисование разблокировано).
+//!
+//!          Более полную информацию об автоматическом обновлении см. в функции txBegin(). См. также txRedrawWindow(),
+//!          txUpdateWindow(), txSleep().
 //!
 //! @note    Если нажата клавиша Alt+PrintScreen, то блокировка временно отменяется.
 //!
@@ -2748,6 +2816,32 @@ inline int txBegin();
 inline int txEnd();
 
 //{----------------------------------------------------------------------------------------------------------------
+//! @ingroup Drawing
+//! @brief   Обновляет изображение в окне TXLib вручную.
+//!
+//!          Более полную информацию об автоматическом обновлении см. в функции txBegin(). См. также txEnd(),
+//!          txUpdateWindow(), txSleep().
+//!
+//! @warning Реализация этой функции неэффективна: она вызывает txSleep (0), что вызывает задержку. Чтобы сделать более
+//!          эффективную реализацию, посмотрите исходный текст функций txRedrawWindow() и txSleep() и сделайте лучше.
+//!          Либо напишите свою, более быструю библиотеку на основе Win32 GDI, GDI Plus, OpenGL, DirectX, SDL или SFML.
+//!
+//! @see     txWindow(), txBegin(), txEnd(), txLock(), txUnlock(), txGDI()
+//!
+//! @usage @code
+//!          txBegin();                // Выключаем автоматическое обновление экрана
+//!
+//!          txCircle (100, 100, 50);  // Рисуем -- изображение не появляется
+//!
+//!          Sleep (3000);             // не txSleep()! txSleep() сама обновит изображение на экране
+//!
+//!          txRedrawWindow();         // Обновляем экран вручную -- изображение появляется
+//! @endcode
+//}----------------------------------------------------------------------------------------------------------------
+
+inline void txRedrawWindow();
+
+//{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
 //! @brief   Разрешает или запрещает автоматическое обновление изображения в окне.
 //!
@@ -2760,7 +2854,8 @@ inline int txEnd();
 //!          замерзания картинки", txUpdateWindow() позволяет явно установить или снять блокировку автоматического
 //!          обновления экрана.
 //!
-//!          Более полную информацию о блокировке см. в функциях txBegin(), txEnd(), txSleep() и txDC().
+//!          Более полную информацию об автоматическом обновлении см. в функции txBegin(). См. также txEnd(),
+//!          txRedrawWindow(), txSleep().
 //!
 //! @see     txBegin(), txEnd(), txSleep(), txUpdateWindow(), txDC(), txTextCursor(), txLock(), txUnlock(), txGDI()
 //!
@@ -2988,11 +3083,19 @@ inline unsigned txMouseButtons();
 //! @usage @code
 //!          void CatsLife()
 //!              {
-//!              while (true)
+//!              try
 //!                  {
-//!                  Mouse mouse = txCatchMouse();
-//!                  Eat (mouse);
-//!                  txSleep();
+//!                  while (true)
+//!                      {
+//!                      Mouse mouse = txCatchMouse();
+//!                      Eat (mouse);
+//!                      txSleep();
+//!                      }
+//!                  }
+//!
+//!              catch (Mouse& mouse)
+//!                  {
+//!                  Eat (mouse);  // Just do eat. Anyway
 //!                  }
 //!              }
 //! @endcode
@@ -4433,7 +4536,8 @@ template <typename T> inline T txUnlock (T value);
 //! @brief   Вызов функции Win32 GDI с автоматической блокировкой и разблокировкой.
 //!
 //! @param   command  Функция GDI (возможно, возвращающая значение).
-//! @param   dc       Дескриптор контекста рисования (холста) для вызова функции.
+//! @param   dc       Дескриптор контекста рисования (холста), использующийся в вызове функции GDI (см. параметр
+//!                   @c command).
 //!
 //! @return  Значение, возвращаемое вызываемой функцией GDI.
 //!
@@ -6653,7 +6757,7 @@ FARPROC _txDllImport (const char dllFileName[], const char funcName[], bool requ
             ok &= RegQueryValueEx (key, regName, NULL, NULL, (BYTE*) path, &n)       == ERROR_SUCCESS;
 
         if (key) RegCloseKey (key);
-        
+
         strncat_s (path, MAX_PATH, dllDir, sizeof (dllDir) - 1);
 
         // dllPaths[1] is a directory relative to TXib.h file used in compilation
@@ -11037,11 +11141,12 @@ $       ok &= txGDI (!!(Win32::BitBlt         (destImage,   ROUND (xDest),   ROU
 
 //-----------------------------------------------------------------------------------------------------------------
 
-inline bool txTransparentBlt (double xDest, double yDest, HDC sourceImage, COLORREF transColor /*= TX_BLACK*/)
+inline bool txTransparentBlt (double xDest, double yDest, HDC sourceImage,
+                              double xSource /*= 0*/, double ySource /*= 0*/, COLORREF transColor /*= TX_BLACK*/)
     {
 $1  if (_TX_TXWINDOW_FAILED()) return false;
 
-$   return txTransparentBlt (txDC(), xDest, yDest, 0, 0, sourceImage, 0, 0, transColor);
+$   return txTransparentBlt (txDC(), xDest, yDest, 0, 0, sourceImage, xSource, ySource, transColor);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -11096,11 +11201,12 @@ $   return ok;
 
 //-----------------------------------------------------------------------------------------------------------------
 
-inline bool txAlphaBlend (double xDest, double yDest, HDC sourceImage, double alpha /*= 1.0*/)
+inline bool txAlphaBlend (double xDest, double yDest, HDC sourceImage,
+                          double xSource /*= 0*/, double ySource /*= 0*/, double alpha /*= 1.0*/)
     {
 $1  if (_TX_TXWINDOW_FAILED()) return false;
 
-$   return txAlphaBlend (txDC(), xDest, yDest, 0, 0, sourceImage, 0, 0, alpha);
+$   return txAlphaBlend (txDC(), xDest, yDest, 0, 0, sourceImage, xSource, ySource, alpha);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -11416,9 +11522,7 @@ $   return old;
 
 bool txPlaySound (const char filename[] /*= NULL*/, DWORD mode /*= SND_ASYNC*/)
     {
-$1  if (_TX_ARGUMENT_FAILED (filename && *filename)) return false;
-
-$   mode |= SND_FILENAME | SND_NODEFAULT | SND_NOWAIT;
+$1  mode |= SND_FILENAME | SND_NODEFAULT | SND_NOWAIT;
 $   if (mode & SND_LOOP) mode = (mode & ~SND_SYNC) | SND_ASYNC;
 
 $   if (!filename) mode = SND_PURGE;
@@ -11591,16 +11695,13 @@ $   static unsigned n = 0;
 
 $   average [n++ % SIZEARR (average)] = fps;
 
-$   if (n < minFrames)
-        { $ return 0; }
-
 $   unsigned nn = MIN (n, (unsigned) SIZEARR (average));
 
 $   fps = 0;
 $   for (unsigned i = 0; i <= nn; i++) fps += average[i];
 $   fps /= nn;
 
-$   return fps;
+$   return (n >= minFrames)? fps : 0;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -12075,6 +12176,7 @@ $   return pw;
 //!          @tbr
 //!          @tr <tt> $n              </tt> @td Перевод строки (печать @c '\\n').
 //!          @tr <tt> $nn             </tt> @td Пустая  строка (печать @c '\\n\\n').
+//!          @tr <tt> $t              </tt> @td Табуляция      (печать @c '\\t').
 //!          @endtable
 //!
 //! @title   Установка атрибутов символов консоли: @table
@@ -12102,7 +12204,7 @@ $   return pw;
 //!          @td @c $L @td Location bold    @td Светло-серый     на темно-сером    @td
 //! @endtable
 //! @title @table
-//!          @tr @c $t (cond) @td Светло-зеленый @b или светло-красный, в зависимости от условия @c cond.
+//!          @tr @c $T (cond) @td Светло-зеленый @b или светло-красный, в зависимости от условия @c cond.
 //! @endtable
 //! @title @table
 //!          @tr @c $s  @td Запомнить атрибуты. При выходе из @c { блока кода @c } атрибуты восстанавливаются.
@@ -12130,15 +12232,17 @@ $   return pw;
 //!          $$( txCreateWindow (800, 600) );
 //!
 //!          $d  // default color
-//!          $$$( if ($(xy) < $(h)) { $sE return $(h); } );  // save color, print in error color, restore color
+//!          $$$( if ($(xy) < $(h)) { $sE return $(h); } );  // Save color, print in error color, restore color
 //!
-//!          $t (h, h < 10);  // print a result in success color or error color
+//!          $T (h, h < 10);  // print a result in success color or error color
 //!
 //!          bool isPositive = (h > 0);
-//!          $test (isPositive);             // print a test result
+//!          $test (isPositive);                             // Print a test result
 //!
-//!          $unittest (strlen ("abc"), 3);  // checks in unit-test style
+//!          bool ok = ( $unittest (strlen ("abc"), 3) );    // Checks in unit-test style, thanks GCC
 //!
+//!          $unittest (strlen ("abc"), 3);                  // Checks in unit-test style, Microsoft compatible way.
+//!                                                          // No return result from $unittest here, sorry (:
 //!          $$$$
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
@@ -12190,7 +12294,7 @@ $   return pw;
 #define $l            txSetConsoleAttr (FOREGROUND_BLACK        | BACKGROUND_DARKGRAY);
 #define $L            txSetConsoleAttr (FOREGROUND_LIGHTGRAY    | BACKGROUND_DARKGRAY);
 
-#define $t( cond )    txSetConsoleAttr ((cond)? FOREGROUND_LIGHTGREEN : FOREGROUND_LIGHTRED );
+#define $T( cond )    txSetConsoleAttr ((cond)? FOREGROUND_LIGHTGREEN : FOREGROUND_LIGHTRED );
 
 #define $s            _txSaveConsoleAttr __txSavedConsoleAttrs;
 
@@ -12224,7 +12328,6 @@ $   return pw;
 #define $sl           $s $l
 #define $sL           $s $L
 
-#define $st( cond )   $s $t (cond)
 #define $sT( cond )   $s $T (cond)
 
 #define $test(cond)   { if (!!(cond)) { $o std::cerr << "[PASSED] " __TX_FILELINE__ ": " #cond; } \
@@ -12232,7 +12335,7 @@ $   return pw;
 
 #define $status(cond) $test (cond)
 
-#define $unittest( code, ethalon )                                                                                                \
+#define $unittest( code, ethalon )                                                                                             \
     {                                                                                                                          \
     const auto& _result  = (code);                                                                                             \
     const auto& _ethalon = (ethalon);                                                                                          \
@@ -12243,6 +12346,8 @@ $   return pw;
         { $se std::cerr << "[FAILED] " __TX_FILELINE__ ": " #code " == (" << _result << "), should be (" << _ethalon << ")"; } \
                                                                                                                                \
     $n;                                                                                                                        \
+                                                                                                                               \
+    (_result == _ethalon);                                                                                                     \
     }
 
 //=================================================================================================================
@@ -12267,6 +12372,7 @@ $   return pw;
 
 #define $n            { ::std::cerr << "\n";   }
 #define $nn           { ::std::cerr << "\n\n"; }
+#define $t            { ::std::cerr << "\t";   }
 
 //-----------------------------------------------------------------------------------------------------------------
 
@@ -12587,13 +12693,7 @@ using ::std::string;
                                                                                                                    
                                                                                                                    
                                                                                                                    
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                               
-
+                                                                                                                  
 
 
 
