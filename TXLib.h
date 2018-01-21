@@ -1,14 +1,14 @@
 //=================================================================================================================
-//           [These sections are for folding control  in Code::Blocks]         [$Date: 2017-12-26 22:32:03 +0400 $]
+//           [These sections are for folding control  in Code::Blocks]         [$Date: 2018-01-21 12:47:19 +0400 $]
 //{          [Best viewed with "Fold all on file open" option enabled]         [Best screen/page width = 120 chars]
 //=================================================================================================================
 //!
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 134 $
+//!          $Version: 00173a, Revision: 135 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2017-12-26 22:32:03 +0400 $
+//!          $Date: 2018-01-21 12:47:19 +0400 $
 //!
 //!          TX Library -- компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -133,9 +133,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 134, 2017-12-26 22:32:03 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 134, 2017-12-26 22:32:03 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 134, 2017-12-26 22:32:03 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 135, 2018-01-21 12:47:19 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 135, 2018-01-21 12:47:19 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 135, 2018-01-21 12:47:19 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -548,14 +548,16 @@
     #define   _WIN32_IE                WINVER   // Defaults to the same as WINVER
 #endif
 
-#define stristr( str1, str2 )          Win32::StrStrIA ((char*) (str1), (str2))
+#define stristr( str1, str2 )          Win32::StrStrIA ((str1), (str2))
 
 //-----------------------------------------------------------------------------------------------------------------
 
 #define _USE_MATH_DEFINES              1        // Math.h's M_PI etc.
 #define __STDC_WANT_LIB_EXT1__         1        // String and output *_s functions
 #define _SECURE_SCL                    1        // Enable checked STL iterators to throw an exception on incorrect use
-#define _ITERATOR_DEBUG_LEVEL          2        // ...the same, for newer MSVCs
+#if defined (_DEBUG)
+#define _HAS_ITERATOR_DEBUGGING        1
+#endif
 
 #if defined (_MSC_VER) && defined (_DEBUG)
 
@@ -623,6 +625,7 @@ namespace std { enum nomeow_t { nomeow }; }     // Vital addition to the C++ sta
 #include <string>
 #include <map>
 #include <iostream>
+#include <numeric>
 #include <algorithm>
 #include <exception>
 #include <stdexcept>
@@ -1065,8 +1068,8 @@ const char* txGetModuleFileName (bool fileNameOnly = true);
 //!                         MY_SHINING_MOONLIGHT  = RGB (128, 255,  64);
 //!          ...
 //!
-//!          txSetColor     (TX_RED);
-//!          txSetFillColor (TX_NULL);
+//!          txSetColor     (TX_YELLOW);              // Устанавливаем желтый цвет линий
+//!          txSetFillColor (TX_NULL);                // Заливка фигур будет прозрачная
 //!
 //!          txSetFillColor (MY_DEEP_ROMANTIC_BLUE);  // А.И. Куинджи, "Лунная ночь на Днепре"
 //!          txSetColor     (MY_SHINING_MOONLIGHT);   // http://tanais.info/art/pic/kuindzhi1.html
@@ -1162,11 +1165,11 @@ COLORREF RGB (int red, int green, int blue);
 //! @see     txSetFillColor(), txGetColor(), txGetFillColor(), txColors, RGB()
 //!
 //! @usage @code
-//!          txSetColor (TX_RED);
-//!          txSetColor (RGB (255, 128, 0), 5);
+//!          txSetColor (TX_YELLOW);             // Цвет линий будет желтым
+//!          txSetColor (RGB (255, 128, 0), 5);  // Оранжевые линии толщиной 5 пикселей
 //!
-//!          txSetColor (RGB (255, 255, 0));   // Красный + зеленый = желтый
-//!          txSetColor (RGB (255, 128, 64));  // Нечто оранжевое
+//!          txSetColor (RGB (255, 255, 0));     // Желтый = Красный + зеленый (другой способ указания цвета)
+//!          txSetColor (RGB (255, 128, 64));    // Нечто оранжевое
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
@@ -1224,7 +1227,7 @@ COLORREF txGetColor (HDC dc = txDC());
 //! @see     txSetColor(), txGetFillColor(), txGetColor(), txColors, RGB()
 //!
 //! @usage @code
-//!          txSetFillColor (TX_RED);
+//!          txSetFillColor (TX_LIGHTGREEN);
 //!          txSetFillColor (RGB (255, 128, 0));
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
@@ -6235,7 +6238,7 @@ _TX_DLLIMPORT     ("OLE32",    void,     CoUninitialize,             (void));
 _TX_DLLIMPORT     ("Shell32",  HINSTANCE,ShellExecuteA,              (HWND wnd, const char operation[], const char file[],
                                                                       const char parameters[], const char directory[], int showCmd));
 
-_TX_DLLIMPORT     ("ShlWAPI",  char*,    StrStrIA,                   (char string[], const char search[]));
+_TX_DLLIMPORT     ("ShlWAPI",  char*,    StrStrIA,                   (const char string[], const char search[]));
 
 _TX_DLLIMPORT_OPT ("NTDLL",    char*,    wine_get_version,           (void));
 
@@ -6382,7 +6385,7 @@ void             _txOnInvalidParam      (const wchar_t* expr, const wchar_t* fun
 int              _txOnAllocHook         (int type, void* data, size_t size, int use, long request,
                                          const unsigned char* file, int line);
 int              _txOnRTCFailure        (int type, const char* file, int line, const char* module, const char* format, ...);
-int              _txOnErrorReport       (int type, char* message, int* ret);
+int              _txOnErrorReport       (int type, const char* message, int* ret);
 
 void             _txOnCExit();
 void             _txOnExit              (int      retcode);
@@ -6644,7 +6647,7 @@ $       _CrtSetDbgFlag (_CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF | _CRTDBG
 $       _CrtSetAllocHook (_txOnAllocHook);
 
 $       unsigned mode = _CRTDBG_MODE_FILE;
-$       if (_CrtSetReportHook2 (_CRT_RPTHOOK_INSTALL, _txOnErrorReport) > 0) mode = 0;
+$       if (_CrtSetReportHook2 (_CRT_RPTHOOK_INSTALL, (_CRT_REPORT_HOOK) _txOnErrorReport) > 0) mode = 0;
 
 $       _CrtSetReportMode (_CRT_WARN,   _CRTDBG_MODE_DEBUG | mode);
 $       _CrtSetReportMode (_CRT_ERROR,  _CRTDBG_MODE_DEBUG | mode | _CRTDBG_MODE_WNDW);
@@ -10122,7 +10125,7 @@ const char* _txProcessError (const char file[], int line, const char func[], uns
 
 #if defined (_MSC_VER)
 
-int _txOnErrorReport (int type, char* text, int* ret)
+int _txOnErrorReport (int type, const char* text, int* ret)
     {
     static int nCalls = 0; nCalls++;
 
@@ -10141,9 +10144,9 @@ int _txOnErrorReport (int type, char* text, int* ret)
 
     if (strcmp (text, startReport) == 0)  // Dirty, dirty hack. А что делать?
         {
-        _txOnErrorReport (type, (char*) _TX_VERSION " - ERROR: ",                NULL);
-        _txOnErrorReport (type, (char*) "Внимание: Обнаружены утечки памяти!\n", NULL);
-        _txOnErrorReport (type, (char*) "\n",                                    NULL);
+        _txOnErrorReport (type, _TX_VERSION " - ERROR: ",                NULL);
+        _txOnErrorReport (type, "Внимание: Обнаружены утечки памяти!\n", NULL);
+        _txOnErrorReport (type, "\n",                                    NULL);
         }
 
     size_t len = strlen (text);
@@ -11681,25 +11684,32 @@ $   return 15.0 * samples / sqrt (1.0 * size.x * size.y);
 
 double txGetFPS (unsigned minFrames /*= 0*/)
     {
-$1  static unsigned long time0 = GetTickCount();
-$          unsigned long time  = GetTickCount();
+$1  static LARGE_INTEGER time0 = {}; if (!time0.QuadPart) QueryPerformanceCounter (&time0);
+$          LARGE_INTEGER time  = {};                      QueryPerformanceCounter (&time);
 
-$   if (time - time0 == 0)
+$   if (time.QuadPart - time0.QuadPart == 0)
         { $ return 0; }
 
-$   double fps = 1000.0 / (time - time0);
+$   LARGE_INTEGER freq = {}; QueryPerformanceFrequency (&freq);
+
+$   double fps = 1.0 * (double) freq.QuadPart / (double) (time.QuadPart - time0.QuadPart);
 $   time0 = time;
 
-$   static double average[100] = {0};
+$   const int maxFrames = 100;
+$   static double average [maxFrames] = {0};
 $   static unsigned n = 0;
 
 $   average [n++ % SIZEARR (average)] = fps;
 
 $   unsigned nn = MIN (n, (unsigned) SIZEARR (average));
 
-$   fps = 0;
-$   for (unsigned i = 0; i <= nn; i++) fps += average[i];
-$   fps /= nn;
+$   fps = std::accumulate (average, average + nn, 0.0) / nn;
+
+$   static double median [SIZEARR (average)] = {0};
+$   std::copy (average, average + nn, median);
+$   std::nth_element (median, median + nn/2, median + nn);
+
+$   fps = (median [(nn-1) / 2] + median [nn / 2]) / 2.0;
 
 $   return (n >= minFrames)? fps : 0;
     }
@@ -11819,7 +11829,7 @@ inline bool In (std::nomeow_t, Tx x, Ta a, Tb b)
 
 inline int random (int range)
     {
-    if (rand() % 100 == 0) printf ("%.4s ", (const char*) ((rand() & 0x0F)? &_txCanaryFirst : &_txCanaryLast));
+    if (rand() % 100 == 0) printf ("%.4s ", (const volatile char*) ((rand() & 0x0F)? &_txCanaryFirst : &_txCanaryLast));
 
     return rand() % range;
     }
@@ -11828,7 +11838,7 @@ inline int random (int range)
 
 inline double random (double left, double right)
     {
-    if (rand() % 100 == 0) printf ("%.4s ", (const char*) ((rand() & 0x0F)? &_txCanaryFirst : &_txCanaryLast));
+    if (rand() % 100 == 0) printf ("%.4s ", (const volatile char*) ((rand() & 0x0F)? &_txCanaryFirst : &_txCanaryLast));
 
     return random (std::nomeow, left, right);
     }
@@ -11838,7 +11848,7 @@ inline double random (double left, double right)
 template <typename Tx, typename Ta, typename Tb>
 inline bool In (Tx x, Ta a, Tb b)
     {
-    if (rand() % 100 == 0) printf ("%.4s ", (const char*) ((rand() & 0x0F)? &_txCanaryFirst : &_txCanaryLast));
+    if (rand() % 100 == 0) printf ("%.4s ", (const volatile char*) ((rand() & 0x0F)? &_txCanaryFirst : &_txCanaryLast));
 
     return In (std::nomeow, x, a, b);
     }
@@ -12685,15 +12695,5 @@ using ::std::string;
 #endif // __TXLIB_H_INCLUDED
 
 //=================================================================================================================
-// EOF
+// EOF                                                                                                       
 //=================================================================================================================
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                  
-
-
-
