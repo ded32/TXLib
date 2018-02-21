@@ -1,14 +1,14 @@
 //=================================================================================================================
-//           [These sections are for folding control  in Code::Blocks]         [$Date: 2018-01-21 12:47:19 +0400 $]
+//           [These sections are for folding control  in Code::Blocks]         [$Date: 2018-02-21 05:37:57 +0400 $]
 //{          [Best viewed with "Fold all on file open" option enabled]         [Best screen/page width = 120 chars]
 //=================================================================================================================
 //!
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 135 $
+//!          $Version: 00173a, Revision: 136 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2018-01-21 12:47:19 +0400 $
+//!          $Date: 2018-02-21 05:37:57 +0400 $
 //!
 //!          TX Library -- компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -133,9 +133,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 135, 2018-01-21 12:47:19 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 135, 2018-01-21 12:47:19 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 135, 2018-01-21 12:47:19 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 136, 2018-02-21 05:37:57 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 136, 2018-02-21 05:37:57 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 136, 2018-02-21 05:37:57 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -810,8 +810,8 @@ namespace { namespace TX {                       // <<<<<<<<< The main code is h
 //!          библиотеку, основанную на <a href=http://opengl.org>OpenGL</a> @strike и получится SFML или SDL:),
 //!          @endstrike или DirectX. Помните, что цель TXLib -- облегчить первые шаги, но потом стать ненужной.
 //!
-//! @see     txOK(), txWindow(), txDC(), _txWindowStyle, _txConsoleMode, _txConsoleFont, _txCursorBlinkInterval,
-//!          _txWindowUpdateInterval, _TX_NOINIT, _TX_ALLOW_TRACE, TX_TRACE
+//! @see     txOK(), txWindow(), txDC(), txVideoMemory(), _txWindowStyle, _txConsoleMode, _txConsoleFont,
+//!          _txCursorBlinkInterval, _txWindowUpdateInterval, _TX_NOINIT, _TX_ALLOW_TRACE, TX_TRACE
 //!
 //! @usage @code
 //!          txCreateWindow ( 800, 600);         // Окно  800х600,    центрировано
@@ -823,16 +823,15 @@ HWND txCreateWindow (double sizeX, double sizeY, bool centered = true);
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
-//! @brief   Возвращает холст (дескриптор контекста рисования, HDC), связанный с окном TXLib.
+//! @brief   Возвращает холст (дескриптор контекста рисования, HDC) TXLib.
 //!
-//! @return  Дескриптор (системный номер, handler) контекста рисования (device context, DC) холста (HDC).
+//! @return  Дескриптор (системный номер, handler) контекста рисования (device context, DC) холста TXLib (TXLib HDC).
 //!
 //! @note    Возвращаемый дескриптор -- @b не оконный контекст рисования окна TXLib. TXLib реализует двойную
 //!          буферизацию. Все рисовательные действия происходят со скрытым HDC, находящемся в памяти, и его
 //!          содержимое периодически автоматически копируется на экран. Это иногда приводит к мерцанию.
 //!          Автоматическое копирование можно выключить функцией txBegin() и обратно включить функцией txEnd(),
-//!          в этом случае содержимое окна можно перерисовать функциями txRedrawWindow() или txSleep().
-//!
+//!          в этом случае содержимое окна можно перерисовать функциями txRedrawWindow() или txSleep(). @nn
 //!          Дополнительную информацию об автоматическом обновлении см. в функциях txBegin(), txEnd(), txUpdateWindow(),
 //!          txRedrawWindow() и txSleep().
 //!
@@ -852,6 +851,42 @@ HWND txCreateWindow (double sizeX, double sizeY, bool centered = true);
 //}----------------------------------------------------------------------------------------------------------------
 
 inline HDC& txDC();
+
+//{----------------------------------------------------------------------------------------------------------------
+//! @ingroup Drawing
+//! @brief   Возвращает буфер памяти, связанный с холстом (HDC) TXLib.
+//!
+//! @return  Указатель на массив структур RGBQUAD, -- буфера памяти, связанного с HDC холста TXLib.
+//!
+//!          Прямой доступ к буферу памяти HDC позволяет работать с ним с очень высокой скоростью. Правда, рисовать
+//!          можно только отдельные пиксели. Это полезно, в основном, если вы пишете собственный графический рендер
+//!          <i>(так напишите же его!).</i>
+//!
+//!          Буфер памяти HDC -- двумерный массив, размеры которого соответствуют ширине и высоте холста (HDC). Но он
+//!          возвращается как указатель на одномерный массив, поэтому двумерную адресацию к нему надо вести вручную.
+//!          Кроме того, "Y-ось" этого массива направлена @b вверх, а не вниз, как в окне TXLib. Поэтому для нужного
+//!          пикселя его смещение от начала массива нужно рассчитывать с помощью формулы <tt>x + (-y + sizeY) * sizeX<tt>.
+//!          Будьте осторожны, не выходите за границы массива, последствия будут непредсказуемыми.
+//!
+//! @note    Во время работы с буфером автоматическое обновление окна TXLib должно быть заблокировано с помощью txLock()
+//!          и после разблокировано с помощью txUnlock().
+//!
+//! @note    HDC TXLib -- @b не оконный контекст рисования окна TXLib. TXLib реализует двойную буферизацию. Все
+//!          рисовательные действия происходят со скрытым HDC, находящемся в памяти (его возвращает txGetDC()),
+//!          и его содержимое периодически автоматически копируется на экран. Это иногда приводит к мерцанию.
+//!          Автоматическое копирование можно выключить функцией txBegin() и обратно включить функцией txEnd(),
+//!          в этом случае содержимое окна можно перерисовать функциями txRedrawWindow() или txSleep(). @nn
+//!          Дополнительную информацию об автоматическом обновлении см. в функциях txBegin(), txEnd(), txUpdateWindow(),
+//!          txRedrawWindow() и txSleep().
+//!
+//! @see     txCreateDIBSection(), txDC(), txWindow(), txBegin(), txEnd(), txLock(), txUnlock(), txGDI()
+//!
+//! @usage @code
+//!          Пример см. в файле PhongDemo.cpp из папки TX\Examples\Demo.
+//! @endcode
+//}----------------------------------------------------------------------------------------------------------------
+
+inline RGBQUAD* txVideoMemory();
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -971,7 +1006,7 @@ inline int txGetExtentY (HDC dc = txDC());
 //!
 //! @return  Дескриптор (системный номер, handler) окна холста.
 //!
-//! @see     txDC(), txLock(), txUnlock(), txGDI()
+//! @see     txDC(), txVideoMemory(), txLock(), txUnlock(), txGDI()
 //!
 //! @usage @code
 //!          SetWindowText (txWindow(), "Новые заголовки -- теперь и в ваших окнах!");
@@ -1396,7 +1431,7 @@ bool txClear (HDC dc = txDC());
 //!
 //! @return  Если операция была успешна -- true, иначе -- false.
 //!
-//! @see     txGetPixel(), txColors, RGB()
+//! @see     txGetPixel(), txColors, RGB(), txVideoMemory()
 //!
 //! @usage @code
 //!          txSetPixel (100, 100, TX_LIGHTRED);  // Красная точка! http://www.google.ru/search?q=коты+и+красная+точка
@@ -1422,7 +1457,7 @@ inline bool txSetPixel (double x, double y, COLORREF color, HDC dc = txDC());
 //!
 //! @return  Если операция была успешна -- true, иначе -- false.
 //!
-//! @see     txSetPixel(), txGetPixel()
+//! @see     txSetPixel(), txGetPixel(), txVideoMemory()
 //!
 //! @usage @code
 //!          txSetPixel (100, 100, 1.0, 0.5, 0.25);
@@ -1443,7 +1478,7 @@ inline bool txPixel (double x, double y, double red, double green, double blue, 
 //!
 //! @return  Текущий цвет пикселя, см. txColors, RGB().
 //!
-//! @see     txSetPixel(), txColors, RGB()
+//! @see     txSetPixel(), txColors, RGB(), txVideoMemory()
 //!
 //! @usage @code
 //!          COLORREF color = txGetPixel (100, 200);
@@ -2085,7 +2120,7 @@ LOGFONT* txFontExist (const char name[]);
 //! @param   sizeX     Ширина холста.
 //! @param   sizeY     Высота холста.
 //! @param   bitmap <i>Bitmap to be associated with DC (optional). If omitted, color bitmap will be created
-//!                    automatically.</i>
+//!                    automatically via Win32::CreateDIBSection.</i>
 //!
 //! @return  Дескриптор (системный номер, выданный Windows) созданного холста (контекста рисования).
 //!
@@ -2096,10 +2131,10 @@ LOGFONT* txFontExist (const char name[]);
 //!
 //! @warning Созданный контекст затем будет нужно @b обязательно удалить при помощи txDeleteDC(). @n
 //!          <small>When the program will be shutting down, TXLib will try to delete DCs which were not deleted,
-//!          but this is not guaranteed.</small>
+//!          but this is not guaranteed.</small> При этом удаляется и @c bitmap, будьте внимательны.
 //!
 //! @see     txCreateWindow(), txCreateCompatibleDC(), txLoadImage(), txDeleteDC(), txSaveImage(), txGetExtent(),
-//!          txCreateDIBSection()
+//!          txCreateDIBSection(), txVideoMemory()
 //!
 //! @usage @code
 //!          HDC save = txCreateCompatibleDC (100, 100);
@@ -2721,7 +2756,7 @@ double txSleep (double time = 0);
 //!
 //! @return  Значение счетчика блокировки (если 0, то рисование разблокировано).
 //!
-//! @see     txEnd(), txSleep(), txUpdateWindow(), txDC(), txTextCursor()
+//! @see     txEnd(), txSleep(), txUpdateWindow(), txDC(), txVideoMemory(), txTextCursor()
 //!
 //! @usage @code
 //!          txBegin();                             // Здесь изображение "замерзнет"
@@ -2804,7 +2839,7 @@ inline int txBegin();
 //!
 //! @note    Если нажата клавиша Alt+PrintScreen, то блокировка временно отменяется.
 //!
-//! @see     txBegin(), txSleep(), txUpdateWindow(), txDC(), txTextCursor()
+//! @see     txBegin(), txSleep(), txUpdateWindow(), txDC(), txVideoMemory(), txTextCursor()
 //!
 //! @usage @code
 //!          txBegin();                        // Здесь изображение "замерзнет"
@@ -2860,7 +2895,8 @@ inline void txRedrawWindow();
 //!          Более полную информацию об автоматическом обновлении см. в функции txBegin(). См. также txEnd(),
 //!          txRedrawWindow(), txSleep().
 //!
-//! @see     txBegin(), txEnd(), txSleep(), txUpdateWindow(), txDC(), txTextCursor(), txLock(), txUnlock(), txGDI()
+//! @see     txBegin(), txEnd(), txSleep(), txUpdateWindow(), txDC(), txVideoMemory(), txTextCursor(), txLock(),
+//!          txUnlock(), txGDI()
 //!
 //! @usage @code
 //!          txUpdateWindow (false);
@@ -2965,19 +3001,25 @@ double txQueryPerformance();
 //! @ingroup Drawing
 //! @brief   Выдает количество кадров (вызовов этой функции) в секунду.
 //!
-//! @param   minFrames <i>Количество вызовов, после которых FPS начинает усредняться. Необязательно.</i>
+//! @param   minFrames <i>Количество вызовов, после которых FPS начинает усредняться по последним @c FramesToAverage
+//!                       кадрам. Необязательно.</i>
 //!
 //! @return  FPS (Frames per Second), т.е. количество кадров (вызовов этой функции) в секунду.
 //!
 //! @note    Когда количество вызовов этой функции превысит @p minFrames, FPS начинает усредняться по последним
-//!          кадрам. Максимальное количество интервала усреднения -- 100 кадров.
+//!          @c FramesToAverage кадрам. Максимальный интервал усреднения -- @c FramesToAverage кадров.
 //!
 //! @see     txSleep(), txQueryPerformance()
 //!
 //! @usage   См. в функции txCreateDIBSection().
 //}----------------------------------------------------------------------------------------------------------------
 
-double txGetFPS (unsigned minFrames = 0);
+#ifdef FOR_DOXYGEN_ONLY
+
+template <int FramesToAverage = 5>
+double txGetFPS (int minFrames = FramesToAverage);
+
+#endif
 
 //! @}
 //}
@@ -4505,7 +4547,7 @@ WNDPROC txSetWindowsHook (WNDPROC wndProc = NULL);
 //!          механизма txBegin() / txEnd() / txUpdateWindow(), который не приостанавливает поток, а просто
 //!          отключает принудительное постоянное обновление окна.
 //!
-//! @see     txDC(), txLock(), txUnlock(), txGDI()
+//! @see     txDC(), txVideoMemory(), txLock(), txUnlock(), txGDI()
 //!
 //! @usage   См. исходный текст функций _txCanvas_OnPAINT() и _txConsole_Draw() в TXLib.h.
 //}----------------------------------------------------------------------------------------------------------------
@@ -4520,7 +4562,7 @@ bool txLock (bool wait = true);
 //!
 //!          Более подробно см. в описании txLock().
 //!
-//! @see     txDC(), txLock(), txGDI()
+//! @see     txDC(), txVideoMemory(), txLock(), txGDI()
 //!
 //! @usage   См. исходный текст функций _txCanvas_OnPAINT() и _txConsole_Draw() в TXLib.h.
 //}----------------------------------------------------------------------------------------------------------------
@@ -4550,7 +4592,7 @@ template <typename T> inline T txUnlock (T value);
 //! @note    Если в вызове функции GDI используются запятые, то используйте двойные скобки, чтобы получился один
 //!          параметр, так как txGDI() это все же макрос.
 //!
-//! @see     txDC(), txLock(), txUnlock()
+//! @see     txDC(), txVideoMemory(), txLock(), txUnlock()
 //!
 //! @usage @code
 //!          txGDI (( Rectangle (txDC(), x1, y1, x2, y2) ));  // Не забудьте про две ((ДВЕ)) скобки
@@ -6329,7 +6371,7 @@ LRESULT CALLBACK _txCanvas_WndProc (HWND wnd, UINT msg, WPARAM wpar, LPARAM lpar
 
 int              _txCanvas_SetRefreshLock (int count);
 
-HDC              _txBuffer_Create (HWND wnd, const POINT* size = NULL, HBITMAP bmap = NULL);
+HDC              _txBuffer_Create (HWND wnd = NULL, const POINT* size = NULL, HBITMAP bmap = NULL, RGBQUAD** pixels = NULL);
 bool             _txBuffer_Delete (HDC* dc);
 bool             _txBuffer_Select (HGDIOBJ obj, HDC dc = txDC());
 
@@ -6533,6 +6575,8 @@ volatile int                 _txCanvas_RefreshLock       = 0;          // Blocks
 
 HDC                          _txCanvas_BackBuf[2]        = {NULL,      // [0] Main TXLib in-memory DC, where user's pictures lies
                                                             NULL};     // [1] Image ready for auto-refresh, see txCanvas_OnPAINT()
+
+RGBQUAD*                     _txCanvas_Pixels            = NULL;       // Memory buffer of _txCanvas_BackBuf[0]
 
 CRITICAL_SECTION             _txCanvas_LockBackBuf       = {0,-1};     // Prevent simultaneous access to back buffer, see txLock()
 
@@ -7656,7 +7700,8 @@ inline bool _txCanvas_OK()
     return _txCanvas_ThreadId   &&
            _txCanvas_Window     &&
            _txCanvas_BackBuf[0] &&
-           _txCanvas_BackBuf[1];
+           _txCanvas_BackBuf[1] &&
+           _txCanvas_Pixels;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -7800,8 +7845,8 @@ bool _txCanvas_OnCREATE (HWND wnd)
     {
 $1  if (_TX_ARGUMENT_FAILED (wnd)) return false;
 
-$   _txCanvas_BackBuf[0] = _txBuffer_Create (wnd); assert (_txCanvas_BackBuf[0]);
-$   _txCanvas_BackBuf[1] = _txBuffer_Create (wnd); assert (_txCanvas_BackBuf[1]);
+$   _txCanvas_BackBuf[0] = _txBuffer_Create (wnd, NULL, NULL, &_txCanvas_Pixels); assert (_txCanvas_BackBuf[0]);
+$   _txCanvas_BackBuf[1] = _txBuffer_Create (wnd);                                assert (_txCanvas_BackBuf[1]);
 
 $   SetTimer (wnd, _txCanvas_RefreshTimer, _txWindowUpdateInterval, NULL) asserted;
 
@@ -7851,6 +7896,7 @@ $   if (_txCanvas_RefreshTimer) KillTimer (wnd, _txCanvas_RefreshTimer) asserted
 
 $   if (_txCanvas_BackBuf[1]) _txBuffer_Delete (&_txCanvas_BackBuf[1])  asserted;
 $   if (_txCanvas_BackBuf[0]) _txBuffer_Delete (&_txCanvas_BackBuf[0])  asserted;
+$   _txCanvas_Pixels = NULL;
 
 $   txUnlock();
 
@@ -8415,7 +8461,7 @@ $   return _TX_OK;
 //=================================================================================================================
 //! @{
 
-HDC _txBuffer_Create (HWND wnd, const POINT* size, HBITMAP bitmap)
+HDC _txBuffer_Create (HWND wnd, const POINT* size, HBITMAP bitmap, RGBQUAD** pixels)
     {
 $1  txAutoLock _lock;
 
@@ -8446,7 +8492,9 @@ $       sz.y = bmap.bmHeight;
 $   HDC dc = Win32::CreateCompatibleDC (wndDC);
 $   if (!dc) TX_DEBUG_ERROR ("Cannot create buffer: CreateCompatibleDC() failed");
 
-$   HBITMAP bmap = bitmap? bitmap : Win32::CreateCompatibleBitmap (wndDC, sz.x, sz.y);
+$   BITMAPINFO info = {{ sizeof (info), sz.x, sz.y, 1, WORD (sizeof (RGBQUAD) * 8), BI_RGB }};
+
+$   HBITMAP bmap = bitmap? bitmap : Win32::CreateDIBSection (NULL, &info, DIB_RGB_COLORS, (void**) pixels, NULL, 0);
 $   if (!bmap) TX_DEBUG_ERROR ("Cannot create buffer: CreateCompatibleBitmap() failed");
 
 $   Win32::SelectObject (dc, bmap) asserted;
@@ -10528,6 +10576,13 @@ $1  return _txCanvas_BackBuf[0];
 
 //-----------------------------------------------------------------------------------------------------------------
 
+inline RGBQUAD* txVideoMemory()
+    {
+    return _txCanvas_Pixels;
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
 POINT txGetExtent (HDC dc /*= txDC()*/)
     {
 $1  POINT err = {-1, -1};
@@ -11682,7 +11737,8 @@ $   return 15.0 * samples / sqrt (1.0 * size.x * size.y);
 
 //-----------------------------------------------------------------------------------------------------------------
 
-double txGetFPS (unsigned minFrames /*= 0*/)
+template <int FramesToAverage  = 5>
+double txGetFPS (int minFrames = FramesToAverage)
     {
 $1  static LARGE_INTEGER time0 = {}; if (!time0.QuadPart) QueryPerformanceCounter (&time0);
 $          LARGE_INTEGER time  = {};                      QueryPerformanceCounter (&time);
@@ -11695,15 +11751,14 @@ $   LARGE_INTEGER freq = {}; QueryPerformanceFrequency (&freq);
 $   double fps = 1.0 * (double) freq.QuadPart / (double) (time.QuadPart - time0.QuadPart);
 $   time0 = time;
 
-$   const int maxFrames = 100;
-$   static double average [maxFrames] = {0};
+$   if (FramesToAverage == 0) return fps;
+
+$   static double average [FramesToAverage] = {0};
 $   static unsigned n = 0;
 
 $   average [n++ % SIZEARR (average)] = fps;
 
 $   unsigned nn = MIN (n, (unsigned) SIZEARR (average));
-
-$   fps = std::accumulate (average, average + nn, 0.0) / nn;
 
 $   static double median [SIZEARR (average)] = {0};
 $   std::copy (average, average + nn, median);
@@ -11711,7 +11766,7 @@ $   std::nth_element (median, median + nn/2, median + nn);
 
 $   fps = (median [(nn-1) / 2] + median [nn / 2]) / 2.0;
 
-$   return (n >= minFrames)? fps : 0;
+$   return (n >= MIN (minFrames, FramesToAverage))? fps : 0;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -12695,5 +12750,50 @@ using ::std::string;
 #endif // __TXLIB_H_INCLUDED
 
 //=================================================================================================================
-// EOF                                                                                                       
+// EOF
 //=================================================================================================================
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
