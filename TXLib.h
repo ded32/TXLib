@@ -1,14 +1,14 @@
 //=================================================================================================================
-//           [These sections are for folding control  in Code::Blocks]         [$Date: 2018-02-21 05:37:57 +0400 $]
+//           [These sections are for folding control  in Code::Blocks]         [$Date: 2018-02-24 02:31:04 +0400 $]
 //{          [Best viewed with "Fold all on file open" option enabled]         [Best screen/page width = 120 chars]
 //=================================================================================================================
 //!
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 136 $
+//!          $Version: 00173a, Revision: 137 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2018-02-21 05:37:57 +0400 $
+//!          $Date: 2018-02-24 02:31:04 +0400 $
 //!
 //!          TX Library -- компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -133,9 +133,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 136, 2018-02-21 05:37:57 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 136, 2018-02-21 05:37:57 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 136, 2018-02-21 05:37:57 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 137, 2018-02-24 02:31:04 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 137, 2018-02-24 02:31:04 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 137, 2018-02-24 02:31:04 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -241,6 +241,8 @@
 
     #define _GCC_VER                   ( __GNUC__*100 + __GNUC_MINOR__*10 + __GNUC_PATCHLEVEL__ )
 
+    #pragma     GCC diagnostic ignored "-Wpragmas"
+
     #if (_GCC_VER >= 420)
 
         #pragma GCC diagnostic warning "-Wall"
@@ -288,11 +290,11 @@
 
         #if (_GCC_VER >= 472)
         #pragma GCC diagnostic warning "-Wnarrowing"
-        #pragma GCC diagnostic ignored "-Wliteral-suffix"
         #endif
 
         #if (_GCC_VER >= 481)
         #pragma GCC diagnostic warning "-Waggressive-loop-optimizations"
+        #pragma GCC diagnostic ignored "-Wliteral-suffix"
         #pragma GCC diagnostic warning "-Wvarargs"
         #endif
 
@@ -342,6 +344,8 @@
         #pragma GCC optimize           "no-strict-aliasing"
 
     #endif
+
+    #pragma     GCC diagnostic warning "-Wpragmas"
 
     #if (_GCC_VER >= 420)
         #define _tx_thread             __thread
@@ -500,6 +504,7 @@
         #pragma warning (disable: 26135)        // Missing locking annotation
         #pragma warning (disable: 28125)        // The function must be called from within a try/except block
         #pragma warning (disable: 28159)        // Consider using another function instead
+        #pragma warning (disable: 4124)         // Using __fastcall with stack checking is ineffective
 
         #pragma setlocale              ("russian")  // Set source file encoding, see also _TX_CP
 
@@ -530,6 +535,23 @@
     #pragma warning (disable:  522)             // Remark: function "..." redeclared "inline" after being called
     #pragma warning (disable:  981)             // Remark: operands are evaluated in unspecified order
     #pragma warning (disable: 1684)             // Conversion from pointer to same-sized integral type (potential portability problem)
+
+#endif
+
+//-----------------------------------------------------------------------------------------------------------------
+
+#if (defined (_GCC_VER) && (_GCC_VER <  472)  || \
+     defined (_MSC_VER) && (_MSC_VER < 1000)) // Minimum requirements are now GCC 7.4.2 or MSVC 10.0 (2010)
+
+    #ifdef __GNUC__
+    #error
+    #error ---------------------------------------------------------------------------------------
+    #endif
+    #error TXLib.h: This version/revision will NOT work with GCC < 4.7.2 or MS Visual Studio < 2010, sorry.
+    #error
+    #error Please use TXLib.h previous stable version/revision OR upgrade your compiler.
+    #error ---------------------------------------------------------------------------------------
+    #error
 
 #endif
 
@@ -865,11 +887,12 @@ inline HDC& txDC();
 //!          Буфер памяти HDC -- двумерный массив, размеры которого соответствуют ширине и высоте холста (HDC). Но он
 //!          возвращается как указатель на одномерный массив, поэтому двумерную адресацию к нему надо вести вручную.
 //!          Кроме того, "Y-ось" этого массива направлена @b вверх, а не вниз, как в окне TXLib. Поэтому для нужного
-//!          пикселя его смещение от начала массива нужно рассчитывать с помощью формулы <tt>x + (-y + sizeY) * sizeX<tt>.
-//!          Будьте осторожны, не выходите за границы массива, последствия будут непредсказуемыми.
+//!          пикселя его смещение от начала массива нужно рассчитывать с помощью формулы <tt>x + (-y + sizeY) * sizeX</tt>.
+//!
+//! @warning Будьте осторожны, не выходите за границы массива, последствия будут непредсказуемыми.
 //!
 //! @note    Во время работы с буфером автоматическое обновление окна TXLib должно быть заблокировано с помощью txLock()
-//!          и после разблокировано с помощью txUnlock().
+//!          и после разблокировано с помощью txUnlock(). @nn
 //!
 //! @note    HDC TXLib -- @b не оконный контекст рисования окна TXLib. TXLib реализует двойную буферизацию. Все
 //!          рисовательные действия происходят со скрытым HDC, находящемся в памяти (его возвращает txGetDC()),
@@ -883,6 +906,7 @@ inline HDC& txDC();
 //!
 //! @usage @code
 //!          Пример см. в файле PhongDemo.cpp из папки TX\Examples\Demo.
+//!          Также см. пример в помощи по функции txCreateDIBSection().
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
@@ -2180,20 +2204,25 @@ HDC txCreateCompatibleDC (double sizeX, double sizeY, HBITMAP bitmap = NULL);
 //!          RGBQUAD и передать адрес этого указателя в качестве третьего параметра функции txCreateDIBSection().
 //!          Она изменит значение этого указателя так, что он станет указывать на массив цветов пикселей холста.
 //!
-//! @note    Память под массив RGBQUAD выделять @b не надо и освобождать его @b не надо, этим занимается сама
-//!          txCreateDIBSection() вместе с txDeleteDC().
-//!
 //!          Массив @p pixels одномерный, но по сути он описывает двумерное изображение. Поэтому с ним надо
 //!          работать как с двумерным прямоугольным массивом, физически расположенным в одномерном массиве:
 //!          вручную вычислять смещение от начала массива до нужного пикселя и после этого адресоваться к массиву.
-//!          (Так обычно делают, размещая двумерные массивы в динамической памяти.) См. пример использования ниже.
+//!          (Так обычно делают, размещая двумерные массивы в динамической памяти.) Кроме того, "Y-ось" этого
+//!          массива направлена @b вверх, а не вниз, как в окне TXLib. Поэтому для нужного пикселя его смещение
+//!          от начала массива нужно рассчитывать с помощью формулы <tt>x + (-y + sizeY) * sizeX</tt>.
+//!          См. пример использования ниже.
 //!
-//! @note    Аппаратно-независимые холсты -- это контексты устройств, связанные с аппаратно-независимыми растрами
-//!          (Device Independent Bitmaps, DIB) Windows.
+//! @warning Будьте осторожны, не выходите за границы массива, последствия будут непредсказуемыми. @nn
 //!
 //! @warning Созданный контекст затем будет нужно @b обязательно удалить при помощи txDeleteDC(). @n
 //!          <small>When the program will be shutting down, TXLib will try to delete DCs which were not deleted,
 //!          but this is not guaranteed.</small>
+//!
+//! @note    Память под массив RGBQUAD выделять @b не надо и освобождать его @b не надо, этим занимается сама
+//!          txCreateDIBSection() вместе с txDeleteDC(). @nn
+//!
+//! @note    Аппаратно-независимые холсты -- это контексты устройств, связанные с аппаратно-независимыми растрами
+//!          (Device Independent Bitmaps, DIB) Windows.
 //!
 //! @see     txCreateWindow(), txCreateCompatibleDC(), txLoadImage(), txDeleteDC(), txSaveImage(), txGetExtent(),
 //!          txCreateCompatibleDC()
@@ -2222,7 +2251,7 @@ HDC txCreateCompatibleDC (double sizeX, double sizeY, HBITMAP bitmap = NULL);
 //!                  for (int y = 0; y < size.y; y++)
 //!                  for (int x = 0; x < size.x; x++)
 //!                      {
-//!                      RGBQUAD* c = &buf [x + y*size.x];             // Get color at (x, y) within image buffer
+//!                      RGBQUAD* c = & buf [x + (-y + size.y) * size.x]; // Get color at (x, y) within image buffer
 //!
 //!                      c->rgbRed      = (BYTE) (255 - c->rgbRed);    // Negative colors
 //!                      c->rgbGreen    = (BYTE) (255 - c->rgbGreen);
@@ -3001,13 +3030,13 @@ double txQueryPerformance();
 //! @ingroup Drawing
 //! @brief   Выдает количество кадров (вызовов этой функции) в секунду.
 //!
-//! @param   minFrames <i>Количество вызовов, после которых FPS начинает усредняться по последним @c FramesToAverage
+//! @param   minFrames <i>Количество вызовов, после которых FPS начинает усредняться по последним @c txFramesToAverage
 //!                       кадрам. Необязательно.</i>
 //!
 //! @return  FPS (Frames per Second), т.е. количество кадров (вызовов этой функции) в секунду.
 //!
 //! @note    Когда количество вызовов этой функции превысит @p minFrames, FPS начинает усредняться по последним
-//!          @c FramesToAverage кадрам. Максимальный интервал усреднения -- @c FramesToAverage кадров.
+//!          @c txFramesToAverage кадрам. Максимальный интервал усреднения -- @c txFramesToAverage кадров.
 //!
 //! @see     txSleep(), txQueryPerformance()
 //!
@@ -3016,8 +3045,13 @@ double txQueryPerformance();
 
 #ifdef FOR_DOXYGEN_ONLY
 
-template <int FramesToAverage = 5>
-double txGetFPS (int minFrames = FramesToAverage);
+#if (__cplusplus >= 201100)
+    template <int txFramesToAverage = 5>
+#else
+    const     int txFramesToAverage = 5;
+#endif
+
+double txGetFPS (int minFrames = txFramesToAverage);
 
 #endif
 
@@ -11737,8 +11771,13 @@ $   return 15.0 * samples / sqrt (1.0 * size.x * size.y);
 
 //-----------------------------------------------------------------------------------------------------------------
 
-template <int FramesToAverage  = 5>
-double txGetFPS (int minFrames = FramesToAverage)
+#if (__cplusplus >= 201100)
+    template <int txFramesToAverage = 5>
+#else
+    const     int txFramesToAverage = 5;
+#endif
+
+double txGetFPS (int minFrames = txFramesToAverage)
     {
 $1  static LARGE_INTEGER time0 = {}; if (!time0.QuadPart) QueryPerformanceCounter (&time0);
 $          LARGE_INTEGER time  = {};                      QueryPerformanceCounter (&time);
@@ -11751,9 +11790,9 @@ $   LARGE_INTEGER freq = {}; QueryPerformanceFrequency (&freq);
 $   double fps = 1.0 * (double) freq.QuadPart / (double) (time.QuadPart - time0.QuadPart);
 $   time0 = time;
 
-$   if (FramesToAverage == 0) return fps;
+$   if (txFramesToAverage == 0) return fps;
 
-$   static double average [FramesToAverage] = {0};
+$   static double average [txFramesToAverage] = {0};
 $   static unsigned n = 0;
 
 $   average [n++ % SIZEARR (average)] = fps;
@@ -11766,7 +11805,7 @@ $   std::nth_element (median, median + nn/2, median + nn);
 
 $   fps = (median [(nn-1) / 2] + median [nn / 2]) / 2.0;
 
-$   return (n >= MIN (minFrames, FramesToAverage))? fps : 0;
+$   return ((int)n >= MIN (minFrames, txFramesToAverage))? fps : 0;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -12748,52 +12787,13 @@ using ::std::string;
 //-----------------------------------------------------------------------------------------------------------------
 
 #endif // __TXLIB_H_INCLUDED
-
+                                                                             
 //=================================================================================================================
-// EOF
+// EOF                                                                                                             
 //=================================================================================================================
                                                                                                                    
                                                                                                                    
                                                                                                                    
-                                                                                          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
