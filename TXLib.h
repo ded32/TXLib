@@ -1,14 +1,14 @@
 //=================================================================================================================
-//           [These sections are for folding control  in Code::Blocks]         [$Date: 2018-02-24 02:31:04 +0400 $]
+//           [These sections are for folding control  in Code::Blocks]         [$Date: 2018-09-11 17:44:46 +0400 $]
 //{          [Best viewed with "Fold all on file open" option enabled]         [Best screen/page width = 120 chars]
 //=================================================================================================================
 //!
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 137 $
+//!          $Version: 00173a, Revision: 138 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2018-02-24 02:31:04 +0400 $
+//!          $Date: 2018-09-11 17:44:46 +0400 $
 //!
 //!          TX Library -- компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -115,9 +115,9 @@
 //!            Версия библиотеки в целочисленном формате: старшее слово -- номер версии, младшее -- номер ревизии,
 //!            в двоично-десятичном формате. Например, @c 0x172a0050 -- версия @c 0.172a, ревизия @c 50.
 //! @code
-//!            #define _TX_VERSION "TXLib [Version: 1.72a, Revision 50]"                 //
+//!            #define _TX_VERSION "TXLib [Ver: 1.73a, Rev: 105, Date: 2018-06-12 00:00:00 +0300]"                 //
 //!            #define _TX_AUTHOR  "Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru)"  //  ПРИМЕР
-//!            #define _TX_VER      0x172a0000                                           //
+//!            #define _TX_VER      0x173a0000                                           //
 //! @endcode
 //!            Эти константы автоматически обновляются при изменении версии.
 //!
@@ -133,13 +133,13 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 137, 2018-02-24 02:31:04 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 137, 2018-02-24 02:31:04 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 137, 2018-02-24 02:31:04 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 138, 2018-09-11 17:44:46 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 138, 2018-09-11 17:44:46 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 138, 2018-09-11 17:44:46 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
-#define _TX_V_FROM_CVS(_1,file,ver,rev,date,auth,_2)  "TXLib [Ver: " #ver ", Rev: " #rev "]"
+#define _TX_V_FROM_CVS(_1,file,ver,rev,date,auth,_2)  "TXLib [Ver: " #ver ", Rev: " #rev ", Date: " #date "]"
 #define _TX_A_FROM_CVS(_1,file,ver,rev,date,auth,_2)  "Copyright (C) " auth
 //! @endcond
 
@@ -294,11 +294,14 @@
 
         #if (_GCC_VER >= 481)
         #pragma GCC diagnostic warning "-Waggressive-loop-optimizations"
-        #pragma GCC diagnostic ignored "-Wliteral-suffix"
         #pragma GCC diagnostic warning "-Wvarargs"
+
+        #pragma GCC diagnostic ignored "-Wliteral-suffix"
         #endif
 
         #if (_GCC_VER >= 510)
+        #pragma GCC diagnostic error   "-Wsizeof-array-argument"
+
         #pragma GCC diagnostic warning "-Wconditionally-supported"
         #pragma GCC diagnostic warning "-Wformat=2"
         #pragma GCC diagnostic warning "-Wformat-signedness"
@@ -541,7 +544,7 @@
 //-----------------------------------------------------------------------------------------------------------------
 
 #if (defined (_GCC_VER) && (_GCC_VER <  472)  || \
-     defined (_MSC_VER) && (_MSC_VER < 1000)) // Minimum requirements are now GCC 7.4.2 or MSVC 10.0 (2010)
+     defined (_MSC_VER) && (_MSC_VER < 1000)) // Minimum requirements are now GCC 4.7.2 or MSVC 10.0 (2010)
 
     #ifdef __GNUC__
     #error
@@ -576,6 +579,7 @@
 
 #define _USE_MATH_DEFINES              1        // Math.h's M_PI etc.
 #define __STDC_WANT_LIB_EXT1__         1        // String and output *_s functions
+#define _ALLOW_RTCc_IN_STL             1        // MSVC C2338: /RTCc rejects conformant code, so it isn't supported by libc.
 #define _SECURE_SCL                    1        // Enable checked STL iterators to throw an exception on incorrect use
 #if defined (_DEBUG)
 #define _HAS_ITERATOR_DEBUGGING        1
@@ -845,7 +849,7 @@ HWND txCreateWindow (double sizeX, double sizeY, bool centered = true);
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
-//! @brief   Возвращает холст (дескриптор контекста рисования, HDC) TXLib.
+//! @brief   Возвращает холст (дескриптор контекста рисования, HDC) окна рисования TXLib.
 //!
 //! @return  Дескриптор (системный номер, handler) контекста рисования (device context, DC) холста TXLib (TXLib HDC).
 //!
@@ -1777,8 +1781,10 @@ bool txTriangle (double x1, double y1, double x2, double y2, double x3, double y
     (void)x1; (void)y1; (void)x2; (void)y2; (void)x3; (void)y3;
 
     MessageBox (txWindow(),
+               "txTriangle (double x1, double y1, double x2, double y2, double x3, double y3)\n\n"
                "Эта функция не реализована в библиотеке, потому что вы легко можете реализовать ее сами\n"
-               "как функцию с параметрами, используя txPolygon(). См. \"Пример с функциями с параметрами\".",
+               "как функцию с параметрами, используя txPolygon(). См. \"Пример с функциями с параметрами\".\n"
+               "Ну или нарисовать тремя линиями. :)",
                "TXLib сообщает", MB_ICONINFORMATION);
 
     return false;
@@ -2346,19 +2352,19 @@ HDC txCreateDIBSection (double sizeX, double sizeY, COLORREF** pixels);
 //!
 //! @usage   Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
-//!          HDC  background_FromTXLibHelp = txLoadImage ("Resources\\Images\\Background.bmp");
+//!          HDC  background_CopiedFromHelp = txLoadImage ("Resources\\Images\\Background.bmp");
 //!
-//!          if (!background_FromTXLibHelp)
+//!          if (!background_CopiedFromHelp)
 //!              txMessageBox ("Не могу загрузить фон из Background.bmp", "Да, я скопировал это из примера");
 //!
 //!          // Не надо часто загружать одно и то же изображение, особенно в цикле -- программа будет тормозить!
 //!          // Загрузите один раз перед циклом, потом используйте много раз.
 //!          // Посмотрите, как сделано в примере TX\Examples\Tennis\Tennis.cpp.
 //!
-//!          txBitBlt (txDC(), 0, 0, 800, 600, background_FromTXLibHelp, 0, 0);
+//!          txBitBlt (txDC(), 0, 0, 800, 600, background_CopiedFromHelp, 0, 0);
 //!
 //!          ...
-//!          txDeleteDC (background_FromTXLibHelp);
+//!          txDeleteDC (background_CopiedFromHelp);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
@@ -2378,17 +2384,17 @@ HDC txLoadImage (const char filename[], unsigned imageFlags = IMAGE_BITMAP, unsi
 //!
 //! @usage   Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
-//!          HDC  background_FromTXLibHelp = txLoadImage ("Resources\\Images\\Background.bmp");
+//!          HDC  background_CopiedFromHelp = txLoadImage ("Resources\\Images\\Background.bmp");
 //!
-//!          if (!background_FromTXLibHelp)
+//!          if (!background_CopiedFromHelp)
 //!              txMessageBox ("Не могу загрузить фон из Background.bmp, и я скопировал это из примера.", "Oh, not now");
 //!
 //!          // См. важный комментарий в примере к функции txLoadImage!
 //!
-//!          txBitBlt (txDC(), 0, 0, 800, 600, background_FromTXLibHelp, 0, 0);
+//!          txBitBlt (txDC(), 0, 0, 800, 600, background_CopiedFromHelp, 0, 0);
 //!
 //!          ...
-//!          txDeleteDC (background_FromTXLibHelp);
+//!          txDeleteDC (background_CopiedFromHelp);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
@@ -2424,17 +2430,17 @@ bool txDeleteDC (HDC* dc);
 //!
 //! @usage   Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
-//!          HDC  background_FromTXLibHelp = txLoadImage ("Resources\\Images\\Background.bmp");
+//!          HDC  background_CopiedFromHelp = txLoadImage ("Resources\\Images\\Background.bmp");
 //!
-//!          if (!background_FromTXLibHelp)
+//!          if (!background_CopiedFromHelp)
 //!              ("Не могу фон из загрузить Background.bmp, и да, я взял этот код из примера.", "Once again :(");
 //!
 //!          // См. важный комментарий в примере к функции txLoadImage!
 //!
-//!          txBitBlt (txDC(), 0, 0, 800, 600, background_FromTXLibHelp);
+//!          txBitBlt (txDC(), 0, 0, 800, 600, background_CopiedFromHelp);
 //!
 //!          ...
-//!          txDeleteDC (background_FromTXLibHelp);
+//!          txDeleteDC (background_CopiedFromHelp);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
@@ -2499,21 +2505,21 @@ inline bool txBitBlt (double xDest, double yDest, HDC sourceImage, double xSourc
 //!
 //! @usage   Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
-//!          HDC  superman_FromTXLibHelp = txLoadImage ("Resources\\Images\\Superman.bmp");
+//!          HDC  superman_CopiedFromHelp = txLoadImage ("Resources\\Images\\Superman.bmp");
 //!
-//!          if (!superman_FromTXLibHelp)
+//!          if (!superman_CopiedFromHelp)
 //!              txMessageBox ("Cannot load superman, all the monsters will succeed (I copied them from TXLib Help)", "Sorry");
 //!
 //!          // См. важный комментарий в примере к функции txLoadImage!
 //!
-//!          txTransparentBlt (txDC(), 0, 0, 800, 600, superman_FromTXLibHelp);
+//!          txTransparentBlt (txDC(), 0, 0, 800, 600, superman_CopiedFromHelp);
 //!
 //!          // А можно и так:
-//!          Win32::TransparentBlt (txDC(), 0, 0, 800, 600, superman_FromTXLibHelp, 0, 0, 80, 60, -1); // 10x zoom
+//!          Win32::TransparentBlt (txDC(), 0, 0, 800, 600, superman_CopiedFromHelp, 0, 0, 80, 60, -1); // 10x zoom
 //!          // Познай мощь Win32 GDI, отказавшись от TXLib'а! :) см. TransparentBlt в MSDN.com.
 //!
 //!          ...
-//!          txDeleteDC (superman_FromTXLibHelp);  // So pity :( But he was only a copy from TXLib Help.
+//!          txDeleteDC (superman_CopiedFromHelp);  // So pity :( But he was only a copy from TXLib Help.
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
@@ -2626,22 +2632,22 @@ inline bool txTransparentBlt (double xDest, double yDest, HDC sourceImage,
 //!
 //! @usage   Пример использования см. в файле TX\Examples\Tennis\Tennis.cpp.
 //! @code
-//!          HDC  batman_FromTXLibHelp = txLoadImage ("Resources\\Images\\Batman.bmp");
+//!          HDC  batman_CopiedFromHelp = txLoadImage ("Resources\\Images\\Batman.bmp");
 //!
-//!          if (!batman_FromTXLibHelp)
+//!          if (!batman_CopiedFromHelp)
 //!              txMessageBox ("Call to Batman failed because I copied it from TXLib Help", "Do save yourself");
 //!
-//!          txUseAlpha (batman_FromTXLibHelp);  // If image colors are not premultiplied, see above
+//!          txUseAlpha (batman_CopiedFromHelp);  // If image colors are not premultiplied, see above
 //!
 //!          // См. важный комментарий в примере к функции txLoadImage!
 //!
-//!          txAlphaBlend (txDC(), 0, 0, 800, 600, batman_FromTXLibHelp);
+//!          txAlphaBlend (txDC(), 0, 0, 800, 600, batman_CopiedFromHelp);
 //!
 //!          ...
-//!          txDeleteDC (batman_FromTXLibHelp);  // Don't worry, batman will return in "Batman returns" movie, later...
+//!          txDeleteDC (batman_CopiedFromHelp);  // Don't worry, batman will return in "Batman returns" movie, later...
 //!          ...
 //!
-//!          return batman_FromTXLibHelp;        // ...and there he comes -- in TXLib copy form
+//!          return batman_CopiedFromHelp;        // ...and there he comes -- in TXLib copy form
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
@@ -3415,7 +3421,7 @@ bool txPlaySound (const char filename[] = NULL, DWORD mode = SND_ASYNC);
 //!              MessageBox (txWindow(), "Хватит и обычного MessageBox()", "Win32 сообщает", 0);
 //!              }
 //!          else
-//!              txMessageBox ("Спасаем от кракозябл вместо русских букв. Гарантия. Недорого.");
+//!              txMessageBox ("Спасаем от кракозябл вместо русских букв, без регистрации и СМС.");
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
@@ -7496,8 +7502,8 @@ $   if (useHotPatching && oldFunc)
         {
 $       const size_t jmpSz = 1 + sizeof (DWORD);  // sizeof (JMP rel instruction)
 
-$       DWORD rights = PAGE_READWRITE;
-$       if (!VirtualProtect ((void*)(uintptr_t) oldFunc, jmpSz, rights, &rights)) return NULL;
+$       DWORD oldRights = 0;
+$       if (!VirtualProtect ((void*)(uintptr_t) oldFunc, jmpSz, PAGE_EXECUTE_READWRITE, &oldRights)) return NULL;
 
         // Overwrite oldFunc prolog with JMP trampoline to newFunc.
         // Calling oldFunc from any location will lead to newFunc call anyway.
@@ -7505,7 +7511,9 @@ $       if (!VirtualProtect ((void*)(uintptr_t) oldFunc, jmpSz, rights, &rights)
 $       *(BYTE*)  ((char*)(uintptr_t) oldFunc + 0) = 0xE9;  // JMP rel
 $       *(DWORD*) ((char*)(uintptr_t) oldFunc + 1) = (DWORD) ((char*)(uintptr_t) newFunc - (char*)(uintptr_t) oldFunc - jmpSz);
 
-$       VirtualProtect ((void*)(uintptr_t) oldFunc, jmpSz, rights, &rights);
+$       FlushInstructionCache (GetCurrentProcess(), (void*) oldFunc, jmpSz);
+
+$       VirtualProtect ((void*)(uintptr_t) oldFunc, jmpSz, oldRights, &oldRights);
 
 $       return oldFunc;
         }
@@ -10542,7 +10550,8 @@ $1  time_t timeT     = time (NULL) - clock()/CLOCKS_PER_SEC;
     _tx_snprintf_s (text, sizeof (text) - 1,
 
                     "Developed with:\n\n"
-                    "The Dumb Artist Library (TX Library) - " _TX_VERSION "\n" _TX_AUTHOR "\n"
+                    "The Dumb Artist Library (TX Library)\n"
+                    _TX_VERSION "\n" _TX_AUTHOR "\n"
                     "See license on: http://txlib.ru\n\n"
 
                     "TXLib file:" "\t" __FILE__ "\n"
@@ -10802,10 +10811,10 @@ bool txLine (double x0, double y0, double x1, double y1, HDC dc /*= txDC()*/)
     {
 $1  if (_TX_DEFAULT_HDC_FAILED (dc)) return false;
 
-$   txGDI ((Win32::MoveToEx (dc, ROUND (x0), ROUND (y0), NULL)), dc) asserted;
-$   txGDI ((Win32::LineTo   (dc, ROUND (x1), ROUND (y1)      )), dc) asserted;
+$   bool ok  = txGDI ((Win32::MoveToEx (dc, ROUND (x0), ROUND (y0), NULL)), dc);
+$        ok &= txGDI ((Win32::LineTo   (dc, ROUND (x1), ROUND (y1)      )), dc);
 
-$   return true;
+$   return ok;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -10814,9 +10823,7 @@ bool txRectangle (double x0, double y0, double x1, double y1, HDC dc /*= txDC()*
     {
 $1  if (_TX_DEFAULT_HDC_FAILED (dc)) return false;
 
-$   txGDI ((Win32::Rectangle (dc, ROUND (x0), ROUND (y0), ROUND (x1), ROUND (y1))), dc) asserted;
-
-$   return true;
+$   return txGDI ((Win32::Rectangle (dc, ROUND (x0), ROUND (y0), ROUND (x1), ROUND (y1))), dc);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -10835,9 +10842,7 @@ bool txEllipse (double x0, double y0, double x1, double y1, HDC dc /*= txDC()*/)
     {
 $1  if (_TX_DEFAULT_HDC_FAILED (dc)) return false;
 
-$   txGDI ((Win32::Ellipse (dc, ROUND (x0), ROUND (y0), ROUND (x1), ROUND (y1))), dc) asserted;
-
-$   return true;
+$   return txGDI ((Win32::Ellipse (dc, ROUND (x0), ROUND (y0), ROUND (x1), ROUND (y1))), dc);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -10915,10 +10920,10 @@ $1  if (_TX_ARGUMENT_FAILED    (text)) return false;
 $   if (_TX_DEFAULT_HDC_FAILED (dc))   return false;
 
 $   int len = (int) strlen (text);
-$   txGDI (!!(Win32::TextOut (dc, ROUND (x), ROUND (y), text, len)), dc) asserted;
+$   bool ok = txGDI (!!(Win32::TextOut (dc, ROUND (x), ROUND (y), text, len)), dc);
 $   Win32::GetPixel (dc, 0, 0);
 
-$   return true;
+$   return ok;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -10956,7 +10961,7 @@ $   bool ok = false;
 
 $   if (Win32::DrawText)
         {
-$       txGDI ((Win32::DrawText (dc, text, -1, &r, format)), dc) asserted;
+$       ok = txGDI ((Win32::DrawText (dc, text, -1, &r, format)), dc);
 $       Win32::GetPixel (dc, 0, 0);
 $       ok = true;
         }
@@ -11234,7 +11239,7 @@ $       ok &= txGDI (!!(Win32::BitBlt         (destImage,   ROUND (xDest),   ROU
 //-----------------------------------------------------------------------------------------------------------------
 
 inline bool txTransparentBlt (double xDest, double yDest, HDC sourceImage,
-                              double xSource /*= 0*/, double ySource /*= 0*/, COLORREF transColor /*= TX_BLACK*/)
+                              COLORREF transColor /*= TX_BLACK*/, double xSource /*= 0*/, double ySource /*= 0*/)
     {
 $1  if (_TX_TXWINDOW_FAILED()) return false;
 
@@ -11268,14 +11273,12 @@ $       TX_ERROR ("Прямоугольник копируемой области {%lg, %lg, %lg, %lg} не полн
 $   if (alpha < 0) alpha = 0;
 $   if (alpha > 1) alpha = 1;
 
-$   BITMAP bmap = {0};
-$   Win32::GetObject (txGDI ((Win32::GetCurrentObject (sourceImage, OBJ_BITMAP)), sourceImage), sizeof (bmap), &bmap) asserted;
+$   BITMAP bmap = { 0, 0, 0, 0, 0, 24 };
+$   bool ok = Win32::GetObject (txGDI ((Win32::GetCurrentObject (sourceImage, OBJ_BITMAP)), sourceImage), sizeof (bmap), &bmap);
 
 $   BLENDFUNCTION blend = { AC_SRC_OVER, 0, (BYTE) ROUND (alpha * 255), (BYTE) ((bmap.bmBitsPixel == 32)? AC_SRC_ALPHA : 0) };
 
-$   bool ok = (Win32::AlphaBlend != NULL);
-
-$   if (ok)
+$   if (Win32::AlphaBlend)
         {
 $       ok &= txGDI (!!(Win32::AlphaBlend (destImage,   ROUND (xDest),   ROUND (yDest),   ROUND (width), ROUND (height),
                                            sourceImage, ROUND (xSource), ROUND (ySource), ROUND (width), ROUND (height), blend)),
@@ -11286,6 +11289,7 @@ $       ok &= txGDI (!!(Win32::AlphaBlend (destImage,   ROUND (xDest),   ROUND (
 $       ok &= txGDI (!!(Win32::BitBlt     (destImage,   ROUND (xDest),   ROUND (yDest),   ROUND (width), ROUND (height),
                                            sourceImage, ROUND (xSource), ROUND (ySource), SRCCOPY)),
                                            destImage);
+$       ok = false;
         }
 
 $   return ok;
@@ -11307,7 +11311,8 @@ HDC txUseAlpha (HDC image)
     {
 $1  if (_TX_HDC_FAILED (image)) return NULL;
 
-$   HBITMAP bitmap = (HBITMAP) Win32::GetCurrentObject (image, OBJ_BITMAP); assert (bitmap);
+$   HBITMAP bitmap = (HBITMAP) Win32::GetCurrentObject (image, OBJ_BITMAP);
+$   if (!bitmap) return NULL;
 
 $   DIBSECTION dib = {{0}};
 $   Win32::GetObject (bitmap, sizeof (dib), &dib) asserted;
@@ -12276,7 +12281,7 @@ $   return pw;
 //!          @tr <tt> $$$$_           </tt> @td Печать местоположения в коде (только имя функции).
 //!          @tbr
 //!          @tr <tt> $test (cond)    </tt> @td Печать результата теста различным цветом в зависимости от условия @c cond.
-//!          @tr <tt> $unittest (code, ethalon) </tt> @td Печать результата <b>юнит-теста</b> @c code с ожидаемым результатом @c ethalon.
+//!          @tr <tt> $unittest (code, expected) </tt> @td Печать результата <b>юнит-теста</b> @c code с ожидаемым результатом @c expected.
 //!          @tbr
 //!          @tr <tt> $n              </tt> @td Перевод строки (печать @c '\\n').
 //!          @tr <tt> $nn             </tt> @td Пустая  строка (печать @c '\\n\\n').
@@ -12366,6 +12371,10 @@ $   return pw;
     #define $debug  if (0)
 #endif
 
+#define $$d         $debug
+#define $$w         $$$$
+#define $$b         DebugBreak()
+
 //-----------------------------------------------------------------------------------------------------------------
 
 #define $H            txSetConsoleAttr (FOREGROUND_BLACK        | BACKGROUND_BLACK);
@@ -12439,19 +12448,19 @@ $   return pw;
 
 #define $status(cond) $test (cond)
 
-#define $unittest( code, ethalon )                                                                                             \
-    {                                                                                                                          \
-    const auto& _result  = (code);                                                                                             \
-    const auto& _ethalon = (ethalon);                                                                                          \
-                                                                                                                               \
-    if (_result == _ethalon)                                                                                                   \
-        { $so std::cerr << "[PASSED] " __TX_FILELINE__ ": " #code; }                                                           \
-    else                                                                                                                       \
-        { $se std::cerr << "[FAILED] " __TX_FILELINE__ ": " #code " == (" << _result << "), should be (" << _ethalon << ")"; } \
-                                                                                                                               \
-    $n;                                                                                                                        \
-                                                                                                                               \
-    (_result == _ethalon);                                                                                                     \
+#define $unittest( code, expected )                                                                                             \
+    {                                                                                                                           \
+    const auto& _result   = (code);                                                                                             \
+    const auto& _expected = (expected);                                                                                         \
+                                                                                                                                \
+    if (_result == _expected)                                                                                                   \
+        { $so std::cerr << "[PASSED] " __TX_FILELINE__ ": " #code; }                                                            \
+    else                                                                                                                        \
+        { $se std::cerr << "[FAILED] " __TX_FILELINE__ ": " #code " == (" << _result << "), should be (" << _expected << ")"; } \
+                                                                                                                                \
+    $n;                                                                                                                         \
+                                                                                                                                \
+    (_result == _expected);                                                                                                     \
     }
 
 //=================================================================================================================
@@ -12597,6 +12606,26 @@ template <typename T, int N> inline
     }
 
 #endif
+
+//-----------------------------------------------------------------------------------------------------------------
+
+std::ostream& operator << (std::ostream& stream, const POINT& point)
+    {
+    stream << "{ " << point.x << ", " << point.y << " }";
+    return stream;
+    }
+
+std::ostream& operator << (std::ostream& stream, const SIZE& size)
+    {
+    stream << "{ " << size.cx << ", " << size.cy << " }";
+    return stream;
+    }
+
+std::ostream& operator << (std::ostream& stream, const RECT& rect)
+    {
+    stream << "{ " << rect.left << ", " << rect.top << ", " << rect.right << ", " << rect.bottom << " }";
+    return stream;
+    }
 
 //! @endcond
 
@@ -12787,13 +12816,184 @@ using ::std::string;
 //-----------------------------------------------------------------------------------------------------------------
 
 #endif // __TXLIB_H_INCLUDED
-                                                                             
+
 //=================================================================================================================
-// EOF                                                                                                             
+// EOF
 //=================================================================================================================
                                                                                                                    
                                                                                                                    
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
