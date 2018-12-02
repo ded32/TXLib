@@ -1,14 +1,14 @@
 //=================================================================================================================
-//           [These sections are for folding control  in Code::Blocks]         [$Date: 2018-09-11 17:44:46 +0400 $]
+//           [These sections are for folding control  in Code::Blocks]         [$Date: 2018-12-02 05:32:31 +0400 $]
 //{          [Best viewed with "Fold all on file open" option enabled]         [Best screen/page width = 120 chars]
 //=================================================================================================================
 //!
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 138 $
+//!          $Version: 00173a, Revision: 139 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2018-09-11 17:44:46 +0400 $
+//!          $Date: 2018-12-02 05:32:31 +0400 $
 //!
 //!          TX Library -- компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -133,9 +133,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 138, 2018-09-11 17:44:46 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 138, 2018-09-11 17:44:46 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 138, 2018-09-11 17:44:46 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 139, 2018-12-02 05:32:31 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 139, 2018-12-02 05:32:31 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 139, 2018-12-02 05:32:31 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -357,31 +357,32 @@
     #endif
 
     #if (_GCC_VER >= 472)
-        #define _tx_explicit           explicit
-
         #if !defined (_TX_TESTING)              // This is not a fair play, but this pragma is the only way to clear the
         #pragma GCC system_header               // "override controls (override/final) only available with -std=c++11
         #endif                                  // or -std=gnu++11" warning when -std=... command line option is not set.
 
-        #define _TX_DEPRECATED         __attribute__ (( deprecated ))
-
     #else
-        #define _tx_explicit
-        #define _TX_DEPRECATED
+        #define explicit
 
     #endif
 
-    #ifndef MINGW_HAS_SECURE_API
-    #define MINGW_HAS_SECURE_API       1
+    #ifndef     MINGW_HAS_SECURE_API
+        #define MINGW_HAS_SECURE_API   1
     #endif
 
-    #define _GLIBCXX_DEBUG
-    #define _GLIBCXX_DEBUG_PEDANTIC
+    #ifndef     _GLIBCXX_NDEBUG                 // TXLib enables _GLIBCXX_DEBUG by default. When using third-party libraries
+        #define _GLIBCXX_DEBUG                  // compiled without _GLIBCXX_DEBUG (SFML, for example), #define _GLIBCXX_NDEBUG
+        #define _GLIBCXX_DEBUG_PEDANTIC         // *before* including TXLib.h.
+    #endif
 
-    #define _TX_CHECK_FORMAT( arg )    __attribute__ (( format (printf, (arg), (arg)+1) ))
+    #if defined (_WIN64)                        // removed in x86 because printf ("%lg", double) failure, this prints 0 always
+    #ifndef     __USE_MINGW_ANSI_STDIO
+        #define __USE_MINGW_ANSI_STDIO 1
+    #endif
+    #endif
 
     template <typename T>
-    inline T _txNOP (T value)          { return value; }      // To suppress performance warnings in assert etc.
+    inline T _txNOP (T value)          { return value; }   // To suppress performance warnings in assert etc.
 
     // From MinGW\include\float.h which is replaced by MinGW\lib\gcc\i686-pc-mingw32\x.x.x\include\float.h
     extern "C" __declspec (dllimport)  unsigned __cdecl _controlfp (unsigned control, unsigned mask);
@@ -389,10 +390,9 @@
 
 #else
 
-    #define _TX_CHECK_FORMAT( arg )
-    #define _TX_DEPRECATED
+    #define     __attribute__( attr )
 
-    #define _txNOP( value )            ( value )
+    #define     _txNOP( value )        ( value )
 
 #endif
 
@@ -518,11 +518,9 @@
 
         #define _CRT_SECURE_CPP_OVERLOAD_SECURE_NAMES  1
 
-        #define _tx_explicit           explicit
-
     #else
 
-        #define _tx_explicit
+        #define explicit
 
     #endif
 
@@ -876,7 +874,7 @@ HWND txCreateWindow (double sizeX, double sizeY, bool centered = true);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-inline HDC& txDC();
+inline HDC& txDC() __attribute__ ((warn_unused_result));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -914,7 +912,7 @@ inline HDC& txDC();
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-inline RGBQUAD* txVideoMemory();
+inline RGBQUAD* txVideoMemory() __attribute__ ((warn_unused_result));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -960,7 +958,7 @@ bool txSetDefaults (HDC dc = txDC());
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-inline bool txOK();
+inline bool txOK() __attribute__ ((warn_unused_result));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -983,7 +981,7 @@ inline bool txOK();
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-inline POINT txGetExtent (HDC dc = txDC());
+inline POINT txGetExtent (HDC dc = txDC()) __attribute__ ((warn_unused_result));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1004,7 +1002,7 @@ inline POINT txGetExtent (HDC dc = txDC());
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-inline int txGetExtentX (HDC dc = txDC());
+inline int txGetExtentX (HDC dc = txDC()) __attribute__ ((warn_unused_result));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1026,7 +1024,7 @@ inline int txGetExtentX (HDC dc = txDC());
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-inline int txGetExtentY (HDC dc = txDC());
+inline int txGetExtentY (HDC dc = txDC()) __attribute__ ((warn_unused_result));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1042,7 +1040,7 @@ inline int txGetExtentY (HDC dc = txDC());
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-inline HWND txWindow();
+inline HWND txWindow() __attribute__ ((warn_unused_result));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Technical
@@ -1055,7 +1053,7 @@ inline HWND txWindow();
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-inline const char* txVersion();
+inline const char* txVersion() __attribute__ ((warn_unused_result));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Technical
@@ -1068,7 +1066,7 @@ inline const char* txVersion();
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-inline unsigned txVersionNumber();
+inline unsigned txVersionNumber() __attribute__ ((warn_unused_result));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Technical
@@ -1102,7 +1100,7 @@ inline unsigned txVersionNumber();
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-const char* txGetModuleFileName (bool fileNameOnly = true);
+const char* txGetModuleFileName (bool fileNameOnly = true) __attribute__ ((warn_unused_result));
 
 //! @}
 //}
@@ -1276,7 +1274,7 @@ COLORREF txColor (double red, double green, double blue);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-COLORREF txGetColor (HDC dc = txDC());
+COLORREF txGetColor (HDC dc = txDC()) __attribute__ ((warn_unused_result));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1335,7 +1333,7 @@ COLORREF txFillColor (double red, double green, double blue);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-COLORREF txGetFillColor (HDC dc = txDC());
+COLORREF txGetFillColor (HDC dc = txDC()) __attribute__ ((warn_unused_result));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1357,7 +1355,7 @@ COLORREF txGetFillColor (HDC dc = txDC());
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-unsigned txExtractColor (COLORREF color, COLORREF component);
+unsigned txExtractColor (COLORREF color, COLORREF component) __attribute__ ((warn_unused_result));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1387,7 +1385,7 @@ unsigned txExtractColor (COLORREF color, COLORREF component);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-COLORREF txRGB2HSL (COLORREF rgbColor);
+COLORREF txRGB2HSL (COLORREF rgbColor) __attribute__ ((warn_unused_result));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1419,7 +1417,7 @@ COLORREF txRGB2HSL (COLORREF rgbColor);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-COLORREF txHSL2RGB (COLORREF hslColor);
+COLORREF txHSL2RGB (COLORREF hslColor) __attribute__ ((warn_unused_result));
 
 //! @}
 //}
@@ -1516,7 +1514,7 @@ inline bool txPixel (double x, double y, double red, double green, double blue, 
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-inline COLORREF txGetPixel (double x, double y, HDC dc = txDC());
+inline COLORREF txGetPixel (double x, double y, HDC dc = txDC()) __attribute__ ((warn_unused_result));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -1782,8 +1780,8 @@ bool txTriangle (double x1, double y1, double x2, double y2, double x3, double y
 
     MessageBox (txWindow(),
                "txTriangle (double x1, double y1, double x2, double y2, double x3, double y3)\n\n"
-               "Эта функция не реализована в библиотеке, потому что вы легко можете реализовать ее сами\n"
-               "как функцию с параметрами, используя txPolygon(). См. \"Пример с функциями с параметрами\".\n"
+               "Эта функция не реализована в библиотеке, потому что вы легко можете реализовать ее сами "
+               "как функцию с параметрами, используя txPolygon(). См. \"Пример с функциями с параметрами\". "
                "Ну или нарисовать тремя линиями. :)",
                "TXLib сообщает", MB_ICONINFORMATION);
 
@@ -1802,7 +1800,7 @@ bool txTriangle (double x1, double y1, double x2, double y2, double x3, double y
 #define lOOO         1000                       //
 #define O                                       //
 
-bool txNotifyIcon (unsigned flags, const char title[], const char format[], ...) _TX_CHECK_FORMAT (3);
+bool txNotifyIcon (unsigned flags, const char title[], const char format[], ...) __attribute__ ((format (printf, 3, 4)));
 
 //! @endcond
 //}
@@ -1850,9 +1848,7 @@ bool txNotifyIcon (unsigned flags, const char title[], const char format[], ...)
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-void txDrawMan (int x, int y, int sizeX, int sizeY, COLORREF color, double handL, double handR, double twist,
-                double head, double eyes, double wink, double crazy, double smile, double hair, double wind);
-
+inline
 void txDrawMan (int x, int y, int sizeX, int sizeY, COLORREF color, double handL, double handR, double twist,
                 double head, double eyes, double wink, double crazy, double smile, double hair, double wind)
     {
@@ -2045,7 +2041,7 @@ HFONT txSelectFont (const char name[], double sizeY, double sizeX = -1,
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-SIZE txGetTextExtent (const char text[], HDC dc = txDC());
+SIZE txGetTextExtent (const char text[], HDC dc = txDC()) __attribute__ ((warn_unused_result));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -2063,7 +2059,7 @@ SIZE txGetTextExtent (const char text[], HDC dc = txDC());
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-int txGetTextExtentX (const char text[], HDC dc = txDC());
+int txGetTextExtentX (const char text[], HDC dc = txDC()) __attribute__ ((warn_unused_result));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -2081,7 +2077,7 @@ int txGetTextExtentX (const char text[], HDC dc = txDC());
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-int txGetTextExtentY (const char text[], HDC dc = txDC());
+int txGetTextExtentY (const char text[], HDC dc = txDC()) __attribute__ ((warn_unused_result));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -2132,7 +2128,7 @@ unsigned txSetTextAlign (unsigned align = TA_CENTER | TA_BASELINE, HDC dc = txDC
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-LOGFONT* txFontExist (const char name[]);
+LOGFONT* txFontExist (const char name[]) __attribute__ ((warn_unused_result));
 
 //! @}
 //}
@@ -2180,7 +2176,7 @@ LOGFONT* txFontExist (const char name[]);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-HDC txCreateCompatibleDC (double sizeX, double sizeY, HBITMAP bitmap = NULL);
+HDC txCreateCompatibleDC (double sizeX, double sizeY, HBITMAP bitmap = NULL) __attribute__ ((warn_unused_result));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -2288,10 +2284,10 @@ HDC txCreateCompatibleDC (double sizeX, double sizeY, HBITMAP bitmap = NULL);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-HDC txCreateDIBSection (double sizeX, double sizeY, RGBQUAD**  pixels = NULL);
+HDC txCreateDIBSection (double sizeX, double sizeY, RGBQUAD**  pixels = NULL) __attribute__ ((warn_unused_result));
 
 //! @cond INTERNAL
-HDC txCreateDIBSection (double sizeX, double sizeY, COLORREF** pixels);
+HDC txCreateDIBSection (double sizeX, double sizeY, COLORREF** pixels)        __attribute__ ((warn_unused_result));
 //! @endcond
 
 //{----------------------------------------------------------------------------------------------------------------
@@ -2368,7 +2364,7 @@ HDC txCreateDIBSection (double sizeX, double sizeY, COLORREF** pixels);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-HDC txLoadImage (const char filename[], unsigned imageFlags = IMAGE_BITMAP, unsigned loadFlags = LR_LOADFROMFILE);
+HDC txLoadImage (const char filename[], unsigned imageFlags = IMAGE_BITMAP, unsigned loadFlags = LR_LOADFROMFILE) __attribute__ ((warn_unused_result));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -3030,7 +3026,7 @@ bool txDestroyWindow();
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-double txQueryPerformance();
+double txQueryPerformance() __attribute__ ((warn_unused_result));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -3088,7 +3084,7 @@ double txGetFPS (int minFrames = txFramesToAverage);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-inline POINT txMousePos();
+inline POINT txMousePos() __attribute__ ((warn_unused_result));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Mouse
@@ -3107,7 +3103,7 @@ inline POINT txMousePos();
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-inline int txMouseX();
+inline int txMouseX() __attribute__ ((warn_unused_result));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Mouse
@@ -3126,7 +3122,7 @@ inline int txMouseX();
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-inline int txMouseY();
+inline int txMouseY() __attribute__ ((warn_unused_result));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Mouse
@@ -3150,7 +3146,7 @@ inline int txMouseY();
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-inline unsigned txMouseButtons();
+inline unsigned txMouseButtons() __attribute__ ((warn_unused_result));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Mouse
@@ -3234,7 +3230,7 @@ inline Mouse& txCatchMouse (bool shouldEat = true);
 //!          на синем фоне, то его код будет @c 0x1e (старшая цифра -- старшие 4 бита -- это цвет фона, младшая
 //!          цифра -- младшие 4 бита -- это цвет текста).
 //!
-//! @see     txTextCursor(), txGetConsoleAttr(), txSetConsoleCursorPos(), txGetConsoleCursorPos(),
+//! @see     txTextCursor(), txGetConsoleAttr(), txSetConsoleCursorPos(), txGetConsoleCursorPos(), txGetConsoleExtent(),
 //!          txGetConsoleFontSize(), txClearConsole()
 //!
 //! @usage @code
@@ -3251,7 +3247,7 @@ bool txSetConsoleAttr (unsigned colors = 0x07 /*FOREGROUND_LIGHTGRAY*/);
 //!
 //! @return  Текущие цветовые атрибуты консоли. См. txSetConsoleAttr().
 //!
-//! @see     txTextCursor(), txSetConsoleAttr(), txSetConsoleCursorPos(), txGetConsoleCursorPos(),
+//! @see     txTextCursor(), txSetConsoleAttr(), txSetConsoleCursorPos(), txGetConsoleCursorPos(), txGetConsoleExtent(),
 //!          txGetConsoleFontSize(), txClearConsole()
 //!
 //! @usage @code
@@ -3259,7 +3255,7 @@ bool txSetConsoleAttr (unsigned colors = 0x07 /*FOREGROUND_LIGHTGRAY*/);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-unsigned txGetConsoleAttr();
+unsigned txGetConsoleAttr() __attribute__ ((warn_unused_result));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -3269,7 +3265,7 @@ unsigned txGetConsoleAttr();
 //!
 //!          При стирании используются текущие атрибуты (цвета текста и фона) консоли.
 //!
-//! @see     txTextCursor(), txSetConsoleAttr(), txGetConsoleAttr(), txGetConsoleCursorPos(),
+//! @see     txTextCursor(), txSetConsoleAttr(), txGetConsoleAttr(), txGetConsoleCursorPos(), txGetConsoleExtent(),
 //!          txGetConsoleFontSize(), txClearConsole()
 //!
 //! @usage @code
@@ -3286,13 +3282,15 @@ bool txClearConsole();
 //! @param   x  X-координата курсора в пикселях.
 //! @param   y  Y-координата курсора в пикселях.
 //!
-//! @return  Предыдущее положение мигающего курсора в структуре POINT.
+//! @return  Предыдущее положение мигающего курсора в пикселях, в
+//!          <a href=http://www.google.com/search?q=POINT+structure+MSDN>структуре POINT.</a>
 //!
 //! @note    Нельзя установить совсем любую позицию. Текст в консоли расположен по прямоугольной сетке, размер
 //!          которой зависит от размеров шрифта консоли. Устанавливаемая позиция округляется, чтобы курсор попал
 //!          в ячейку сетки. См. пример к функции txGetConsoleFontSize().
 //!
-//! @see     txTextCursor(), txSetConsoleAttr(), txGetConsoleAttr(), txGetConsoleCursorPos(), txClearConsole()
+//! @see     txTextCursor(), txSetConsoleAttr(), txGetConsoleAttr(), txGetConsoleCursorPos(), txGetConsoleExtent(),
+//!          txClearConsole()
 //!
 //! @usage @code
 //!          txSetConsoleCursorPos (txGetExtentX(), txGetExtentY());  // Центр Вселенной
@@ -3305,9 +3303,11 @@ POINT txSetConsoleCursorPos (double x, double y);
 //! @ingroup Drawing
 //! @brief   Возвращает позицию мигающего курсора консоли.
 //!
-//! @return  Положение мигающего курсора в структуре POINT.
+//! @return  Положение мигающего курсора в пикселях, в
+//!          <a href=http://www.google.com/search?q=POINT+structure+MSDN>структуре POINT.</a>
 //!
-//! @see     txTextCursor(), txSetConsoleAttr(), txGetConsoleAttr(), txSetConsoleCursorPos(), txClearConsole()
+//! @see     txTextCursor(), txSetConsoleAttr(), txGetConsoleAttr(), txSetConsoleCursorPos(), txGetConsoleExtent(),
+//!          txClearConsole()
 //!
 //! @usage @code
 //!          POINT pos = txGetConsoleCursorPos();
@@ -3318,11 +3318,28 @@ POINT txGetConsoleCursorPos();
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
+//! @brief   Возвращает размер консоли.
+//!
+//! @return  Положение мигающего курсора в @b символах, в
+//!          <a href=http://www.google.com/search?q=POINT+structure+MSDN>структуре POINT.</a>
+//!
+//! @see     txTextCursor(), txSetConsoleAttr(), txGetConsoleAttr(), txSetConsoleCursorPos(), txGetConsoleExtent(),
+//!          txClearConsole()
+//!
+//! @usage @code
+//!          POINT size = txGetConsoleExtent();
+//! @endcode
+//}----------------------------------------------------------------------------------------------------------------
+
+POINT txGetConsoleExtent();
+
+//{----------------------------------------------------------------------------------------------------------------
+//! @ingroup Drawing
 //! @brief   Возвращает размеры шрифта консоли.
 //!
 //! @return  Размеры шрифта консоли в пикселях, в структуре POINT.
 //!
-//! @see     txTextCursor(), txSetConsoleAttr(), txGetConsoleAttr(), txSetConsoleCursorPos(),
+//! @see     txTextCursor(), txSetConsoleAttr(), txGetConsoleAttr(), txSetConsoleCursorPos(), txGetConsoleExtent(),
 //!          txGetConsoleFontSize(), txClearConsole()
 //!
 //! @usage @code
@@ -3331,7 +3348,7 @@ POINT txGetConsoleCursorPos();
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-POINT txGetConsoleFontSize();
+POINT txGetConsoleFontSize() __attribute__ ((warn_unused_result));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -3467,7 +3484,7 @@ int txMessageBox (const char text[], const char header[] = "TXLib сообщает", uns
 //}----------------------------------------------------------------------------------------------------------------
 
 #ifdef FOR_DOXYGEN_ONLY
-bool txNotifyIcon (unsigned flags, const char title[], const char format[], ...) _TX_CHECK_FORMAT (3);
+bool txNotifyIcon (unsigned flags, const char title[], const char format[], ...) __attribute__ ((format (printf, 3, 4)));
 #endif
 
 //{----------------------------------------------------------------------------------------------------------------
@@ -3497,7 +3514,7 @@ bool txNotifyIcon (unsigned flags, const char title[], const char format[], ...)
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-int txOutputDebugPrintf (const char format[], ...) _TX_CHECK_FORMAT (1);
+int txOutputDebugPrintf (const char format[], ...) __attribute__ ((format (printf, 1, 2)));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
@@ -3616,7 +3633,7 @@ int txOutputDebugPrintf (const char format[], ...) _TX_CHECK_FORMAT (1);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-inline int random (int range) _TX_DEPRECATED;
+inline int random (int range) __attribute__ ((deprecated));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
@@ -3645,9 +3662,9 @@ inline int random (int range) _TX_DEPRECATED;
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-inline double random (double left, double right) _TX_DEPRECATED;
+inline double random (double left, double right)                __attribute__ ((warn_unused_result)) __attribute__ ((deprecated));
 
-inline double random (std::nomeow_t, double left, double right);
+inline double random (std::nomeow_t, double left, double right) __attribute__ ((warn_unused_result));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
@@ -3673,10 +3690,10 @@ inline double random (std::nomeow_t, double left, double right);
 //}----------------------------------------------------------------------------------------------------------------
 
 template <typename Tx, typename Ta, typename Tb>
-inline bool In (Tx x, Ta a, Tb b) _TX_DEPRECATED;
+inline bool In (Tx x, Ta a, Tb b)                __attribute__ ((warn_unused_result)) __attribute__ ((deprecated));
 
 template <typename Tx, typename Ta, typename Tb>
-inline bool In (std::nomeow_t, Tx x, Ta a, Tb b) _TX_DEPRECATED;
+inline bool In (std::nomeow_t, Tx x, Ta a, Tb b) __attribute__ ((warn_unused_result)) __attribute__ ((deprecated));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
@@ -3727,9 +3744,9 @@ inline bool In (std::nomeow_t, Tx x, Ta a, Tb b) _TX_DEPRECATED;
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-inline bool In (const POINT& pt, const RECT& rect)       _TX_DEPRECATED;
+inline bool In (const POINT& pt, const RECT& rect)       __attribute__ ((warn_unused_result)) __attribute__ ((deprecated));
 
-inline bool In (const COORD& pt, const SMALL_RECT& rect) _TX_DEPRECATED;
+inline bool In (const COORD& pt, const SMALL_RECT& rect) __attribute__ ((warn_unused_result)) __attribute__ ((deprecated));
 
 //! @}
 //{----------------------------------------------------------------------------------------------------------------
@@ -3980,7 +3997,7 @@ double txSqr (double x)
 #define ZERO( type )    zero <type> ()
 
 //! @cond INTERNAL
-template <typename T> inline T zero();
+template <typename T> inline T zero() __attribute__ ((warn_unused_result));
 //! @endcond
 
 //{----------------------------------------------------------------------------------------------------------------
@@ -4077,8 +4094,8 @@ struct _tx_auto_func_
     typedef _tx_auto_func_ this_t;
     T func_;
 
-    _tx_explicit _tx_auto_func_ (T func) : func_ (func) {}
-                ~_tx_auto_func_ () { func_(); }
+    explicit _tx_auto_func_ (T func) : func_ (func) {}
+            ~_tx_auto_func_ () { func_(); }
 
     private: this_t& operator= (const this_t&) { return *this; }
     };
@@ -5104,7 +5121,7 @@ class txAutoLock
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-    _tx_explicit txAutoLock (CRITICAL_SECTION* cs, bool mandatory = true) :
+    explicit txAutoLock (CRITICAL_SECTION* cs, bool mandatory = true) :
         cs_ (cs)
         {
 $1      if (!cs_) return;
@@ -5128,7 +5145,7 @@ $1      if (!cs_) return;
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-    _tx_explicit txAutoLock (bool mandatory = true) :
+    explicit txAutoLock (bool mandatory = true) :
         cs_ (NULL)
         {
 $1      new (this) txAutoLock (&_txCanvas_LockBackBuf, mandatory);
@@ -5296,7 +5313,7 @@ struct txDialog
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-    _tx_explicit txDialog (const Layout* layout);
+    explicit txDialog (const Layout* layout);
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @brief   Деструктор.
@@ -5557,7 +5574,7 @@ struct txDialog
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-const char* txInputBox (const char* text = NULL, const char* caption = NULL, const char* input = NULL);
+const char* txInputBox (const char* text = NULL, const char* caption = NULL, const char* input = NULL) __attribute__ ((warn_unused_result));
 
 const char* txInputBox (const char* text, const char* caption, const char* input)
     {
@@ -6393,7 +6410,7 @@ int              _txInitialize();
 void             _txCleanup();
 
 HWND             _txCanvas_CreateWindow (SIZE* size);
-inline bool      _txCanvas_OK();
+inline bool      _txCanvas_OK()                                               __attribute__ ((warn_unused_result));
 
 bool             _txCanvas_OnCREATE     (HWND wnd);
 bool             _txCanvas_OnDESTROY    (HWND wnd);
@@ -6411,23 +6428,23 @@ LRESULT CALLBACK _txCanvas_WndProc (HWND wnd, UINT msg, WPARAM wpar, LPARAM lpar
 
 int              _txCanvas_SetRefreshLock (int count);
 
-HDC              _txBuffer_Create (HWND wnd = NULL, const POINT* size = NULL, HBITMAP bmap = NULL, RGBQUAD** pixels = NULL);
+HDC              _txBuffer_Create (HWND wnd = NULL, const POINT* size = NULL, HBITMAP bmap = NULL, RGBQUAD** pixels = NULL) __attribute__ ((warn_unused_result));
 bool             _txBuffer_Delete (HDC* dc);
 bool             _txBuffer_Select (HGDIOBJ obj, HDC dc = txDC());
 
 HWND             _txConsole_Attach();
-bool             _txConsole_OK();
+bool             _txConsole_OK()                                              __attribute__ ((warn_unused_result));
 bool             _txConsole_Detach (bool activate);
 bool             _txConsole_Draw (HDC dc);
 bool             _txConsole_SetUnicodeFont();
 
-HICON            _txCreateTXIcon (int size);
+HICON            _txCreateTXIcon (int size)                                   __attribute__ ((warn_unused_result));
 int              _txSetFinishedText (HWND wnd);
 void             _txPauseBeforeTermination (HWND canvas);
-bool             _txIsParentWaitable (DWORD* parentPID = NULL);
-PROCESSENTRY32*  _txFindProcess (unsigned pid = GetCurrentProcessId());
+bool             _txIsParentWaitable (DWORD* parentPID = NULL)                __attribute__ ((warn_unused_result));
+PROCESSENTRY32*  _txFindProcess (unsigned pid = GetCurrentProcessId())        __attribute__ ((warn_unused_result));
 bool             _txKillProcess (DWORD pid);
-bool             _txInDll();
+bool             _txInDll()                                                   __attribute__ ((warn_unused_result));
 int              _txGetInput();
 
 bool             _txCreateShortcut (const char shortcutName[],
@@ -6439,17 +6456,17 @@ bool             _txCreateShortcut (const char shortcutName[],
 void*            _tx_DLGTEMPLATE_Create (void* globalMem, size_t bufsize, DWORD style, DWORD exStyle,
                                          WORD controls, short x, short y, short cx, short cy,
                                          const char caption[], const char font[], WORD fontsize,
-                                         const char menu[]);
+                                         const char menu[])                   __attribute__ ((warn_unused_result));
 
 void*            _tx_DLGTEMPLATE_Add    (void* dlgTemplatePtr, size_t bufsize, DWORD style, DWORD exStyle,
                                          short x, short y, short cx, short cy,
                                          WORD id, const char wclass[], const char caption[]);
 
 const char*      _txError        (const char file[] = NULL, int line = 0, const char func[] = NULL, unsigned color = 0,
-                                  const char msg[] = NULL, ...) _TX_CHECK_FORMAT (5);
+                                  const char msg[] = NULL, ...) __attribute__ ((format (printf, 5, 6)));
 const char*      _txProcessError (const char file[], int line, const char func[], unsigned color,
                                   const char msg[], va_list args);
-const char*      _txAppInfo();
+const char*      _txAppInfo()                                                 __attribute__ ((warn_unused_result));
 
 void             _txOnTerminate();
 void             _txOnUnexpected();
@@ -6493,7 +6510,7 @@ int              _txStackWalk                (int framesToSkip, size_t szCapture
                                               CONTEXT* context = NULL, HANDLE thread = GetCurrentThread());
 const char*      _txCaptureStackBackTraceTX  (int framesToSkip = 0, bool readSource = false);
 
-const char*      _txSymPrintFromAddr         (void* addr = NULL, const char format[] = NULL, ...) _TX_CHECK_FORMAT (2);
+const char*      _txSymPrintFromAddr         (void* addr = NULL, const char format[] = NULL, ...) __attribute__ ((format (printf, 2, 3)));
 bool             _txSymGetFromAddr           (void* addr, Win32::SYMBOL_INFO** symbol = NULL,
                                               Win32::IMAGEHLP_LINE64** line = NULL, const char** module = NULL,
                                               const char** source = NULL, int context = 2);
@@ -6503,14 +6520,14 @@ ptrdiff_t        _txReadSource               (char buf[], ptrdiff_t size, const 
 PROC             _txSetProcAddress (const char funcName[], PROC newFunc, const char dllName[] = NULL, int useHotPatching = false,
                                     HMODULE module = NULL, bool debug = false);
 
-ptrdiff_t        _tx_snprintf_s    (char stream[], ptrdiff_t size, const char format[], ...);
+ptrdiff_t        _tx_snprintf_s    (char stream[], ptrdiff_t size, const char format[], ...) __attribute__ ((format (printf, 3, 4)));
 ptrdiff_t        _tx_vsnprintf_s   (char stream[], ptrdiff_t size, const char format[], va_list arg);
 
 #if defined (__CYGWIN__)
 
 int              _getch();
 int              _putch (int ch);
-int              _kbhit();
+int              _kbhit()                                                     __attribute__ ((warn_unused_result));
 
 #endif
 
@@ -6704,7 +6721,7 @@ $       _txOnSignal();
 $       if (!*_txLogName)
             { $ _tx_snprintf_s (_txLogName, sizeof (_txLogName) - 1, "%s.log", txGetModuleFileName()); }
 
-        #if !defined (_MSC_VER_6)
+        #if ! (defined (_MSC_VER_6) || defined (_MSC_VER) && (_MSC_VER <= 1911))
 $       ::std::set_unexpected (_txOnUnexpected);
 $       ::std::set_terminate  (_txOnTerminate);
         #endif
@@ -11547,8 +11564,8 @@ $   COORD pos = { (short) ROUND (1.0 * x / fontSz.x + con.srWindow.Left),
 
 $   SetConsoleCursorPosition (GetStdHandle (STD_OUTPUT_HANDLE), pos) asserted;
 
-$   POINT prev = { ROUND (1.0 * (con.dwCursorPosition.X - con.srWindow.Left) / fontSz.x),
-                   ROUND (1.0 * (con.dwCursorPosition.Y - con.srWindow.Top ) / fontSz.y) };
+$   POINT prev = { ROUND (1.0 * (con.dwCursorPosition.X - con.srWindow.Left) * fontSz.x),
+                   ROUND (1.0 * (con.dwCursorPosition.Y - con.srWindow.Top ) * fontSz.y) };
 $   return prev;
     }
 
@@ -11561,9 +11578,21 @@ $1  POINT fontSz = txGetConsoleFontSize();
 $   CONSOLE_SCREEN_BUFFER_INFO con = {{0}};
 $   GetConsoleScreenBufferInfo (GetStdHandle (STD_OUTPUT_HANDLE), &con) asserted;
 
-$   POINT pos = { ROUND (1.0 * (con.dwCursorPosition.X - con.srWindow.Left) / fontSz.x),
-                  ROUND (1.0 * (con.dwCursorPosition.Y - con.srWindow.Top ) / fontSz.y) };
+$   POINT  pos = { ROUND (1.0 * (con.dwCursorPosition.X - con.srWindow.Left) * fontSz.x),
+                   ROUND (1.0 * (con.dwCursorPosition.Y - con.srWindow.Top ) * fontSz.y) };
 $   return pos;
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+POINT txGetConsoleExtent()
+    {
+$1  CONSOLE_SCREEN_BUFFER_INFO con = {{0}};
+$   GetConsoleScreenBufferInfo (GetStdHandle (STD_OUTPUT_HANDLE), &con) asserted;
+
+$   POINT  size = { con.srWindow.Right  - con.srWindow.Left + 1,
+                    con.srWindow.Bottom - con.srWindow.Top  + 1 };
+$   return size;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -11778,11 +11807,17 @@ $   return 15.0 * samples / sqrt (1.0 * size.x * size.y);
 
 #if (__cplusplus >= 201100)
     template <int txFramesToAverage = 5>
+    double txGetFPS (int minFrames = txFramesToAverage) __attribute__ ((warn_unused_result));
 #else
     const     int txFramesToAverage = 5;
+    double txGetFPS (int minFrames = txFramesToAverage) __attribute__ ((warn_unused_result));
 #endif
 
-double txGetFPS (int minFrames = txFramesToAverage)
+#if (__cplusplus >= 201100)
+    template <int txFramesToAverage = 5>
+#endif
+
+double txGetFPS (int minFrames)
     {
 $1  static LARGE_INTEGER time0 = {}; if (!time0.QuadPart) QueryPerformanceCounter (&time0);
 $          LARGE_INTEGER time  = {};                      QueryPerformanceCounter (&time);
@@ -12493,8 +12528,8 @@ struct _txDumpSuffix
     {
     const char* suffix_;
 
-    inline  _tx_explicit _txDumpSuffix (const char suffix[] = "") : suffix_ (suffix) {}
-    inline              ~_txDumpSuffix()                    { ::std::cerr << suffix_; }
+    inline  explicit _txDumpSuffix (const char suffix[] = "") : suffix_ (suffix) {}
+    inline          ~_txDumpSuffix()                    { ::std::cerr << suffix_; }
 
     _txDumpSuffix             (const _txDumpSuffix&);
     _txDumpSuffix& operator = (const _txDumpSuffix&);
@@ -12504,9 +12539,9 @@ struct _txSaveConsoleAttr
     {
     unsigned attr_;
 
-    inline              _txSaveConsoleAttr()           : attr_ (txGetConsoleAttr ()) {}
-    inline _tx_explicit _txSaveConsoleAttr (WORD attr) : attr_ (txGetConsoleAttr ()) { txSetConsoleAttr (attr);  }
-    inline             ~_txSaveConsoleAttr()                                         { txSetConsoleAttr (attr_); }
+    inline          _txSaveConsoleAttr()           : attr_ (txGetConsoleAttr ()) {}
+    inline explicit _txSaveConsoleAttr (WORD attr) : attr_ (txGetConsoleAttr ()) { txSetConsoleAttr (attr);  }
+    inline         ~_txSaveConsoleAttr()                                         { txSetConsoleAttr (attr_); }
     };
 
 #if !defined (_MSC_VER_6)
@@ -12821,42 +12856,7 @@ using ::std::string;
 // EOF
 //=================================================================================================================
                                                                                                                    
-                                                                                                                   
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                                                  
 
 
 
