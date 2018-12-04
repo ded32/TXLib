@@ -1,14 +1,14 @@
 //=================================================================================================================
-//           [These sections are for folding control  in Code::Blocks]         [$Date: 2018-12-02 05:32:31 +0400 $]
+//           [These sections are for folding control  in Code::Blocks]         [$Date: 2018-12-04 21:43:03 +0400 $]
 //{          [Best viewed with "Fold all on file open" option enabled]         [Best screen/page width = 120 chars]
 //=================================================================================================================
 //!
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 139 $
+//!          $Version: 00173a, Revision: 140 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2018-12-02 05:32:31 +0400 $
+//!          $Date: 2018-12-04 21:43:03 +0400 $
 //!
 //!          TX Library -- компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -105,7 +105,7 @@
 #define       __TXLIB_H_INCLUDED
 
 //-----------------------------------------------------------------------------------------------------------------
-//{          Version information
+//{          Version information and configuration
 //-----------------------------------------------------------------------------------------------------------------
 
 //{----------------------------------------------------------------------------------------------------------------
@@ -133,9 +133,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 139, 2018-12-02 05:32:31 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 139, 2018-12-02 05:32:31 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 139, 2018-12-02 05:32:31 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 140, 2018-12-04 21:43:03 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 140, 2018-12-04 21:43:03 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 140, 2018-12-04 21:43:03 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -144,6 +144,120 @@
 //! @endcond
 
 //! @}
+//{----------------------------------------------------------------------------------------------------------------
+//! @ingroup Technical
+//! @brief   Имя модуля TXLib. Входит в диагностические сообщения.
+//!
+//! @note    Можно переопределять до включения файла TXLib.h.
+//!
+//! @hideinitializer
+//}----------------------------------------------------------------------------------------------------------------
+
+#if !defined (_TX_MODULE)
+    #define   _TX_MODULE      "TXLib"
+#endif
+
+//{----------------------------------------------------------------------------------------------------------------
+//! @ingroup Technical
+//! @brief   Имя и версия текущего компилятора
+//! @hideinitializer
+//}----------------------------------------------------------------------------------------------------------------
+
+#if   defined (__GNUC__)
+    #define __TX_COMPILER__   "GNU g++ "            TX_QUOTE (__GNUC__)       "."  \
+                                                    TX_QUOTE (__GNUC_MINOR__) "."  \
+                                                    TX_QUOTE (__GNUC_PATCHLEVEL__) \
+                              ", std="              TX_QUOTE (__cplusplus)
+#elif defined (__clang__)
+    #define __TX_COMPILER__   "Clang "              TX_QUOTE (__clang_major__) "."  \
+                                                    TX_QUOTE (__clang_minor__) "."  \
+                                                    TX_QUOTE (__clang_patchlevel__) \
+                              ", std="              TX_QUOTE (__cplusplus)
+#elif defined (_MSC_VER)
+    #define __TX_COMPILER__   "MSVS "               TX_QUOTE (_MSC_VER)            \
+                              ", std="              TX_QUOTE (__cplusplus)
+
+#elif defined (__INTEL_COMPILER)
+    #define __TX_COMPILER__   "Intel C++ "          TX_QUOTE (__INTEL_COMPILER)    \
+                              ", std="              TX_QUOTE (__cplusplus)
+
+#else
+    #define __TX_COMPILER__   "Unknown C++, std="   TX_QUOTE (__cplusplus)
+
+#endif
+
+//! @cond INTERNAL
+
+#define  TX_QUOTE( sym )  _TX_QUOTE (sym)
+#define _TX_QUOTE( sym )  #sym
+
+//! @endcond
+
+//{----------------------------------------------------------------------------------------------------------------
+//! @ingroup Technical
+//! @brief   Имя режима сборки
+//! @hideinitializer
+//}----------------------------------------------------------------------------------------------------------------
+
+#if   !defined (NDEBUG) &&  defined (_DEBUG)
+    #define _TX_BUILDMODE     "DEBUG"
+
+#elif !defined (NDEBUG) && !defined (_DEBUG)
+    #define _TX_BUILDMODE     "Debug"
+
+#elif  defined (NDEBUG)
+    #define _TX_BUILDMODE     "Release"
+#endif
+
+//{----------------------------------------------------------------------------------------------------------------
+//! @ingroup Misc
+//! @brief   Макрос, раскрывающийся в имя файла и номер строки файла, где он встретился.
+//! @hideinitializer
+//}----------------------------------------------------------------------------------------------------------------
+
+#define __TX_FILELINE__       __FILE__ " (" TX_QUOTE (__LINE__) ")"
+
+//{----------------------------------------------------------------------------------------------------------------
+//! @ingroup Misc
+//! @brief   Имя текущей функции
+//!
+//! @warning Если определение имени функции не поддерживается компилятором, то __TX_FUNCTION__ раскрывается в имя
+//!          исходного файла и номер строки.
+//!
+//! @hideinitializer
+//}----------------------------------------------------------------------------------------------------------------
+
+#if defined (__GNUC__) || defined (__clang__)
+    #define __TX_FUNCTION__   __PRETTY_FUNCTION__
+
+#elif defined (__FUNCSIG__)
+    #define __TX_FUNCTION__   __FUNCSIG__
+
+#elif defined (__FUNCTION__)
+    #define __TX_FUNCTION__   __FUNCTION__
+
+#elif defined (__INTEL_COMPILER) && (__INTEL_COMPILER >= 600)
+    #define __TX_FUNCTION__   __FUNCTION__
+
+#elif defined (__BORLANDC__) && (__BORLANDC__ >= 0x550)
+    #define __TX_FUNCTION__   __FUNC__
+
+#elif defined (__STDC_VERSION__) && (__STDC_VERSION__ >= 199901)
+    #define __TX_FUNCTION__   __func__
+
+#elif defined (__PYTHON__)
+    #error No Python. No. Using parseltongue languages can lead you to Slytherin.
+
+#else
+    #define __TX_FUNCTION__   "(" __TX_FILELINE__ ")"
+
+#endif
+
+#if !defined (__func__) && defined (__FUNCTION__)
+    #define __func__          __FUNCTION__
+
+#endif
+
 //}
 //-----------------------------------------------------------------------------------------------------------------
 
@@ -788,6 +902,14 @@ namespace { namespace TX { }}
 namespace { namespace TX {                       // <<<<<<<<< The main code is here, unfold it <<<<<<<<<<<<<<<<<<<<
 
 /*! @endcond */
+
+//=================================================================================================================
+//{          TXLIB INTERFACE
+//           Интерфейс библиотеки
+//=================================================================================================================
+
+
+
 
 //=================================================================================================================
 //{          TXLIB INTERFACE
@@ -1572,12 +1694,12 @@ bool txRectangle (double x0, double y0, double x1, double y1, HDC dc = txDC());
 //!
 //! @param   points     Массив структур POINT с координатами точек.
 //! @param   numPoints  Количество точек в массиве.
-//! @param   dc      <i>Дескриптор контекста рисования (холста) для рисования линии или прямоугольника.
-//!                     Необязателен.</i>
+//! @param   dc      <i>Дескриптор контекста рисования (холста) для рисования. Необязателен.</i>
 //!
 //! @return  Если операция была успешна -- true, иначе -- false.
 //!
 //!          Цвет и толщина линий задается функцией txSetColor(), цвет заполнения -- txSetFillColor().
+//!          Если нужно нарисовать ломаную линию, а не многоугольник, используйте прозрачный цвет заполнения (TX_TRANSPARENT).
 //!
 //! @see     txSetColor(), txGetColor(), txSetFillColor(), txGetFillColor(), txColors, RGB(),
 //!          txLine(), txRectangle(), txPolygon(), txEllipse(), txCircle(), txArc(), txPie(), txChord()
@@ -3071,6 +3193,8 @@ double txGetFPS (int minFrames = txFramesToAverage);
 //!
 //! @return  Позиция Мыши! как структура POINT.
 //!
+//! @note    Если Мышь! не внутри окна TXLib, то ее координаты равны { -1, -1 }.
+//!
 //! @see     txMouseX(), txMouseY(), txMousePos(), txMouseButtons()
 //!
 //! @usage @code
@@ -3078,7 +3202,7 @@ double txGetFPS (int minFrames = txFramesToAverage);
 //!
 //!          while (txMouseButtons() != 1)
 //!              {
-//!              if (In (txMousePos(), area)) txTextOut (100, 100, "What are you doing here?!");
+//!              if (In (txMousePos(), area)) txTextOut (100, 100, "http://vk.com/TiShtoTamDelaesh?!");
 //!              txSleep (0);
 //!              }
 //! @endcode
@@ -3091,6 +3215,8 @@ inline POINT txMousePos() __attribute__ ((warn_unused_result));
 //! @brief   Возвращает X-Координату Мыши!
 //!
 //! @return  X-координата Мыши!
+//!
+//! @note    Если Мышь! не внутри окна TXLib, то ее X-координата равна -1.
 //!
 //! @see     txMouseX(), txMouseY(), txMousePos(), txMouseButtons()
 //!
@@ -3110,6 +3236,8 @@ inline int txMouseX() __attribute__ ((warn_unused_result));
 //! @brief   Возвращает Y-Координату Мыши!
 //!
 //! @return  Y-координата Мыши!
+//!
+//! @note    Если Мышь! не внутри окна TXLib, то ее Y-координата равна -1.
 //!
 //! @see     txMouseX(), txMouseY(), txMousePos(), txMouseButtons()
 //!
@@ -3131,7 +3259,7 @@ inline int txMouseY() __attribute__ ((warn_unused_result));
 //! @return  Состояние Кнопок Мыши!
 //!
 //!          В возвращаемом значении выставленный в единицу 1-й (младший) бит означает нажатую левую Кнопку Мыши!,
-//!          2-й -- правую кнопку. @n
+//!          2-й -- правую Кнопку. @n
 //!          Например, возвращенное число 3 (двоичное 11) означает одновременное нажатие левой и правой Кнопок.
 //!
 //! @see     txMouseX(), txMouseY(), txMousePos(), txMouseButtons()
@@ -3156,7 +3284,7 @@ inline unsigned txMouseButtons() __attribute__ ((warn_unused_result));
 //!
 //! @return  Пойманная Мышь!
 //!
-//! @note    Эту функцию можно применять, только если Вы -- кот. <a href=http://sisinmaru.com><tt> =^..^= </tt></a> @n
+//! @note    Эту функцию можно применять, только если Вы -- Кот. <a href=http://sisinmaru.com><tt> =^..^= </tt></a> @n
 //!          Поэтому в текущей версии она не реализована :)
 //!
 //! @see     txMouseX(), txMouseY(), txMousePos(), txMouseButtons()
@@ -3176,7 +3304,7 @@ inline unsigned txMouseButtons() __attribute__ ((warn_unused_result));
 //!
 //!              catch (Mouse& mouse)
 //!                  {
-//!                  Eat (mouse);  // Just do eat. Anyway
+//!                  Eat (mouse);  // Just do eat (R). Anyway
 //!                  }
 //!              }
 //! @endcode
@@ -3414,7 +3542,7 @@ bool txPlaySound (const char filename[] = NULL, DWORD mode = SND_ASYNC);
 //! @ingroup Misc
 //! @brief   Выводит сообщение в окне с помощью функции MessageBox.
 //!
-//! @param   text      Текст сообщения.
+//! @param   text      Текст сообщения. <i>В принципе, необязательно, но зачем вы тогда меня вызывали?</i>
 //! @param   header <i>Заголовок сообщения. Необязательно.</i>
 //! @param   flags  <i>Флаги отображения сообщения. Необязательно.</i>
 //!
@@ -3442,7 +3570,68 @@ bool txPlaySound (const char filename[] = NULL, DWORD mode = SND_ASYNC);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-int txMessageBox (const char text[], const char header[] = "TXLib сообщает", unsigned flags = 0);
+int txMessageBox (const char text[] = "Муаххаха! :)", const char header[] = "TXLib сообщает",
+                  unsigned flags = MB_ICONINFORMATION | MB_OKCANCEL);
+
+//{----------------------------------------------------------------------------------------------------------------
+//! @ingroup Misc
+//! @brief   Проверяет, нажата ли указанная клавиша.
+//!
+//! @param   key       Номер клавиши.
+//!
+//! @return  true, если указанная клавиша нажата, false -- если не нажата.
+//!
+//! @note    В отличие от оригинальной функции GetAsyncKeyState(), возвращает false, если окно TXLib не активно.
+//!
+//! @usage @code
+//!          void PlayBall();
+//!
+//!          int main()
+//!              {
+//!              txCreateWindow (800, 600);
+//!
+//!              PlayBall();
+//!              }
+//!
+//!          void PlayBall()
+//!              {
+//!              int x  = 100, y  = 100;
+//!              int vx = 5,   vy = 7;
+//!              int ax = 0,   ay = 1;
+//!              int dt = 1;
+//!
+//!              txSetColor     (TX_LIGHTGREEN);
+//!              txSetFillColor (TX_GREEN);
+//!
+//!              while (!txGetAsyncKeyState (VK_ESCAPE))  // Погуглите любой код VK_...,
+//!                  {                                    // и найдете их все
+//!                  txCircle (x, y, 20);
+//!
+//!                  vx += ax * dt;                       // First velocity, then position: this gives more precision
+//!                  vy += ay * dt;                       // See: http://en.wikipedia.org/wiki/Backward_Euler_method
+//!
+//!                   x += vx * dt;
+//!                   y += vy * dt;
+//!
+//!                  if (x > 800) { vx = -vx; x = 800; }  // = 800 is not the precise solution. Can you make it better?
+//!                  if (x <   0) { vx = -vx; x =   0; }
+//!                  if (y > 600) { vy = -vy; y = 600; }
+//!                  if (y <   0) { vy = -vy; y =   0; }
+//!
+//!                  if (txGetAsyncKeyState (VK_LEFT))  vx--;
+//!                  if (txGetAsyncKeyState (VK_RIGHT)) vx++;
+//!                  if (txGetAsyncKeyState (VK_UP))    vy--;
+//!                  if (txGetAsyncKeyState (VK_DOWN))  vy++;
+//!                  if (txGetAsyncKeyState (VK_SPACE)) vx = vy = 0;
+//!                  if (txGetAsyncKeyState ('M'))      printf ("Meow ");
+//!
+//!                  txSleep (20);
+//!                  }
+//!              }
+//! @endcode
+//}----------------------------------------------------------------------------------------------------------------
+
+inline bool txGetAsyncKeyState (int key);
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
@@ -4388,120 +4577,6 @@ void txDump (const void* address, const char name[] = "txDump()");
 #define TX_COMMA              ,  //!< Синоним макроса _ (@ref _ "символ подчеркивания")
 
 //! @}
-
-//{----------------------------------------------------------------------------------------------------------------
-//! @ingroup Misc
-//! @brief   Имя и версия текущего компилятора
-//! @hideinitializer
-//}----------------------------------------------------------------------------------------------------------------
-
-#if   defined (__GNUC__)
-    #define __TX_COMPILER__   "GNU g++ "            TX_QUOTE (__GNUC__)       "."  \
-                                                    TX_QUOTE (__GNUC_MINOR__) "."  \
-                                                    TX_QUOTE (__GNUC_PATCHLEVEL__) \
-                              ", std="              TX_QUOTE (__cplusplus)
-#elif defined (__clang__)
-    #define __TX_COMPILER__   "Clang "              TX_QUOTE (__clang_major__) "."  \
-                                                    TX_QUOTE (__clang_minor__) "."  \
-                                                    TX_QUOTE (__clang_patchlevel__) \
-                              ", std="              TX_QUOTE (__cplusplus)
-#elif defined (_MSC_VER)
-    #define __TX_COMPILER__   "MSVS "               TX_QUOTE (_MSC_VER)            \
-                              ", std="              TX_QUOTE (__cplusplus)
-
-#elif defined (__INTEL_COMPILER)
-    #define __TX_COMPILER__   "Intel C++ "          TX_QUOTE (__INTEL_COMPILER)    \
-                              ", std="              TX_QUOTE (__cplusplus)
-
-#else
-    #define __TX_COMPILER__   "Unknown C++, std="   TX_QUOTE (__cplusplus)
-
-#endif
-
-//! @cond INTERNAL
-
-#define  TX_QUOTE( sym )  _TX_QUOTE (sym)
-#define _TX_QUOTE( sym )  #sym
-
-//! @endcond
-
-//{----------------------------------------------------------------------------------------------------------------
-//! @ingroup Misc
-//! @brief   Макрос, раскрывающийся в имя файла и номер строки файла, где он встретился.
-//! @hideinitializer
-//}----------------------------------------------------------------------------------------------------------------
-
-#define __TX_FILELINE__       __FILE__ " (" TX_QUOTE (__LINE__) ")"
-
-//{----------------------------------------------------------------------------------------------------------------
-//! @ingroup Misc
-//! @brief   Имя текущей функции
-//!
-//! @warning Если определение имени функции не поддерживается компилятором, то __TX_FUNCTION__ раскрывается в имя
-//!          исходного файла и номер строки.
-//!
-//! @hideinitializer
-//}----------------------------------------------------------------------------------------------------------------
-
-#if defined (__GNUC__) || defined (__clang__)
-    #define __TX_FUNCTION__   __PRETTY_FUNCTION__
-
-#elif defined (__FUNCSIG__)
-    #define __TX_FUNCTION__   __FUNCSIG__
-
-#elif defined (__FUNCTION__)
-    #define __TX_FUNCTION__   __FUNCTION__
-
-#elif defined (__INTEL_COMPILER) && (__INTEL_COMPILER >= 600)
-    #define __TX_FUNCTION__   __FUNCTION__
-
-#elif defined (__BORLANDC__) && (__BORLANDC__ >= 0x550)
-    #define __TX_FUNCTION__   __FUNC__
-
-#elif defined (__STDC_VERSION__) && (__STDC_VERSION__ >= 199901)
-    #define __TX_FUNCTION__   __func__
-
-#elif defined (__PYTHON__)
-    #error No Python. No. Using parseltongue languages can lead you to Slytherin.
-
-#else
-    #define __TX_FUNCTION__   "(" __TX_FILELINE__ ")"
-
-#endif
-
-#if !defined (__func__) && defined (__FUNCTION__)
-    #define __func__          __FUNCTION__
-
-#endif
-
-//{----------------------------------------------------------------------------------------------------------------
-//! @ingroup Misc
-//! @brief   Имя режима сборки
-//! @hideinitializer
-//}----------------------------------------------------------------------------------------------------------------
-
-#if   !defined (NDEBUG) &&  defined (_DEBUG)
-    #define _TX_BUILDMODE     "DEBUG"
-
-#elif !defined (NDEBUG) && !defined (_DEBUG)
-    #define _TX_BUILDMODE     "Debug"
-
-#elif  defined (NDEBUG)
-    #define _TX_BUILDMODE     "Release"
-#endif
-
-//{----------------------------------------------------------------------------------------------------------------
-//! @ingroup Misc
-//! @brief   Имя модуля TXLib, входит в диагностические сообщения.
-//!
-//! @note    Можно переопределять до включения файла TXLib.h.
-//!
-//! @hideinitializer
-//}----------------------------------------------------------------------------------------------------------------
-
-#if !defined (_TX_MODULE)
-    #define   _TX_MODULE      "TXLib"
-#endif
 
 //! @}
 //}
@@ -6270,11 +6345,12 @@ _TX_DLLIMPORT     ("GDI32",    HBRUSH,   CreateSolidBrush,           (COLORREF c
 _TX_DLLIMPORT     ("GDI32",    bool,     MoveToEx,                   (HDC dc, int x, int y, POINT* point));
 _TX_DLLIMPORT     ("GDI32",    bool,     LineTo,                     (HDC dc, int x, int y));
 _TX_DLLIMPORT     ("GDI32",    bool,     Polygon,                    (HDC dc, const POINT points[], int count));
+_TX_DLLIMPORT     ("GDI32",    bool,     Polyline,                   (HDC dc, const POINT points[], int count));
+_TX_DLLIMPORT     ("GDI32",    bool,     PolyBezier,                 (HDC dc, const POINT points[], int count));
 _TX_DLLIMPORT     ("GDI32",    bool,     Rectangle,                  (HDC dc, int x0, int y0, int x1, int y1));
 _TX_DLLIMPORT     ("GDI32",    bool,     RoundRect,                  (HDC dc, int x0, int y0, int x1, int y1, int sizeX, int sizeY));
 _TX_DLLIMPORT     ("GDI32",    bool,     Ellipse,                    (HDC dc, int x0, int y0, int x1, int y1));
-_TX_DLLIMPORT     ("GDI32",    bool,     Arc,                        (HDC dc, int x0, int y0, int x1, int y1,
-                                                                      int xStart, int yStart, int xEnd, int yEnd));
+_TX_DLLIMPORT     ("GDI32",    bool,     AngleArc,                   (HDC dc, int x0, int y0, int x1, int y1, int startAngle, int totalAngle));
 _TX_DLLIMPORT     ("GDI32",    bool,     Pie,                        (HDC dc, int x0, int y0, int x1, int y1,
                                                                       int xStart, int yStart, int xEnd, int yEnd));
 _TX_DLLIMPORT     ("GDI32",    bool,     Chord,                      (HDC dc, int x0, int y0, int x1, int y1,
@@ -6285,6 +6361,9 @@ _TX_DLLIMPORT     ("GDI32",    bool,     GetTextExtentPoint32A,      (HDC dc, co
 _TX_DLLIMPORT     ("GDI32",    bool,     ExtFloodFill,               (HDC dc, int x, int y, COLORREF color, unsigned type));
 _TX_DLLIMPORT     ("GDI32",    bool,     BitBlt,                     (HDC dest, int xDest, int yDest, int width, int height,
                                                                       HDC src,  int xSrc,  int ySrc,  DWORD rOp));
+_TX_DLLIMPORT     ("GDI32",    bool,     PlgBlt,                     (HDC dest, const POINT* parallelogram,
+                                                                      HDC src, int xSrc, int ySrc, int width, int height,
+                                                                      HBITMAP mask, int xMask, int yMask));
 _TX_DLLIMPORT     ("GDI32",    int,      SetDIBitsToDevice,          (HDC dc, int xDest, int yDest, DWORD width, DWORD height,
                                                                       int xSrc, int ySrc, unsigned startLine, unsigned numLines,
                                                                       const void* data, const BITMAPINFO* info, unsigned colorUse));
@@ -6293,6 +6372,7 @@ _TX_DLLIMPORT     ("GDI32",    int,      GetDIBits,                  (HDC hdc, H
 _TX_DLLIMPORT     ("GDI32",    bool,     PatBlt,                     (HDC dc, int x0, int y0, int width, int height, DWORD rOp));
 _TX_DLLIMPORT     ("GDI32",    int,      SetROP2,                    (HDC dc, int mode));
 _TX_DLLIMPORT     ("GDI32",    int,      SetStretchBltMode,          (HDC dc, int mode));
+_TX_DLLIMPORT     ("GDI32",    DWORD,    GdiSetBatchLimit,           (DWORD limit));
 _TX_DLLIMPORT     ("GDI32",    HBITMAP,  CreateDIBSection,           (HDC dc, const BITMAPINFO* bmInfo, unsigned colorUsage, void **vBits,
                                                                       HANDLE section, DWORD offset));
 
@@ -6420,6 +6500,7 @@ bool             _txCanvas_OnKEYDOWN    (HWND wnd, WPARAM vk, LPARAM info);
 bool             _txCanvas_OnCHAR       (HWND wnd, WPARAM ch, LPARAM info);
 bool             _txCanvas_OnTIMER      (HWND wnd, WPARAM id);
 bool             _txCanvas_OnMOUSEMOVE  (HWND wnd, WPARAM buttons, LPARAM coords);
+bool             _txCanvas_OnMOUSELEAVE (HWND wnd);
 bool             _txCanvas_OnCmdCONSOLE (HWND wnd, WPARAM cmd);
 bool             _txCanvas_OnCmdABOUT   (HWND wnd, WPARAM cmd);
 
@@ -6428,7 +6509,8 @@ LRESULT CALLBACK _txCanvas_WndProc (HWND wnd, UINT msg, WPARAM wpar, LPARAM lpar
 
 int              _txCanvas_SetRefreshLock (int count);
 
-HDC              _txBuffer_Create (HWND wnd = NULL, const POINT* size = NULL, HBITMAP bmap = NULL, RGBQUAD** pixels = NULL) __attribute__ ((warn_unused_result));
+HDC              _txBuffer_Create (HWND wnd = NULL, const POINT* size = NULL, HBITMAP bmap = NULL,
+                                   RGBQUAD** pixels = NULL)                   __attribute__ ((warn_unused_result));
 bool             _txBuffer_Delete (HDC* dc);
 bool             _txBuffer_Select (HGDIOBJ obj, HDC dc = txDC());
 
@@ -6463,7 +6545,7 @@ void*            _tx_DLGTEMPLATE_Add    (void* dlgTemplatePtr, size_t bufsize, D
                                          WORD id, const char wclass[], const char caption[]);
 
 const char*      _txError        (const char file[] = NULL, int line = 0, const char func[] = NULL, unsigned color = 0,
-                                  const char msg[] = NULL, ...) __attribute__ ((format (printf, 5, 6)));
+                                  const char msg[] = NULL, ...)               __attribute__ ((format (printf, 5, 6)));
 const char*      _txProcessError (const char file[], int line, const char func[], unsigned color,
                                   const char msg[], va_list args);
 const char*      _txAppInfo()                                                 __attribute__ ((warn_unused_result));
@@ -6483,7 +6565,8 @@ void             _txOnInvalidParam      (const wchar_t* expr, const wchar_t* fun
                                          unsigned line, uintptr_t);
 int              _txOnAllocHook         (int type, void* data, size_t size, int use, long request,
                                          const unsigned char* file, int line);
-int              _txOnRTCFailure        (int type, const char* file, int line, const char* module, const char* format, ...);
+int              _txOnRTCFailure        (int type, const char* file, int line, const char* module, const char* format, ...)
+                                                                              __attribute__ ((format (printf, 5, 6)));
 int              _txOnErrorReport       (int type, const char* message, int* ret);
 
 void             _txOnCExit();
@@ -6520,7 +6603,7 @@ ptrdiff_t        _txReadSource               (char buf[], ptrdiff_t size, const 
 PROC             _txSetProcAddress (const char funcName[], PROC newFunc, const char dllName[] = NULL, int useHotPatching = false,
                                     HMODULE module = NULL, bool debug = false);
 
-ptrdiff_t        _tx_snprintf_s    (char stream[], ptrdiff_t size, const char format[], ...) __attribute__ ((format (printf, 3, 4)));
+ptrdiff_t        _tx_snprintf_s    (char stream[], ptrdiff_t size, const char format[], ...)      __attribute__ ((format (printf, 3, 4)));
 ptrdiff_t        _tx_vsnprintf_s   (char stream[], ptrdiff_t size, const char format[], va_list arg);
 
 #if defined (__CYGWIN__)
@@ -6973,6 +7056,8 @@ $   _txWaitFor (_txRunning, 30*_TX_TIMEOUT);
 
 $   if (!_txRunning)       return TX_DEBUG_ERROR ("\a" "Cannot create canvas window."),(HWND)NULL;
 $   if (!txOK())           return TX_DEBUG_ERROR ("\a" "Canvas window is not OK."),    (HWND)NULL;
+
+$   Win32::GdiSetBatchLimit (1);
 
 $   SetLastError (0);
 
@@ -7654,6 +7739,8 @@ $   SetClassLong_ (wnd, GCL_HCURSOR_, (DWORD)(uintptr_t) (cursor? cursor : LoadC
 
     if (menu) { $ SetMenu (wnd, menu); DrawMenuBar (wnd); }
 
+$   Win32::GdiSetBatchLimit (1);
+
     _TX_ON_DEBUG (OutputDebugString (_TX_VERSION " - STARTED: " _TX_MODULE "\n"));
 
 $   _txRunning = true;
@@ -7884,6 +7971,8 @@ $       if (res) return res;
         case WM_MBUTTONDOWN:
         case WM_MOUSEMOVE:    $     _txCanvas_OnMOUSEMOVE  (wnd, wpar, lpar); return 0;
 
+        case WM_MOUSELEAVE:   $     _txCanvas_OnMOUSELEAVE (wnd);             return 0;
+
         default: break;
         }
 
@@ -8078,13 +8167,33 @@ $   return true;
 
 //-----------------------------------------------------------------------------------------------------------------
 
-bool _txCanvas_OnMOUSEMOVE (HWND, WPARAM buttons, LPARAM coords)
+bool _txCanvas_OnMOUSEMOVE (HWND wnd, WPARAM buttons, LPARAM coords)
     {
 $1  if (_TX_ARGUMENT_FAILED (_txCanvas_OK())) return false;
+
+$   if (_txMousePos.x == -1 && _txMousePos.y == -1)
+        {
+$       TRACKMOUSEEVENT track = { sizeof (track), TME_HOVER | TME_LEAVE, wnd, HOVER_DEFAULT };
+$       TrackMouseEvent (&track);
+        }
 
 $   _txMousePos.x   = LOWORD (coords);
 $   _txMousePos.y   = HIWORD (coords);
 $   _txMouseButtons = (unsigned) buttons;
+
+
+$   return true;
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+bool _txCanvas_OnMOUSELEAVE (HWND)
+    {
+$1  if (_TX_ARGUMENT_FAILED (_txCanvas_OK())) return false;
+
+$   _txMousePos.x   = -1;
+$   _txMousePos.y   = -1;
+$   _txMouseButtons = 0;
 
 $   return true;
     }
@@ -10289,7 +10398,7 @@ int _txOnErrorReport (int type, const char* text, int* ret)
 
 //-----------------------------------------------------------------------------------------------------------------
 
-int txMessageBox (const char text[], const char header[], unsigned flags /*= 0*/)
+int txMessageBox (const char text[], const char header[], unsigned flags /*= MB_ICONINFORMATION | MB_OKCANCEL*/)
     {
 $1  static wchar_t textW   [_TX_BIGBUFSIZE * sizeof (wchar_t)] = L"[NULL text]";
     static wchar_t headerW [_TX_BUFSIZE    * sizeof (wchar_t)] = L"[NULL header]";
@@ -10298,9 +10407,25 @@ $1  static wchar_t textW   [_TX_BIGBUFSIZE * sizeof (wchar_t)] = L"[NULL text]";
     if (header) MultiByteToWideChar (_TX_CP, 0, header, -1, headerW, SIZEARR (headerW)) || memset (headerW, 0, sizeof (headerW));
 
     HWND wnd = _txCanvas_Window;
-    return MessageBoxW ((wnd? wnd : Win32::GetConsoleWindow()), textW, headerW, flags | MB_SETFOREGROUND | MB_TOPMOST);
+    int  ret = MessageBoxW ((wnd? wnd : Win32::GetConsoleWindow()), textW, headerW, flags | MB_SETFOREGROUND | MB_TOPMOST | MB_OKCANCEL);
 
-    return 0;
+    if (ret == IDCANCEL)
+        {
+$       SendNotifyMessage (txWindow(), (_txMain? WM_CLOSE : WM_DESTROY), 0, 0);
+$       _txWaitFor (!_txCanvas_Window, _TX_TIMEOUT);
+        }
+
+    return ret;
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+bool txGetAsyncKeyState (int key)
+    {
+$1  HWND wnd = GetForegroundWindow();
+
+    return (GetAsyncKeyState (key) & 0x8000) &&
+           (wnd == txWindow() || wnd == Win32::GetConsoleWindow());
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -10880,9 +11005,7 @@ $   POINT center = { ROUND ((x0 + x1) /2), ROUND ((y0 + y1) /2) };
 $   double start =  startAngle               * txPI/180,
            end   = (startAngle + totalAngle) * txPI/180;
 
-$   return txGDI (!!(Win32::Arc (dc, ROUND (x0), ROUND (y0), ROUND (x1), ROUND (y1),
-                                     ROUND (center.x + 1E3*cos (start)), ROUND (center.y - 1E3*sin (start)),
-                                     ROUND (center.x + 1E3*cos (end)),   ROUND (center.y - 1E3*sin (end)))), dc);
+$   return txGDI (!!(Win32::AngleArc (dc, ROUND (x0), ROUND (y0), ROUND (x1), ROUND (y1), startAngle, totalAngle)), dc);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -10938,7 +11061,6 @@ $   if (_TX_DEFAULT_HDC_FAILED (dc))   return false;
 
 $   int len = (int) strlen (text);
 $   bool ok = txGDI (!!(Win32::TextOut (dc, ROUND (x), ROUND (y), text, len)), dc);
-$   Win32::GetPixel (dc, 0, 0);
 
 $   return ok;
     }
@@ -12706,9 +12828,11 @@ std::ostream& operator << (std::ostream& stream, const RECT& rect)
 #define txFillColor(...)               ( _txLocCurSet(), txFillColor           (__VA_ARGS__) )
 #define txFloodFill(...)               ( _txLocCurSet(), txFloodFill           (__VA_ARGS__) )
 #define txFontExist(...)               ( _txLocCurSet(), txFontExist           (__VA_ARGS__) )
+#define txGetAsyncKeyState(...)        ( _txLocCurSet(), txGetAsyncKeyState    (__VA_ARGS__) )
 #define txGetColor(...)                ( _txLocCurSet(), txGetColor            (__VA_ARGS__) )
 #define txGetConsoleAttr(...)          ( _txLocCurSet(), txGetConsoleAttr      (__VA_ARGS__) )
 #define txGetConsoleCursorPos(...)     ( _txLocCurSet(), txGetConsoleCursorPos (__VA_ARGS__) )
+#define txGetConsoleExtent(...)        ( _txLocCurSet(), txGetConsoleExtent    (__VA_ARGS__) )
 #define txGetConsoleFontSize(...)      ( _txLocCurSet(), txGetConsoleFontSize  (__VA_ARGS__) )
 #define txGetExtent(...)               ( _txLocCurSet(), txGetExtent           (__VA_ARGS__) )
 #define txGetExtentY(...)              ( _txLocCurSet(), txGetExtentY          (__VA_ARGS__) )
@@ -12855,131 +12979,7 @@ using ::std::string;
 //=================================================================================================================
 // EOF
 //=================================================================================================================
-                                                                                                                   
-                                                                  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                                                                                          
 
 
 
