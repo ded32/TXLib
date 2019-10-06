@@ -1,14 +1,14 @@
 //=================================================================================================================
-//           [These sections are for folding control  in Code::Blocks]         [$Date: 2019-08-21 01:50:10 +0400 $]
+//           [These sections are for folding control  in Code::Blocks]         [$Date: 2019-10-06 22:13:59 +0400 $]
 //{          [Best viewed with "Fold all on file open" option enabled]         [Best screen/page width = 120 chars]
 //=================================================================================================================
 //!
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 143 $
+//!          $Version: 00173a, Revision: 144 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2019-08-21 01:50:10 +0400 $
+//!          $Date: 2019-10-06 22:13:59 +0400 $
 //!
 //!          TX Library -- компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -115,7 +115,7 @@
 //!            Версия библиотеки в целочисленном формате: старшее слово -- номер версии, младшее -- номер ревизии,
 //!            в двоично-десятичном формате. Например, @c 0x172a0050 -- версия @c 0.172a, ревизия @c 50.
 //! @code
-//!            #define _TX_VERSION "TXLib [Ver: 1.73a, Rev: 105, Date: 2019-08-07 00:00:00 +0300]"  //
+//!            #define _TX_VERSION "TXLib [Ver: 1.73a, Rev: 105, Date: 2019-10-05 00:00:00 +0300]"  //
 //!            #define _TX_AUTHOR  "Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru)"             //  ПРИМЕР
 //!            #define _TX_VER      0x173a0000                                                      //
 //! @endcode
@@ -133,9 +133,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 143, 2019-08-21 01:50:10 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 143, 2019-08-21 01:50:10 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 143, 2019-08-21 01:50:10 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 144, 2019-10-06 22:13:59 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 144, 2019-10-06 22:13:59 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 144, 2019-10-06 22:13:59 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -638,6 +638,47 @@
 
     #endif
 
+    #if (_MSC_VER >= 1910)                      // MSVC 2017 or greater with Code Analysis enabled
+
+        #pragma warning (disable:  4191)        // 'type cast': unsafe conversion from 'type1' to 'type2'. Calling this function through the result pointer may cause your program to fail
+        #pragma warning (disable:  4555)        // result of expression not used
+        #pragma warning (disable:  5045)        // Compiler will insert Spectre mitigation for memory load if /Qspectre switch specified
+        #pragma warning (disable: 26400)        // Do not assign the result of an allocation or a function call with an owner<T> return value to a raw pointer, use owner<T> instead (i.11).
+        #pragma warning (disable: 26401)        // Do not delete a raw pointer that is not an owner<T> (i.11).
+        #pragma warning (disable: 26409)        // Avoid calling new and delete explicitly, use std::make_unique<T> instead (r.11).
+        #pragma warning (disable: 26426)        // Global initializer calls a non-constexpr function 'name' (i.22).
+        #pragma warning (disable: 26429)        // Symbol 'name' is never tested for nullness, it can be marked as not_null (f.23).
+        #pragma warning (disable: 26430)        // Symbol 'buf' is not tested for nullness on all paths (f.23).
+        #pragma warning (disable: 26432)        // If you define or delete any default operation in the type 'struct 'name', define or delete them all (c.21).
+        #pragma warning (disable: 26433)        // Function 'name' should be marked with 'override' (c.128).
+        #pragma warning (disable: 26438)        // Avoid 'goto' (es.76).
+        #pragma warning (disable: 26440)        // Function 'name' can be declared 'noexcept' (f.6).
+        #pragma warning (disable: 26446)        // Prefer to use gsl::at() instead of unchecked subscript operator (bounds.4).
+        #pragma warning (disable: 26447)        // The function is declared 'noexcept' but calls function 'name' which may throw exceptions (f.6).
+        #pragma warning (disable: 26448)        // Consider using gsl::finally if final action is intended (gsl.util).
+        #pragma warning (disable: 26451)        // Arithmetic overflow: Using operator 'op' on a n-byte value and then casting the result to a m-byte value. Cast the value to the wider type before calling operator 'op' to avoid overflow (io.2).
+        #pragma warning (disable: 26455)        // Default constructor may not throw. Declare it 'noexcept' (f.6).
+        #pragma warning (disable: 26461)        // The pointer argument 'name' for function 'name' can be marked as a pointer to const (con.3).
+        #pragma warning (disable: 26462)        // The value pointed to by 'name' is assigned only once, mark it as a pointer to const (con.4).
+        #pragma warning (disable: 26475)        // Do not use function style C-casts (es.49).
+        #pragma warning (disable: 26477)        // Use 'nullptr' rather than 0 or NULL (es.47).
+        #pragma warning (disable: 26481)        // Don't use pointer arithmetic. Use span instead (bounds.1).
+        #pragma warning (disable: 26482)        // Only index into arrays using constant expressions (bounds.2).
+        #pragma warning (disable: 26483)        // Value n is outside the bounds (0, 0) of variable 'name'. Only index into arrays using constant expressions that are within bounds of the array (bounds.2).
+        #pragma warning (disable: 26485)        // Expression 'expr': No array to pointer decay (bounds.3).
+        #pragma warning (disable: 26486)        // Don't pass a pointer that may be invalid to a function. Parameter n 'name' in call to 'name' may be invalid (lifetime.3).
+        #pragma warning (disable: 26487)        // Don't return a pointer 'name' that may be invalid (lifetime.4).
+        #pragma warning (disable: 26488)        // Do not dereference a potentially null pointer: 'expr'. 'name' was null at line n (lifetime.1).
+        #pragma warning (disable: 26489)        // Don't dereference a pointer that may be invalid: 'expr'. 'name' may have been invalidated at line n (lifetime.1).
+        #pragma warning (disable: 26490)        // Don't use reinterpret_cast (type.1).
+        #pragma warning (disable: 26492)        // Don't use const_cast to cast away const or volatile (type.3).
+        #pragma warning (disable: 26493)        // Don't use C-style casts (type.4).
+        #pragma warning (disable: 26496)        // The variable 'name' is assigned only once, mark it as const (con.4).
+        #pragma warning (disable: 26812)        // The enum type 'type' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).
+        #pragma warning (disable: 26814)        // The const variable 'name' can be computed at compile-time. Consider using constexpr (con.5).
+
+    #endif
+
 #endif
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -737,8 +778,11 @@ namespace std { enum nomeow_t { nomeow }; }     // Vital addition to the C++ sta
 //{          The Includes
 //-----------------------------------------------------------------------------------------------------------------
 
-#if defined (_MSC_VER_6)
-    #pragma warning (push, 3)                   // MSVC 6: At level 4, some std headers emit warnings O_o
+#if defined (_MSC_VER)
+    #pragma warning (push, 3)                   // MSVC: At level /Wall, some std headers emit warnings... O_o
+
+    #pragma warning (disable: 4365)             // 'argument': conversion from 'long' to 'unsigned int', signed/unsigned mismatch
+    #pragma warning (disable: 4005)             // 'name': macro redefinition
 #endif
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -797,22 +841,13 @@ namespace std { enum nomeow_t { nomeow }; }     // Vital addition to the C++ sta
 
 #if defined (_MSC_VER)
 
-#pragma warning (disable: 4005)                 // '...': macro redefinition
-#pragma warning (disable: 4091)                 // 'typedef ': ignored on left of '' when no variable is declared
-#pragma warning (disable: 6001)                 // Uninitialized variable usage "*ppidls"
-
-#include <shlobj.h>
-
 #include <new.h>
 
+#include <shlobj.h>
 #include <ntstatus.h>
 #include <crtdbg.h>
 #include <rtcapi.h>
 #include <dbghelp.h>
-
-#pragma warning (default: 4005)                 // '...': macro redefinition
-#pragma warning (default: 4091)                 // 'typedef ': ignored on left of '' when no variable is declared
-#pragma warning (default: 6001)                 // Uninitialized variable usage "*ppidls"
 
 #endif
 
@@ -821,8 +856,8 @@ namespace std { enum nomeow_t { nomeow }; }     // Vital addition to the C++ sta
 //! @name    Адаптация к компиляторам и платформам
 //-----------------------------------------------------------------------------------------------------------------
 
-#if defined (_MSC_VER_6)
-    #pragma warning (pop)                       // MSVC 6: Restore max level
+#if defined (_MSC_VER)
+    #pragma warning (pop)                       // MSVC: Restore max level
 #endif
 
 #if defined (__STRICT_ANSI__UNDEFINED)
@@ -4966,7 +5001,8 @@ const unsigned _TX_BUFSIZE                =  1024,
 //}----------------------------------------------------------------------------------------------------------------
 
 #if !defined  (_TX_WAITABLE_PARENTS)
-    #define    _TX_WAITABLE_PARENTS       "cmd.exe:devenv.exe, "                    /* MSVS 2003+    */ \
+    #define    _TX_WAITABLE_PARENTS       "VSDebugConsole.exe:devenv.exe, "         /* MSVS 2019     */ \
+                                          "cmd.exe:devenv.exe, "                    /* MSVS 2003+    */ \
                                           "vcspawn.exe:msdev.exe, "                 /* MSVS 6        */ \
                                           "cb_console_runner.exe:codeblocks.exe, "  /* CodeBlocks 8+ */ \
                                           "cmd.exe:console_runner.exe, "            /* CodeBlocks 1  */ \
@@ -7503,7 +7539,9 @@ $   bool wine    = !!Win32::wine_get_version;
 
 $   if (kbWait && !canvas && !kbRedir && !wine)
         {
-$       printf ("\n" "[Нажмите любую клавишу для завершения]");
+$       printf (!_txSENumber? "\n" "[Нажмите любую клавишу для завершения]" :
+                              "\n" "[Press F to Pay Respects...]");  // https://knowyourmeme.com/memes/press-f-to-pay-respects
+$       fflush (stdout);        
         }
 
 $   for (int i = 1; ; i++)
@@ -12643,16 +12681,21 @@ $   return pw;
 //!          @tr <tt> $v (var, cond)  </tt> @td То же, что и <tt>$(var),</tt> но различным цветом в зависимости от условия @c cond.
 //!          @tr <tt> $v_(var, cond)  </tt> @td То же, что и <tt>$v(var),</tt> но без новой строки.
 //!          @tbr
+//!          @tr <tt> $do(code)       </tt> @td Печать строки кода, затем выполнение этого кода.
+//!          @tr <tt> $DO(code)       </tt> @td То же, что и <tt>$do(code),</tt> но с паузой (нажмите любую клавишу).
+//!          @tr <tt> $Do(code)       </tt> @td То же, что и <tt>$do(code),</tt> но с паузой (txMessageBox).
+//!          @tbr
 //!          @tr <tt> $$ (expr)       </tt> @td Печать выражения, его вычисление, печать и возврат значения. @n
 //!                                             Если выражение содержит оператор "запятая", не взятый в скобки,
 //!                                             необходимо окружать expr еще одной парой скобок.
 //!          @tr <tt> $$_(expr)       </tt> @td То же, что и <tt>$$(expr),</tt>  но вторая печать идет без новой строки.
 //!          @tbr
-//!          @tr <tt> $$$ (expr)      </tt> @td То же, что и <tt>$$(expr),</tt>  но для операторов или блоков кода (без возврата значения).
-//!          @tr <tt> $$$_(expr)      </tt> @td То же, что и <tt>$$$(expr),</tt> но вторая печать идет без новой строки.
+//!          @tr <tt> $$$ (code)      </tt> @td То же, что и <tt>$$(expr),</tt>  но для операторов или блоков кода (без возврата значения).
+//!          @tr <tt> $$$_(code)      </tt> @td То же, что и <tt>$$$(expr),</tt> но вторая печать идет без новой строки.
 //!          @tbr
 //!          @tr <tt> $$$$            </tt> @td Печать местоположения в коде.
 //!          @tr <tt> $$$$_           </tt> @td Печать местоположения в коде (только имя функции).
+//!          @tr <tt> $meow           </tt> @td То же, что и $$$$
 //!          @tbr
 //!          @tr <tt> $test (cond)    </tt> @td Печать результата теста различным цветом в зависимости от условия @c cond.
 //!          @tr <tt> $unittest (code, expected) </tt> @td Печать результата <b>юнит-теста</b> @c code с ожидаемым результатом @c expected.
@@ -12709,25 +12752,27 @@ $   return pw;
 //!          $r  // red
 //!          double xy = $$( pow (x, y) );
 //!
-//!          $$$$
+//!          $meow
 //!          double h  = $$(( $(x) = x*x, y = y*y, sqrt ($(x+y)) ));
 //!
+//!          $$$$ $$P
 //!          $$( txCreateWindow (800, 600) );
 //!
 //!          $d  // default color
 //!          $$$( if ($(xy) < $(h)) { $sE return $(h); } );  // Save color, print h in error color, restore color
 //!
-//!          $T (h < 10); $(h);  // Print h again, but in success color (h < 10) or error color (otherwize)
-//!          $n;                 // New line
+//!          $T (h <  10); $(h);  // Print h again, but in success color (h < 10)...
+//!          $T (h <= 10); $(h);  // ...or error color (otherwize)
+//!          $n                   // New line
 //!
-//!          bool isPositive = (h > 0);
-//!          $test (isPositive); $n;                         // Print a test result
+//!          $Do (bool isPositive = (h > 0));
+//!          $test (isPositive); $n                          // Print a test result
 //!
 //!          bool ok = ( $unittest (strlen ("abc"), 3) );    // Checks in unit-test style, thanks GCC
 //!
 //!          $unittest (strlen ("abc"), 3);                  // Checks in unit-test style, Microsoft compatible way.
 //!                                                          // No return result from $unittest here, sorry (:
-//!          $$$$
+//!          $$$$ $P
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
@@ -12738,7 +12783,7 @@ $   return pw;
 
 //-----------------------------------------------------------------------------------------------------------------
 
-// This will never be documented. Read the source, Luke.
+// This will never be documented, he-he. Read the source, Luke.
 
 #if defined (_DEBUG)
     #define $debug  if (1)
@@ -12753,6 +12798,10 @@ $   return pw;
 #define $$d         $debug
 #define $$w         $$$$
 #define $$b         DebugBreak()
+#define $$p         txMessageBox (__TX_FILELINE__, __TX_FUNCTION__);
+#define $$P         $$p
+#define $P          $do ("(press a key)"); _getch();
+#define $p          _getch();
 
 //-----------------------------------------------------------------------------------------------------------------
 
@@ -12844,27 +12893,32 @@ $   return pw;
 
 //=================================================================================================================
 
-#define $(var)        (                                                       _txDump ((var),  "{" #var ": ", "}\n") )
-#define $_(var)       (                                                       _txDump ((var),  "{" #var ": ", "} " ) )
+#define $(   var )       (                                                       _txDump ((var),  "[" #var " = ", "]\n") )
+#define $_(  var )       (                                                       _txDump ((var),  "[" #var " = ", "] " ) )
 
-#define $x(var)       (                                                       _txDump ((var),  "{" #var ": ", "}\n", ::std::ios_base::showbase | ::std::ios_base::hex) )
-#define $x_(var)      (                                                       _txDump ((var),  "{" #var ": ", "} ",  ::std::ios_base::showbase | ::std::ios_base::hex) )
+#define $x(  var )       (                                                       _txDump ((var),  "[" #var " = ", "]\n", ::std::ios_base::showbase | ::std::ios_base::hex) )
+#define $x_( var )       (                                                       _txDump ((var),  "[" #var " = ", "] ",  ::std::ios_base::showbase | ::std::ios_base::hex) )
 
-#define $v(var,cond)  { { $st (cond);                                         _txDump ((var),  "{" #var ": ", "}" ); } $n; }
-#define $v_(var,cond) {   $st (cond);                                         _txDump ((var),  "{" #var ": ", "}" );       }
+#define $v(  var, cond ) { { $st (cond);                                         _txDump ((var),  "[" #var " = ", "]" ); } $n; }
+#define $v_( var, cond ) {   $st (cond);                                         _txDump ((var),  "[" #var " = ", "]" );       }
 
-#define $$(cmd)       ( ::std::cerr << "\n<" __TX_FILELINE__ ": " #cmd ">\n", _txDump ((cmd),"\n<" __TX_FILELINE__ ": " #cmd ": ", ", DONE>\n\n") )
-#define $$_(cmd)      ( ::std::cerr << "\n<" __TX_FILELINE__ ": " #cmd ">\n", _txDump ((cmd),  "<" __TX_FILELINE__ ": " #cmd ": ", ", DONE>\n\n") )
+#define $$(  cmd )       ( ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n", _txDump ((cmd),"\n[" __TX_FILELINE__ ": " #cmd ": ", ", DONE]\n\n") )
+#define $$_( cmd )       ( ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n", _txDump ((cmd),  "[" __TX_FILELINE__ ": " #cmd ": ", ", DONE]\n\n") )
 
-#define $$$(cmd)      { ::std::cerr << "\n<" __TX_FILELINE__ ": " #cmd ">\n"; _txDumpSuffix ("\n<" __TX_FILELINE__ ": " #cmd        " DONE>\n\n"); { cmd; } }
-#define $$$_(cmd)     { ::std::cerr << "\n<" __TX_FILELINE__ ": " #cmd ">\n"; _txDumpSuffix (  "<" __TX_FILELINE__ ": " #cmd        " DONE>\n\n"); { cmd; } }
+#define $$$( cmd )       { ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n"; _txDumpSuffix ("\n[" __TX_FILELINE__ ": " #cmd        " DONE]\n\n"); { cmd; } }
+#define $$$_(cmd )       { ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n"; _txDumpSuffix (  "[" __TX_FILELINE__ ": " #cmd        " DONE]\n\n"); { cmd; } }
+#define $do( cmd )         ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n";                                                                        cmd
+#define $DO( cmd )         ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]...\n"; $p;                                                                 cmd
+#define $Do( cmd )         ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]...\n";                                                                     \
+                           txMessageBox ( "\n[" __TX_FILELINE__ ": " #cmd "]...\n", __TX_FUNCTION__);                                                   cmd
 
-#define $$$$          { txOutputDebugPrintf ("\f\n"); { $s $l txOutputDebugPrintf ("\f" "<%s (%d) %s>", __FILE__, __LINE__, __TX_FUNCTION__); } txOutputDebugPrintf ("\f\n"); }
-#define $$$$_         { txOutputDebugPrintf ("\f\n"); { $s $l txOutputDebugPrintf ("\f"    "<(%d) %s>",           __LINE__, __func__);        } txOutputDebugPrintf ("\f\n"); }
+#define $$$$             { txOutputDebugPrintf ("\f\n"); { $s $l txOutputDebugPrintf ("\f" "[%s (%d) %s]", __FILE__, __LINE__, __TX_FUNCTION__); } txOutputDebugPrintf ("\f\n"); }
+#define $$$$_            { txOutputDebugPrintf ("\f\n"); { $s $l txOutputDebugPrintf ("\f" "[" "(%d) %s]",           __LINE__, __func__);        } txOutputDebugPrintf ("\f\n"); }
+#define $meow            $$$$
 
-#define $n            { ::std::cerr << "\n";   }
-#define $nn           { ::std::cerr << "\n\n"; }
-#define $t            { ::std::cerr << "\t";   }
+#define $n               { ::std::cerr << "\n";   }
+#define $nn              { ::std::cerr << "\n\n"; }
+#define $t               { ::std::cerr << "\t";   }
 
 //-----------------------------------------------------------------------------------------------------------------
 
@@ -13266,34 +13320,80 @@ using ::std::string;
 // EOF
 //=================================================================================================================
                                                                                                                    
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                     
+                                                   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
