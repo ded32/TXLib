@@ -1,14 +1,14 @@
 //=================================================================================================================
-//           [These sections are for folding control  in Code::Blocks]         [$Date: 2019-10-06 22:13:59 +0400 $]
+//           [These sections are for folding control  in Code::Blocks]         [$Date: 2019-10-26 21:18:58 +0400 $]
 //{          [Best viewed with "Fold all on file open" option enabled]         [Best screen/page width = 120 chars]
 //=================================================================================================================
 //!
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 144 $
+//!          $Version: 00173a, Revision: 145 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2019-10-06 22:13:59 +0400 $
+//!          $Date: 2019-10-26 21:18:58 +0400 $
 //!
 //!          TX Library -- компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -55,17 +55,17 @@
 //!
 //!          -# Модули библиотеки Microsoft DBGHELP для доступа к отладочным символам Microsoft:
 //!
-//!             - @c dbghelp32.dll для 32-разрядных программ (либо @c dbghelp.dll, 32-разрядная версия),
-//!             - @c dbghelp64.dll для 64-разрядных программ (либо @c dbghelp.dll, 64-разрядная версия),
-//!             - @c symsrv32.dll  для 32-разрядных программ (либо @c symsrv.dll,  32-разрядная версия),
-//!             - @c symsrv64.dll  для 64-разрядных программ (либо @c symsrv.dll,  64-разрядная версия),
+//!             - @c dbghelp32.dll или dbghe32.dll - для 32-разрядных программ (либо @c dbghelp.dll, 32-разрядная версия),
+//!             - @c dbghelp64.dll или dbghe64.dll - для 64-разрядных программ (либо @c dbghelp.dll, 64-разрядная версия),
+//!             - @c symsrv32.dll  или syms32.dll  - для 32-разрядных программ (либо @c symsrv.dll,  32-разрядная версия),
+//!             - @c symsrv64.dll  или syms64.dll  - для 64-разрядных программ (либо @c symsrv.dll,  64-разрядная версия),
 //!             - @c symsrv.yes.
 //!
 //!          -# Модули библиотеки <a href=https://github.com/jrfonseca/drmingw/releases>DrMinGW</a> для доступа
 //!             к отладочным символам MinGW компилятора GCC @c g++:
 //!
-//!             - @c mgwhelp32.dll для 32-разрядных программ (либо @c mgwhelp.dll, 32-разрядная версия),
-//!             - @c mgwhelp64.dll для 64-разрядных программ (либо @c mgwhelp.dll, 64-разрядная версия).
+//!             - @c mgwhelp32.dll или mgwhe32.dll - для 32-разрядных программ (либо @c mgwhelp.dll, 32-разрядная версия),
+//!             - @c mgwhelp64.dll или mgwhe64.dll - для 64-разрядных программ (либо @c mgwhelp.dll, 64-разрядная версия).
 //!
 //!          Суффиксы @c 32 и @c 64 помогают отличить 32-разрядную и 64-разрядную версии DLL-файлов библиотек.
 //!          Например, @c dbghelp32.dll -- это просто переименованная 32-разрядная версия файла @c dbghelp.dll.
@@ -115,7 +115,7 @@
 //!            Версия библиотеки в целочисленном формате: старшее слово -- номер версии, младшее -- номер ревизии,
 //!            в двоично-десятичном формате. Например, @c 0x172a0050 -- версия @c 0.172a, ревизия @c 50.
 //! @code
-//!            #define _TX_VERSION "TXLib [Ver: 1.73a, Rev: 105, Date: 2019-10-05 00:00:00 +0300]"  //
+//!            #define _TX_VERSION "TXLib [Ver: 1.73a, Rev: 105, Date: 2019-10-21 00:00:00 +0300]"  //
 //!            #define _TX_AUTHOR  "Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru)"             //  ПРИМЕР
 //!            #define _TX_VER      0x173a0000                                                      //
 //! @endcode
@@ -133,9 +133,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 144, 2019-10-06 22:13:59 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 144, 2019-10-06 22:13:59 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 144, 2019-10-06 22:13:59 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 145, 2019-10-26 21:18:58 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 145, 2019-10-26 21:18:58 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 145, 2019-10-26 21:18:58 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -1111,22 +1111,35 @@ inline bool txOK() __attribute__ ((warn_unused_result));
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
-//! @brief   Возвращает размер окна или холста в виде структуры POINT.
+//! @brief   Возвращает размер окна, картинки или холста в виде структуры POINT.
 //!
-//! @param   dc <i>Дескриптор контекста рисования (холста), размеры которого возвращаются. Необязателен. Если не указан
-//!                или равен txDC(), возвращаются размеры окна TXLib.</i>
+//! @param   dc <i>Дескриптор контекста рисования (холста) с загруженной или созданной картинкой, размеры которого
+//!                нужно определить. Необязателен. Если не указан или равен txDC(), возвращаются размеры окна TXLib.</i>
 //!
-//! @return  Размер окна рисования в виде структуры POINT, содержащей компоненты @c x и @c y.
+//! @return  Размер окна, картинки или холста в виде структуры POINT, содержащей компоненты @c x и @c y.
 //!
 //! @note    Если окно не создано, возвращается размер экрана.
 //!
 //! @see     txGetExtentX(), txGetExtentY()
 //!
 //! @usage @code
-//!          POINT size = txGetExtent();
+//!          txCreateWindow (800, 600);
 //!
-//!          txLine (0, 0,      size.x, size.y);
-//!          txLine (0, size.y, size.x, 0);
+//!          HDC image = txLoadImage ("TX/Wizard/TX Application/VS/HTML/1033/TX Application_resize.bmp");
+//!
+//!          POINT center = { txGetExtentX() / 2, txGetExtentY() / 2 };
+//!          POINT size   = txGetExtent (image);
+//!
+//!          txBitBlt (center.x,            center.y,            image);  // This is krivo
+//!
+//!          txBitBlt (center.x - size.x/2, center.y - size.y/2, image);  // This is centered
+//!
+//!          txSetColor (TX_WHITE, 3);
+//!          txSetFillColor (TX_TRANSPARENT);
+//!          txCircle (center.x, center.y, hypot (size.x, size.y) / 2);
+//!          txCircle (center.x, center.y, 10);
+//!
+//!          txDeleteDC (image);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
@@ -2402,11 +2415,11 @@ HDC txCreateCompatibleDC (double sizeX, double sizeY, HBITMAP bitmap = NULL) __a
 //!                  for (int y = 0; y < size.y; y++)
 //!                  for (int x = 0; x < size.x; x++)
 //!                      {
-//!                      RGBQUAD* c = & buf [x + (-y + size.y) * size.x]; // Get color at (x, y) within image buffer
+//!                      RGBQUAD* c = & buf [x + y * size.x];          // Get color at (x, y) within image buffer
 //!
-//!                      c->rgbRed      = (BYTE) (255 - c->rgbRed);    // Negative colors
-//!                      c->rgbGreen    = (BYTE) (255 - c->rgbGreen);
-//!                      c->rgbBlue     = (BYTE) (255 - c->rgbBlue);
+//!                      c->rgbRed      = (BYTE) c->rgbRed;
+//!                      c->rgbGreen    = (BYTE) c->rgbGreen;
+//!                      c->rgbBlue     = (BYTE) c->rgbBlue;
 //!
 //!                      double r       = hypot (x - size.x/2, y - size.y/2);
 //!                      double alpha   = sin (0.05 * r) * 0.1 + 0.5;
@@ -2721,22 +2734,30 @@ inline bool txTransparentBlt (double xDest, double yDest, HDC sourceImage,
 //!          работать не будет. Такое бывает, если xSource или ySource отрицательны, или величина (xSource + width)
 //!          больше ширины изображения-источника, или величина (ySource + height) больше высоты изображения-источника.
 //!
-//! @note    Изображение-источник должно быть загружено с помощью txLoadImage() и иметь либо <b>32-битовый RGBA-формат,</b>
-//!          либо 24-битовый RGB-формат. Дополнительный канал <b>(A: альфа-канал)</b> 32-битового формата отвечает за
-//!          попиксельную прозрачность участков изображения: для каждого пикселя в этом канале значение 0 означает
-//!          его полную прозрачность, значение 255 -- полную непрозрачность, промежуточные значения -- полупрозрачность. @nn
-//!          24-битовый RGB-формат файлов (TrueColor) подразумевает, что попиксельной прозрачности нет и все пиксели
-//!          изображения имеют равную прозрачность, задающуюся параметром @c alpha. @nn
+//! @note    Изображение-источник должно быть загружено с помощью txLoadImage() и иметь <b>32-битовый RGBA-формат.</b>
+//!          Дополнительный канал <b>(A: альфа-канал)</b> 32-битового формата отвечает за попиксельную прозрачность
+//!          участков изображения: для каждого пикселя в этом канале значение 0 означает его полную прозрачность,
+//!          значение 255 -- полную непрозрачность, промежуточные значения -- полупрозрачность. @nn
+//!
 //!          Пустое 32-битовое изображение-источник также может быть создано с помощью функции txCreateDIBSection(), а
 //!          24-битовое -- функцией txCreateCompatibleDC(). После создания на этом изображении можно рисовать, как на
 //!          основном окне TXLib, используя параметр @c dc функций рисования.
 //!
-//! @warning Если изображение имеет 32-битовый RGBA-формат, то его альфа-канал не должен быть полностью черным, иначе
-//!          txAlphaBlend() посчитает изображение полностью прозрачным и не выведет на экран ничего.
+//! @warning Если изображение имеет 32-битовый RGBA-формат файла, то его альфа-канал не должен быть полностью черным,
+//!          иначе txAlphaBlend() посчитает изображение полностью прозрачным и не выведет на экран ничего. @nn
 //!
 //!          Если изображение-источник создано с помощью txCreateDIBSection() или txLoadImage(), то txAlphaBlend()
 //!          может использовать как общую прозрачность, задачаемую параметром @p alpha, так и попиксельную прозрачность,
 //!          задаваемую альфа-каналом.
+//!
+//!          Если изображение имеет 24-битовый RGB-формат файлов (TrueColor), то это подразумевает, что попиксельной
+//!          прозрачности нет и все пиксели изображения имеют равную прозрачность, задающуюся параметром @c alpha. @nn
+//!
+//!          Имейте в виду, что многие графические редакторы сохраняют изображение в 32-битовом формате, даже если вы
+//!          явно указываете 24-битовый формат или формат TrueColor. Если при этом в изображении нет альфа-канала,
+//!          то txAlphaBlend не выведет ничего. Так происходит, например, если сохранять картинку в Microsoft Paint,
+//!          который не умеет создавать альфа-каналы и при этом сохраняет всегда в 32-битовом формате. Для таких случаев
+//!          надо использовать txTransparentBlt. @nn
 //!
 //!          Для BMP-файла альфа-канал можно сделать, например, в Adobe Photoshop, командой "Новый канал (New Channel)"
 //!          в палитре каналов (Channels). Черный цвет в альфа-канале соответствует полной прозрачности, белый --
@@ -4536,6 +4557,7 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
 //! @brief   Распечатывает дамп области памяти в консоли.
 //!
 //! @param   address  Адрес начала распечатки.
+//! @param   pause <i>Делать ли паузу в конце распечатки. Необязательно.</i>
 //! @param   name  <i>Название распечатки (усекается до 8 символов). Необязательно.</i>
 //!
 //! @note    Распечатывается область памяти размером 256 байт.
@@ -4548,7 +4570,15 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-void txDump (const void* address, const char name[] = "txDump()");
+#ifdef FOR_DOXYGEN_ONLY
+void txDump (const void* address, bool pause = true, const char name[] = "_txDump()");
+#endif
+
+//! @cond INTERNAL
+#define txDump( address, ... )     _txDump (address, #address, ##__VA_ARGS__)
+
+void _txDump (const void* address, const char name[] = "_txDump()", bool pause = true);
+//! @endcond
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
@@ -4993,11 +5023,12 @@ const unsigned _TX_BUFSIZE                =  1024,
 //!          консоли.)
 //!
 //!          Программы разделяются пробелом или запятой. Допускается указание родителя запускающей программы, после
-//!          двоеточия.
+//!          двоеточия. Имя программы, начинающееся с большой буквы - спец. случай для консоли CLion, см. функции
+//!          _txCleanup() и _txIsParentWaitable() в исходном тексте @ref TXLib.h.
 //!
 //!          Может задаваться перед включением TXLib.h в программу.
 //!
-//! @see     _TX_ALLOW_KILL_PARENT, _TX_NOINIT, _txWatchdogTimeout
+//! @see     _TX_ALLOW_KILL_PARENT, _TX_NOINIT, _txCleanup(), _txIsParentWaitable(), _txWatchdogTimeout()
 //}----------------------------------------------------------------------------------------------------------------
 
 #if !defined  (_TX_WAITABLE_PARENTS)
@@ -5008,6 +5039,8 @@ const unsigned _TX_BUFSIZE                =  1024,
                                           "cmd.exe:console_runner.exe, "            /* CodeBlocks 1  */ \
                                           "starter.exe:eclipse.exe, "               /* Eclipse 4     */ \
                                           "starter.exe:javaw.exe, "                 /* Eclipse 3     */ \
+                                          "Winpty-agent.exe:Clion64.exe, "          /* CLion64       */ \
+                                          "Winpty-agent.exe:Clion.exe, "            /* CLion32       */ \
                                           "consolepauser.exe:devcpp.exe"            /* Dev-Cpp       */
 #endif
 
@@ -5024,7 +5057,7 @@ const unsigned _TX_BUFSIZE                =  1024,
 //!
 //!          См. также определение этой константы в файле TXLib.h.
 //!
-//! @see     _TX_WAITABLE_PARENTS, _TX_NOINIT, _txWatchdogTimeout
+//! @see     _TX_WAITABLE_PARENTS, _TX_NOINIT, _txWatchdogTimeout()
 //!
 //! @usage @code
 //!          #define _TX_ALLOW_KILL_PARENT false
@@ -6028,13 +6061,19 @@ struct NOTIFYICONDATA
     DWORD dwInfoFlags;
     };
 
-struct CONSOLE_FONT_INFO
+#endif
+
+struct CONSOLE_CURSOR_INFO
     {
-    DWORD  nFont;
-    COORD  dwFontSize;
+    DWORD dwSize;
+    BOOL bVisible;
     };
 
-#endif
+struct CONSOLE_FONT_INFO
+    {
+    DWORD nFont;
+    COORD dwFontSize;
+    };
 
 struct CONSOLE_FONT_INFOEX
     {
@@ -6616,7 +6655,7 @@ bool             _txConsole_SetUnicodeFont();
 HICON            _txCreateTXIcon (int size)                                   __attribute__ ((warn_unused_result));
 int              _txSetFinishedText (HWND wnd);
 void             _txPauseBeforeTermination (HWND canvas);
-bool             _txIsParentWaitable (DWORD* parentPID = NULL)                __attribute__ ((warn_unused_result));
+int              _txIsParentWaitable (DWORD* parentPID = NULL)                __attribute__ ((warn_unused_result));
 PROCESSENTRY32*  _txFindProcess (unsigned pid = GetCurrentProcessId())        __attribute__ ((warn_unused_result));
 bool             _txKillProcess (DWORD pid);
 bool             _txInDll()                                                   __attribute__ ((warn_unused_result));
@@ -6837,6 +6876,7 @@ volatile WNDPROC             _txAltWndProc               = NULL;       // Альтер
 
 _tx_thread _txLoc            _txLocCur                   = {};         // Execution point tracking and trace state, see "$" macro
 
+int                          _txErrors                   = 0;          // TX_ERROR calls sequental number
 long                         _txSENumber                 = 0;          // SEH exceptions sequental number
 long                         _txSEFatalNumber            = 0;          // SEH fatal exceptions sequental number
 char                         _txDumpSE [_TX_BUFSIZE]     = "";         // SEH dump data area
@@ -6963,7 +7003,7 @@ $       _set_security_error_handler (_txOnSecurityError);
 $       ::std::set_constraint_handler_s (_txOnSecurityErrorAnsi);
         #endif
 
-        #if defined (_MSC_VER) && (_MSC_VER >= 1900) || defined (_GCC_VER) && (_GCC_VER >= 530) && !defined (__CYGWIN__)
+        #if defined (_MSC_VER) && (_MSC_VER >= 1900) || defined (_GCC_VER) && (_GCC_VER >= 530) && !defined (__CYGWIN__) && !defined (i386)
 $       __setusermatherr (_txOnMatherr);
         #endif
 
@@ -7265,7 +7305,12 @@ inline bool txOK()
     {
     return (_txCanaryFirst == 0x776F656D &&  // Too well-known values to use constants. You know these values, don't you?
             _txCanaryLast  == 0x5E2E2E5E &&
-            _txCanvas_OK());
+            _txCanvas_OK()
+
+    #if defined (_MSC_VER)
+         && _CrtCheckMemory()
+    #endif
+            );
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -7414,7 +7459,8 @@ $   HWND wnd        = (canvas)? canvas : console;
 $   bool externTerm = (thread != _txMainThreadId &&
                        thread != _txCanvas_ThreadId);
 $   DWORD parent = 0;
-$   bool waitableParent = !externTerm && _txIsParentWaitable (&parent);
+$   int  isParentWaitable = _txIsParentWaitable (&parent);
+$   bool waitableParent   = !externTerm && isParentWaitable;
 
 $   if (_txConsole)
         {
@@ -7427,20 +7473,21 @@ $   if (_txMain && !externTerm && wnd != NULL)
 
 $   _flushall();
 
-$   if ((canvas? _txMain : (_txConsole && !waitableParent)) && !_txExit &&
+$   bool paused = false;
+$   if (((canvas? _txMain : (_txConsole /*!!! && !waitableParent*/)) && !_txExit) || _txErrors &&
         thread == _txMainThreadId)
         {
 $       if (wnd)
             {
-$           ShowWindow          (wnd, SW_SHOW);
-$           EnableWindow        (wnd, true);
-$           SetForegroundWindow (wnd);
-$           BringWindowToTop    (wnd);
-$           RedrawWindow        (wnd, NULL, NULL, RDW_INVALIDATE | RDW_INTERNALPAINT | RDW_UPDATENOW);
+            if (isParentWaitable >= 0) { $ SetWindowPos (wnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW); }
+$           EnableWindow (wnd, true);
             }
 
 $       if (console)
-            { $ _txPauseBeforeTermination (canvas); }
+            {
+$           _txPauseBeforeTermination (canvas);
+$           paused = true;
+            }
         }
 
 $   if (txWindow())
@@ -7461,29 +7508,36 @@ $   if (_txCanvas_Thread)
 $   if (!txWindow())
         { $ DeleteCriticalSection (&_txCanvas_LockBackBuf); CRITICAL_SECTION zero = {0, -1}; _txCanvas_LockBackBuf = zero; }
 
-$   if (_txMain && canvas && waitableParent && _txNOP (_TX_ALLOW_KILL_PARENT))
-        {
-$       bool killed = _txKillProcess (parent);
-
-$       parent = 0;
-$       if (!killed || _txIsParentWaitable (&parent))
-            {
-$           PostMessage (GetConsoleWindow(), WM_CHAR, '\n', 0);
-$           waitableParent = true;
-            }
-        }
+$   console = Win32::GetConsoleWindow();
 
 $   if (_txMain && _txConsole)
         { $ _txConsole_Detach (waitableParent && !externTerm); }
 
+$   bool parentKilled = false;
+$   if (/*!!! _txMain && canvas &&*/ waitableParent && /*!!!*/ paused && _txNOP (_TX_ALLOW_KILL_PARENT))
+        {
+$       parentKilled = _txKillProcess (parent);
+
+$       parent = 0;
+$       if (!parentKilled || _txIsParentWaitable (&parent))
+            {
+$           PostMessage (console, WM_CHAR, '\n', 0);
+$           waitableParent = true;
+            }
+        }
+
+$   std::cout.flush();
+$   std::cerr.flush();
+$   std::clog.flush();
 $   _flushall();
+
 $   _txSymGetFromAddr (NULL);
 
     _TX_ON_DEBUG (OutputDebugString ("\n");
                   OutputDebugString (_TX_VERSION " - FINISHED: " _TX_MODULE "\n");
                   OutputDebugString ("\n"));
 
-$   if (_txWatchdogTimeout >= 0)
+$   if (/*!!!*/ parentKilled && _txWatchdogTimeout >= 0)
         { $ _beginthread (_txWatchdogTerminator, 0, &_txWatchdogTimeout); }
     }
 
@@ -7539,9 +7593,9 @@ $   bool wine    = !!Win32::wine_get_version;
 
 $   if (kbWait && !canvas && !kbRedir && !wine)
         {
-$       printf (!_txSENumber? "\n" "[Нажмите любую клавишу для завершения]" :
-                              "\n" "[Press F to Pay Respects...]");  // https://knowyourmeme.com/memes/press-f-to-pay-respects
-$       fflush (stdout);        
+$       fprintf (stderr, (!_txErrors? "\n" "[Нажмите любую клавишу для завершения]" :
+                                      "\n" "[Press F to Pay Respects...]"));  // https://knowyourmeme.com/memes/press-f-to-pay-respects
+$       fflush  (stderr);
         }
 
 $   for (int i = 1; ; i++)
@@ -7566,12 +7620,12 @@ $       Sleep (_txWindowUpdateInterval);
             { $ _txTrace (__FILE__, __LINE__, NULL, "WARNING: Программа не отвечает и будет завершена.");  break; }
 
         if (!wine && !(i % 100500))
-            { $ printf ("\r" "[Так нажмите же какую-нибудь клавишу для моего завершения]"); }
+            { $ fprintf (stderr, "\r" "[Так нажмите же какую-нибудь клавишу для моего завершения]"); }
         }
 
 $   while (!wine && _kbhit()) (void)_getch();
 
-$   printf ("\n");
+$   fprintf (stderr, "\n");
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -7607,13 +7661,13 @@ $   return EOF;
 
 //-----------------------------------------------------------------------------------------------------------------
 
-bool _txIsParentWaitable (DWORD* parentPID /*= NULL*/)
+int _txIsParentWaitable (DWORD* parentPID /*= NULL*/)
     {
 $1  PROCESSENTRY32* info = _txFindProcess();
-$   if (!info) return false;
+$   if (!info) return 0;
 
 $   info = _txFindProcess (info->th32ParentProcessID);
-$   if (!info) return false;
+$   if (!info) return 0;
 
 $   char parent [MAX_PATH] = "";
 $   strncpy_s (parent, sizeof (parent), info->szExeFile, sizeof (parent) - 1);
@@ -7631,19 +7685,20 @@ $       char* gp = strchr (p, ':');
 $       if (gp)
             {
 $           *gp++ = 0;
+
 $           if (_stricmp (p, parent) != 0) { continue; }
 
 $           if (info) if (_stricmp (gp, info->szExeFile) == 0)  // Was &&, but MSVC /analyze is so paranoid
-                { $ return true; }
+                { $ return islower ((unsigned char) *gp)? +1 : -1; }
             }
         else
             {
 $           if (_stricmp (p, parent) == 0)
-                { $ return true; }
+                { $ return islower ((unsigned char)  *p)? +1 : -1; }
             }
         }
 
-$   return false;
+$   return 0;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -7673,7 +7728,6 @@ $1  Sleep (*(int*) timeout);
 $   OutputDebugString ("\n");
     txOutputDebugPrintf ("%s - WARNING: %s(): Timeout (%d) expired, activating. %s\n",  // Kinda static reflection
                          _TX_VERSION, __func__, *(int*) timeout, ((__func__[8] == 'd')? "Bark, bark" : "Meow, meow"));
-
 $   DWORD parent = 0;
 $   if (_txIsParentWaitable (&parent))
         {
@@ -8731,7 +8785,7 @@ $       if (init == S_OK) Win32::CoUninitialize();
 
     // If Unicode font is not already set, do set it.
 
-$   CONSOLE_FONT_INFO cur = {0};
+$   Win32::CONSOLE_FONT_INFO cur = {0};
 $   _TX_CALL (Win32::GetCurrentConsoleFont, (out, false, &cur));
 
 $   ok &= (cur.nFont >= uniFont);
@@ -10373,7 +10427,7 @@ $   return trace;
 
 const char* _txProcessError (const char file[], int line, const char func[], unsigned color, const char msg[], va_list args)
     {
-    static int      nCalls   = 0; nCalls++;
+    _txErrors++;
 
     DWORD           winerr   = GetLastError();
 
@@ -10434,7 +10488,7 @@ const char* _txProcessError (const char file[], int line, const char func[], uns
 
                 PRINT_ ("\n\n" "#%d: %s, Instance: 0x%p (%d-bit), Flags: %c%c%c%c%c%d, Thread: 0x%X%s" _
 
-                        nCalls _ _TX_VERSION _ &_txInitialized _ (sizeof (void*) == 4)? 32 : 64 _
+                        _txErrors _ _TX_VERSION _ &_txInitialized _ (sizeof (void*) == 4)? 32 : 64 _
 
                         "cC"[_txConsole]_ "mM"[_txMain]_ "dD"[_txIsDll]_ "rR"[_txRunning]_ "eE"[_txExit]_ _txLocCur.trace _
 
@@ -10476,13 +10530,13 @@ const char* _txProcessError (const char file[], int line, const char func[], uns
     txSetConsoleAttr ((options & isFatal)? FOREGROUND_LIGHTMAGENTA : FOREGROUND_LIGHTRED);
     if (color) txSetConsoleAttr (color);
 
-    printf (              "\n" "--------------------------------------------------\n"
+    fprintf (stderr,      "\n" "--------------------------------------------------\n"
                                "%s\n"
                                "--------------------------------------------------\n",
                                what);
 
     if (stristr (stkTrace, ".exe: "))
-        printf (               "Стек вызовов:\n\n"
+        fprintf (stderr,       "Стек вызовов:\n\n"
                                "%s\n\n"
                                "--------------------------------------------------\n",
                                stkTrace);
@@ -10562,7 +10616,7 @@ const char* _txProcessError (const char file[], int line, const char func[], uns
 
 int _txOnErrorReport (int type, const char* text, int* ret)
     {
-    static int nCalls = 0; nCalls++;
+    _txErrors++;
 
     unsigned restore = txGetConsoleAttr();
 
@@ -11656,12 +11710,15 @@ $   bool ok = !!Win32::GetObject (txGDI ((Win32::GetCurrentObject (sourceImage, 
 
     // Эта структура определяет, как цвета пикселей окна (точнее, source DC) и картинки смешиваются при рисовании.
     // Параметры смешивания не помещаются в какую-то одну переменную, нескольно отдельных переменных делать нерационально,
-    // поэтому в Win32 используется структура - группа из переменных. Фактически в этой структуре важен третий параметр,
-    // задающий прозрачность картинки. Если он 0 - то она полностью прозрачна и вызов Win32::AlphaBlend ничего не нарисует.
-    // Если 255 - то картинка перенесется в окно полностью, без прозрачности. С помощью последнего параметра структуры система
-    // рисования Windows (Win32 GDI) узнает, есть ли альфа-канал в копируемой картинке. Если он есть, параметр надо задать как
-    // AC_SRC_ALPHA, иначе 0. Здесь для универсальности это определяется автоматически из вызова Win32::GetObject(), см. выше.
-    // Пожалуйста, не надо бездумно копировать себе в программу этот код. Осмыслите его, решите, будете ли вы использовать ли
+    // поэтому в Win32 используется структура - группа из переменных, их называют компонентами структуры. В этой структуре
+    // более всех важен *третий компонент*, задающий прозрачность картинки. Если он 0 - то она полностью прозрачна и вызов
+    // Win32::AlphaBlend ничего не нарисует. Если 255 - то картинка скопируется в окно полностью, без прозрачности. С помощью
+    // *последнего компонента* структуры система рисования Windows (Win32 GDI) узнает, надо ли учитывать альфа-канал в копируемой
+    // картинке или его надо игнорировать. Если в картинке фактически есть правильно построенный альфа-канал (см. описание
+    // функции txAlphaBlend в системе помощи TXLib), то *последний компонент* структуры надо задать как константу AC_SRC_ALPHA.
+    // Если в картинке альфа-канала нет, то *последний параметр* надо установить в 0. В коде ниже это определяется автоматически
+    // из вызова Win32::GetObject(), для универсальности (см. выше).
+    // Пожалуйста, не надо бездумно копировать себе в программу этот код. Осмыслите его, и решите, будете ли вы использовать ли
     // вы альфа-каналы или нет, и установите AC_SRC_ALPHA либо 0. Иначе этим копипастом вы породите невнятный паленый код и
     // безнадежно испортите себе карму. :((
 
@@ -11688,9 +11745,9 @@ $       ok = false;
         }
 
     // В этой функции проверок и комментариев больше, чем рабочего кода, и это как бы намекает, что нетрудно сделать свою
-    // аналогичную функцию без ограничений масштаба. <s>Если ты дочитал до этого места,</s> пересядь с иглы TXLib'а на
-    // поверхность GDI Win32, <s>хотя GDI тоже так себе, так что лучше заюзай GDI+, SFML, OpenGL или DirectX, будет круто.
-    // Хотя это и сложнее, да.</s>
+    // аналогичную функцию без ограничений масштаба отображения. <s>Если ты дочитал до этого места,</s> пересядь с иглы TXLib'а
+    // на поверхность GDI Win32, <s>хотя GDI тоже так себе, так что лучше заюзай GDI+, SFML, OpenGL или DirectX, будет круто.
+    // Хотя это и сложнее.</s>
 
     // Но помни про паленый копипаст и карму, см. выше. Я предупредил.
 
@@ -12007,7 +12064,7 @@ $   return written == len;
 
 POINT txGetConsoleFontSize()
     {
-$1  CONSOLE_FONT_INFO font = {0, {8, 16}};
+$1  Win32::CONSOLE_FONT_INFO font = {0, {8, 16}};
 
 $   _TX_CALL (Win32::GetCurrentConsoleFont, (GetStdHandle (STD_OUTPUT_HANDLE), false, &font));
 
@@ -12092,7 +12149,7 @@ inline bool txDisableAutoPause()
 
 //-----------------------------------------------------------------------------------------------------------------
 
-void txDump (const void* address, const char name[] /*= "txDump()"*/)
+void _txDump (const void* address, const char name[] /*= "_txDump()"*/, bool pause /*= true*/)
     {
 $1  const unsigned char* p = (const unsigned char*) address;
 $   unsigned x = 0;
@@ -12118,6 +12175,12 @@ $   for (int y = 0; y < 16; y++, p += 16)
 
 $   txSetConsoleAttr (attr);
 $   printf ("\n");
+
+$   if (pause)
+        {
+$       fprintf (stderr, "[Нажмите любую клавишу для продолжения]\n");
+$       (void)_getch();
+        }
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -12128,11 +12191,11 @@ void _txStackBackTrace (const char file[] /*= "?"*/, int line /*= 0*/, const cha
 $1  unsigned attr = txGetConsoleAttr();
 $   txSetConsoleAttr (FOREGROUND_LIGHTCYAN);
 
-$   printf ("\n" "--------------------------------------------------\n"
-                 "Трассировка стека из \"%s\" at %s (%d):\n\n"
-                 "%s\n\n"
-                 "--------------------------------------------------\n\n",
-                 func, file, line, _txCaptureStackBackTrace (1, readSource));
+$   fprintf (stderr, "\n" "--------------------------------------------------\n"
+                          "Трассировка стека из \"%s\" at %s (%d):\n\n"
+                          "%s\n\n"
+                          "--------------------------------------------------\n\n",
+                          func, file, line, _txCaptureStackBackTrace (1, readSource));
 
 $   txSetConsoleAttr (attr);
     }
@@ -12340,7 +12403,7 @@ inline bool In (std::nomeow_t, Tx x, Ta a, Tb b)
 
 inline int random (int range)
     {
-    if (rand() % 100 == 0) printf ("%.4s ", (const volatile char*) ((rand() & 0x0F)? &_txCanaryFirst : &_txCanaryLast));
+    if (rand() % 100 == 0) fprintf (stderr, "%.4s ", (const volatile char*) ((rand() & 0x0F)? &_txCanaryFirst : &_txCanaryLast));
 
     return rand() % range;
     }
@@ -12349,7 +12412,7 @@ inline int random (int range)
 
 inline double random (double left, double right)
     {
-    if (rand() % 100 == 0) printf ("%.4s ", (const volatile char*) ((rand() & 0x0F)? &_txCanaryFirst : &_txCanaryLast));
+    if (rand() % 100 == 0) fprintf (stderr, "%.4s ", (const volatile char*) ((rand() & 0x0F)? &_txCanaryFirst : &_txCanaryLast));
 
     return random (std::nomeow, left, right);
     }
@@ -12359,7 +12422,7 @@ inline double random (double left, double right)
 template <typename Tx, typename Ta, typename Tb>
 inline bool In (Tx x, Ta a, Tb b)
     {
-    if (rand() % 100 == 0) printf ("%.4s ", (const volatile char*) ((rand() & 0x0F)? &_txCanaryFirst : &_txCanaryLast));
+    if (rand() % 100 == 0) fprintf (stderr, "%.4s ", (const volatile char*) ((rand() & 0x0F)? &_txCanaryFirst : &_txCanaryLast));
 
     return In (std::nomeow, x, a, b);
     }
@@ -12772,7 +12835,7 @@ $   return pw;
 //!
 //!          $unittest (strlen ("abc"), 3);                  // Checks in unit-test style, Microsoft compatible way.
 //!                                                          // No return result from $unittest here, sorry (:
-//!          $$$$ $P
+//!          $$$$ $$p
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
@@ -12780,28 +12843,6 @@ $   return pw;
 #define __TX_DEBUG_MACROS  ("Группа отладочных $-макросов")
 
 //! @cond INTERNAL
-
-//-----------------------------------------------------------------------------------------------------------------
-
-// This will never be documented, he-he. Read the source, Luke.
-
-#if defined (_DEBUG)
-    #define $debug  if (1)
-    #define $printf if (1)
-    #define $PRINTF if (1)
-#else
-    #define $debug  if (0)
-    #define $printf if (0)
-    #define $PRINTF if (0)
-#endif
-
-#define $$d         $debug
-#define $$w         $$$$
-#define $$b         DebugBreak()
-#define $$p         txMessageBox (__TX_FILELINE__, __TX_FUNCTION__);
-#define $$P         $$p
-#define $P          $do ("(press a key)"); _getch();
-#define $p          _getch();
 
 //-----------------------------------------------------------------------------------------------------------------
 
@@ -12893,20 +12934,20 @@ $   return pw;
 
 //=================================================================================================================
 
-#define $(   var )       (                                                       _txDump ((var),  "[" #var " = ", "]\n") )
-#define $_(  var )       (                                                       _txDump ((var),  "[" #var " = ", "] " ) )
+#define $(   var )       (                                                       _txDumpVar ((var),  "[" #var " = ", "]\n") )
+#define $_(  var )       (                                                       _txDumpVar ((var),  "[" #var " = ", "] " ) )
 
-#define $x(  var )       (                                                       _txDump ((var),  "[" #var " = ", "]\n", ::std::ios_base::showbase | ::std::ios_base::hex) )
-#define $x_( var )       (                                                       _txDump ((var),  "[" #var " = ", "] ",  ::std::ios_base::showbase | ::std::ios_base::hex) )
+#define $x(  var )       (                                                       _txDumpVar ((var),  "[" #var " = ", "]\n", ::std::ios_base::showbase | ::std::ios_base::hex) )
+#define $x_( var )       (                                                       _txDumpVar ((var),  "[" #var " = ", "] ",  ::std::ios_base::showbase | ::std::ios_base::hex) )
 
-#define $v(  var, cond ) { { $st (cond);                                         _txDump ((var),  "[" #var " = ", "]" ); } $n; }
-#define $v_( var, cond ) {   $st (cond);                                         _txDump ((var),  "[" #var " = ", "]" );       }
+#define $v(  var, cond ) { { $st (cond);                                         _txDumpVar ((var),  "[" #var " = ", "]" ); } $n; }
+#define $v_( var, cond ) {   $st (cond);                                         _txDumpVar ((var),  "[" #var " = ", "]" );       }
 
-#define $$(  cmd )       ( ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n", _txDump ((cmd),"\n[" __TX_FILELINE__ ": " #cmd ": ", ", DONE]\n\n") )
-#define $$_( cmd )       ( ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n", _txDump ((cmd),  "[" __TX_FILELINE__ ": " #cmd ": ", ", DONE]\n\n") )
+#define $$(  cmd )       ( ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n", _txDumpVar ((cmd),"\n[" __TX_FILELINE__ ": " #cmd ": ", ", DONE]\n\n") )
+#define $$_( cmd )       ( ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n", _txDumpVar ((cmd),  "[" __TX_FILELINE__ ": " #cmd ": ", ", DONE]\n\n") )
 
-#define $$$( cmd )       { ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n"; _txDumpSuffix ("\n[" __TX_FILELINE__ ": " #cmd        " DONE]\n\n"); { cmd; } }
-#define $$$_(cmd )       { ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n"; _txDumpSuffix (  "[" __TX_FILELINE__ ": " #cmd        " DONE]\n\n"); { cmd; } }
+#define $$$( cmd )       { ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n"; _txDumpVarSuffix ("\n[" __TX_FILELINE__ ": " #cmd        " DONE]\n\n"); { cmd; } }
+#define $$$_(cmd )       { ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n"; _txDumpVarSuffix (  "[" __TX_FILELINE__ ": " #cmd        " DONE]\n\n"); { cmd; } }
 #define $do( cmd )         ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]\n";                                                                        cmd
 #define $DO( cmd )         ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]...\n"; $p;                                                                 cmd
 #define $Do( cmd )         ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]...\n";                                                                     \
@@ -12922,6 +12963,28 @@ $   return pw;
 
 //-----------------------------------------------------------------------------------------------------------------
 
+// This will never be documented, he-he. Read the source, Luke.
+
+#if defined (_DEBUG)
+    #define $debug  if (1)
+    #define $printf if (1)
+    #define $PRINTF if (1)
+#else
+    #define $debug  if (0)
+    #define $printf if (0)
+    #define $PRINTF if (0)
+#endif
+
+#define $$d         $debug
+#define $$w         $$$$
+#define $$b         DebugBreak()
+#define $$p         $p
+#define $$P         txMessageBox (__TX_FILELINE__, __TX_FUNCTION__);
+#define $p          fprintf (stderr, "[%s %s: Нажмите любую клавишу для продолжения]", __TX_FILELINE__, __TX_FUNCTION__); $P
+#define $P          _getch();
+
+//-----------------------------------------------------------------------------------------------------------------
+
 struct _txSaveConsoleAttr
     {
     unsigned attr_;
@@ -12931,21 +12994,21 @@ struct _txSaveConsoleAttr
     inline         ~_txSaveConsoleAttr()                                         { txSetConsoleAttr (attr_); }
     };
 
-struct _txDumpSuffix
+struct _txDumpVarSuffix
     {
     const char* suffix_;
 
-    inline  explicit _txDumpSuffix (const char suffix[] = "") : suffix_ (suffix) {}
-    inline          ~_txDumpSuffix()                          { ::std::cerr << suffix_; }
+    inline  explicit _txDumpVarSuffix (const char suffix[] = "") : suffix_ (suffix) {}
+    inline          ~_txDumpVarSuffix()                          { ::std::cerr << suffix_; }
 
-    _txDumpSuffix             (const _txDumpSuffix&);
-    _txDumpSuffix& operator = (const _txDumpSuffix&);
+    _txDumpVarSuffix             (const _txDumpVarSuffix&);
+    _txDumpVarSuffix& operator = (const _txDumpVarSuffix&);
     };
 
 #if !defined (_MSC_VER_6)
 
 template <typename T> inline
-const T&     _txDump (const T&     value,      const char prefix[] = "", const char suffix[] = "", std::ios_base::fmtflags flags = ::std::cerr.flags())
+const T&     _txDumpVar (const T&     value,      const char prefix[] = "", const char suffix[] = "", std::ios_base::fmtflags flags = ::std::cerr.flags())
     {
     ::std::cerr << prefix;
 
@@ -12963,7 +13026,7 @@ const T&     _txDump (const T&     value,      const char prefix[] = "", const c
 #endif
 
 template <typename T> inline
-      T&     _txDump (      T&     value,      const char prefix[] = "", const char suffix[] = "", std::ios_base::fmtflags flags = ::std::cerr.flags())
+      T&     _txDumpVar (      T&     value,      const char prefix[] = "", const char suffix[] = "", std::ios_base::fmtflags flags = ::std::cerr.flags())
     {
     ::std::cerr << prefix;
 
@@ -12981,7 +13044,7 @@ template <typename T> inline
 #if !defined (_MSC_VER_6)
 
 inline
-const char*  _txDump (const char*  value,      const char prefix[] = "", const char suffix[] = "", std::ios_base::fmtflags flags = ::std::cerr.flags())
+const char*  _txDumpVar (const char*  value,      const char prefix[] = "", const char suffix[] = "", std::ios_base::fmtflags flags = ::std::cerr.flags())
     {
     ::std::cerr << prefix;
 
@@ -12999,7 +13062,7 @@ const char*  _txDump (const char*  value,      const char prefix[] = "", const c
 #endif
 
 inline
-      char*  _txDump (      char*  value,      const char prefix[] = "", const char suffix[] = "", std::ios_base::fmtflags flags = ::std::cerr.flags())
+      char*  _txDumpVar (      char*  value,      const char prefix[] = "", const char suffix[] = "", std::ios_base::fmtflags flags = ::std::cerr.flags())
     {
     ::std::cerr << prefix;
 
@@ -13017,7 +13080,7 @@ inline
 #if !defined (_MSC_VER_6)
 
 template <int N> inline
-const char (&_txDump (const char (&value) [N], const char prefix[] = "", const char suffix[] = "", std::ios_base::fmtflags flags = ::std::cerr.flags())) [N]
+const char (&_txDumpVar (const char (&value) [N], const char prefix[] = "", const char suffix[] = "", std::ios_base::fmtflags flags = ::std::cerr.flags())) [N]
     {
     ::std::cerr << prefix;
 
@@ -13035,7 +13098,7 @@ const char (&_txDump (const char (&value) [N], const char prefix[] = "", const c
 #endif
 
 template <int N> inline
-      char (&_txDump (      char (&value) [N], const char prefix[] = "", const char suffix[] = "", std::ios_base::fmtflags flags = ::std::cerr.flags())) [N]
+      char (&_txDumpVar (      char (&value) [N], const char prefix[] = "", const char suffix[] = "", std::ios_base::fmtflags flags = ::std::cerr.flags())) [N]
     {
     ::std::cerr << prefix;
 
@@ -13053,7 +13116,7 @@ template <int N> inline
 #if !defined (_MSC_VER_6)
 
 template <typename T, int N> inline
-const T    (&_txDump (const T    (&value) [N], const char prefix[] = "", const char suffix[] = "", std::ios_base::fmtflags flags = ::std::cerr.flags())) [N]
+const T    (&_txDumpVar (const T    (&value) [N], const char prefix[] = "", const char suffix[] = "", std::ios_base::fmtflags flags = ::std::cerr.flags())) [N]
     {
     ::std::cerr << prefix;
 
@@ -13080,7 +13143,7 @@ const T    (&_txDump (const T    (&value) [N], const char prefix[] = "", const c
 #endif
 
 template <typename T, int N> inline
-      T    (&_txDump (      T    (&value) [N], const char prefix[] = "", const char suffix[] = "", std::ios_base::fmtflags flags = ::std::cerr.flags())) [N]
+      T    (&_txDumpVar (      T    (&value) [N], const char prefix[] = "", const char suffix[] = "", std::ios_base::fmtflags flags = ::std::cerr.flags())) [N]
     {
     ::std::cerr << prefix;
 
@@ -13161,7 +13224,6 @@ std::ostream& operator << (std::ostream& stream, const RECT& rect)
 #define txDestroyWindow(...)           ( _txLocCurSet(), txDestroyWindow       (__VA_ARGS__) )
 #define txDisableAutoPause(...)        ( _txLocCurSet(), txDisableAutoPause    (__VA_ARGS__) )
 #define txDrawText(...)                ( _txLocCurSet(), txDrawText            (__VA_ARGS__) )
-#define txDump(...)                    ( _txLocCurSet(), txDump                (__VA_ARGS__) )
 #define txEllipse(...)                 ( _txLocCurSet(), txEllipse             (__VA_ARGS__) )
 #define txEnd(...)                     ( _txLocCurSet(), txEnd                 (__VA_ARGS__) )
 #define txExtractColor(...)            ( _txLocCurSet(), txExtractColor        (__VA_ARGS__) )
@@ -13227,6 +13289,7 @@ std::ostream& operator << (std::ostream& stream, const RECT& rect)
 #define txWindow(...)                  ( _txLocCurSet(), txWindow              (__VA_ARGS__) )
 #define tx_fpreset(...)                ( _txLocCurSet(), tx_fpreset            (__VA_ARGS__) )
 #define _txStackBackTrace(...)         ( _txLocCurSet(), _txStackBackTrace     (__VA_ARGS__) )
+#define _txDump(...)                   ( _txLocCurSet(), _txDump               (__VA_ARGS__) )
 
 //}
 //=================================================================================================================
@@ -13320,77 +13383,14 @@ using ::std::string;
 // EOF
 //=================================================================================================================
                                                                                                                    
-                                                   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                              
 
 
 
