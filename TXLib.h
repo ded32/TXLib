@@ -1,14 +1,14 @@
 //=================================================================================================================
-//           [These sections are for folding control  in Code::Blocks]         [$Date: 2019-10-26 21:18:58 +0400 $]
+//           [These sections are for folding control  in Code::Blocks]         [$Date: 2019-11-16 20:26:16 +0400 $]
 //{          [Best viewed with "Fold all on file open" option enabled]         [Best screen/page width = 120 chars]
 //=================================================================================================================
 //!
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 145 $
+//!          $Version: 00173a, Revision: 146 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2019-10-26 21:18:58 +0400 $
+//!          $Date: 2019-11-16 20:26:16 +0400 $
 //!
 //!          TX Library -- компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -115,7 +115,7 @@
 //!            Версия библиотеки в целочисленном формате: старшее слово -- номер версии, младшее -- номер ревизии,
 //!            в двоично-десятичном формате. Например, @c 0x172a0050 -- версия @c 0.172a, ревизия @c 50.
 //! @code
-//!            #define _TX_VERSION "TXLib [Ver: 1.73a, Rev: 105, Date: 2019-10-21 00:00:00 +0300]"  //
+//!            #define _TX_VERSION "TXLib [Ver: 1.73a, Rev: 105, Date: 2019-11-05 00:00:00 +0300]"  //
 //!            #define _TX_AUTHOR  "Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru)"             //  ПРИМЕР
 //!            #define _TX_VER      0x173a0000                                                      //
 //! @endcode
@@ -133,9 +133,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 145, 2019-10-26 21:18:58 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 145, 2019-10-26 21:18:58 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 145, 2019-10-26 21:18:58 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 146, 2019-11-16 20:26:16 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 146, 2019-11-16 20:26:16 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 146, 2019-11-16 20:26:16 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -2094,6 +2094,7 @@ bool txTextOut (double x, double y, const char text[], HDC dc = txDC());
 //{----------------------------------------------------------------------------------------------------------------
 //! @cond INTERNAL
 
+#undef txRectandle
 #undef txCircle
 #undef txSetColor
 #undef C0L0RREF
@@ -4612,6 +4613,25 @@ void _txDump (const void* address, const char name[] = "_txDump()", bool pause =
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
+//! @brief   Преобразует декорированное имя С++ в название типа.
+//!
+//!          Декорирование имен (name mangling): <a href=http://en.wikipedia.org/wiki/Name_mangling#Simple_example>см.</a>
+//!
+//! @note    Возвращает указатель на динамическую память. Вы должны <b>сами</b> освободить эту память вызовом @c free().
+//!
+//! @see     txDump(), txStackBackTrace(), TX_ERROR(), TX_DEBUG_ERROR()
+//!
+//! @usage @code
+//!          char* buf = txDemangle (typeid (buf) .name());
+//!          std::cout << "Type of buf is: " << buf << "\n";
+//!          free (buf);
+//! @endcode
+//}----------------------------------------------------------------------------------------------------------------
+
+char* txDemangle (const char* mangledName);
+
+//{----------------------------------------------------------------------------------------------------------------
+//! @ingroup Misc
 //! @brief   Макрос, позволяющий передать переменное число параметров в какой-либо другой макрос.
 //!
 //! @note    <b>Символ подчеркивания и символ TX_COMMA просто переопределяются в запятую.</b>
@@ -6442,7 +6462,12 @@ extern "C" ABI::__cxa_eh_globals* __cxa_get_globals();
 #define _TX_DLLIMPORT_OPT( lib, retval, name, params ) \
      retval (WINAPI* name) params = (retval (WINAPI*) params) _txDllImport (lib ".dll", #name, false)
 
-FARPROC _txDllImport (const char dllFileName[], const char funcName[], bool required = true);
+#define _TX_DLLIMPORT_CRT( lib, retval, name, params ) \
+     retval (      * name) params = (retval (      *) params) _txDllImport (lib ".dll", #name, false)
+
+typedef void (*_tx_FARPROC)();
+
+_tx_FARPROC _txDllImport (const char dllFileName[], const char funcName[], bool required = true);
 
 //-----------------------------------------------------------------------------------------------------------------
 
@@ -6557,6 +6582,9 @@ _TX_DLLIMPORT     ("MSVCRT",   void,     exit,                          (int ret
 _TX_DLLIMPORT_OPT ("MSVCRT",   void,     _cexit,                        (void));
 _TX_DLLIMPORT     ("MSVCRT",   unsigned, _fpreset,                      ());
 _TX_DLLIMPORT     ("MSVCRT",   unsigned, _controlfp,                    (unsigned control, unsigned mask));
+_TX_DLLIMPORT_CRT ("MSVCRT",   char*,    __unDName,                     (char* outStr, const char* mangledName, int outStrLen,
+                                                                         void* (*mallocFunc) (size_t size), void (*freeFunc) (void *pointer),
+                                                                         unsigned short flags));
 
 _TX_DLLIMPORT_OPT ("OpenGL32", HDC,         wglGetCurrentDC,            ());
 _TX_DLLIMPORT_OPT ("OpenGL32", unsigned,    glGetError,                 (void));
@@ -7059,7 +7087,7 @@ $   return 1;
 #pragma warning (disable: 6102)  // Using dllPaths[BYTE:1] from failed function call
 #endif
 
-FARPROC _txDllImport (const char dllFileName[], const char funcName[], bool required /*= true*/)
+_tx_FARPROC _txDllImport (const char dllFileName[], const char funcName[], bool required /*= true*/)
     {
     if (_TX_ARGUMENT_FAILED (dllFileName && *dllFileName)) return NULL;
     if (_TX_ARGUMENT_FAILED (funcName    && *funcName))    return NULL;
@@ -7146,7 +7174,7 @@ FARPROC _txDllImport (const char dllFileName[], const char funcName[], bool requ
                                      dllName _ (arch? "\" / \"" : "") _ dllArch);
     if (!dll) return NULL;
 
-    FARPROC addr = GetProcAddress (dll, funcName);
+    _tx_FARPROC addr = (_tx_FARPROC) GetProcAddress (dll, funcName);
     if (!addr && required) TX_ERROR ("\a" "Cannot import \"%s\" from library \"%s%s%s\"." _
                                      funcName _ dllName _ (arch? "\" / \"" : "") _ dllArch);
     return addr;
@@ -7461,6 +7489,9 @@ $   bool externTerm = (thread != _txMainThreadId &&
 $   DWORD parent = 0;
 $   int  isParentWaitable = _txIsParentWaitable (&parent);
 $   bool waitableParent   = !externTerm && isParentWaitable;
+
+$   if (canvas)
+        { $ txSleep (5*_txWindowUpdateInterval); }
 
 $   if (_txConsole)
         {
@@ -12202,6 +12233,36 @@ $   txSetConsoleAttr (attr);
 
 //-----------------------------------------------------------------------------------------------------------------
 
+char* txDemangle (const char* mangledName)
+    {
+$1  if (!mangledName) return NULL;
+
+$   char* typeName = NULL;
+
+    #if defined (_GCC_VER)
+
+$   int err = 1;
+$   typeName = ::abi::__cxa_demangle (mangledName, 0, 0, &err); (void) err;
+    if (typeName) { $ return typeName; }
+
+    #endif
+
+$   unsigned short flags = 0;
+
+$   if (mangledName[0] == '.')
+        {
+$       mangledName++;
+$       flags = 0x2800;  // UNDNAME_32_BIT_DECODE | UNDNAME_TYPE_ONLY
+        }
+
+$   typeName = _TX_CALL (Win32::__unDName, (NULL, mangledName, 0, malloc, free, flags));
+    if (typeName) { $ return typeName; }
+
+$   return strdup (mangledName);
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
 double txQueryPerformance()
     {
 $1  int maxTime    =  500;
@@ -13390,7 +13451,46 @@ using ::std::string;
                                                                                                                    
                                                                                                                    
                                                                                                                    
-                                                              
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
