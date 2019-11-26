@@ -1,14 +1,14 @@
 //=================================================================================================================
-//           [These sections are for folding control  in Code::Blocks]         [$Date: 2019-11-16 20:26:16 +0400 $]
+//           [These sections are for folding control  in Code::Blocks]         [$Date: 2019-11-26 23:39:14 +0400 $]
 //{          [Best viewed with "Fold all on file open" option enabled]         [Best screen/page width = 120 chars]
 //=================================================================================================================
 //!
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 146 $
+//!          $Version: 00173a, Revision: 147 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2019-11-16 20:26:16 +0400 $
+//!          $Date: 2019-11-26 23:39:14 +0400 $
 //!
 //!          TX Library -- компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -115,7 +115,7 @@
 //!            Версия библиотеки в целочисленном формате: старшее слово -- номер версии, младшее -- номер ревизии,
 //!            в двоично-десятичном формате. Например, @c 0x172a0050 -- версия @c 0.172a, ревизия @c 50.
 //! @code
-//!            #define _TX_VERSION "TXLib [Ver: 1.73a, Rev: 105, Date: 2019-11-05 00:00:00 +0300]"  //
+//!            #define _TX_VERSION "TXLib [Ver: 1.73a, Rev: 105, Date: 2019-11-21 00:00:00 +0300]"  //
 //!            #define _TX_AUTHOR  "Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru)"             //  ПРИМЕР
 //!            #define _TX_VER      0x173a0000                                                      //
 //! @endcode
@@ -133,9 +133,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 146, 2019-11-16 20:26:16 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 146, 2019-11-16 20:26:16 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 146, 2019-11-16 20:26:16 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 147, 2019-11-26 23:39:14 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 147, 2019-11-26 23:39:14 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 147, 2019-11-26 23:39:14 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -2016,7 +2016,7 @@ void txDrawMan (int x, int y, int sizeX, int sizeY, COLORREF color, double handL
     {
     const char msg[] = "\0/А я - человечек из библиотеки!\0/Меня объясняли на уроке!\0/Напиши меня сам!\0/";
 
-    static unsigned count = GetTickCount(), L = 0;
+    static int count = GetTickCount(), L = 0;
 
     C0L0RREF lineColor = txGetColor();
     C0L0RREF fillColor = txGetFillColor();
@@ -2043,7 +2043,8 @@ void txDrawMan (int x, int y, int sizeX, int sizeY, COLORREF color, double handL
 
     txLine (x, y - (O.8 + head - O.05 * smile/2) * sizeY, x - O.05 * sizeY, y - (O.8 + head + O.05 * smile/2) * sizeY),
     txLine (x, y - (O.8 + head - O.05 * smile/2) * sizeY, x + O.05 * sizeY, y - (O.8 + head + O.05 * smile/2) * sizeY),
-    txNotifyIcon (4, (const char*)!! (L+'L')[msg], "\n%s\n", msg + (count++ % 3)["\"<"]);
+    txNotifyIcon (4, (const char*)!! (L+'L')[msg], "\n%s\n", msg + ((unsigned) (((count -=- 1) ^=! 1) ^=~ ((0)^(0)) +1) % 3)["\"<"]);
+    // Above there are Mouth operator -=-, Cat operator ^=!, Mouse operator ^=~ and Owl constant ((0)^(0)). Use it freely, meow
 
     txCircle (x - O.05 * sizeY, y - (O.9 + head - O.02 * crazy) * sizeY, eyes * (1 + O.5*wink) * O.02 * sizeY);
     txCircle (x + O.05 * sizeY, y - (O.9 + head + O.02 * crazy) * sizeY, eyes * (1 - O.5*wink) * O.02 * sizeY),
@@ -4707,14 +4708,27 @@ char* txDemangle (const char* mangledName);
 //!
 //!              txSetWindowsHook (MyWndProc);
 //!
-//!              txDrawText (0, 0, txGetExtentX(), txGetExtentY(), "MOV txWindow, eax [please]");
+//!              POINT sz = txGetExtent();
+//!
+//!              txSelectFont ("Lucida Console", 30, 15);
+//!              txDrawText (0, 0,      sz.x, sz.y, "MOV txWindow, eax [please]");
+//!
+//!              txSelectFont ("Lucida Console", 15, 7.5);
+//!              txDrawText (0, sz.y/2, sz.x, sz.y, "(Info for the cats: NO MOUSE HERE)");
 //!
 //!              return 0;
 //!              }
 //!
 //!          LRESULT CALLBACK MyWndProc (HWND window, UINT message, WPARAM wParam, LPARAM lParam)
 //!              {
-//!              if (message == WM_MOVE) txMessageBox ("  I like to MOVe it, MOVe it", "TXLib 2 Real", MB_ICONINFORMATION);
+//!              if (message == WM_MOVE)
+//!                  txMessageBox ("  I like to MOVe it, MOVe it", "TXLib 2 Real", MB_ICONINFORMATION);
+//!
+//!              if (message == WM_SETCURSOR && LOWORD (lParam) == HTCLIENT)
+//!                  {
+//!                  SetCursor (NULL);
+//!                  return TRUE;
+//!                  }
 //!
 //!              static int i = 0;
 //!              if (i++ % 15 == 0)
@@ -6765,6 +6779,7 @@ PROC             _txSetProcAddress (const char funcName[], PROC newFunc, const c
                                     HMODULE module = NULL, bool debug = false);
 
 bool             _txIsBadReadPtr   (const void* address);
+bool             _txCheckSourceCP  (int needCP = _TX_CP, bool verbose = true);
 
 ptrdiff_t        _tx_snprintf_s    (char stream[], ptrdiff_t size, const char format[], ...)      __attribute__ ((format (printf, 3, 4)));
 ptrdiff_t        _tx_vsnprintf_s   (char stream[], ptrdiff_t size, const char format[], va_list arg);
@@ -6965,6 +6980,8 @@ $       (void)          AddAtom ("_txConsole");
 
 $   if (_txConsole)
         {
+$       _txCheckSourceCP (_TX_CP, true);
+
 $       unsigned long stackSize = _TX_STACKSIZE;
 $       _TX_CALL (Win32::SetThreadStackGuarantee, (&stackSize));
 
@@ -7078,6 +7095,40 @@ $   Win32::DeleteObject (Win32::SelectObject (dc, _txStockBitmap)) asserted;
 $   Win32::DeleteDC (dc) asserted;
 
 $   return 1;
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+bool _txCheckSourceCP (int needCP /*= _TX_CP*/, bool verbose /*= true*/)
+    {
+$1  const char* sCodePage = NULL;
+$   int codePage = 0;
+
+$   switch (((unsigned const char*) "А") [0])
+        {
+        case 192: {$ codePage =  1251; sCodePage = "1251.";          break; }
+        case 208: {$ codePage = 65001; sCodePage = "UTF-8.";         break; }
+        case 128: {$ codePage =   866; sCodePage = "866.";           break; }
+        case 225: {$ codePage = 20866; sCodePage = "KOI-8, waaat?!"; break; }
+        default:  {$ codePage =    -1; sCodePage = "(Unknown)";      break; }
+        }
+
+$   if (codePage != needCP && verbose)
+        {
+$       *_txTraceSE = ' ';  // No stack trace please
+
+$       _TX_UNEXPECTED ("\v\t" "\n\n" "WARNING: CHECK TXLib.h file CODEPAGE. Maybe it is %s It should be %d.\n\n"
+                        "This is NOT an error of TXLib itself. Please note:\n\n"
+                        "Do NOT copy-and-paste TXLib.h file contents into a new file and them save it inside your "
+                        "IDE or editor. This can change original TXLib codepage (%d) to another one. Instead, DO "
+                        "use copy / move / cut-and-paste operations in Windows Explorer (Far Manager etc) only. "
+                        "Or, when you see TXLib.h being opened in browser, use 'Save as...' (Ctrl+S) command.\n\n"
+                        "Now you should re-download TXLib.h file from the http://txlib.ru site.\n\n"
+                        "You can continue, but Russian messages and symbols may appear unreadable." _
+                        sCodePage _ needCP _ needCP);
+        }
+
+$   return (codePage == needCP);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -13443,57 +13494,6 @@ using ::std::string;
 //=================================================================================================================
 // EOF
 //=================================================================================================================
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                                                         
 
 
