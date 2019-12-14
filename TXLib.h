@@ -1,14 +1,17 @@
 //=================================================================================================================
-//           [These sections are for folding control  in Code::Blocks]         [$Date: 2019-11-26 23:39:14 +0400 $]
-//{          [Best viewed with "Fold all on file open" option enabled]         [Best screen/page width = 120 chars]
+//           [These sections are for folding control  in Code::Blocks]         [$Date: 2019-12-15 01:32:31 +0400 $]
+//           [Best viewed with "Fold all on file open" option enabled]         [Best screen/page width = 120 chars]
+//
+//           [If RUSSIAN CHARS below are UNREADABLE, check this file codepage.   It should be 1251, NOT UTF-8 etc.]
+//{          [Use RELOAD options in your IDE or editor (CLion / Visual Studio Code / ...), and do NOT use Convert.]
 //=================================================================================================================
 //!
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 147 $
+//!          $Version: 00173a, Revision: 148 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2019-11-26 23:39:14 +0400 $
+//!          $Date: 2019-12-15 01:32:31 +0400 $
 //!
 //!          TX Library -- компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -115,7 +118,7 @@
 //!            Версия библиотеки в целочисленном формате: старшее слово -- номер версии, младшее -- номер ревизии,
 //!            в двоично-десятичном формате. Например, @c 0x172a0050 -- версия @c 0.172a, ревизия @c 50.
 //! @code
-//!            #define _TX_VERSION "TXLib [Ver: 1.73a, Rev: 105, Date: 2019-11-21 00:00:00 +0300]"  //
+//!            #define _TX_VERSION "TXLib [Ver: 1.73a, Rev: 105, Date: 2019-12-14 00:00:00 +0300]"  //
 //!            #define _TX_AUTHOR  "Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru)"             //  ПРИМЕР
 //!            #define _TX_VER      0x173a0000                                                      //
 //! @endcode
@@ -133,9 +136,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 147, 2019-11-26 23:39:14 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 147, 2019-11-26 23:39:14 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 147, 2019-11-26 23:39:14 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 148, 2019-12-15 01:32:31 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 148, 2019-12-15 01:32:31 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 148, 2019-12-15 01:32:31 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -348,6 +351,27 @@
     #endif
 
 #endif
+
+//-----------------------------------------------------------------------------------------------------------------
+
+#if 0 //!!! defined (__GNUC__) && ('А' != -64)  // (unsigned char) != 192: Codepage is NOT 1251. See also _txCheckSourceCP()
+
+    #ifdef __GNUC__
+    #error
+    #error ---------------------------------------------------------------------------------------
+    #endif
+    #error TXLIB.h: CHECK TXLib.h file CODEPAGE. It is NOT 1251. This is NOT an error of TXLib itself.
+    #error
+    #error Do NOT copy-and-paste TXLib.h file contents into a new file and them save it inside your
+    #error IDE or editor. This can change original TXLib codepage (1251) to another one. Instead, DO
+    #error use copy / move / cut-and-paste operations in Windows Explorer (Far Manager etc) only.
+    #error
+    #error Or, when you see TXLib.h being opened in browser, use 'Save as...' (Ctrl+S) command.
+    #error Now you should re-download TXLib.h file from the http://txlib.ru site.
+    #error ---------------------------------------------------------------------------------------
+    #error
+
+    #endif
 
 //-----------------------------------------------------------------------------------------------------------------
 
@@ -850,6 +874,10 @@ namespace std { enum nomeow_t { nomeow }; }     // Vital addition to the C++ sta
 #include <dbghelp.h>
 
 #endif
+
+#if defined (TX_USE_SPEAK) //--------------------------------------------------------------------------------------
+#include <SAPI.h>          // <== ЕСЛИ ЗДЕСЬ ОШИБКА, ТО У ВАС НЕТ ФАЙЛА SAPI.h. No SAPI.h file, TXLib is not guilty :(
+#endif                     //--------------------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------------------------------------------
 //{          Compiler- and platform-specific
@@ -3237,9 +3265,10 @@ double txGetFPS (int minFrames = txFramesToAverage) __attribute__ ((warn_unused_
 //! @ingroup Mouse
 //! @brief   Возвращает позицию Мыши!
 //!
-//! @return  Позиция Мыши! как структура POINT.
+//! @return  Позиция Мыши! как структура POINT, отсчитывающаяся от левого верхнего угла окна.
 //!
-//! @note    Если Мышь! не внутри окна TXLib, то ее координаты равны { -1, -1 }.
+//! @note    Если окна TXLib нет @strike (какой ужас!), @endstrike то координаты отсчитываются от верхнего левого
+//!          угла экрана.
 //!
 //! @see     txMouseX(), txMouseY(), txMousePos(), txMouseButtons()
 //!
@@ -3260,9 +3289,10 @@ inline POINT txMousePos() __attribute__ ((warn_unused_result));
 //! @ingroup Mouse
 //! @brief   Возвращает X-Координату Мыши!
 //!
-//! @return  X-координата Мыши!
+//! @return  X-координата Мыши!, отсчитывающаяся от левого верхнего угла окна.
 //!
-//! @note    Если Мышь! не внутри окна TXLib, то ее X-координата равна -1.
+//! @note    Если окна TXLib нет @strike (какой ужас!), @endstrike то координаты отсчитываются от верхнего левого
+//!          угла экрана.
 //!
 //! @see     txMouseX(), txMouseY(), txMousePos(), txMouseButtons()
 //!
@@ -3281,9 +3311,10 @@ inline int txMouseX() __attribute__ ((warn_unused_result));
 //! @ingroup Mouse
 //! @brief   Возвращает Y-Координату Мыши!
 //!
-//! @return  Y-координата Мыши!
+//! @return  Y-координата Мыши!, отсчитывающаяся от левого верхнего угла окна.
 //!
-//! @note    Если Мышь! не внутри окна TXLib, то ее Y-координата равна -1.
+//! @note    Если окна TXLib нет @strike (какой ужас!), @endstrike то координаты отсчитываются от верхнего левого
+//!          угла экрана.
 //!
 //! @see     txMouseX(), txMouseY(), txMousePos(), txMouseButtons()
 //!
@@ -3375,7 +3406,7 @@ inline Mouse& txCatchMouse (bool shouldEat = true);
 //!
 //! @param   colors <i>Цветовые атрибуты консоли. Необязательны. Если не указаны, то цвет -- светло-серый.</i>
 //!
-//! @return  Если операция была успешна -- true, иначе -- false.
+//! @return  Предыдущие цветовые атрибуты консоли.
 //!
 //!          @b Атрибуты -- это цвет текста (colorText) и цвет фона (colorBackground), объединенные вместе: @nn
 //!          <tt>colors = colorText + colorBackground * 16</tt> @nn
@@ -3413,7 +3444,7 @@ inline Mouse& txCatchMouse (bool shouldEat = true);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-bool txSetConsoleAttr (unsigned colors = 0x07 /*FOREGROUND_LIGHTGRAY*/);
+unsigned txSetConsoleAttr (unsigned colors = 0x07 /*FOREGROUND_LIGHTGRAY*/);
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -3586,6 +3617,50 @@ bool txPlaySound (const char filename[] = NULL, DWORD mode = SND_ASYNC);
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
+//! @brief   Читает текст вслух.
+//!
+//! @param   text  Текст для @strike внеклассного @endstrike чтения.
+//!
+//! @return  Время чтения текста в миллисекундах (если не указана опция @c \\a). Если -1, то текст не прочитался. :(
+//!
+//!          Для использования этой функции укажите перед включением файла @c TXLib.h определите имя @c TX_USE_SPEAK
+//!          командой <tt>\#define TX_USE_SPEAK</tt> @b до строки с \#include "TXLib.h" для того, чтобы TXLib задействовал
+//!          библиотеку Microsoft Speech API (SAPI.h). См. пример использования ниже.
+//!
+//!          Текст читается голосом, установленным по умолчанию в Панели управления Windiws. Если голос поддерживает русский
+//!          язык (начиная с Windows 8.1), то можно использовать русские фразы. До Windows 8.1 они не проговариваются. Если
+//!          голос читает плохо, то смените его в Панели Управления Windows.
+//!
+//! @note    Если текст начинается с символа @c \\v, то он еще и печатается на экране (сам символ @c \\v не печатается). @nn
+//!
+//! @note    Если текст начинается с символа @c \\a, то он проговаривается асинхронно: txSpeak() возвращается сразу после
+//!          вызова, и чтение идет параллельно с работой программы. Без этой опции txSpeak() делает паузу в программе,
+//!          ожидая конца чтения, и только потом возвращается. @nn
+//!
+//! @note    Если строка с текстом пустая (не считая @c \\v и @c \\a), то txSpeak() лучше скажет что-то более важное, чем
+//!          просто молчание. :)
+//!
+//! @warning Для работы этой функции TXLib требует наличия файла @c SAPI.h из стандартной библиотеки Windows. Не на всех
+//!          платформах он есть. Если этот файл не найден, то будет ошибка компиляции. @nn
+//!          Этот файл точно есть в Visual Studio или в этой сборке платформы MinGW: https://nuwen.net/mingw.html.
+//!
+//! @see     txMessageBox(), txOutputDebugPrintf()
+//!
+//! @usage @code
+//!          #define  TX_USE_SPEAK
+//!          #include "TXLib.h"
+//!
+//!          int main()
+//!              {
+//!              txSpeak ("TX Library is cool!");
+//!              }
+//! @endcode
+//}----------------------------------------------------------------------------------------------------------------
+
+int txSpeak (const char* text, ...) __attribute__ ((format (printf, 1, 2)));
+
+//{----------------------------------------------------------------------------------------------------------------
+//! @ingroup Misc
 //! @brief   Выводит сообщение в окне с помощью функции MessageBox.
 //!
 //! @param   text      Текст сообщения. <i>В принципе, необязательно, но зачем вы тогда меня вызывали?</i>
@@ -3604,7 +3679,7 @@ bool txPlaySound (const char filename[] = NULL, DWORD mode = SND_ASYNC);
 //!          неверно установлена кодовая страница для программ, не поддерживающих UNICODE.</i> В остальных случаях
 //!          нужды в @c txMessageBox нет.
 //!
-//! @see     TX_ERROR(), TX_DEBUG_ERROR(), txOutputDebugPrintf(), txNotifyIcon(), txStackBackTrace()
+//! @see     TX_ERROR(), TX_DEBUG_ERROR(), txOutputDebugPrintf(), txNotifyIcon(), txSpeak(), txStackBackTrace()
 //!
 //! @usage @code
 //!          if (txMessageBox ("Получилось?", "Прочти меня", MB_YESNO) == IDYES)
@@ -3623,7 +3698,7 @@ int txMessageBox (const char text[] = "Муаххаха! :)", const char header[] = "TXL
 //! @ingroup Misc
 //! @brief   Проверяет, нажата ли указанная клавиша.
 //!
-//! @param   key       Номер клавиши.
+//! @param   key  Код (номер) клавиши, как правило, заданный константой (VK_SPACE, VK_LEFT, 'W' и т.п.)
 //!
 //! @return  true, если указанная клавиша нажата, false -- если не нажата.
 //!
@@ -3707,7 +3782,7 @@ inline bool txGetAsyncKeyState (int key);
 //!          не участвует.</small>
 //!        - Сообщение не должно превышать _TX_BUFSIZE символов, иначе оно обрезается.
 //!
-//! @see     TX_ERROR(), TX_DEBUG_ERROR(), txOutputDebugPrintf(), txMessageBox()
+//! @see     TX_ERROR(), TX_DEBUG_ERROR(), txOutputDebugPrintf(), txMessageBox(), txSpeak()
 //!
 //! @usage @code
 //!          int hours = 3, minutes = 10;
@@ -4616,21 +4691,29 @@ void _txDump (const void* address, const char name[] = "_txDump()", bool pause =
 //! @ingroup Misc
 //! @brief   Преобразует декорированное имя С++ в название типа.
 //!
-//!          Декорирование имен (name mangling): <a href=http://en.wikipedia.org/wiki/Name_mangling#Simple_example>см.</a>
+//! @param   mangledName  Декорированное (mangled) имя.
 //!
-//! @note    Возвращает указатель на динамическую память. Вы должны <b>сами</b> освободить эту память вызовом @c free().
+//! @return  Строка с названием типа в @b динамической памяти.
+//!
+//! @note    Если используется форма функции, возвращающая @c char*, вы должны <b>сами</b> освободить память,
+//!          занимаемую строкой, с помощью вызова @c free(), иначе будет утечка памяти.
+//!
+//!          <a href=http://en.wikipedia.org/wiki/Name_mangling#Simple_example>Что такое декорирование имен (name mangling)
+//!          см. здесь.</a>
 //!
 //! @see     txDump(), txStackBackTrace(), TX_ERROR(), TX_DEBUG_ERROR()
 //!
 //! @usage @code
-//!          char* buf = txDemangle (typeid (buf) .name());
-//!          std::cout << "Type of buf is: " << buf << "\n";
-//!          free (buf);
+//!          auto type = txDemangle (typeid (std::string) .name());
+//!          std::cout << "The real type of std::string is: " << type << ", muahhaha! :)\n";
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
+//! @{
 
-char* txDemangle (const char* mangledName);
+std::string txDemangle (const char* mangledName);
+char*       txDemangle (const char* mangledName, std::nomeow_t);
 
+//! @}
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
 //! @brief   Макрос, позволяющий передать переменное число параметров в какой-либо другой макрос.
@@ -5101,7 +5184,7 @@ const unsigned _TX_BUFSIZE                =  1024,
 
 #if !defined (_TX_ALLOW_KILL_PARENT)            // DISCLAIMER: Я не призываю к убийству родителей.
     #define   _TX_ALLOW_KILL_PARENT       true  //             Это технический термин.
-#endif                                          //             г-дам юристам привет.
+#endif                                          //             г_дам юристам привет.
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Technical
@@ -5113,11 +5196,6 @@ const unsigned _TX_BUFSIZE                =  1024,
 //!          thread), который ожидает _txWatchdogTimeout миллисекунд, а затем принудительно завершает программу.
 //!
 //! @see     _TX_WAITABLE_PARENTS, _TX_NOINIT
-//!
-//! @usage @code
-//!          #define _TX_ALLOW_KILL_PARENT false
-//!          #include "TXLib.h"
-//! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
 int            _txWatchdogTimeout         = 10*_TX_TIMEOUT;
@@ -6179,6 +6257,9 @@ const GUID IID_IShellLink         = {0x000214ee, 0x0000, 0x0000, {0xc0,0x00,0x00
 const GUID IID_IShellLinkDataList = {0x45e2b4ae, 0xb1c3, 0x11d0, {0xb9,0x2f,0x00,0xa0,0xc9,0x03,0x12,0xe1}};
 const GUID IID_IPersistFile       = {0x0000010b, 0x0000, 0x0000, {0xc0,0x00,0x00,0x00,0x00,0x00,0x00,0x46}};
 
+const GUID CLSID_SpVoice          = {0x96749377, 0x3391, 0x11d2, {0x9e,0xe3,0x00,0xc0,0x4f,0x79,0x73,0x96}};
+const GUID IID_ISpVoice           = {0x6c44df74, 0x72b9, 0x4992, {0xa1,0xec,0xef,0x99,0x6e,0x04,0x22,0xd4}};
+
 #undef  INTERFACE
 
 enum ADDRESS_MODE
@@ -6596,6 +6677,9 @@ _TX_DLLIMPORT     ("MSVCRT",   void,     exit,                          (int ret
 _TX_DLLIMPORT_OPT ("MSVCRT",   void,     _cexit,                        (void));
 _TX_DLLIMPORT     ("MSVCRT",   unsigned, _fpreset,                      ());
 _TX_DLLIMPORT     ("MSVCRT",   unsigned, _controlfp,                    (unsigned control, unsigned mask));
+_TX_DLLIMPORT     ("MSVCRT",   uintptr_t, _beginthread,                 (void (__cdecl* start_address) (void*), unsigned stack_size, void* arglist));
+_TX_DLLIMPORT     ("MSVCRT",   uintptr_t, _beginthreadex,               (void* security, unsigned stack_size, unsigned (__stdcall* start_address) (void*),
+                                                                         void *arglist, unsigned init_flag, unsigned* thread_addr));
 _TX_DLLIMPORT_CRT ("MSVCRT",   char*,    __unDName,                     (char* outStr, const char* mangledName, int outStrLen,
                                                                          void* (*mallocFunc) (size_t size), void (*freeFunc) (void *pointer),
                                                                          unsigned short flags));
@@ -6649,10 +6733,10 @@ _TX_DLLIMPORT_OPT ("MgwHelp*", bool,     StackWalk64,                   (DWORD a
 const int        _TX_CP                                   =   1251;        // Информация о локали
 
 #ifndef __CYGWIN__
-const char       _TX_LC_CTYPE[]                           =  "Russian";
-const wchar_t    _TX_LC_CTYPE_W[]                         = L"Russian_Russia.ACP";
+const char       _TX_LOCALE[]                             =  "Russian";
+const wchar_t    _TX_WLOCALE[]                            = L"Russian_Russia.ACP";
 #else
-const char       _TX_LC_CTYPE[]                           =  "ru_RU.CP1251";
+const char       _TX_LOCALE[]                             =  "ru_RU.CP1251";
 #endif
 
 const int        _TX_IDM_ABOUT                            =   40000,       // Идентификаторы системного меню окна
@@ -7266,12 +7350,12 @@ $   if (centered) { size.cx *= -1; size.cy *= -1; }
 
     // In Thread, where REAL creation lies...
 
-    #if !( defined (_MSC_VER) && (_MSC_VER < 1400) && !defined (_MT) ) && !defined (__CYGWIN__)
+    #if !( defined (_MSC_VER) && (_MSC_VER < 1400) && !defined (_MT) )
 $   unsigned id = 0;
-$   _txCanvas_Thread = (HANDLE) _beginthreadex (NULL, 0,                         _txCanvas_ThreadProc, &size, 0, &id);
+$   _txCanvas_Thread = (HANDLE) Win32::_beginthreadex (NULL, 0,                         _txCanvas_ThreadProc, &size, 0, &id);
     #else
 $   DWORD    id = 0;
-$   _txCanvas_Thread =           CreateThread  (NULL, 0, (LPTHREAD_START_ROUTINE)_txCanvas_ThreadProc, &size, 0, &id);
+$   _txCanvas_Thread =                  CreateThread  (NULL, 0, (LPTHREAD_START_ROUTINE)_txCanvas_ThreadProc, &size, 0, &id);
     #endif
 
 $   if (!_txCanvas_Thread) return TX_DEBUG_ERROR ("\a" "Cannot start canvas thread."), (HWND)NULL;
@@ -7577,6 +7661,8 @@ $   if (txWindow())
 
 $   _txWaitFor (!txWindow(), 5*_TX_TIMEOUT);
 
+$   txSpeak (NULL);
+
 $   if (GetCurrentThreadId() != _txMainThreadId)
         { $ SuspendThread (_txMainThread);    }
 $   if (GetCurrentThreadId() != _txCanvas_ThreadId)
@@ -7620,7 +7706,7 @@ $   _txSymGetFromAddr (NULL);
                   OutputDebugString ("\n"));
 
 $   if (/*!!!*/ parentKilled && _txWatchdogTimeout >= 0)
-        { $ _beginthread (_txWatchdogTerminator, 0, &_txWatchdogTimeout); }
+        {$ Win32::_beginthread (_txWatchdogTerminator, 0, &_txWatchdogTimeout); }
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -8093,7 +8179,7 @@ $   LeaveCriticalSection (&_txCanvas_LockBackBuf);
     _TX_ON_DEBUG (OutputDebugString (_TX_VERSION " - STOPPED: " _TX_MODULE "\n"));
 
 $   if (_txWatchdogTimeout >= 0)
-        { $ _beginthread (_txWatchdogTerminator, 0, &_txWatchdogTimeout); }
+        {$ Win32::_beginthread (_txWatchdogTerminator, 0, &_txWatchdogTimeout); }
 
 $   if (_txRunning && _txMain)         // Main window is destroyed but main() is still running.
         {                              // No chances for good termination, so use exit().
@@ -8646,10 +8732,10 @@ HWND _txConsole_Attach()
     {
 $1  HWND console = Win32::GetConsoleWindow();
 
-$   bool wine    = !!Win32::wine_get_version;  // Linux::Wine v1.2.2+ compatibility.
-                                               // Beer compatibility may be added in future versions.
-$   if (!console)                              // Минздрав РФ предупреждает: чрезмерное употребление wine
-        {                                      // вредит Вашему здоровью.
+$   bool wine    = !!Win32::wine_get_version;     // Linux::Wine v1.2.2+ compatibility.
+                                                  // Beer compatibility may be added in future versions.
+$   if (!console)                                 // Минздрав РФ предупреждает: чрезмерное употребление wine
+        {                                         // вредит Вашему здоровью.
 $       FreeConsole();
 $       AllocConsole();
         }
@@ -8666,17 +8752,24 @@ $       Win32::SetConsoleFont          = NULL;
 
     // Устанавливаем русскую кодовую страницу для консоли Windows
 
-$   SetConsoleCP       (_TX_CP);  // 1251
-$   SetConsoleOutputCP (_TX_CP);  // 1251
+$   SetConsoleCP       (_TX_CP);                  // 1251
+$   SetConsoleOutputCP (_TX_CP);                  // 1251
 
     // Устанавливаем русскую кодовую страницу для стандартной библиотеки, иначе не будут работать Unicode-версии
     // функций (wprintf, ...). Если компилите с помощью gcc и собираетесь использовать L"unicode-строки" с русским
     // языком, укажите опции в командной строке компилятора g++: -finput-charset=CP1251 -fexec-charset=CP1251.
 
-$   setlocale (LC_CTYPE, _TX_LC_CTYPE);                 //  "Russian"
+$   setlocale (LC_ALL,     _TX_LOCALE);           // "Russian"
+$   setlocale (LC_NUMERIC, "C");                  // Return to decimal point (3.14) instead of comma (3,14) in floating numbers
 
     #ifndef __CYGWIN__
-$   if (!wine) _wsetlocale (LC_CTYPE, _TX_LC_CTYPE_W);  // L"Russian_Russia.ACP"
+
+$   if (!wine)
+        {
+$       _wsetlocale (LC_ALL,     _TX_WLOCALE);    // L"Russian_Russia.ACP"
+$       _wsetlocale (LC_NUMERIC, L"C");           // L"C" (see above)
+        }
+
     #endif
 
 $   static bool done = false;
@@ -9543,12 +9636,15 @@ long _txOnExceptionSEH (EXCEPTION_POINTERS* exc, const char func[])
     assert (func);
     assert (func[3] == 'V' || func[3] == 'U');
 
-    DWORD code = (exc && exc->ExceptionRecord)? exc->ExceptionRecord->ExceptionCode    : 0;
-    void* addr = (exc && exc->ExceptionRecord)? exc->ExceptionRecord->ExceptionAddress : NULL;
+    bool  unhExc = (func[3] == 'U');
+    DWORD code   = (exc && exc->ExceptionRecord)? exc->ExceptionRecord->ExceptionCode    : 0;
+    void* addr   = (exc && exc->ExceptionRecord)? exc->ExceptionRecord->ExceptionAddress : NULL;
 
-    if (code == DBG_PRINTEXCEPTION_C      ||
-        code == DBG_PRINTEXCEPTION_WIDE_C ||
-        code == DBG_THREAD_NAME           ||
+    if (code == DBG_PRINTEXCEPTION_C                 ||
+        code == DBG_PRINTEXCEPTION_WIDE_C            ||
+        code == DBG_THREAD_NAME                      ||
+        code == RPC_S_SERVER_UNAVAILABLE  && !unhExc ||
+        code == RPC_S_CALL_CANCELLED      && !unhExc ||
        (code == EXCEPTION_BREAKPOINT && IsDebuggerPresent()))
         return EXCEPTION_CONTINUE_SEARCH;
 
@@ -9569,8 +9665,8 @@ $       longjmp (_txDumpExceptionObjJmp, 1);
     if (code == EXCEPTION_STACK_OVERFLOW) { $ _resetstkoflw(); }
     #endif
 
-$   bool primaryException = (func && exc)? ((func[3] == 'V' || (func[3] == 'U' && !*_txDumpSE)) &&
-                                            !_TX_MSC__CXX_DETECT_RETHROW (exc->ExceptionRecord)) : true;
+$   bool primaryException = !(func && exc) || !(unhExc && *_txDumpSE || _TX_MSC__CXX_DETECT_RETHROW (exc->ExceptionRecord));
+
 $   if (primaryException && exc)
         {
 $       unsigned err = GetLastError();
@@ -12027,11 +12123,13 @@ $   return value;
 
 inline POINT txMousePos()
     {
-$1  POINT err = {-1, -1};
+$1  POINT pos = {};
+$   GetCursorPos (&pos);
 
-$   if (_TX_TXWINDOW_FAILED()) return err;
+$   if (txWindow())
+        {$ ScreenToClient (txWindow(), &pos); }
 
-$   return _txMousePos;
+$   return pos;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -12052,16 +12150,20 @@ inline int txMouseY()
 
 inline unsigned txMouseButtons()
     {
-$1  if (_TX_TXWINDOW_FAILED()) return 0;
-
-$   return _txMouseButtons;
+$1  return ((GetAsyncKeyState (VK_LBUTTON) & 0x8000) >> 15) |  // MSB to bit 0
+           ((GetAsyncKeyState (VK_RBUTTON) & 0x8000) >> 14) |  // MSB to bit 1
+           ((GetAsyncKeyState (VK_MBUTTON) & 0x8000) >> 13);   // MSB to bit 2
     }
 
 //-----------------------------------------------------------------------------------------------------------------
 
-bool txSetConsoleAttr (unsigned color /*= FOREGROUND_LIGHTGRAY*/)
+unsigned txSetConsoleAttr (unsigned color /*= FOREGROUND_LIGHTGRAY*/)
     {
-    return !!SetConsoleTextAttribute (GetStdHandle (STD_OUTPUT_HANDLE), (WORD) color);
+    unsigned oldAttr = txGetConsoleAttr();
+
+    SetConsoleTextAttribute (GetStdHandle (STD_OUTPUT_HANDLE), (WORD) color);
+
+    return oldAttr;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -12182,6 +12284,76 @@ $   return !!Win32::PlaySound (filename, NULL, mode);
 
 //-----------------------------------------------------------------------------------------------------------------
 
+int txSpeak (const char* text, ...)
+    {
+$1  bool verbose = false;
+$   bool async   = false;
+
+$   for (; text && *text; text++)
+        {
+        if      (*text == '\a') {$ async   = true; }
+        else if (*text == '\v') {$ verbose = true; }
+        else break;
+        }
+
+$   char textA [_TX_BUFSIZE] = "You asked to speak empty text. I would rather say that TX Library is cool! Cats rules!";
+
+$   va_list arg; va_start (arg, text);
+    if (text && *text) {$ _tx_vsnprintf_s (textA, sizeof (textA) - 1, text, arg); }
+$   va_end (arg);
+
+#ifdef TX_USE_SPEAK
+
+    if (text && verbose) {$ printf ("%s", textA); }
+
+$   int time = GetTickCount();
+
+$   static wchar_t textW [_TX_BUFSIZE * sizeof (wchar_t)] = L"";
+$   MultiByteToWideChar (_TX_CP, 0, textA, -1, textW, SIZEARR (textW));
+
+$   static ISpVoice* voice = NULL;
+
+$   if (text && !voice)
+        {
+$       HRESULT res = Win32::CoInitialize (NULL);
+        if (res == S_OK) {$ Win32::CoCreateInstance (Win32::CLSID_SpVoice, NULL, CLSCTX_ALL, Win32::IID_ISpVoice, (void**) &voice); }
+        }
+
+$   if (text && voice)
+        {
+$       Win32::_fpreset();
+$       voice->Speak (textW, SPF_PERSIST_XML | SPF_PURGEBEFORESPEAK | (async? SPF_ASYNC : 0), NULL);
+$       tx_fpreset();
+        }
+
+$   if (!text && voice)
+        {
+$       voice->Release();
+$       voice = NULL;
+
+$       Win32::CoUninitialize();
+        }
+
+$   return (voice)? GetTickCount() - time : -1;
+
+#else
+
+$   if (text)
+        {
+$       int oldAttr = txSetConsoleAttr (FOREGROUND_LIGHTRED | BACKGROUND_BLACK);
+
+$       txNotifyIcon (NIIF_ERROR, "txSpeak(): Не могу произнести (нужен TX_USE_SPEAK, см. TXLib Help)", "\n" "%s", textA);
+
+$       txSetConsoleAttr (oldAttr);
+        }
+
+$   return -1;
+
+#endif
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
 // +--<<< Это вряд ли имеет отношение к тому, что вы ищете :)
 // V      Полезно смотреть не только вверх, но и вниз
 
@@ -12284,7 +12456,7 @@ $   txSetConsoleAttr (attr);
 
 //-----------------------------------------------------------------------------------------------------------------
 
-char* txDemangle (const char* mangledName)
+char* txDemangle (const char* mangledName, std::nomeow_t)
     {
 $1  if (!mangledName) return NULL;
 
@@ -12310,6 +12482,17 @@ $   typeName = _TX_CALL (Win32::__unDName, (NULL, mangledName, 0, malloc, free, 
     if (typeName) { $ return typeName; }
 
 $   return strdup (mangledName);
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+std::string txDemangle (const char* mangledName)
+    {
+$1  char* typeName = txDemangle (mangledName, std::nomeow);
+$   std::string name (typeName? typeName : "");
+$   free (typeName);
+
+$   return name;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -13093,7 +13276,7 @@ $   return pw;
 #define $$p         $p
 #define $$P         txMessageBox (__TX_FILELINE__, __TX_FUNCTION__);
 #define $p          fprintf (stderr, "[%s %s: Нажмите любую клавишу для продолжения]", __TX_FILELINE__, __TX_FUNCTION__); $P
-#define $P          _getch();
+#define $P          ((int(*)()) (_getch)) ();  // Avoid "return value not used"
 
 //-----------------------------------------------------------------------------------------------------------------
 
@@ -13333,6 +13516,7 @@ std::ostream& operator << (std::ostream& stream, const RECT& rect)
 #define txCreateWindow(...)            ( _txLocCurSet(), txCreateWindow        (__VA_ARGS__) )
 #define txDC(...)                      ( _txLocCurSet(), txDC                  (__VA_ARGS__) )
 #define txDeleteDC(...)                ( _txLocCurSet(), txDeleteDC            (__VA_ARGS__) )
+#define txDemangle(...)                ( _txLocCurSet(), txDemangle            (__VA_ARGS__) )
 #define txDestroyWindow(...)           ( _txLocCurSet(), txDestroyWindow       (__VA_ARGS__) )
 #define txDisableAutoPause(...)        ( _txLocCurSet(), txDisableAutoPause    (__VA_ARGS__) )
 #define txDrawText(...)                ( _txLocCurSet(), txDrawText            (__VA_ARGS__) )
@@ -13378,6 +13562,7 @@ std::ostream& operator << (std::ostream& stream, const RECT& rect)
 #define txRectangle(...)               ( _txLocCurSet(), txRectangle           (__VA_ARGS__) )
 #define txRedrawWindow(...)            ( _txLocCurSet(), txRedrawWindow        (__VA_ARGS__) )
 #define txSaveImage(...)               ( _txLocCurSet(), txSaveImage           (__VA_ARGS__) )
+#define txSpeak(...)                   ( _txLocCurSet(), txSpeak               (__VA_ARGS__) )
 #define txSelectFont(...)              ( _txLocCurSet(), txSelectFont          (__VA_ARGS__) )
 #define txSelectObject(...)            ( _txLocCurSet(), txSelectObject        (__VA_ARGS__) )
 #define txSetColor(...)                ( _txLocCurSet(), txSetColor            (__VA_ARGS__) )
@@ -13426,6 +13611,10 @@ using ::std::cin;                      // Predefined usings to avoid "using name
 using ::std::cout;
 using ::std::cerr;
 using ::std::string;
+using ::std::wcin;
+using ::std::wcout;
+using ::std::wcerr;
+using ::std::wstring;
 
 //}
 //-----------------------------------------------------------------------------------------------------------------
@@ -13494,6 +13683,17 @@ using ::std::string;
 //=================================================================================================================
 // EOF
 //=================================================================================================================
-                                                                         
+                                                                                                                   
+                                                                                                                   
+                                                         
+
+
+
+
+
+
+
+
+
 
 
