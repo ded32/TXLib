@@ -1,5 +1,5 @@
 //=================================================================================================================
-//           [These sections are for folding control  in Code::Blocks]         [$Date: 2019-12-15 01:32:31 +0400 $]
+//           [These sections are for folding control  in Code::Blocks]         [$Date: 2020-01-05 00:05:18 +0400 $]
 //           [Best viewed with "Fold all on file open" option enabled]         [Best screen/page width = 120 chars]
 //
 //           [If RUSSIAN CHARS below are UNREADABLE, check this file codepage.   It should be 1251, NOT UTF-8 etc.]
@@ -9,9 +9,9 @@
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 148 $
+//!          $Version: 00173a, Revision: 149 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2019-12-15 01:32:31 +0400 $
+//!          $Date: 2020-01-05 00:05:18 +0400 $
 //!
 //!          TX Library -- компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -118,7 +118,7 @@
 //!            Версия библиотеки в целочисленном формате: старшее слово -- номер версии, младшее -- номер ревизии,
 //!            в двоично-десятичном формате. Например, @c 0x172a0050 -- версия @c 0.172a, ревизия @c 50.
 //! @code
-//!            #define _TX_VERSION "TXLib [Ver: 1.73a, Rev: 105, Date: 2019-12-14 00:00:00 +0300]"  //
+//!            #define _TX_VERSION "TXLib [Ver: 1.73a, Rev: 105, Date: 2019-12-21 00:00:00 +0300]"  //
 //!            #define _TX_AUTHOR  "Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru)"             //  ПРИМЕР
 //!            #define _TX_VER      0x173a0000                                                      //
 //! @endcode
@@ -136,9 +136,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 148, 2019-12-15 01:32:31 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 148, 2019-12-15 01:32:31 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 148, 2019-12-15 01:32:31 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 149, 2020-01-05 00:05:18 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 149, 2020-01-05 00:05:18 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 149, 2020-01-05 00:05:18 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -191,8 +191,11 @@
 
 //! @cond INTERNAL
 
-#define  TX_QUOTE( sym )  _TX_QUOTE (sym)
-#define _TX_QUOTE( sym )  #sym
+#define  TX_QUOTE(sym)        _TX_QUOTE (sym)
+#define _TX_QUOTE(sym)        #sym
+
+#define  TX_JOIN(sym1, sym2)  _TX_JOIN (sym1, sym2)
+#define _TX_JOIN(sym1, sym2)  sym1 ## sym2
 
 //! @endcond
 
@@ -766,9 +769,11 @@
 
     #define _CRTDBG_MAP_ALLOC                   // Enable MSVCRT debug heap
     #define _new_dbg                   new (_NORMAL_BLOCK, __FILE__, __LINE__)
+    #define NEW                        new (_NORMAL_BLOCK, __FILE__, __LINE__)
 
 #else
     #define _new_dbg                   new
+    #define NEW                        new
 
 #endif
 
@@ -936,6 +941,14 @@ namespace std { enum nomeow_t { nomeow }; }     // Vital addition to the C++ sta
     #define putch                                        _putch
     #define kbhit                                        _kbhit
 
+#endif
+
+#if defined (IN)                                // IN and OUT are defined in WinDef.h to support Microsoft SAL.
+#undef IN                                       // Remove them because these names are often confused with the
+#endif                                          // user's code.
+
+#if defined (IN)
+#undef OUT
 #endif
 
 //}
@@ -10800,7 +10813,7 @@ int _txOnErrorReport (int type, const char* text, int* ret)
 
     switch (type)
        {
-       case _CRT_WARN:   txSetConsoleAttr (FOREGROUND_LIGHTCYAN);    break;
+       case _CRT_WARN:   txSetConsoleAttr (FOREGROUND_LIGHTRED);     break;
        case _CRT_ERROR:  txSetConsoleAttr (FOREGROUND_LIGHTMAGENTA); break;
        case _CRT_ASSERT: txSetConsoleAttr (FOREGROUND_YELLOW);       break;
        default:                                                      break;
@@ -10811,6 +10824,7 @@ int _txOnErrorReport (int type, const char* text, int* ret)
 
     if (strcmp (text, startReport) == 0)  // Dirty, dirty hack. А что делать?
         {
+        _txOnErrorReport (type, "\n",                                    NULL);
         _txOnErrorReport (type, _TX_VERSION " - ERROR: ",                NULL);
         _txOnErrorReport (type, "Внимание: Обнаружены утечки памяти!\n", NULL);
         _txOnErrorReport (type, "\n",                                    NULL);
@@ -13173,7 +13187,8 @@ $   return pw;
 
 #define $T( cond )    txSetConsoleAttr ((cond)? FOREGROUND_LIGHTGREEN : FOREGROUND_LIGHTRED );
 
-#define $s            _txSaveConsoleAttr __txSavedConsoleAttrs;
+
+#define $s            _txSaveConsoleAttr TX_JOIN (__txSavedConsoleAttrs, __LINE__);
 
 #define $sH           $s $H
 #define $sB           $s $B
@@ -13261,22 +13276,22 @@ $   return pw;
 // This will never be documented, he-he. Read the source, Luke.
 
 #if defined (_DEBUG)
-    #define $debug  if (1)
-    #define $printf if (1)
-    #define $PRINTF if (1)
+    #define $debug       if (1)
+    #define $printf      if (1)
+    #define $PRINTF      if (1)
 #else
-    #define $debug  if (0)
-    #define $printf if (0)
-    #define $PRINTF if (0)
+    #define $debug       if (0)
+    #define $printf      if (0)
+    #define $PRINTF      if (0)
 #endif
 
-#define $$d         $debug
-#define $$w         $$$$
-#define $$b         DebugBreak()
-#define $$p         $p
-#define $$P         txMessageBox (__TX_FILELINE__, __TX_FUNCTION__);
-#define $p          fprintf (stderr, "[%s %s: Нажмите любую клавишу для продолжения]", __TX_FILELINE__, __TX_FUNCTION__); $P
-#define $P          ((int(*)()) (_getch)) ();  // Avoid "return value not used"
+#define $$d              $debug
+#define $$w              $$$$
+#define $$b              DebugBreak()
+#define $$p              $p
+#define $$P              txMessageBox (__TX_FILELINE__, __TX_FUNCTION__);
+#define $p               fprintf (stderr, "[%s %s: Нажмите любую клавишу для продолжения]", __TX_FILELINE__, __TX_FUNCTION__); $P
+#define $P               ((int(*)()) (_getch)) ();  // Avoid "return value not used"
 
 //-----------------------------------------------------------------------------------------------------------------
 
@@ -13305,6 +13320,7 @@ struct _txDumpVarSuffix
 template <typename T> inline
 const T&     _txDumpVar (const T&     value,      const char prefix[] = "", const char suffix[] = "", std::ios_base::fmtflags flags = ::std::cerr.flags())
     {
+    $sc;
     ::std::cerr << prefix;
 
     std::ios_base::fmtflags old = ::std::cerr.flags (flags);
@@ -13323,6 +13339,7 @@ const T&     _txDumpVar (const T&     value,      const char prefix[] = "", cons
 template <typename T> inline
       T&     _txDumpVar (      T&     value,      const char prefix[] = "", const char suffix[] = "", std::ios_base::fmtflags flags = ::std::cerr.flags())
     {
+    $sc;
     ::std::cerr << prefix;
 
     std::ios_base::fmtflags old = ::std::cerr.flags (flags);
@@ -13341,6 +13358,7 @@ template <typename T> inline
 inline
 const char*  _txDumpVar (const char*  value,      const char prefix[] = "", const char suffix[] = "", std::ios_base::fmtflags flags = ::std::cerr.flags())
     {
+    $sc;
     ::std::cerr << prefix;
 
     std::ios_base::fmtflags old = ::std::cerr.flags (flags);
@@ -13359,6 +13377,7 @@ const char*  _txDumpVar (const char*  value,      const char prefix[] = "", cons
 inline
       char*  _txDumpVar (      char*  value,      const char prefix[] = "", const char suffix[] = "", std::ios_base::fmtflags flags = ::std::cerr.flags())
     {
+    $sc;
     ::std::cerr << prefix;
 
     std::ios_base::fmtflags old = ::std::cerr.flags (flags);
@@ -13377,6 +13396,7 @@ inline
 template <int N> inline
 const char (&_txDumpVar (const char (&value) [N], const char prefix[] = "", const char suffix[] = "", std::ios_base::fmtflags flags = ::std::cerr.flags())) [N]
     {
+    $sc;
     ::std::cerr << prefix;
 
     std::ios_base::fmtflags old = ::std::cerr.flags (flags);
@@ -13395,6 +13415,7 @@ const char (&_txDumpVar (const char (&value) [N], const char prefix[] = "", cons
 template <int N> inline
       char (&_txDumpVar (      char (&value) [N], const char prefix[] = "", const char suffix[] = "", std::ios_base::fmtflags flags = ::std::cerr.flags())) [N]
     {
+    $sc;
     ::std::cerr << prefix;
 
     std::ios_base::fmtflags old = ::std::cerr.flags (flags);
@@ -13413,12 +13434,13 @@ template <int N> inline
 template <typename T, int N> inline
 const T    (&_txDumpVar (const T    (&value) [N], const char prefix[] = "", const char suffix[] = "", std::ios_base::fmtflags flags = ::std::cerr.flags())) [N]
     {
+    $sc;
     ::std::cerr << prefix;
 
     if (!_txIsBadReadPtr (value))
         for (int i = 0; ; i++)
             {
-            { $s $D; ::std::cerr << "[" << i << "]: "; }
+            { $sC; ::std::cerr << "[" << i << "]: "; }
 
             std::ios_base::fmtflags old = ::std::cerr.flags (flags);
             ::std::cerr << value[i];
@@ -13440,12 +13462,13 @@ const T    (&_txDumpVar (const T    (&value) [N], const char prefix[] = "", cons
 template <typename T, int N> inline
       T    (&_txDumpVar (      T    (&value) [N], const char prefix[] = "", const char suffix[] = "", std::ios_base::fmtflags flags = ::std::cerr.flags())) [N]
     {
+    $sc;
     ::std::cerr << prefix;
 
     if (!_txIsBadReadPtr (value))
         for (int i = 0; ; i++)
             {
-            { $s $D; ::std::cerr << "[" << i << "]: "; }
+            { $sC; ::std::cerr << "[" << i << "]: "; }
 
             std::ios_base::fmtflags old = ::std::cerr.flags (flags);
             ::std::cerr << value[i];
@@ -13685,9 +13708,86 @@ using ::std::wstring;
 //=================================================================================================================
                                                                                                                    
                                                                                                                    
-                                                         
-
-
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                  
 
 
 
