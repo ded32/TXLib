@@ -1,5 +1,5 @@
 //=================================================================================================================
-//           [These sections are for folding control  in Code::Blocks]         [$Date: 2020-01-05 00:05:18 +0400 $]
+//           [These sections are for folding control  in Code::Blocks]         [$Date: 2020-01-05 09:32:48 +0400 $]
 //           [Best viewed with "Fold all on file open" option enabled]         [Best screen/page width = 120 chars]
 //
 //           [If RUSSIAN CHARS below are UNREADABLE, check this file codepage.   It should be 1251, NOT UTF-8 etc.]
@@ -9,9 +9,9 @@
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 149 $
+//!          $Version: 00173a, Revision: 150 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2020-01-05 00:05:18 +0400 $
+//!          $Date: 2020-01-05 09:32:48 +0400 $
 //!
 //!          TX Library -- компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -118,7 +118,7 @@
 //!            Версия библиотеки в целочисленном формате: старшее слово -- номер версии, младшее -- номер ревизии,
 //!            в двоично-десятичном формате. Например, @c 0x172a0050 -- версия @c 0.172a, ревизия @c 50.
 //! @code
-//!            #define _TX_VERSION "TXLib [Ver: 1.73a, Rev: 105, Date: 2019-12-21 00:00:00 +0300]"  //
+//!            #define _TX_VERSION "TXLib [Ver: 1.73a, Rev: 105, Date: 2020-01-05 00:00:00 +0300]"  //
 //!            #define _TX_AUTHOR  "Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru)"             //  ПРИМЕР
 //!            #define _TX_VER      0x173a0000                                                      //
 //! @endcode
@@ -136,9 +136,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 149, 2020-01-05 00:05:18 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 149, 2020-01-05 00:05:18 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 149, 2020-01-05 00:05:18 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 150, 2020-01-05 09:32:48 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 150, 2020-01-05 09:32:48 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 150, 2020-01-05 09:32:48 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -3621,6 +3621,8 @@ bool txTextCursor (bool blink = true);
 //! @note    Поддерживаются только файлы в формате WAV. Остальные форматы (MP3 и др.) надо перекодировать в WAV.
 //!          Переименование со сменой расширения не поможет, как и в случае с форматом картинок в txLoadImage().
 //!
+//! @see     txSpeak(), txPlayVideo()
+//!
 //! @usage @code
 //!          txPlaySound ("tada.wav");  // So happy that this always exists
 //! @endcode
@@ -3630,7 +3632,36 @@ bool txPlaySound (const char filename[] = NULL, DWORD mode = SND_ASYNC);
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
-//! @brief   Читает текст вслух.
+//! @brief   Проигрывает видео.
+//!
+//! @param   fileName  Имя видеофайла или любого другого источника, с которым работает VideoLAN (rtsp://, http:// и т.д.).
+//!
+//! @return  Время воспроизведения в миллисекундах (если не указана опция @c \\a). Если меньше 0, то файл не воспроизвелся. :(
+//!
+//! @note    Если имя файла начинается с символа @c \\a, то он воспроизводится асинхронно: txPlayVideo() возвращается
+//!          сразу после вызова, и воспрооизведение идет параллельно с работой программы. Без этой опции txPlayVideo()
+//!          делает паузу в программе, ожидая конца воспроизведения, и только потом возвращается. @nn
+//!
+//! @note    Воспроизведение требует установки внешней программы @b @c VideoLAN. Ее можно скачать с официального сайта
+//!          <a href=http://videolan.org>VideoLAN.org</a>. Без установки этой программы видео воспроизводиться не будет
+//!          и в системном трее выведется сообщение об ошибке. @nn
+//!
+//! @note    Во время воспроизведения видео занимает все окно TXLib целиком, и за ним ничего не видно. :( Однако после
+//!          окончания воспроизведения рисунок в окне восстановится.
+//!
+//! @see     txPlaySound(), txSpeak(), txMessageBox(), txOutputDebugPrintf()
+//!
+//! @usage @code
+//!          txPlayVideo ("https://www.youtube.com/watch?v=z_AbfPXTKms");  // Кот Мару, 24 000 000+ просмотров.
+//!                                                                        // А ты чего добился в жизни? :)
+//! @endcode
+//}----------------------------------------------------------------------------------------------------------------
+
+int txPlayVideo (const char* fileName);
+
+//{----------------------------------------------------------------------------------------------------------------
+//! @ingroup Misc
+//! @brief   Читает @strike мысли @endstrike текст вслух.
 //!
 //! @param   text  Текст для @strike внеклассного @endstrike чтения.
 //!
@@ -3657,7 +3688,7 @@ bool txPlaySound (const char filename[] = NULL, DWORD mode = SND_ASYNC);
 //!          платформах он есть. Если этот файл не найден, то будет ошибка компиляции. @nn
 //!          Этот файл точно есть в Visual Studio или в этой сборке платформы MinGW: https://nuwen.net/mingw.html.
 //!
-//! @see     txMessageBox(), txOutputDebugPrintf()
+//! @see     txPlaySound(), txPlayVideo(), txMessageBox(), txOutputDebugPrintf()
 //!
 //! @usage @code
 //!          #define  TX_USE_SPEAK
@@ -4706,7 +4737,7 @@ void _txDump (const void* address, const char name[] = "_txDump()", bool pause =
 //!
 //! @param   mangledName  Декорированное (mangled) имя.
 //!
-//! @return  Строка с названием типа в @b динамической памяти.
+//! @return  Строка с названием типа.
 //!
 //! @note    Если используется форма функции, возвращающая @c char*, вы должны <b>сами</b> освободить память,
 //!          занимаемую строкой, с помощью вызова @c free(), иначе будет утечка памяти.
@@ -4727,6 +4758,37 @@ std::string txDemangle (const char* mangledName);
 char*       txDemangle (const char* mangledName, std::nomeow_t);
 
 //! @}
+//{----------------------------------------------------------------------------------------------------------------
+//! @ingroup Misc
+//! @brief   Читает информацию из реестра Windows.
+//!
+//! @param   keyName    Имя ключа реестра (см. ниже)
+//! @param   valueName  Имя параметра ключа
+//! @param   value      Буфер, в который записывается значение
+//! @param   szValue    Размер буфера
+//!
+//! @return  Количество байт, записанных в буфер со значением
+//!
+//! @note    Имя ключа реестра @c keyName @b обязательно должно начинаться c имени или обозначения одного из разделов:
+//!
+//! @table   @tr <b>Обозначение</b> @tr <b>Ключ реестра</b>
+//!          @tr    HKLM            @td    HKEY_LOCAL_MACHINE
+//!          @tr    HKCU            @td    HKEY_CURRENT_USER
+//!          @tr    HKCR            @td    HKEY_CLASSES_ROOT
+//!          @tr    HKU             @td    HKEY_USERS
+//!          @tr    HKCC            @td    HKEY_CURRENT_CONFIG
+//!          @endtable
+//!
+//! @usage @code
+//!          char path[MAX_PATH] = "(not installed)";
+//!          txRegQuery ("HKCU\\Software\\TX Library", "ProductDir", path, sizeof (path));
+//!
+//!          printf ("TX Library is installed in: \"%s\"\n", path);
+//! @endcode
+//}----------------------------------------------------------------------------------------------------------------
+
+int txRegQuery (const char* keyName, const char* valueName, void* value, size_t szValue);
+
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
 //! @brief   Макрос, позволяющий передать переменное число параметров в какой-либо другой макрос.
@@ -6686,12 +6748,12 @@ _TX_DLLIMPORT     ("ShlWAPI",  char*,    StrStrIA,                      (const c
 
 _TX_DLLIMPORT_OPT ("NTDLL",    char*,    wine_get_version,              (void));
 
-_TX_DLLIMPORT     ("MSVCRT",   void,     exit,                          (int retcode));
-_TX_DLLIMPORT_OPT ("MSVCRT",   void,     _cexit,                        (void));
-_TX_DLLIMPORT     ("MSVCRT",   unsigned, _fpreset,                      ());
-_TX_DLLIMPORT     ("MSVCRT",   unsigned, _controlfp,                    (unsigned control, unsigned mask));
-_TX_DLLIMPORT     ("MSVCRT",   uintptr_t, _beginthread,                 (void (__cdecl* start_address) (void*), unsigned stack_size, void* arglist));
-_TX_DLLIMPORT     ("MSVCRT",   uintptr_t, _beginthreadex,               (void* security, unsigned stack_size, unsigned (__stdcall* start_address) (void*),
+_TX_DLLIMPORT_CRT ("MSVCRT",   void,     exit,                          (int retcode));
+_TX_DLLIMPORT_CRT ("MSVCRT",   void,     _cexit,                        (void));
+_TX_DLLIMPORT_CRT ("MSVCRT",   unsigned, _fpreset,                      ());
+_TX_DLLIMPORT_CRT ("MSVCRT",   unsigned, _controlfp,                    (unsigned control, unsigned mask));
+_TX_DLLIMPORT_CRT ("MSVCRT",   uintptr_t,_beginthread,                  (void (__cdecl* start_address) (void*), unsigned stack_size, void* arglist));
+_TX_DLLIMPORT_CRT ("MSVCRT",   uintptr_t,_beginthreadex,                (void* security, unsigned stack_size, unsigned (__stdcall* start_address) (void*),
                                                                          void *arglist, unsigned init_flag, unsigned* thread_addr));
 _TX_DLLIMPORT_CRT ("MSVCRT",   char*,    __unDName,                     (char* outStr, const char* mangledName, int outStrLen,
                                                                          void* (*mallocFunc) (size_t size), void (*freeFunc) (void *pointer),
@@ -6788,15 +6850,16 @@ bool             _txBuffer_Select (HGDIOBJ obj, HDC dc = txDC());
 HWND             _txConsole_Attach();
 bool             _txConsole_OK()                                              __attribute__ ((warn_unused_result));
 bool             _txConsole_Detach (bool activate);
-bool             _txConsole_Draw (HDC dc);
+bool             _txConsole_Draw   (HDC dc);
 bool             _txConsole_SetUnicodeFont();
 
-HICON            _txCreateTXIcon (int size)                                   __attribute__ ((warn_unused_result));
+HICON            _txCreateTXIcon  (int size)                                   __attribute__ ((warn_unused_result));
 int              _txSetFinishedText (HWND wnd);
 void             _txPauseBeforeTermination (HWND canvas);
 int              _txIsParentWaitable (DWORD* parentPID = NULL)                __attribute__ ((warn_unused_result));
 PROCESSENTRY32*  _txFindProcess (unsigned pid = GetCurrentProcessId())        __attribute__ ((warn_unused_result));
 bool             _txKillProcess (DWORD pid);
+int              _txKillAllChildren (const char* name);
 bool             _txInDll()                                                   __attribute__ ((warn_unused_result));
 int              _txGetInput();
 
@@ -7244,28 +7307,13 @@ _tx_FARPROC _txDllImport (const char dllFileName[], const char funcName[], bool 
 
     if (!*dllPaths[0] && Win32::SetDllDirectoryA)
         {
-        const char regKey[]  = "Software\\TX Library";
-        const char regName[] = "ProductDir";
         const char dllDir[]  = "\\Windows";
 
         // dllPaths[0] is relative to the TX Setup directory stored in the Registry
 
         char* path = dllPaths[0];
 
-        HKEY  key = NULL;
-        DWORD n   = 0;
-
-        bool ok = RegOpenKeyEx (HKEY_CURRENT_USER, regKey, 0, KEY_QUERY_VALUE, &key) == ERROR_SUCCESS;
-        if (!ok) key = NULL;
-
-        if (ok)
-            ok &= RegQueryValueEx (key, regName, NULL, NULL, NULL, &n)               == ERROR_SUCCESS;
-
-        if (ok && n < MAX_PATH)
-            ok &= RegQueryValueEx (key, regName, NULL, NULL, (BYTE*) path, &n)       == ERROR_SUCCESS;
-
-        if (key) RegCloseKey (key);
-
+        txRegQuery ("HKCU\\Software\\TX Library", "ProductDir", path, MAX_PATH);
         strncat_s (path, MAX_PATH, dllDir, sizeof (dllDir) - 1);
 
         // dllPaths[1] is a directory relative to TXib.h file used in compilation
@@ -7331,6 +7379,39 @@ _tx_FARPROC _txDllImport (const char dllFileName[], const char funcName[], bool 
 #if defined (_MSC_VER) && (_MSC_VER == 1800)
 #pragma warning (pop)
 #endif
+
+//-----------------------------------------------------------------------------------------------------------------
+
+int txRegQuery (const char* keyName, const char* valueName, void* value, size_t szValue)
+    {
+    if (_TX_ARGUMENT_FAILED (keyName))   return 0;
+    if (_TX_ARGUMENT_FAILED (valueName)) return 0;
+
+    HKEY  key  = NULL;
+    DWORD size = 0;
+
+    #define EQU_(name1, name2)  ( _strnicmp (keyName, name1 "\\", sizeof (name1)) == 0 || \
+                                  _strnicmp (keyName, name2 "\\", sizeof (name2)) == 0 )
+
+    if      (EQU_("HKLM", "HKEY_LOCAL_MACHINE"))  key = HKEY_LOCAL_MACHINE;
+    else if (EQU_("HKCU", "HKEY_CURRENT_USER"))   key = HKEY_CURRENT_USER;
+    else if (EQU_("HKCR", "HKEY_CLASSES_ROOT"))   key = HKEY_CLASSES_ROOT;
+    else if (EQU_("HKU",  "HKEY_USERS"))          key = HKEY_USERS;
+    else if (EQU_("HKCC", "HKEY_CURRENT_CONFIG")) key = HKEY_CURRENT_CONFIG;
+
+    else { _TX_ARGUMENT_FAILED (!" keyName должно начинаться с HKLM\\, HKCU\\, HKCR\\, HKU\\ или HKCC\\ "); return 0; }
+
+    #undef EQU_
+
+    keyName = strchr (keyName, '\\') + 1;
+
+    bool                               ok  = !!RegOpenKeyEx    (key, keyName,   0, KEY_QUERY_VALUE, &key)         == ERROR_SUCCESS;
+    if (ok)                            ok &= !!RegQueryValueEx (key, valueName, NULL, NULL, NULL,          &size) == ERROR_SUCCESS;
+    if (ok && value && size < szValue) ok &= !!RegQueryValueEx (key, valueName, NULL, NULL, (BYTE*) value, &size) == ERROR_SUCCESS;
+    if (key)                           ok &= !!RegCloseKey     (key);
+
+    return size;
+    }
 
 //}
 //-----------------------------------------------------------------------------------------------------------------
@@ -7675,6 +7756,7 @@ $   if (txWindow())
 $   _txWaitFor (!txWindow(), 5*_TX_TIMEOUT);
 
 $   txSpeak (NULL);
+$   _txKillAllChildren ("vlc.exe");
 
 $   if (GetCurrentThreadId() != _txMainThreadId)
         { $ SuspendThread (_txMainThread);    }
@@ -7902,9 +7984,57 @@ $   return &info;
 
 //-----------------------------------------------------------------------------------------------------------------
 
+int _txKillAllChildren (const char* name)
+    {
+$1  assert (name);
+
+$   HANDLE sshot1 = CreateToolhelp32Snapshot (TH32CS_SNAPPROCESS, 0);
+$   assert (sshot1); if (!sshot1) return NULL;
+
+$   HANDLE sshot2 = CreateToolhelp32Snapshot (TH32CS_SNAPPROCESS, 0);
+$   assert (sshot2); if (!sshot2) return NULL;
+
+$   unsigned pid  = GetCurrentProcessId();
+
+$   int killed = 0;
+
+$   PROCESSENTRY32 victim = { sizeof (victim) };
+$   for (bool ok1 = !!Process32First (sshot1, &victim); ok1; ok1 = !!Process32Next (sshot1, &victim))
+        {
+$       if (_stricmp (victim.szExeFile, name) != 0) continue;
+
+        if (victim.th32ParentProcessID == pid)
+            {
+$           _txKillProcess (victim.th32ProcessID);
+$           killed++;
+            }
+
+        PROCESSENTRY32 parent = { sizeof (parent) };
+        for (bool ok2 = !!Process32First (sshot2, &parent); ok2; ok2 = !!Process32Next (sshot2, &parent))
+            {
+            if (parent.th32ParentProcessID == pid                  &&
+                victim.th32ParentProcessID == parent.th32ProcessID &&
+                _stricmp (parent.szExeFile, "cmd.exe") == 0)
+                {
+$               _txKillProcess (victim.th32ProcessID);
+$               killed++;
+                }
+            }
+        }
+
+$   CloseHandle (sshot1);
+$   CloseHandle (sshot2);
+
+$   return killed;
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
 void _txWatchdogTerminator (void* timeout)  // Or Watchcat? Possibly will change in future versions
     {
-$1  Sleep (*(int*) timeout);
+$1  assert (timeout);
+
+$   Sleep (*(int*) timeout);
 
 $   OutputDebugString ("\n");
     txOutputDebugPrintf ("%s - WARNING: %s(): Timeout (%d) expired, activating. %s\n",  // Kinda static reflection
@@ -12368,6 +12498,58 @@ $   return -1;
 
 //-----------------------------------------------------------------------------------------------------------------
 
+int txPlayVideo (const char* fileName)
+    {
+$1  if (_TX_TXWINDOW_FAILED())          return -1;
+$   if (_TX_ARGUMENT_FAILED (fileName)) return -1;
+
+$   static char vlcPath [MAX_PATH] = "";
+$   if (!*vlcPath)
+        {
+$       txRegQuery ("HKLM\\Software\\VideoLAN\\VLC", "InstallDir", vlcPath, sizeof (vlcPath));
+
+$       if (*vlcPath) strncat_s (vlcPath, sizeof (vlcPath) - 1, "\\",      sizeof ("\\"));
+$       strncat_s               (vlcPath, sizeof (vlcPath) - 1, "vlc.exe", sizeof ("vlc.exe"));
+
+$       if (_access (vlcPath, 0) != 0)
+            {
+$           txNotifyIcon (NIIF_ERROR, "txPlayVideo() сообщает", "Не найден проигрыватель VideoLAN (%s), "
+                                                                "скачайте его с VideoLAN.org", vlcPath);
+$           return -EACCES;
+            }
+        }
+
+$   bool async = false;
+    if (*fileName == '\a') {$ async = true; fileName++; }
+
+$   if (!strstr (fileName, "://") && _access (fileName, 0) != 0)
+        {
+$       txNotifyIcon (NIIF_ERROR, "txPlayVideo() сообщает", "Не найден файл \"%s\"", fileName);
+$       return -EACCES;
+        }
+
+$   char cmd [MAX_PATH*2 + 1024] = "";
+$   snprintf (cmd, sizeof (cmd) - 1, "start /min %s \"\" \"%s\" \"%s\""
+              " --ignore-config --reset-config --no-one-instance"
+              " --intf=dummy --dummy-quiet --no-video-deco --no-video-title-show --no-stats --no-sub-autodetect-file"
+              " --no-disable-screensaver --no-snapshot-preview --no-auto-preparse --no-mouse-events" //!!! " --no-keyboard-events"
+              " --live-caching=500 --network-caching=500"
+              " --play-and-exit --no-embedded-video --drawable-hwnd=%llu >nul 2>>&1",
+              (async? "" : "/wait"), vlcPath, fileName, (unsigned long long) txWindow()) < sizeof (cmd) asserted;
+
+$   txOutputDebugPrintf ("txPlayVideo(): system (%s)...\n", cmd);
+
+$   int time = GetTickCount();
+$   int res = system (cmd);
+$   time = GetTickCount() - time;
+
+    if (res != 0) {$ txNotifyIcon (NIIF_ERROR, "txPlayVideo() сообщает", "Ошибка вызова system (%s): %d", cmd, res); }
+
+$   return (res == 0)? time : -res;
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
 // +--<<< Это вряд ли имеет отношение к тому, что вы ищете :)
 // V      Полезно смотреть не только вверх, но и вниз
 
@@ -13714,80 +13896,98 @@ using ::std::wstring;
                                                                                                                    
                                                                                                                    
                                                                                                                    
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                  
+                          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
