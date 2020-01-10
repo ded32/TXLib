@@ -1,5 +1,5 @@
 //=================================================================================================================
-//           [These sections are for folding control  in Code::Blocks]         [$Date: 2020-01-05 09:32:48 +0400 $]
+//           [These sections are for folding control  in Code::Blocks]         [$Date: 2020-01-10 05:31:25 +0400 $]
 //           [Best viewed with "Fold all on file open" option enabled]         [Best screen/page width = 120 chars]
 //
 //           [If RUSSIAN CHARS below are UNREADABLE, check this file codepage.   It should be 1251, NOT UTF-8 etc.]
@@ -9,9 +9,9 @@
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 150 $
+//!          $Version: 00173a, Revision: 151 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2020-01-05 09:32:48 +0400 $
+//!          $Date: 2020-01-10 05:31:25 +0400 $
 //!
 //!          TX Library -- компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -60,9 +60,6 @@
 //!
 //!             - @c dbghelp32.dll или dbghe32.dll - для 32-разрядных программ (либо @c dbghelp.dll, 32-разрядная версия),
 //!             - @c dbghelp64.dll или dbghe64.dll - для 64-разрядных программ (либо @c dbghelp.dll, 64-разрядная версия),
-//!             - @c symsrv32.dll  или syms32.dll  - для 32-разрядных программ (либо @c symsrv.dll,  32-разрядная версия),
-//!             - @c symsrv64.dll  или syms64.dll  - для 64-разрядных программ (либо @c symsrv.dll,  64-разрядная версия),
-//!             - @c symsrv.yes.
 //!
 //!          -# Модули библиотеки <a href=https://github.com/jrfonseca/drmingw/releases>DrMinGW</a> для доступа
 //!             к отладочным символам MinGW компилятора GCC @c g++:
@@ -118,7 +115,7 @@
 //!            Версия библиотеки в целочисленном формате: старшее слово -- номер версии, младшее -- номер ревизии,
 //!            в двоично-десятичном формате. Например, @c 0x172a0050 -- версия @c 0.172a, ревизия @c 50.
 //! @code
-//!            #define _TX_VERSION "TXLib [Ver: 1.73a, Rev: 105, Date: 2020-01-05 00:00:00 +0300]"  //
+//!            #define _TX_VERSION "TXLib [Ver: 1.73a, Rev: 105, Date: 2020-01-10 00:00:00 +0300]"  //
 //!            #define _TX_AUTHOR  "Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru)"             //  ПРИМЕР
 //!            #define _TX_VER      0x173a0000                                                      //
 //! @endcode
@@ -136,9 +133,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 150, 2020-01-05 09:32:48 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 150, 2020-01-05 09:32:48 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 150, 2020-01-05 09:32:48 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 151, 2020-01-10 05:31:25 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 151, 2020-01-10 05:31:25 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 151, 2020-01-10 05:31:25 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -511,6 +508,10 @@
         #define MINGW_HAS_SECURE_API   1
     #endif
 
+    #if defined (TX_USE_SFML)
+        #define _GLIBCXX_NDEBUG
+    #endif
+
     #ifndef     _GLIBCXX_NDEBUG                 // TXLib enables _GLIBCXX_DEBUG by default. When using third-party libraries
         #define _GLIBCXX_DEBUG                  // compiled without _GLIBCXX_DEBUG (SFML, for example), #define _GLIBCXX_NDEBUG
         #define _GLIBCXX_DEBUG_PEDANTIC         // *before* including TXLib.h.
@@ -753,7 +754,8 @@
     #define   _WIN32_IE                WINVER   // Defaults to the same as WINVER
 #endif
 
-#define stristr( str1, str2 )          Win32::StrStrIA ((str1), (str2))
+#define stristr(  str1, str2 )         Win32::StrStrIA ((str1), (str2))
+#define stristrw( str1, str2 )         Win32::StrStrIW ((str1), (str2))
 
 //-----------------------------------------------------------------------------------------------------------------
 
@@ -936,6 +938,7 @@ namespace std { enum nomeow_t { nomeow }; }     // Vital addition to the C++ sta
     #define _strnicmp                                    strncasecmp
     #define _unlink                                      unlink
     #define _vsnprintf                                   vsnprintf
+    #define _access                                      access
 
     #define getch                                        _getch
     #define putch                                        _putch
@@ -3635,29 +3638,76 @@ bool txPlaySound (const char filename[] = NULL, DWORD mode = SND_ASYNC);
 //! @brief   Проигрывает видео.
 //!
 //! @param   fileName  Имя видеофайла или любого другого источника, с которым работает VideoLAN (rtsp://, http:// и т.д.).
+//!                    Если имя -- пустая строка, то проводится проверка на наличие видеопроигрывателя.
+//! @param   zoom   <i>Масштаб изображения. Необязателен. Если не указан, то равен 0 (Автомасштабирование).</i>
+//! @param   wnd    <i>Окно, в котором воспроизводится видео. Необязательно. Если не указано, то используется
+//!                    окно TXLib.</i>
 //!
 //! @return  Время воспроизведения в миллисекундах (если не указана опция @c \\a). Если меньше 0, то файл не воспроизвелся. :(
+//!          Возвращаемое значение @c INT_MIN -- не найден видеопроигрыватель, @c INT_MIN+1 -- не найден видеофайл.
 //!
 //! @note    Если имя файла начинается с символа @c \\a, то он воспроизводится асинхронно: txPlayVideo() возвращается
-//!          сразу после вызова, и воспрооизведение идет параллельно с работой программы. Без этой опции txPlayVideo()
+//!          сразу после вызова, и воспроизведение идет параллельно с работой программы. Без этой опции txPlayVideo()
 //!          делает паузу в программе, ожидая конца воспроизведения, и только потом возвращается. @nn
 //!
-//! @note    Воспроизведение требует установки внешней программы @b @c VideoLAN. Ее можно скачать с официального сайта
-//!          <a href=http://videolan.org>VideoLAN.org</a>. Без установки этой программы видео воспроизводиться не будет
-//!          и в системном трее выведется сообщение об ошибке. @nn
+//! @note    Воспроизведение требует установки внешней программы @b @c VideoLAN версии 3.0.8 или новее. Ее можно скачать
+//!          с официального сайта <a href=http://videolan.org><b>VideoLAN.org</b></a>. Без установки этой программы видео
+//!          воспроизводиться не будет и выведется сообщение об ошибке. @nn
 //!
-//! @note    Во время воспроизведения видео занимает все окно TXLib целиком, и за ним ничего не видно. :( Однако после
-//!          окончания воспроизведения рисунок в окне восстановится.
+//! @note    Если воспроизведение запущено параллельно с помощью опции @c \\a, то оно завершится лишь только когда видеофайл
+//!          закончится, либо когда будет закрыто окно TXLib. Принудительно завершить все воспроизведение видео можно,
+//!          сделав вызов <tt>txPlayVideo (NULL).</tt> @nn
+//!
+//! @note    Во время воспроизведения видео в окне TXLib оно занимает все пространство окна целиком, и за ним не видно
+//!          того, что было нарисовано в окне ранее. :( Однако после окончания воспроизведения рисунок в окне восстановится.
 //!
 //! @see     txPlaySound(), txSpeak(), txMessageBox(), txOutputDebugPrintf()
 //!
 //! @usage @code
-//!          txPlayVideo ("https://www.youtube.com/watch?v=z_AbfPXTKms");  // Кот Мару, 24 000 000+ просмотров.
-//!                                                                        // А ты чего добился в жизни? :)
+//!          int main()
+//!              {
+//!              txCreateWindow (800, 400);
+//!              txSetFillColor (TX_BLUE);
+//!              txClear();
+//!
+//!              txDrawText (0, 0, txGetExtentX(), txGetExtentY(), "Press ESC to stop!");
+//!
+//!              if (txPlayVideo ("") < 0) return 1;
+//!
+//!              txPlayVideo ("https://www.youtube.com/watch?v=z_AbfPXTKms");  // Кот Мару, 24 000 000+ просмотров.
+//!                                                                            // А ты чего добился в жизни? :)
+//!              // Для тех, кто дождался...
+//!
+//!              system ("start /min notepad.exe && start /min mspaint.exe");
+//!
+//!              double dt = 0.04 / (txQueryPerformance() + 1);
+//!
+//!              HWND notepad = FindWindow ("Notepad",    NULL),
+//!                   mspaint = FindWindow ("MSPaintApp", NULL);
+//!
+//!              txPlayVideo ("\a" "https://www.youtube.com/watch?v=z_AbfPXTKms", 0, notepad);
+//!              txPlayVideo ("\a" "https://www.youtube.com/watch?v=z_AbfPXTKms", 2, mspaint);
+//!
+//!              for (double t = 0; !GetAsyncKeyState (VK_ESCAPE); t -= dt)
+//!                  {
+//!                  static const POINT cent = { GetSystemMetrics (SM_CXSCREEN) / 2, GetSystemMetrics (SM_CYSCREEN) / 2 };
+//!                  static const POINT size = { 500, 400 };
+//!
+//!                  POINT p = { ROUND (cent.y/2 * cos (t)), ROUND (cent.y/2 * sin (t)) };
+//!
+//!                  MoveWindow (notepad, cent.x + p.x - size.x/2, cent.y + p.y - size.y/2, size.x,   size.y,   false);
+//!                  MoveWindow (mspaint, cent.x - p.x - size.x,   cent.y - p.y - size.y,   size.x*2, size.y*2, false);
+//!
+//!                  ShowWindow (mspaint, SW_RESTORE);
+//!                  ShowWindow (notepad, SW_RESTORE);
+//!
+//!                  Sleep (20);
+//!                  }
+//!              }
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-int txPlayVideo (const char* fileName);
+int txPlayVideo (const char* fileName, double zoom = 0, HWND wnd = txWindow());
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
@@ -4767,16 +4817,16 @@ char*       txDemangle (const char* mangledName, std::nomeow_t);
 //! @param   value      Буфер, в который записывается значение
 //! @param   szValue    Размер буфера
 //!
-//! @return  Количество байт, записанных в буфер со значением
+//! @return  Количество байт, записанных в буфер @strike сос мыслом @endstrike со значением value
 //!
 //! @note    Имя ключа реестра @c keyName @b обязательно должно начинаться c имени или обозначения одного из разделов:
 //!
-//! @table   @tr <b>Обозначение</b> @tr <b>Ключ реестра</b>
-//!          @tr    HKLM            @td    HKEY_LOCAL_MACHINE
-//!          @tr    HKCU            @td    HKEY_CURRENT_USER
-//!          @tr    HKCR            @td    HKEY_CLASSES_ROOT
-//!          @tr    HKU             @td    HKEY_USERS
-//!          @tr    HKCC            @td    HKEY_CURRENT_CONFIG
+//! @table   @tr <b>Обозначение</b> @td <b>Ключ реестра</b>
+//!          @tr @c HKLM            @td @c HKEY_LOCAL_MACHINE
+//!          @tr @c HKCU            @td @c HKEY_CURRENT_USER
+//!          @tr @c HKCR            @td @c HKEY_CLASSES_ROOT
+//!          @tr @c HKU             @td @c HKEY_USERS
+//!          @tr @c HKCC            @td @c HKEY_CURRENT_CONFIG
 //!          @endtable
 //!
 //! @usage @code
@@ -5111,6 +5161,21 @@ unsigned       _txWindowUpdateInterval    = 25;
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Technical
+//! @brief   Макрос, разрешающий использовать TXLib вместе с графической библиотекой <a href=http://sfml-dev.org>SFML</a>
+//! @note    Этот макрос задается @b перед включением TXLib.h в программу.
+//! @usage @code
+//!          #define  TX_USE_SFML
+//!          #include "TXLib.h"
+//!          #include <SFML/Graphics.hpp>
+//! @endcode
+//}----------------------------------------------------------------------------------------------------------------
+
+#ifdef FOR_DOXYGEN_ONLY
+#define       TX_USE_SFML
+#endif
+
+//{----------------------------------------------------------------------------------------------------------------
+//! @ingroup Technical
 //! @brief   Таймаут операций ожидания событий (мс)
 //}----------------------------------------------------------------------------------------------------------------
 
@@ -5245,7 +5310,7 @@ const unsigned _TX_BUFSIZE                =  1024,
 //!
 //!          Список вызывающих программ, которые могут делать такую паузу, задается в _TX_WAITABLE_PARENTS.
 //!
-//!          Может задаваться перед включением TXLib.h в программу.
+//! @note    Макрос должен задаваться @b перед включением TXLib.h в программу.
 //!
 //!          См. также определение этой константы в файле TXLib.h.
 //!
@@ -5299,10 +5364,10 @@ int            _txWatchdogTimeout         = 10*_TX_TIMEOUT;
 //!          В этом случае лучше пользоваться DbgView (см. выше) и запускать отлаживаемую программу отдельно,
 //!          а не из-под отладчика Visual Studio.
 //!
-//!          _TX_ALLOW_TRACE и TX_TRACE задаются @b перед включением TXLib.h в программу.
+//! @note    _TX_ALLOW_TRACE и TX_TRACE задаются @b перед включением TXLib.h в программу.
 //!
 //! @usage @code
-//!          // Для просмотра трассы запустить DbgView до запуска программы!
+//!          // Для просмотра трассы запустить DbgView ДО запуска программы!
 //!
 //!          #define  _TX_ALLOW_TRACE    // Трассировать только входы в функции.
 //!          #include "TXLib.h"
@@ -6337,6 +6402,58 @@ const GUID IID_ISpVoice           = {0x6c44df74, 0x72b9, 0x4992, {0xa1,0xec,0xef
 
 #undef  INTERFACE
 
+typedef DWORD     NTSTATUS;
+typedef ULONG_PTR KAFFINITY;
+typedef LONG      KPRIORITY;
+
+struct UNICODE_STRING
+    {
+    USHORT Length;
+    USHORT MaximumLength;
+    WCHAR* Buffer;
+    };
+
+struct RTL_USER_PROCESS_PARAMETERS
+    {
+    BYTE  Reserved1[16];
+    void* Reserved2[10];
+    UNICODE_STRING ImagePathName;
+    UNICODE_STRING CommandLine;
+    };
+
+struct PEB
+    {
+    BYTE  Reserved1[2];
+    BYTE  BeingDebugged;
+    BYTE  Reserved2[1];
+    void* Reserved3[2];
+    void* Ldr;
+    RTL_USER_PROCESS_PARAMETERS* ProcessParameters;
+    void* Reserved4[3];
+    void* AtlThunkSListPtr;
+    void* Reserved5;
+    ULONG Reserved6;
+    void* Reserved7;
+    ULONG Reserved8;
+    ULONG AtlThunkSListPtr32;
+    void* Reserved9[45];
+    BYTE  Reserved10[96];
+    void* PostProcessInitRoutine;
+    BYTE  Reserved11[128];
+    void* Reserved12[1];
+    ULONG SessionId;
+    };
+
+struct PROCESS_BASIC_INFORMATION
+    {
+    NTSTATUS  ExitStatus;
+    PEB*      PebBaseAddress;
+    KAFFINITY AffinityMask;
+    KPRIORITY BasePriority;
+    ULONG_PTR UniqueProcessId;
+    ULONG_PTR InheritedFromUniqueProcessId;
+    };
+
 enum ADDRESS_MODE
     {
     AddrMode1616,
@@ -6744,9 +6861,12 @@ _TX_DLLIMPORT     ("OLE32",    void,     CoUninitialize,                (void));
 _TX_DLLIMPORT     ("Shell32",  HINSTANCE,ShellExecuteA,                 (HWND wnd, const char operation[], const char file[],
                                                                          const char parameters[], const char directory[], int showCmd));
 
-_TX_DLLIMPORT     ("ShlWAPI",  char*,    StrStrIA,                      (const char string[], const char search[]));
+_TX_DLLIMPORT     ("ShlWAPI",  char*,    StrStrIA,                      (const char    string[], const char    search[]));
+_TX_DLLIMPORT     ("ShlWAPI",  char*,    StrStrIW,                      (const wchar_t string[], const wchar_t search[]));
 
 _TX_DLLIMPORT_OPT ("NTDLL",    char*,    wine_get_version,              (void));
+_TX_DLLIMPORT     ("NTDLL",    NTSTATUS, NtQueryInformationProcess,     (HANDLE process, int infoClass,
+                                                                         void* processInfo, unsigned long szProcessInfo, unsigned long* szReturnInfo));
 
 _TX_DLLIMPORT_CRT ("MSVCRT",   void,     exit,                          (int retcode));
 _TX_DLLIMPORT_CRT ("MSVCRT",   void,     _cexit,                        (void));
@@ -6859,8 +6979,6 @@ void             _txPauseBeforeTermination (HWND canvas);
 int              _txIsParentWaitable (DWORD* parentPID = NULL)                __attribute__ ((warn_unused_result));
 PROCESSENTRY32*  _txFindProcess (unsigned pid = GetCurrentProcessId())        __attribute__ ((warn_unused_result));
 bool             _txKillProcess (DWORD pid);
-int              _txKillAllChildren (const char* name);
-bool             _txInDll()                                                   __attribute__ ((warn_unused_result));
 int              _txGetInput();
 
 bool             _txCreateShortcut (const char shortcutName[],
@@ -6883,6 +7001,7 @@ const char*      _txError        (const char file[] = NULL, int line = 0, const 
 const char*      _txProcessError (const char file[], int line, const char func[], unsigned color,
                                   const char msg[], va_list args);
 const char*      _txAppInfo()                                                 __attribute__ ((warn_unused_result));
+bool             _txInDll()                                                   __attribute__ ((warn_unused_result));
 
 void             _txOnTerminate();
 void             _txOnUnexpected();
@@ -7755,8 +7874,8 @@ $   if (txWindow())
 
 $   _txWaitFor (!txWindow(), 5*_TX_TIMEOUT);
 
-$   txSpeak (NULL);
-$   _txKillAllChildren ("vlc.exe");
+$   txSpeak     (NULL);
+$   txPlayVideo (NULL);
 
 $   if (GetCurrentThreadId() != _txMainThreadId)
         { $ SuspendThread (_txMainThread);    }
@@ -7966,73 +8085,9 @@ $   return 0;
 
 //-----------------------------------------------------------------------------------------------------------------
 
-PROCESSENTRY32* _txFindProcess (unsigned pid /*= GetCurrentProcessId()*/)
-    {
-$1  static PROCESSENTRY32 info = { sizeof (info) };
-$   if (!pid) return &info;
-
-$   HANDLE sshot = CreateToolhelp32Snapshot (TH32CS_SNAPPROCESS, 0);
-$   assert (sshot); if (!sshot) return NULL;
-
-$   for (bool ok = !!Process32First (sshot, &info); ok; ok = !!Process32Next (sshot, &info))
-        if (info.th32ProcessID == pid) break;
-
-$   CloseHandle (sshot);
-
-$   return &info;
-    }
-
-//-----------------------------------------------------------------------------------------------------------------
-
-int _txKillAllChildren (const char* name)
-    {
-$1  assert (name);
-
-$   HANDLE sshot1 = CreateToolhelp32Snapshot (TH32CS_SNAPPROCESS, 0);
-$   assert (sshot1); if (!sshot1) return NULL;
-
-$   HANDLE sshot2 = CreateToolhelp32Snapshot (TH32CS_SNAPPROCESS, 0);
-$   assert (sshot2); if (!sshot2) return NULL;
-
-$   unsigned pid  = GetCurrentProcessId();
-
-$   int killed = 0;
-
-$   PROCESSENTRY32 victim = { sizeof (victim) };
-$   for (bool ok1 = !!Process32First (sshot1, &victim); ok1; ok1 = !!Process32Next (sshot1, &victim))
-        {
-$       if (_stricmp (victim.szExeFile, name) != 0) continue;
-
-        if (victim.th32ParentProcessID == pid)
-            {
-$           _txKillProcess (victim.th32ProcessID);
-$           killed++;
-            }
-
-        PROCESSENTRY32 parent = { sizeof (parent) };
-        for (bool ok2 = !!Process32First (sshot2, &parent); ok2; ok2 = !!Process32Next (sshot2, &parent))
-            {
-            if (parent.th32ParentProcessID == pid                  &&
-                victim.th32ParentProcessID == parent.th32ProcessID &&
-                _stricmp (parent.szExeFile, "cmd.exe") == 0)
-                {
-$               _txKillProcess (victim.th32ProcessID);
-$               killed++;
-                }
-            }
-        }
-
-$   CloseHandle (sshot1);
-$   CloseHandle (sshot2);
-
-$   return killed;
-    }
-
-//-----------------------------------------------------------------------------------------------------------------
-
 void _txWatchdogTerminator (void* timeout)  // Or Watchcat? Possibly will change in future versions
     {
-$1  assert (timeout);
+$1  if (_TX_ARGUMENT_FAILED (timeout)) return;
 
 $   Sleep (*(int*) timeout);
 
@@ -8060,32 +8115,20 @@ $   Win32::TerminateProcess (GetCurrentProcess(), EXIT_FAILURE);
 //{          Tools
 //-----------------------------------------------------------------------------------------------------------------
 
-bool _txInDll()
+PROCESSENTRY32* _txFindProcess (unsigned pid /*= GetCurrentProcessId()*/)
     {
-$1  MODULEENTRY32 mod = { sizeof (mod) };
+$1  static PROCESSENTRY32 info = { sizeof (info) };
+$   if (!pid) return &info;
 
-$   HANDLE sshot = CreateToolhelp32Snapshot (TH32CS_SNAPMODULE, 0);
-$   assert (sshot); if (!sshot) return false;
+$   HANDLE sshot = CreateToolhelp32Snapshot (TH32CS_SNAPPROCESS, 0);
+$   assert (sshot); if (!sshot) return NULL;
 
-$   bool inDll = false;
-
-$   for (bool ok = !!Module32First (sshot, &mod); ok; ok = !!Module32Next (sshot, &mod))
-        {
-$       if (!mod.modBaseAddr) continue;
-
-$       IMAGE_DOS_HEADER* dosHdr = (IMAGE_DOS_HEADER*)  mod.modBaseAddr;
-$       IMAGE_NT_HEADERS* ntHdr  = (IMAGE_NT_HEADERS*) (mod.modBaseAddr + dosHdr->e_lfanew);
-
-$       inDll = (dosHdr->e_magic  == IMAGE_DOS_SIGNATURE &&
-                 ntHdr->Signature == IMAGE_NT_SIGNATURE  &&
-                (ntHdr->FileHeader.Characteristics & IMAGE_FILE_DLL) != 0);
-
-$       if (In (std::nomeow, (BYTE*)(uintptr_t)_txInDll, mod.modBaseAddr, mod.modBaseAddr + mod.modBaseSize))
-            { $ break; }
-        }
+$   for (bool ok = !!Process32First (sshot, &info); ok; ok = !!Process32Next (sshot, &info))
+        if (info.th32ProcessID == pid) break;
 
 $   CloseHandle (sshot);
-$   return inDll;
+
+$   return &info;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -8115,6 +8158,70 @@ $   bool ok = !!Win32::TerminateProcess (proc, 0);
 $   CloseHandle (proc);
 
 $   return ok;
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+int txTaskKill (const char i[] /*= NULL*/,
+                const char doYouWantToFindSomethingInTheCommandLineIDidSomethingForYouToFindSomethingInTheCommandLineMaybeYouWillFindSomeInterestingInTheCommandLineSoIDidSomethingForYouInTheCommandLine[] /*= NULL*/,
+                unsigned   x   /*= 0*/)
+    {
+    // ...so tired of it already...
+
+    #define name    i
+    #define cmdLine doYouWantToFindSomethingInTheCommandLineIDidSomethingForYouToFindSomethingInTheCommandLineMaybeYouWillFindSomeInterestingInTheCommandLineSoIDidSomethingForYouInTheCommandLine
+    #define pid     x
+
+$1  if (_TX_ARGUMENT_FAILED (name || cmdLine || pid)) return false;
+
+$   wchar_t cmdLineW[_TX_BUFSIZE] = L"";
+    if (cmdLine) {$ MultiByteToWideChar (_TX_CP, 0, cmdLine, -1, cmdLineW, _TX_BUFSIZE); }
+
+$   HANDLE sshot = CreateToolhelp32Snapshot (TH32CS_SNAPPROCESS, 0);
+$   assert (sshot); if (!sshot) return 0;
+
+$   int killed = 0;
+
+$   PROCESSENTRY32 info = { sizeof (info) };
+$   for (bool ok = !!Process32First (sshot, &info); ok; ok = !!Process32Next (sshot, &info))
+        {
+$
+        if (pid  && info.th32ParentProcessID        != pid) {$ continue; }
+
+        if (name && _stricmp (info.szExeFile, name) != 0)   {$ continue; }
+
+$       HANDLE proc = OpenProcess (PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, false, info.th32ProcessID);
+        if (!proc) {$ continue; }
+
+$       Win32::PROCESS_BASIC_INFORMATION pbi = {};
+$       Win32::NtQueryInformationProcess (proc, 0 /*ProcessBasicInformation*/, &pbi, sizeof (pbi), NULL) == 0 asserted;
+
+        // Should use ReadProcessMemory() because the info is actually in another address space
+
+$       Win32::PEB peb = {};
+        if (pbi.PebBaseAddress)        {$ ReadProcessMemory (proc, pbi.PebBaseAddress,        &peb,    sizeof (peb),    NULL) asserted; }
+
+$       Win32::RTL_USER_PROCESS_PARAMETERS params = {};
+        if (peb.ProcessParameters)     {$ ReadProcessMemory (proc, peb.ProcessParameters,     &params, sizeof (params), NULL) asserted; }
+
+$       wchar_t bufferW[_TX_BUFSIZE] = L"";
+        if (params.CommandLine.Buffer) {$ ReadProcessMemory (proc, params.CommandLine.Buffer, &bufferW,
+                                                             MIN (params.CommandLine.Length+2, sizeof (bufferW) - 2),   NULL) asserted; }
+$       CloseHandle (proc) asserted;
+
+        if (*cmdLineW && !stristrw (bufferW, cmdLineW)) {$ continue; }
+
+$       if (_txKillProcess (info.th32ProcessID))
+            {$ killed++; }
+        }
+
+$   CloseHandle (sshot);
+
+$   return killed;
+
+    #undef name
+    #undef cmdLine
+    #undef pid
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -8222,6 +8329,36 @@ $   VirtualProtect (impPtr, sizeof (*impPtr), rights, &rights);
 $   return oldFunc;
 
     #undef RVA_
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+bool _txInDll()
+    {
+$1  MODULEENTRY32 mod = { sizeof (mod) };
+
+$   HANDLE sshot = CreateToolhelp32Snapshot (TH32CS_SNAPMODULE, 0);
+$   assert (sshot); if (!sshot) return false;
+
+$   bool inDll = false;
+
+$   for (bool ok = !!Module32First (sshot, &mod); ok; ok = !!Module32Next (sshot, &mod))
+        {
+$       if (!mod.modBaseAddr) continue;
+
+$       IMAGE_DOS_HEADER* dosHdr = (IMAGE_DOS_HEADER*)  mod.modBaseAddr;
+$       IMAGE_NT_HEADERS* ntHdr  = (IMAGE_NT_HEADERS*) (mod.modBaseAddr + dosHdr->e_lfanew);
+
+$       inDll = (dosHdr->e_magic  == IMAGE_DOS_SIGNATURE &&
+                 ntHdr->Signature == IMAGE_NT_SIGNATURE  &&
+                (ntHdr->FileHeader.Characteristics & IMAGE_FILE_DLL) != 0);
+
+$       if (In (std::nomeow, (BYTE*)(uintptr_t)_txInDll, mod.modBaseAddr, mod.modBaseAddr + mod.modBaseSize))
+            { $ break; }
+        }
+
+$   CloseHandle (sshot);
+$   return inDll;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -12498,10 +12635,20 @@ $   return -1;
 
 //-----------------------------------------------------------------------------------------------------------------
 
-int txPlayVideo (const char* fileName)
+int txPlayVideo (const char* fileName, double zoom /*= 0*/, HWND wnd /*= txWindow()*/)
     {
-$1  if (_TX_TXWINDOW_FAILED())          return -1;
-$   if (_TX_ARGUMENT_FAILED (fileName)) return -1;
+$1  if (wnd && wnd == txWindow() && _TX_TXWINDOW_FAILED()) return -1;
+
+    #define VIDEO_ID_  " --video-title=\"TXLib[%p]::txPlayVideo()\" "
+
+$   if (!fileName)
+        {
+$       char cmd [64] = "";
+$       _snprintf_s (cmd, sizeof (cmd) - 1, VIDEO_ID_, &_txInitialized) < sizeof (cmd) asserted;
+
+$       txTaskKill ("vlc.exe", cmd, 0);  // Kill by command line pattern
+$       return 0;
+        }
 
 $   static char vlcPath [MAX_PATH] = "";
 $   if (!*vlcPath)
@@ -12513,39 +12660,53 @@ $       strncat_s               (vlcPath, sizeof (vlcPath) - 1, "vlc.exe", sizeo
 
 $       if (_access (vlcPath, 0) != 0)
             {
-$           txNotifyIcon (NIIF_ERROR, "txPlayVideo() сообщает", "Не найден проигрыватель VideoLAN (%s), "
-                                                                "скачайте его с VideoLAN.org", vlcPath);
-$           return -EACCES;
+$           txMessageBox ("Не найден видеопроигрыватель VideoLAN (vlc.exe), скачайте его с сайта VideoLAN.org и установите. "
+                          "Без этого видео воспроизводиться не будет. :(", "txPlayVideo() сообщает", MB_ICONSTOP);
             }
         }
+
+    if (_access (vlcPath, 0) != 0) { $ return INT_MIN; }
 
 $   bool async = false;
     if (*fileName == '\a') {$ async = true; fileName++; }
 
-$   if (!strstr (fileName, "://") && _access (fileName, 0) != 0)
+$   if (*fileName && !strstr (fileName, "://") && _access (fileName, 0) != 0)
         {
 $       txNotifyIcon (NIIF_ERROR, "txPlayVideo() сообщает", "Не найден файл \"%s\"", fileName);
-$       return -EACCES;
+$       return INT_MIN+1;
         }
 
 $   char cmd [MAX_PATH*2 + 1024] = "";
-$   snprintf (cmd, sizeof (cmd) - 1, "start /min %s \"\" \"%s\" \"%s\""
-              " --ignore-config --reset-config --no-one-instance"
-              " --intf=dummy --dummy-quiet --no-video-deco --no-video-title-show --no-stats --no-sub-autodetect-file"
-              " --no-disable-screensaver --no-snapshot-preview --no-auto-preparse --no-mouse-events" //!!! " --no-keyboard-events"
-              " --live-caching=500 --network-caching=500"
-              " --play-and-exit --no-embedded-video --drawable-hwnd=%llu >nul 2>>&1",
-              (async? "" : "/wait"), vlcPath, fileName, (unsigned long long) txWindow()) < sizeof (cmd) asserted;
+
+$   _snprintf_s (cmd, sizeof (cmd) - 1, "start /min%s \"\" \"%s\" \"%s\" vlc://quit"
+                 " --zoom=%g --%sautoscale --drawable-hwnd=%llu --no-embedded-video"
+
+                 " --live-caching=500 --network-caching=500 --quiet-synchro"
+
+                 " --ignore-config --reset-config --no-one-instance --play-and-exit"
+                 " --intf=dummy --dummy-quiet --no-video-deco --no-video-title-show --no-stats --no-sub-autodetect-file"
+                 " --no-disable-screensaver --no-snapshot-preview --no-auto-preparse --no-mouse-events --no-keyboard-events"
+
+                 VIDEO_ID_ " >nul 2>>&1",
+
+                 (async? "" : " /wait"), vlcPath, fileName, zoom, (zoom? "no-" : ""),
+                 (unsigned long long) wnd, &_txInitialized) < sizeof (cmd) asserted;
 
 $   txOutputDebugPrintf ("txPlayVideo(): system (%s)...\n", cmd);
 
+    if (wnd == txWindow()) {$ txBegin(); }
+
 $   int time = GetTickCount();
-$   int res = system (cmd);
+$   int res = (*fileName)? system (cmd) : 0;
 $   time = GetTickCount() - time;
+
+    if (wnd == txWindow()) {$ txEnd(); }
 
     if (res != 0) {$ txNotifyIcon (NIIF_ERROR, "txPlayVideo() сообщает", "Ошибка вызова system (%s): %d", cmd, res); }
 
 $   return (res == 0)? time : -res;
+
+    #undef VIDEO_ID_
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -13761,10 +13922,12 @@ std::ostream& operator << (std::ostream& stream, const RECT& rect)
 #define txPie(...)                     ( _txLocCurSet(), txPie                 (__VA_ARGS__) )
 #define txPixel(...)                   ( _txLocCurSet(), txPixel               (__VA_ARGS__) )
 #define txPlaySound(...)               ( _txLocCurSet(), txPlaySound           (__VA_ARGS__) )
+#define txPlayVideo(...)               ( _txLocCurSet(), txPlayVideo           (__VA_ARGS__) )
 #define txPolygon(...)                 ( _txLocCurSet(), txPolygon             (__VA_ARGS__) )
 #define txQueryPerformance(...)        ( _txLocCurSet(), txQueryPerformance    (__VA_ARGS__) )
 #define txRGB2HSL(...)                 ( _txLocCurSet(), txRGB2HSL             (__VA_ARGS__) )
 #define txRectangle(...)               ( _txLocCurSet(), txRectangle           (__VA_ARGS__) )
+#define txRegQuery(...)                ( _txLocCurSet(), txRegQuery            (__VA_ARGS__) )
 #define txRedrawWindow(...)            ( _txLocCurSet(), txRedrawWindow        (__VA_ARGS__) )
 #define txSaveImage(...)               ( _txLocCurSet(), txSaveImage           (__VA_ARGS__) )
 #define txSpeak(...)                   ( _txLocCurSet(), txSpeak               (__VA_ARGS__) )
@@ -13896,98 +14059,35 @@ using ::std::wstring;
                                                                                                                    
                                                                                                                    
                                                                                                                    
-                          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+               
 
 
 
