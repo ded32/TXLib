@@ -1,5 +1,5 @@
 //=================================================================================================================
-//           [These sections are for folding control  in Code::Blocks]         [$Date: 2020-01-14 07:36:14 +0400 $]
+//           [These sections are for folding control  in Code::Blocks]         [$Date: 2020-01-14 22:43:15 +0400 $]
 //           [Best viewed with "Fold all on file open" option enabled]         [Best screen/page width = 120 chars]
 //
 //           [If RUSSIAN CHARS below are UNREADABLE, check this file codepage.   It should be 1251, NOT UTF-8 etc.]
@@ -9,9 +9,9 @@
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 152 $
+//!          $Version: 00173a, Revision: 153 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2020-01-14 07:36:14 +0400 $
+//!          $Date: 2020-01-14 22:43:15 +0400 $
 //!
 //!          TX Library -- компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -115,7 +115,7 @@
 //!            Версия библиотеки в целочисленном формате: старшее слово -- номер версии, младшее -- номер ревизии,
 //!            в двоично-десятичном формате. Например, @c 0x172a0050 -- версия @c 0.172a, ревизия @c 50.
 //! @code
-//!            #define _TX_VERSION "TXLib [Ver: 1.73a, Rev: 105, Date: 2020-01-10 00:00:00 +0300]"  //
+//!            #define _TX_VERSION "TXLib [Ver: 1.73a, Rev: 105, Date: 2020-01-14 00:00:00 +0300]"  //
 //!            #define _TX_AUTHOR  "Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru)"             //  ПРИМЕР
 //!            #define _TX_VER      0x173a0000                                                      //
 //! @endcode
@@ -133,9 +133,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 152, 2020-01-14 07:36:14 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 152, 2020-01-14 07:36:14 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 152, 2020-01-14 07:36:14 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 153, 2020-01-14 22:43:15 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 153, 2020-01-14 22:43:15 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 153, 2020-01-14 22:43:15 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -3214,11 +3214,13 @@ bool txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillClose_AndIWillNotBe
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
-//! @brief   Уничтожает окно TXLib.
+//! @brief   Уничтожает окно.
+//!
+//! @param   wnd  <i>Дескриптор окна для уничтожения. Необязательно. Если не указан, уничтожается окно TXLib.</i>
 //!
 //! @return  Если операция была успешна -- true, иначе -- false.
 //!
-//! @warning Если уничтожается главное окно TXLib, функция main() прерывается и программа автоматически завершается.
+//! @warning Если уничтожается окно TXLib, функция main() принудительно прерывается и программа завершается.
 //!          При этом @b не гарантируется правильное завершение программы, поэтому так делать @b не рекомендуется.
 //!
 //! @see     txCreateWindow()
@@ -3228,7 +3230,7 @@ bool txIDontWantToHaveAPauseAfterMyProgramBeforeTheWindowWillClose_AndIWillNotBe
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-bool txDestroyWindow();
+bool txDestroyWindow (HWND wnd = txWindow());
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Drawing
@@ -3250,7 +3252,7 @@ double txQueryPerformance() __attribute__ ((warn_unused_result));
 //! @brief   Выдает количество кадров (вызовов этой функции) в секунду.
 //!
 //! @param   minFrames <i>Количество вызовов, после которых FPS начинает усредняться по последним @c txFramesToAverage
-//!                       кадрам. Необязательно.</i>
+//!                       кадрам. Необязательно. Если не указано, используется txFramesToAverage.</i>
 //!
 //! @return  FPS (Frames per Second), т.е. количество кадров (вызовов этой функции) в секунду.
 //!
@@ -3611,16 +3613,16 @@ bool txTextCursor (bool blink = true);
 //! @return  Если операция была успешна -- true, иначе -- false.
 //!
 //! @title   Режимы воспроизведения: @table
-//!          @tr SND_ASYNC       @td Звук проигрывается одновременно с работой программы. @n
-//!                                  Чтобы отменить звучание, вызовите txPlaySound (NULL).
-//!          @tr SND_SYNC        @td Выполнение программы приостанавливается до окончания воспроизведения звука.
-//!          @tr SND_LOOP        @td Зацикливать звук при воспроизведении. @n
-//!                                  Чтобы отменить звучание, вызовите txPlaySound (NULL).
+//!          @tr @c SND_ASYNC       @td Звук проигрывается одновременно с работой программы. @n
+//!                                     Чтобы отменить звучание, вызовите txPlaySound (NULL).
+//!          @tr @c SND_SYNC        @td Выполнение программы приостанавливается до окончания воспроизведения звука.
+//!          @tr @c SND_LOOP        @td Зацикливать звук при воспроизведении. @n
+//!                                     Чтобы отменить звучание, вызовите txPlaySound (NULL).
 //!          @tbr
-//!          @tr SND_NODEFAULT   @td Не использовать звук по умолчанию, если нельзя проиграть указанный звуковой файл.
-//!          @tr SND_NOSTOP      @td Если какой-либо звук уже проигрывается, не останавливать его для запуска указанного звука.
-//!          @tr SND_APPLICATION @td Проигрывать звук, используя программу, зарегистрированную для данного типа звуковых файлов.
-//!          @endtable
+//!          @tr @c SND_NODEFAULT   @td Не использовать звук по умолчанию, если нельзя проиграть указанный звуковой файл.
+//!          @tr @c SND_NOSTOP      @td Если какой-либо звук уже проигрывается, @b не останавливать его для запуска указанного звука.
+//!          @tr @c SND_APPLICATION @td Проигрывать звук, используя программу, зарегистрированную для данного типа звуковых файлов.
+//! @endtable
 //!
 //! @note    Поддерживаются только файлы в формате WAV. Остальные форматы (MP3 и др.) надо перекодировать в WAV.
 //!          Переименование со сменой расширения не поможет, как и в случае с форматом картинок в txLoadImage().
@@ -3638,64 +3640,102 @@ bool txPlaySound (const char filename[] = NULL, DWORD mode = SND_ASYNC);
 //! @ingroup Misc
 //! @brief   Проигрывает видео.
 //!
+//! @param   x         X-координата верхнего левого угла видео. <i>См. предупреждение ниже.</i>
+//! @param   y         Y-координата верхнего левого угла видео. <i>См. предупреждение ниже.</i>
+//! @param   width     Ширина видео. <i>См. предупреждение ниже.</i>
+//! @param   height    Высота видео. <i>См. предупреждение ниже.</i>
 //! @param   fileName  Имя видеофайла или любого другого источника, с которым работает VideoLAN (rtsp://, http:// и т.д.).
 //!                    Если имя -- пустая строка @c (""), то проводится проверка на наличие видеопроигрывателя.
 //! @param   zoom   <i>Масштаб изображения. Необязателен. Если не указан, то равен 0 (Автомасштабирование).</i>
 //! @param   wnd    <i>Окно, в котором воспроизводится видео. Необязательно. Если не указано, то используется
 //!                    окно TXLib.</i>
 //!
-//! @return  Время воспроизведения в миллисекундах (если не указана опция @c \\a). Если меньше 0, то файл не воспроизвелся. :(
-//!          Возвращаемое значение @c INT_MIN -- не найден видеопроигрыватель, @c INT_MIN+1 -- не найден видеофайл.
+//! @return  Время воспроизведения в миллисекундах (если не указана опция @c \\a). Если меньше 0, то видео
+//!          не запустилось. :( См. коды ошибок ниже. @nn
+//!          Если указана опция @c \\a, то возвращаемое значение -- дескриптор (HWND) окна видеопотока
+//!          (см. "Асинхронное воспроизведение").
 //!
-//! @note    Воспроизведение требует установки внешней программы @b @c VideoLAN версии @b 3.0.8 или новее. Ее можно скачать
-//!          с официального сайта <a href=http://videolan.org><b>VideoLAN.org</b></a>. После установки может потребоваться
-//!          перезагрузка Windows. Без установки @c VideoLAN видео воспроизводиться не будет и выведется сообщение об ошибке.
+//! @title   Возвращаемые значения в случае ошибки: @table
+//!          @tr @c INT_MIN                    @td Не найден видеопроигрыватель.
+//!          @tr @c INT_MIN+1                  @td Не найден видеофайл.
+//!          @tr @c INT_MIN+2                  @td Внутрення ошибка регистрации класса окна видеопотока.
+//!          @tr @c INT_MIN+3                  @td Внутрення ошибка создания окна видеопотока.
+//!          @tr Другие отрицательные значения @td Код завершения процесса VideoLAN с обратным знаком.
+//! @endtable
 //!
-//!          Если перед именем файла поставить символ @c \\a, то файл будет воспроизводиться асинхронно: txPlayVideo()
-//!          возвращается сразу после вызова, и воспроизведение идет параллельно с работой программы. Без этой опции
-//!          txPlayVideo() делает паузу в программе, ожидая конца воспроизведения, и только потом возвращается.
+//! @title   Асинхронное воспроизведение (опция @c \\a)
 //!
-//! @note    Если воспроизведение запущено параллельно с помощью опции @c \\a, то оно завершится лишь только когда видеофайл
-//!          закончится, либо когда будет закрыто окно TXLib. Принудительно завершить воспроизведение @b всех видео можно,
-//!          сделав вызов <tt>txPlayVideo (NULL).</tt>
+//!          Если перед именем файла поставить символ @c \\a, то файл будет воспроизводиться асинхронно:
+//!          txPlayVideo() возвратится сразу после вызова, и воспроизведение пойдет параллельно с работой
+//!          программы. Оно завершится, когда закончится видеофайл, или когда будет закрыто окно TXLib.
 //!
-//! @warning Во время воспроизведения видео в окне TXLib оно занимает все пространство окна целиком, и за ним не видно
-//!          того, что было нарисовано в окне ранее. :( Однако после окончания воспроизведения рисунок в окне восстановится.
+//!          Без этой опции txPlayVideo() делает паузу в программе, ожидая конца воспроизведения, и только
+//!          потом возвращается.
+//!
+//!          В случае асинхронного воспрооизведения возвращаемым значением функции txPlayVideo() будет @b не
+//!          время ее работы, а дескриптор окна видеопотока (HWND). С его помощью можно контролировать это
+//!          окно, его положение, размер, видимость и другие свойства (см. функции MoveWindow(), ShowWindow()
+//!          и другие в MSDN. Гуглите. См. пример использования).
+//!
+//!          Досрочно прервать воспроизведение можно, уничтожив окно видеопотока с помощью txDestroyWindow().
+//!
+//!          Принудительно завершить воспроизведение @b всех видео можно, сделав вызов <tt>txPlayVideo (NULL).</tt>
+//!
+//! @warning Если в последнем параметре @c wnd указано @b не окно TXLib, то координаты @c x, @c y и размеры
+//!          @c @width, @c height видео игнорируются и видеопоток будет занимать всю клиентскую область окна,
+//!          указанного этим параметром. См. пример использования.
+//!
+//! @note    <b>Воспроизведение требует установки внешней программы @c VideoLAN версии 3.0.8 или новее.</b>
+//!          Ее можно скачать с официального сайта <a href=http://videolan.org><b>VideoLAN.org</b></a>.
+//!          После установки может потребоваться перезагрузка Windows. Без установки @c VideoLAN видео
+//!          воспроизводиться не будет и выведется сообщение об ошибке.
 //!
 //! @see     txPlaySound(), txSpeak(), txMessageBox(), txOutputDebugPrintf()
 //!
 //! @usage @code
 //!          int main()
 //!              {
-//!              txCreateWindow (800, 400);
+//!              txCreateWindow (800, 500);
 //!              txSetFillColor (TX_BLUE);
 //!              txClear();
 //!
 //!              txDrawText (0, 0, txGetExtentX(), txGetExtentY(), "Press ESC to stop!");
 //!
-//!              if (txPlayVideo ("") < 0) return 1;                           // Проверяем, установлен ли VideoLAN
+//!              if (txPlayVideo ("") < 0)                                          // Проверяем, установлен ли VideoLAN
+//!                  {
+//!                  txSetFillColor (TX_RED);
+//!                  txClear();
+//!                  return 1;
+//!                  }
 //!
-//!              txPlayVideo ("https://www.youtube.com/watch?v=z_AbfPXTKms");  // Кот Мару, 24 000 000+ просмотров.
-//!                                                                            // А ты чего добился в жизни? :)
-//!              // Для тех, кто дождался...
+//!              txPlayVideo ("\a" "https://www.youtube.com/watch?v=z_AbfPXTKms");  // Кот Мару, 24 000 000+ просмотров.
+//!                                                                                 // А ты чего добился в жизни? :)
+//!
+//!              txPlayVideo (580, 330, 200, 150, "https://www.youtube.com/watch?v=z_AbfPXTKms");
+//!
+//!              // Для тех, кто [добился] дождался...
 //!
 //!              system ("cmd.exe /c start /min notepad.exe");
-//!              double dt = 0.04 / (txQueryPerformance() + 1);                // Measuring and waiting for Notepad
+//!              double dt = 0.04 / (txQueryPerformance() + 1);                     // Measuring and waiting for Notepad
 //!
 //!              HWND notepad = FindWindow ("Notepad", NULL);
 //!              if (!notepad) return 1;
 //!
-//!              if (txPlayVideo ("\a" "https://www.youtube.com/watch?v=z_AbfPXTKms", 0, notepad) < 0) return 1;
+//!              txPlayVideo ("\a" "https://www.youtube.com/watch?v=z_AbfPXTKms", 0, notepad);
 //!
-//!              for (double t = 0; !GetAsyncKeyState (VK_ESCAPE); t -= dt)
+//!              HWND wnd = (HWND) txPlayVideo (0, 330, 200, 150, "\a" "https://www.youtube.com/watch?v=z_AbfPXTKms");
+//!
+//!              for (double t = 0; !GetAsyncKeyState (VK_ESCAPE); t += dt)
 //!                  {
 //!                  static const POINT cent = { GetSystemMetrics (SM_CXSCREEN) / 2, GetSystemMetrics (SM_CYSCREEN) / 2 };
 //!                  static const POINT size = { 500, 400 };
 //!
 //!                  MoveWindow (notepad, cent.x + ROUND (cent.y/2 * cos (t)) - size.x/2,
-//!                                       cent.y + ROUND (cent.y/2 * sin (t)) - size.y/2, size.x, size.y, false);
+//!                                       cent.y - ROUND (cent.y/2 * sin (t)) - size.y/2, size.x, size.y, false);
 //!
 //!                  ShowWindow (notepad, SW_RESTORE);
+//!
+//!                  MoveWindow (wnd, ROUND (t*100) % 1000 - 200, 330, 200, 150, false);
 //!
 //!                  Sleep (20);
 //!                  }
@@ -3703,7 +3743,22 @@ bool txPlaySound (const char filename[] = NULL, DWORD mode = SND_ASYNC);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-int txPlayVideo (const char* fileName, double zoom = 0, HWND wnd = txWindow());
+ptrdiff_t txPlayVideo (int x, int y, int width, int height, const char fileName[], double zoom = 0, HWND wnd = txWindow());
+
+//{----------------------------------------------------------------------------------------------------------------
+//! @ingroup Misc
+//! @brief   Проигрывает видео.
+//!
+//! @param   fileName  Имя видеофайла или любого другого источника, с которым работает VideoLAN (rtsp://, http:// и т.д.).
+//!                    Если имя -- пустая строка @c (""), то проводится проверка на наличие видеопроигрывателя.
+//! @param   zoom   <i>Масштаб изображения. Необязателен. Если не указан, то равен 0 (Автомасштабирование).</i>
+//! @param   wnd    <i>Окно, в котором воспроизводится видео. Необязательно. Если не указано, то используется
+//!                    окно TXLib.</i>
+//!
+//! См. описание в функции txPlayVideo() выше.
+//}----------------------------------------------------------------------------------------------------------------
+
+ptrdiff_t txPlayVideo (const char fileName[], double zoom = 0, HWND wnd = txWindow());
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
@@ -5571,8 +5626,8 @@ class txAutoLock
         {
 $1      if (!cs_) return;
 
-        if (mandatory) { $    EnterCriticalSection (cs_);                   }
-        else           { $ TryEnterCriticalSection (cs_)? 0 : (cs_ = NULL); }
+        if (mandatory) {$    EnterCriticalSection (cs_);                   }
+        else           {$ TryEnterCriticalSection (cs_)? 0 : (cs_ = NULL); }
         }
 
 //{----------------------------------------------------------------------------------------------------------------
@@ -6931,7 +6986,9 @@ const char       _TX_LOCALE[]                             =  "ru_RU.CP1251";
 #endif
 
 const int        _TX_IDM_ABOUT                            =   40000,       // Идентификаторы системного меню окна
-                 _TX_IDM_CONSOLE                          =   40001;
+                 _TX_IDM_CONSOLE                          =   40001,
+                 _TX_WM_CREATEWND                         =   0x7FF0,      // Сообщения для создания/уничтожения
+                 _TX_WM_DESTROYWND                        =   0x7FF1;      // окон в потоке Canvas
 
 //-----------------------------------------------------------------------------------------------------------------
 
@@ -6950,6 +7007,8 @@ bool             _txCanvas_OnCHAR       (HWND wnd, WPARAM ch, LPARAM info);
 bool             _txCanvas_OnTIMER      (HWND wnd, WPARAM id);
 bool             _txCanvas_OnMOUSEMOVE  (HWND wnd, WPARAM buttons, LPARAM coords);
 bool             _txCanvas_OnMOUSELEAVE (HWND wnd);
+bool             _txCanvas_OnCREATEWND  (HWND wnd, WPARAM, LPARAM lpar);
+bool             _txCanvas_OnDESTROYWND (HWND wnd, WPARAM, LPARAM lpar);
 bool             _txCanvas_OnCmdCONSOLE (HWND wnd, WPARAM cmd);
 bool             _txCanvas_OnCmdABOUT   (HWND wnd, WPARAM cmd);
 
@@ -6969,10 +7028,14 @@ bool             _txConsole_Detach (bool activate);
 bool             _txConsole_Draw   (HDC dc);
 bool             _txConsole_SetUnicodeFont();
 
+ATOM              txRegisterClass          (const char classId[], WNDPROC wndProc, unsigned style, int backBrush, int wndExtra);
+HWND              txCreateExtraWindow      (CREATESTRUCT createData);
 HICON            _txCreateTXIcon           (int size)                             __attribute__ ((warn_unused_result));
 int              _txSetFinishedText        (HWND wnd);
 void             _txPauseBeforeTermination (HWND canvas);
 int              _txIsParentWaitable       (DWORD* parentPID = NULL)              __attribute__ ((warn_unused_result));
+
+LRESULT CALLBACK _txPlayVideo_WndProc      (HWND wnd, UINT msg, WPARAM wpar, LPARAM lpar);
 
 PROCESSENTRY32*  _txFindProcess            (unsigned pid = GetCurrentProcessId()) __attribute__ ((warn_unused_result));
 bool             _txKillProcess            (DWORD pid);
@@ -7176,7 +7239,7 @@ HBITMAP                      _txStockBitmap              = NULL;       // Equiva
 
 CRITICAL_SECTION             _txCanvas_LockBackBuf       = {0,-1};     // Prevent simultaneous access to back buffer, see txLock()
 
-UINT_PTR                     _txCanvas_RefreshTimer      = 0;          // Timer to redraw TXLib window
+UINT_PTR                     _txCanvas_RefreshTimer      = 1;          // Timer ID to redraw TXLib window
 volatile int                 _txCanvas_RefreshLock       = 0;          // Blocks auto on-timer canvas update, see txBegin/txEnd
 
 ::std::vector<HDC>*          _txCanvas_UserDCs           = NULL;       // List of DCs allocated, for auto-free
@@ -7265,7 +7328,7 @@ $       _TX_CALL (Win32::SetThreadStackGuarantee, (&stackSize));
 $       _txOnSignal();
 
 $       if (!*_txLogName)
-            { $ _tx_snprintf_s (_txLogName, sizeof (_txLogName) - 1, "%s.log", txGetModuleFileName()); }
+            {$ _tx_snprintf_s (_txLogName, sizeof (_txLogName) - 1, "%s.log", txGetModuleFileName()); }
 
         #if ! (defined (_MSC_VER_6) || defined (_MSC_VER) && (_MSC_VER <= 1911))
 $       ::std::set_unexpected (_txOnUnexpected);
@@ -7550,7 +7613,7 @@ $       _txMain = ! FindAtom ("_txMain");  // Not a thread-safe
 $       (void)       AddAtom ("_txMain");
         }
 
-$   if (_txWindowUpdateInterval < 10) { $ _txWindowUpdateInterval = 10; }
+$   if (_txWindowUpdateInterval < 10) {$ _txWindowUpdateInterval = 10; }
 
 $   _txRunning = false;
 
@@ -7562,11 +7625,15 @@ $   if (centered) { size.cx *= -1; size.cy *= -1; }
     // In Thread, where REAL creation lies...
 
     #if !( defined (_MSC_VER) && (_MSC_VER < 1400) && !defined (_MT) )
+
 $   unsigned id = 0;
 $   _txCanvas_Thread = (HANDLE) Win32::_beginthreadex (NULL, 0,                         _txCanvas_ThreadProc, &size, 0, &id);
+
     #else
+
 $   DWORD    id = 0;
 $   _txCanvas_Thread =                  CreateThread  (NULL, 0, (LPTHREAD_START_ROUTINE)_txCanvas_ThreadProc, &size, 0, &id);
+
     #endif
 
 $   if (!_txCanvas_Thread) return TX_DEBUG_ERROR ("\a" "Cannot start canvas thread."), (HWND)NULL;
@@ -7587,6 +7654,22 @@ $   _doserrno = 0;
     #endif
 
 $   return txWindow();
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+HWND txCreateExtraWindow (CREATESTRUCT createData)
+    {
+$1  if (_TX_TXWINDOW_FAILED()) return NULL;
+
+$   volatile HWND wnd = NULL;
+$   createData.hInstance = (HINSTANCE)(uintptr_t) &wnd;
+
+$   PostMessage (txWindow(), _TX_WM_CREATEWND, 0, (LPARAM) &createData) asserted;
+
+$   _txWaitFor (wnd, 5*_TX_TIMEOUT);
+
+$   return wnd;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -7628,7 +7711,7 @@ $   Win32::SetStretchBltMode (dc, HALFTONE)                 asserted;
 //}
 
 $   if (dc != txDC())
-        { $ return true; }
+        {$ return true; }
 
 //{ Set defaults for console  layer
 
@@ -7837,7 +7920,7 @@ $   int  isParentWaitable = _txIsParentWaitable (&parent);
 $   bool waitableParent   = !externTerm && isParentWaitable;
 
 $   if (canvas)
-        { $ txSleep (5*_txWindowUpdateInterval); }
+        {$ txSleep (5*_txWindowUpdateInterval); }
 
 $   if (_txConsole)
         {
@@ -7846,7 +7929,7 @@ $       if (console) EnableWindow (console, true);
         }
 
 $   if (_txMain && !externTerm && wnd != NULL)
-        { $ _txSetFinishedText (wnd); }
+        {$ _txSetFinishedText (wnd); }
 
 $   _flushall();
 
@@ -7856,7 +7939,7 @@ $   if (((canvas? _txMain : (_txConsole /*!!! && !waitableParent*/)) && !_txExit
         {
 $       if (wnd)
             {
-            if (isParentWaitable >= 0) { $ SetWindowPos (wnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW); }
+            if (isParentWaitable >= 0) {$ SetWindowPos (wnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW); }
 $           EnableWindow (wnd, true);
             }
 
@@ -7868,7 +7951,7 @@ $           paused = true;
         }
 
 $   if (txWindow())
-        { $ SendNotifyMessage (txWindow(), WM_DESTROY, 0, 0); }
+        {$ SendNotifyMessage (txWindow(), WM_DESTROY, 0, 0); }
 
 $   _txWaitFor (!txWindow(), 5*_TX_TIMEOUT);
 
@@ -7876,22 +7959,22 @@ $   txSpeak     (NULL);
 $   txPlayVideo (NULL);
 
 $   if (GetCurrentThreadId() != _txMainThreadId)
-        { $ SuspendThread (_txMainThread);    }
+        {$ SuspendThread (_txMainThread);    }
 $   if (GetCurrentThreadId() != _txCanvas_ThreadId)
-        { $ SuspendThread (_txCanvas_Thread); }
+        {$ SuspendThread (_txCanvas_Thread); }
 
 $   if (_txMainThread)
-        { $ CloseHandle (_txMainThread)    asserted; _txMainThread    = NULL; }
+        {$ CloseHandle (_txMainThread)    asserted; _txMainThread    = NULL; }
 $   if (_txCanvas_Thread)
-        { $ CloseHandle (_txCanvas_Thread) asserted; _txCanvas_Thread = NULL; }
+        {$ CloseHandle (_txCanvas_Thread) asserted; _txCanvas_Thread = NULL; }
 
 $   if (!txWindow())
-        { $ DeleteCriticalSection (&_txCanvas_LockBackBuf); CRITICAL_SECTION zero = {0, -1}; _txCanvas_LockBackBuf = zero; }
+        {$ DeleteCriticalSection (&_txCanvas_LockBackBuf); CRITICAL_SECTION zero = {0, -1}; _txCanvas_LockBackBuf = zero; }
 
 $   console = Win32::GetConsoleWindow();
 
 $   if (_txMain && _txConsole)
-        { $ _txConsole_Detach (waitableParent && !externTerm); }
+        {$ _txConsole_Detach (waitableParent && !externTerm); }
 
 $   bool parentKilled = false;
 $   if (/*!!! _txMain && canvas &&*/ waitableParent && /*!!!*/ paused && _txNOP (_TX_ALLOW_KILL_PARENT))
@@ -7982,25 +8065,25 @@ $   for (int i = 1; ; i++)
         {
 $       Sleep (_txWindowUpdateInterval);
 
-        if (!kbWait || (kbRedir && !canvas)) { $ break; }  // No need to run and hide
+        if (!kbWait || (kbRedir && !canvas)) {$ break; }  // No need to run and hide
 
-        if (!wine && _txGetInput() != EOF)   { $ break; }  // Somebody hit something.
+        if (!wine && _txGetInput() != EOF)   {$ break; }  // Somebody hit something.
 
-        if (canvas && !_txCanvas_ThreadId)   { $ break; }  // There was a window, and now there is not.
+        if (canvas && !_txCanvas_ThreadId)   {$ break; }  // There was a window, and now there is not.
 
-        if (!Win32::GetConsoleWindow())      { $ break; }  // Console was destroyed
+        if (!Win32::GetConsoleWindow())      {$ break; }  // Console was destroyed
 
         if (_TX_CALL (Win32::GhostWindowFromHungWindow, (canvas)))
-            { $ TX_ERROR ("Программа зависла и будет завершена."); break; }
+            {$ TX_ERROR ("Программа зависла и будет завершена."); break; }
 
         if (canvas && _TX_CALL (Win32::IsHungAppWindow, (canvas)))
-            { $ _txTrace (__FILE__, __LINE__, NULL, "WARNING: Программа-таки зависла и будет завершена."); break; }
+            {$ _txTrace (__FILE__, __LINE__, NULL, "WARNING: Программа-таки зависла и будет завершена."); break; }
 
         if (canvas && !SendMessageTimeout (canvas, WM_NULL, 0,0, SMTO_BLOCK | SMTO_ABORTIFHUNG, _TX_TIMEOUT, NULL))
-            { $ _txTrace (__FILE__, __LINE__, NULL, "WARNING: Программа не отвечает и будет завершена.");  break; }
+            {$ _txTrace (__FILE__, __LINE__, NULL, "WARNING: Программа не отвечает и будет завершена.");  break; }
 
         if (!wine && !(i % 100500))
-            { $ fprintf (stderr, "\r" "[Так нажмите же какую-нибудь клавишу для моего завершения]"); }
+            {$ fprintf (stderr, "\r" "[Так нажмите же какую-нибудь клавишу для моего завершения]"); }
         }
 
 $   while (!wine && _kbhit()) (void)_getch();
@@ -8069,12 +8152,12 @@ $           *gp++ = 0;
 $           if (_stricmp (p, parent) != 0) { continue; }
 
 $           if (info) if (_stricmp (gp, info->szExeFile) == 0)  // Was &&, but MSVC /analyze is so paranoid
-                { $ return islower ((unsigned char) *gp)? +1 : -1; }
+                {$ return islower ((unsigned char) *gp)? +1 : -1; }
             }
         else
             {
 $           if (_stricmp (p, parent) == 0)
-                { $ return islower ((unsigned char)  *p)? +1 : -1; }
+                {$ return islower ((unsigned char)  *p)? +1 : -1; }
             }
         }
 
@@ -8379,7 +8462,7 @@ $       inDll = (dosHdr->e_magic  == IMAGE_DOS_SIGNATURE &&
                 (ntHdr->FileHeader.Characteristics & IMAGE_FILE_DLL) != 0);
 
 $       if (In (std::nomeow, (BYTE*)(uintptr_t)_txInDll, mod.modBaseAddr, mod.modBaseAddr + mod.modBaseSize))
-            { $ break; }
+            {$ break; }
         }
 
 $   CloseHandle (sshot);
@@ -8450,7 +8533,7 @@ $   SetClassLong_ (wnd, GCL_HICON_,   (DWORD)(uintptr_t) (icon32? icon32 : _txCr
 $   SetClassLong_ (wnd, GCL_HICONSM_, (DWORD)(uintptr_t) (icon16? icon16 : _txCreateTXIcon (16)));
 $   SetClassLong_ (wnd, GCL_HCURSOR_, (DWORD)(uintptr_t) (cursor? cursor : LoadCursor (NULL, IDC_ARROW)));
 
-    if (menu) { $ SetMenu (wnd, menu); DrawMenuBar (wnd); }
+    if (menu) {$ SetMenu (wnd, menu); DrawMenuBar (wnd); }
 
 $   Win32::GdiSetBatchLimit (1);
 
@@ -8505,43 +8588,27 @@ $   return true;
 
 //-----------------------------------------------------------------------------------------------------------------
 
-HWND _txCanvas_CreateWindow (SIZE* size)
+HWND _txCanvas_CreateWindow (SIZE* sizePtr)
     {
-$1  if (_TX_ARGUMENT_FAILED (size)) return NULL;
+$1  if (_TX_ARGUMENT_FAILED (sizePtr)) return NULL;
 
-$   static char className[_TX_BUFSIZE] = "";
-$   _tx_snprintf_s (className, sizeof (className) - 1, "/*---[TXLib]-------------------------- "
-                                                       _TX_VERSION "  " __FILE__ "  WndClass %08X "
-                                                       "---------------------------[TXLib]---*/", (int) GetTickCount());
-$   WNDCLASSEX wc    = { sizeof (wc) };
-$   wc.style         = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-$   wc.lpfnWndProc   = _txCanvas_WndProc;
-$   wc.hCursor       = LoadCursor (NULL, IDC_ARROW);
-$   wc.hbrBackground = (HBRUSH) Win32::GetStockObject (BLACK_BRUSH);
-$   wc.lpszClassName = className;
+$   bool centered = false;
+    if (sizePtr->cx < 0 && sizePtr->cy < 0) {$ centered = true; }
 
-$   ATOM wndclass = RegisterClassEx (&wc);
-$   if (!wndclass) return TX_DEBUG_ERROR ("RegisterClass (\"%s\") failed" _ className), (HWND) NULL;
+$   SIZE screen = { GetSystemMetrics (SM_CXSCREEN), GetSystemMetrics (SM_CYSCREEN) };
+$   RECT rect   = { 0, 0, abs (sizePtr->cx), abs (sizePtr->cy) }; AdjustWindowRect (&rect, _txWindowStyle, false);
+$   SIZE size   = { rect.right - rect.left, rect.bottom - rect.top };
 
-$   int centered = false;
-$   if (size->cx < 0 && size->cy < 0) { size->cx *= -1; size->cy *= -1; centered = true; }
+$   ATOM wndClass = txRegisterClass ("MAIN", _txCanvas_WndProc, CS_HREDRAW | CS_VREDRAW | CS_OWNDC, BLACK_BRUSH, 0);
+$   if (!wndClass) return (HWND) NULL;
 
-$   SIZE scr = { GetSystemMetrics (SM_CXSCREEN), GetSystemMetrics (SM_CYSCREEN) };
-$   RECT r   = { 0, 0, size->cx, size->cy }; AdjustWindowRect (&r, _txWindowStyle, false);
-$   SIZE sz  = { r.right - r.left, r.bottom - r.top };
-
-$   HWND wnd = CreateWindowEx (WS_EX_APPWINDOW, className, txGetModuleFileName (false), _txWindowStyle | WS_CLIPCHILDREN,
-                               centered? scr.cx/2 - sz.cx/2 : CW_USEDEFAULT,
-                               centered? scr.cy/2 - sz.cy/2 : CW_USEDEFAULT,
-                               sz.cx, sz.cy, NULL, NULL, NULL, NULL);
-
-$   if (!wnd || !txWindow()) return TX_DEBUG_ERROR ("Cannot create canvas: CreateWindowEx (\"%s\") failed" _ className), (HWND) NULL;
-$   HMENU menu = GetSystemMenu (txWindow(), false);
-$   if (!menu) return txWindow();
-
-$   AppendMenu (menu, MF_SEPARATOR, 0, NULL)                       asserted;
-$   AppendMenu (menu, MF_STRING, _TX_IDM_CONSOLE, "Show &Console") asserted;
-$   AppendMenu (menu, MF_STRING, _TX_IDM_ABOUT,   "&About...")     asserted;
+$   HWND wnd = CreateWindowEx (WS_EX_APPWINDOW, (const char*) wndClass, txGetModuleFileName (false),
+                               _txWindowStyle | WS_CLIPCHILDREN,
+                               centered? screen.cx/2 - size.cx/2 : CW_USEDEFAULT,
+                               centered? screen.cy/2 - size.cy/2 : CW_USEDEFAULT,
+                               size.cx, size.cy, NULL, NULL, NULL, NULL);
+$   if (!wnd || !txWindow())
+        {$ return TX_DEBUG_ERROR ("Cannot create canvas: CreateWindowEx() failed"), (HWND) NULL; }
 
 $   HWND console = Win32::GetConsoleWindow();
 
@@ -8549,11 +8616,43 @@ $   DWORD proc = 0;
 $   GetWindowThreadProcessId (console, &proc);
 
 $   if (console && (proc == GetCurrentProcessId() || _txIsParentWaitable()))
-        { $ ShowWindow (console, _txConsoleMode); }
+        {$ ShowWindow (console, _txConsoleMode); }
+
+$   HMENU menu = GetSystemMenu (txWindow(), false);
+    if (!menu) {$ return txWindow(); }
+
+$   AppendMenu (menu, MF_SEPARATOR, 0, NULL)                       asserted;
+$   AppendMenu (menu, MF_STRING, _TX_IDM_CONSOLE, "Show &Console") asserted;
+$   AppendMenu (menu, MF_STRING, _TX_IDM_ABOUT,   "&About...")     asserted;
 
 $   CheckMenuItem (menu, _TX_IDM_CONSOLE, (console? (IsWindowVisible (console)? MF_CHECKED : 0) : MF_DISABLED));
 
 $   return txWindow();
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+ATOM txRegisterClass (const char classId[], WNDPROC wndProc, unsigned style, int backBrush, int wndExtra)
+    {
+$   static char name[_TX_BUFSIZE] = "";
+$   _tx_snprintf_s (name, sizeof (name) - 1, "/*---[TXLib]-[%s]------------ "
+                                             _TX_VERSION "  " __FILE__ "  WndClass %08lX "
+                                             "-------------[%s]-[TXLib]---*/",
+                                             classId, GetTickCount(), classId);
+$   WNDCLASS wc      = { sizeof (wc) };
+
+$   wc.lpszClassName = name;
+$   wc.lpfnWndProc   = wndProc;
+$   wc.style         = style;
+$   wc.cbWndExtra    = wndExtra * sizeof (long);
+
+$   wc.hCursor       = LoadCursor (NULL, IDC_ARROW);
+$   wc.hbrBackground = (HBRUSH) Win32::GetStockObject (backBrush);
+
+$   ATOM atom = RegisterClass (&wc);
+    if (!atom) {$ TX_DEBUG_ERROR ("RegisterClass (\"%s\") failed" _ name); return NULL; }
+
+$   return atom;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -8578,7 +8677,7 @@ $   _txCanvas_RefreshLock = count;
 $   HWND wnd = txWindow();
 
 $   if ((_txCanvas_RefreshLock <= 0 || oldCount <= 0) && wnd)
-        { $ RedrawWindow (wnd, NULL, NULL, RDW_INVALIDATE | RDW_INTERNALPAINT | RDW_UPDATENOW); }
+        {$ RedrawWindow (wnd, NULL, NULL, RDW_INVALIDATE | RDW_INTERNALPAINT | RDW_UPDATENOW); }
 
 $   return oldCount;
     }
@@ -8671,20 +8770,20 @@ $       if (res) return res;
 
     switch (msg)
         {
-        case WM_CREATE:       $     _txCanvas_OnCREATE     (wnd);                return 0;
+        case WM_CREATE:         $     _txCanvas_OnCREATE     (wnd);                return 0;
 
-        case WM_CLOSE:        $ if (_txCanvas_OnCLOSE      (wnd))  break;   else return 0;
-        case WM_DESTROY:      $     _txCanvas_OnDESTROY    (wnd);                return 0;
+        case WM_CLOSE:          $ if (_txCanvas_OnCLOSE      (wnd))  break;   else return 0;
+        case WM_DESTROY:        $     _txCanvas_OnDESTROY    (wnd);                return 0;
 
-        case WM_ERASEBKGND:   $ if (!bkErased) { bkErased = true;  break; } else return 1;
-        case WM_SIZE:         $                  bkErased = false; break;
+        case WM_ERASEBKGND:     $ if (!bkErased) { bkErased = true;  break; } else return 1;
+        case WM_SIZE:           $                  bkErased = false; break;
 
-        case WM_PAINT:        $     _txCanvas_OnPAINT      (wnd);                return 0;
+        case WM_PAINT:          $     _txCanvas_OnPAINT      (wnd);                return 0;
 
-        case WM_TIMER:        $     _txCanvas_OnTIMER      (wnd, wpar);          return 0;
+        case WM_TIMER:          $     _txCanvas_OnTIMER      (wnd, wpar);          return 0;
 
-        case WM_KEYDOWN:      $     _txCanvas_OnKEYDOWN    (wnd, wpar, lpar);    return 0;
-        case WM_CHAR:         $     _txCanvas_OnCHAR       (wnd, wpar, lpar);    return 0;
+        case WM_KEYDOWN:        $     _txCanvas_OnKEYDOWN    (wnd, wpar, lpar);    return 0;
+        case WM_CHAR:           $     _txCanvas_OnCHAR       (wnd, wpar, lpar);    return 0;
 
         case WM_LBUTTONUP:
         case WM_LBUTTONDOWN:
@@ -8692,17 +8791,20 @@ $       if (res) return res;
         case WM_RBUTTONDOWN:
         case WM_MBUTTONUP:
         case WM_MBUTTONDOWN:
-        case WM_MOUSEMOVE:    $     _txCanvas_OnMOUSEMOVE  (wnd, wpar, lpar);    return 0;
+        case WM_MOUSEMOVE:      $     _txCanvas_OnMOUSEMOVE  (wnd, wpar, lpar);    return 0;
 
-        case WM_MOUSELEAVE:   $     _txCanvas_OnMOUSELEAVE (wnd);                return 0;
+        case WM_MOUSELEAVE:     $     _txCanvas_OnMOUSELEAVE (wnd);                return 0;
+
+        case _TX_WM_CREATEWND:  $     _txCanvas_OnCREATEWND  (wnd, wpar, lpar);    return 0;
+        case _TX_WM_DESTROYWND: $     _txCanvas_OnDESTROYWND (wnd, wpar, lpar);    return 0;
 
         default: break;
         }
 
     if (msg == WM_SYSCOMMAND) switch (wpar)
         {
-        case _TX_IDM_ABOUT:   $     _txCanvas_OnCmdABOUT   (wnd, wpar);          return 0;
-        case _TX_IDM_CONSOLE: $     _txCanvas_OnCmdCONSOLE (wnd, wpar);          return 0;
+        case _TX_IDM_ABOUT:   $       _txCanvas_OnCmdABOUT   (wnd, wpar);          return 0;
+        case _TX_IDM_CONSOLE: $       _txCanvas_OnCmdCONSOLE (wnd, wpar);          return 0;
 
         default: break;
         }
@@ -8719,7 +8821,8 @@ $1  if (_TX_ARGUMENT_FAILED (wnd)) return false;
 $   _txCanvas_BackBuf[0] = _txBuffer_Create (wnd, NULL, NULL, &_txCanvas_Pixels); assert (_txCanvas_BackBuf[0]);
 $   _txCanvas_BackBuf[1] = _txBuffer_Create (wnd, NULL, NULL, NULL);              assert (_txCanvas_BackBuf[1]);
 
-$   (SetTimer (wnd, _txCanvas_RefreshTimer, _txWindowUpdateInterval, NULL) || (_txCanvas_RefreshTimer = 0)) asserted;
+$   if (!SetTimer (wnd, _txCanvas_RefreshTimer, _txWindowUpdateInterval, NULL)) _txCanvas_RefreshTimer = 0;
+$   assert (_txCanvas_RefreshTimer);
 
 $   _txCanvas_UserDCs = new ::std::vector <HDC>;
 
@@ -8946,6 +9049,34 @@ $   return true;
 
 //-----------------------------------------------------------------------------------------------------------------
 
+bool _txCanvas_OnCREATEWND (HWND, WPARAM, LPARAM lpar)
+    {
+$1  if (_TX_ARGUMENT_FAILED (lpar)) return false;
+
+$   const CREATESTRUCT* create = (CREATESTRUCT*) lpar;
+
+$   HWND wnd = CreateWindowEx (create->dwExStyle, create->lpszClass, create->lpszName, create->style,
+                               create->x, create->y, create->cx, create->cy,
+                               create->hwndParent, create->hMenu, NULL, create->lpCreateParams);
+
+$   *(HWND*) create->hInstance = wnd;
+
+$   return true;
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+bool _txCanvas_OnDESTROYWND (HWND, WPARAM, LPARAM lpar)
+    {
+$1  if (_TX_ARGUMENT_FAILED (lpar)) return false;
+
+$   DestroyWindow ((HWND) lpar);
+
+$   return 0;
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
 bool _txCanvas_OnCmdCONSOLE (HWND wnd, WPARAM cmd)
     {
 $1  if (_TX_ARGUMENT_FAILED (wnd)) return false;
@@ -9083,7 +9214,7 @@ $   if (done) return console;
     // Впечатлительным лучше сюда не смотреть.
 
 $   if (!wine)
-        { $ _txConsole_SetUnicodeFont(); }
+        {$ _txConsole_SetUnicodeFont(); }
 
 #ifndef _CONSOLE
 
@@ -9223,7 +9354,7 @@ $       info.FontFamily = 0x36;                                                 
 $       if (!*info.FaceName) info.dwFontSize.Y = (SHORT) (info.dwFontSize.Y + 2);  // Terminal font is too small
 
 $       if (wcsncmp (info.FaceName, L"Consolas", SIZEARR (info.FaceName)) != 0)    // Consolas is allowed too
-            { $ wcsncpy_s (info.FaceName, SIZEARR (info.FaceName), L"Lucida Console", SIZEARR (info.FaceName)); }
+            {$ wcsncpy_s (info.FaceName, SIZEARR (info.FaceName), L"Lucida Console", SIZEARR (info.FaceName)); }
 
 $       return !!Win32::SetCurrentConsoleFontEx (out, false, &info);
         }
@@ -9256,7 +9387,7 @@ $       (void) _unlink (link);
 $       _txCreateShortcut (link, comspec, "/c exit", NULL, NULL, SW_SHOWMINNOACTIVE, NULL, 0, uniSize) asserted;
 
 $       ok = (Win32::ShellExecuteA (NULL, NULL, link, NULL, NULL, SW_SHOWMINNOACTIVE) > (void*)32);  // Sic!
-        if (ok) { $ _txWaitFor (FindWindow (NULL, "~txLink"), _TX_TIMEOUT); }
+        if (ok) {$ _txWaitFor (FindWindow (NULL, "~txLink"), _TX_TIMEOUT); }
 
 $       (void) _unlink (link);
 
@@ -9269,7 +9400,7 @@ $   Win32::CONSOLE_FONT_INFO cur = {0};
 $   _TX_CALL (Win32::GetCurrentConsoleFont, (out, false, &cur));
 
 $   ok &= (cur.nFont >= uniFont);
-    if (!ok) { $ ok &= _TX_CALL (Win32::SetConsoleFont, (out, uniFont)); }
+    if (!ok) {$ ok &= _TX_CALL (Win32::SetConsoleFont, (out, uniFont)); }
 
 $   HWND console = Win32::GetConsoleWindow();
 $   InvalidateRect (console, NULL, false);
@@ -9515,7 +9646,7 @@ $       return;
 
     txOutputDebugPrintf ("%s - WARNING: %s (%d, %d) called\n", _TX_VERSION, __func__, sig, fpe);
 
-    #define GET_DESCR_(str, code, descr)  case (code): { $ (str) = " " #code ": " descr; break; }
+    #define GET_DESCR_(str, code, descr)  case (code): {$ (str) = " " #code ": " descr; break; }
 
 $   const char* sSig = "Неизвестный тип сигнала";
 
@@ -9579,10 +9710,10 @@ void _txOnTerminate()
     // From: http://github.com/gcc-mirror/gcc/blob/master/libstdc%2B%2B-v3/libsupc%2B%2B/vterminate.cc
 
 $1  static int terminating = 0;
-    if (terminating++) { $ _TX_UNEXPECTED ("\a" "std::terminate() вызвана рекурсивно."); return; }
+    if (terminating++) {$ _TX_UNEXPECTED ("\a" "std::terminate() вызвана рекурсивно."); return; }
 
 $   if (!*_txDumpSE)
-        { $ _txDumpExceptionCPP (_txDumpSE + 1, sizeof (_txDumpSE) - 2); }
+        {$ _txDumpExceptionCPP (_txDumpSE + 1, sizeof (_txDumpSE) - 2); }
 
 $   _TX_UNEXPECTED ("\t\a"
                     "std::terminate(): Неперехваченное исключение в функции main() или в деструкторе, "
@@ -9601,7 +9732,7 @@ void _txOnUnexpected()
     txOutputDebugPrintf ("%s - WARNING: %s() called\n", _TX_VERSION, __func__);
 
 $1  if (!*_txDumpSE)
-        { $ _txDumpExceptionCPP (_txDumpSE + 1, sizeof (_txDumpSE) - 2); }
+        {$ _txDumpExceptionCPP (_txDumpSE + 1, sizeof (_txDumpSE) - 2); }
 
 $   _TX_UNEXPECTED ("std::unexpected(): Необработанное исключение.\n\n"
                     "Проверьте свои catch-блоки. Перехватите catch (...). Если вы (зря) используете "
@@ -9621,7 +9752,7 @@ $1  const char* sType = "Неизвестный тип исключения";
 
     #if !defined (__CYGWIN__)
 
-    #define GET_DESCR_(code, descr)  case (code): { $ sType = "(" #code "): " descr; break; }
+    #define GET_DESCR_(code, descr)  case (code): {$ sType = "(" #code "): " descr; break; }
 
 $   switch (exc->type)
         {
@@ -9668,7 +9799,7 @@ void _txOnSecurityErrorAnsi (const char* msg, void* ptr, int code)
     txOutputDebugPrintf ("%s - WARNING: %s (%s, 0x%p, %d) called\n", _TX_VERSION, __func__, msg, ptr, code);
 
 $1  if (code)
-        { $ errno = code; }
+        {$ errno = code; }
 
 $   _TX_UNEXPECTED ("\a"
                     "Ошибка переполнения буфера %d: %s в %.20s (0x%p). Ставьте ассерты!\n\n"
@@ -9759,7 +9890,7 @@ $   while (InterlockedExchange (&running, 1)) Sleep (0);
 
 $   int nErrors = _RTC_NumErrors();
 $   int* errors = NULL;
-$   try { errors = (int*) _alloca (nErrors * sizeof (*errors)); } catch (...) { $ }
+$   try { errors = (int*) _alloca (nErrors * sizeof (*errors)); } catch (...) { $; }
 
 $   int err = 0;
 $   for (int i = 0; i < nErrors; i++) *(errors? &errors[i] : &err) = _RTC_SetErrorType ((_RTC_ErrorNumber) i, _RTC_ERRTYPE_IGNORE);
@@ -9967,7 +10098,7 @@ $       longjmp (_txDumpExceptionObjJmp, 1);
     tx_fpreset();
 
     #if defined (_MSC_VER)
-    if (code == EXCEPTION_STACK_OVERFLOW) { $ _resetstkoflw(); }
+    if (code == EXCEPTION_STACK_OVERFLOW) {$ _resetstkoflw(); }
     #endif
 
 $   bool primaryException = !(func && exc) || !(unhExc && *_txDumpSE || _TX_MSC__CXX_DETECT_RETHROW (exc->ExceptionRecord));
@@ -10031,7 +10162,7 @@ $   char* s = what;
 $   const char* sCode  = NULL;
 $   const char* sDescr = NULL;
 
-    #define GET_DESCR_(code, descr)  case ((unsigned long) code): { $ sCode = #code; sDescr = descr; break; }
+    #define GET_DESCR_(code, descr)  case ((unsigned long) code): {$ sCode = #code; sDescr = descr; break; }
 
 $   switch (code)
         {
@@ -10108,7 +10239,7 @@ $   PRINT_ ((addr? " 0x%p" : " NULL")_ addr);
 $   Win32::SYMBOL_INFO*     sym  = NULL;
 $   Win32::IMAGEHLP_LINE64* line = NULL;
 
-    if (addr) { $ _txSymGetFromAddr (addr, &sym, &line); }
+    if (addr) {$ _txSymGetFromAddr (addr, &sym, &line); }
 
 $   if (sym  &&                   *sym->Name)      PRINT_ (" в функции %s()" _ sym->Name);
 $   if (line && line->FileName && *line->FileName) PRINT_ (" в файле %s на строке %u" _ line->FileName _ line->LineNumber);
@@ -10134,8 +10265,8 @@ $           switch (op = (unsigned long) info[0])
 
 $       PRINT_ (sOp _ op);
 
-$       if (params >= 2) { $ PRINT_ ((object? " по адресу 0x%p" : " по адресу NULL")_ object); }
-        else             { $ PRINT_ (" (адрес не указан)"); }
+$       if (params >= 2) {$ PRINT_ ((object? " по адресу 0x%p" : " по адресу NULL")_ object); }
+        else             {$ PRINT_ (" (адрес не указан)"); }
 
 $       if (code == EXCEPTION_IN_PAGE_ERROR)
             {
@@ -10153,7 +10284,7 @@ $               s += FormatMessage (FORMAT_MESSAGE_FROM_HMODULE | FORMAT_MESSAGE
 $               PRINT_ (")");
                 }
             else
-                { $ PRINT_ (" (не указана)"); }
+                {$ PRINT_ (" (не указана)"); }
             }
         }
 
@@ -10168,22 +10299,22 @@ $       int ok = GetModuleFileName (module, sModule, sizeof (sModule));
 $       char* ext = (ok? strrchr (sModule, '.') : NULL);
 $       if (ext) _strlwr_s (ext, sizeof (sModule) - 1 - (ext - sModule));
 
-        if (ok) { $ PRINT_ (" в модуле %s" _  sModule); }
-        else    { $ PRINT_ (" в модуле 0x%p" _ module); }
+        if (ok) {$ PRINT_ (" в модуле %s" _  sModule); }
+        else    {$ PRINT_ (" в модуле 0x%p" _ module); }
         }
 
 $   PRINT_ (".");
 
 $   if (_txSENumber >= _TX_EXCEPTIONS_LIMIT+0)
-        { $ PRINT_ (" Дополнительно, превышен лимит исключений _TX_EXCEPTIONS_LIMIT (%ld)."        _ _TX_EXCEPTIONS_LIMIT+0); }
+        {$ PRINT_ (" Дополнительно, превышен лимит исключений _TX_EXCEPTIONS_LIMIT (%ld)."        _ _TX_EXCEPTIONS_LIMIT+0); }
 
 $   if (_txSEFatalNumber >= _TX_FATAL_EXCEPTIONS_LIMIT+0)
-        { $ PRINT_ (" Также превышен лимит фатальных исключений _TX_FATAL_EXCEPTIONS_LIMIT (%ld)." _ _TX_FATAL_EXCEPTIONS_LIMIT+0); }
+        {$ PRINT_ (" Также превышен лимит фатальных исключений _TX_FATAL_EXCEPTIONS_LIMIT (%ld)." _ _TX_FATAL_EXCEPTIONS_LIMIT+0); }
 
 $   PRINT_ (" Спасибо %s(), что сообщил. Люблю его <3" _ func);
 
 $   if (exc->ExceptionFlags & EXCEPTION_NONCONTINUABLE)
-        { $ PRINT_ ("\n\n" "Ой, всё (EXCEPTION_NONCONTINUABLE)."); }
+        {$ PRINT_ ("\n\n" "Ой, всё (EXCEPTION_NONCONTINUABLE)."); }
 
 $   if (exc->ExceptionRecord)
         {
@@ -10370,15 +10501,15 @@ $   const char* name = (!err && typeName)? typeName : mangledName;
 $   if (name &&
        (strcmp (name, "class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >")           == 0 ||
         strcmp (name, "std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >")                   == 0))
-        { $ name = "std::string"; }
+        {$ name = "std::string"; }
 
 $   if (name &&
        (strcmp (name, "class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > *")         == 0 ||
         strcmp (name, "class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > * __ptr64") == 0 ||
         strcmp (name, "std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*")                  == 0))
-        { $ name = "std::string*"; }
+        {$ name = "std::string*"; }
 
-    if (name) { $ PRINT_ (" %s" _ name); }
+    if (name) {$ PRINT_ (" %s" _ name); }
 
     #if defined (_GCC_VER)
 $   free (typeName);
@@ -10390,12 +10521,12 @@ $   if (mangledName)
         if (setjmp (_txDumpExceptionObjJmp) == 0)
             {
             #define PRINT_VAL_(fmt, typ, ...)                                                                            \
-                else if (*type == typeid (      typ       )) { $ PRINT_ (" = " #fmt _ (* (typ* ) object) __VA_ARGS__); } \
-                else if (*type == typeid (const typ       )) { $ PRINT_ (" = " #fmt _ (* (typ* ) object) __VA_ARGS__); } \
-                else if (*type == typeid (      typ*      )) { $ PRINT_ (" = " #fmt _ (**(typ**) object) __VA_ARGS__); } \
-                else if (*type == typeid (const typ*      )) { $ PRINT_ (" = " #fmt _ (**(typ**) object) __VA_ARGS__); } \
-                else if (*type == typeid (      typ* const)) { $ PRINT_ (" = " #fmt _ (**(typ**) object) __VA_ARGS__); } \
-                else if (*type == typeid (const typ* const)) { $ PRINT_ (" = " #fmt _ (**(typ**) object) __VA_ARGS__); }
+                else if (*type == typeid (      typ       )) {$ PRINT_ (" = " #fmt _ (* (typ* ) object) __VA_ARGS__); } \
+                else if (*type == typeid (const typ       )) {$ PRINT_ (" = " #fmt _ (* (typ* ) object) __VA_ARGS__); } \
+                else if (*type == typeid (      typ*      )) {$ PRINT_ (" = " #fmt _ (**(typ**) object) __VA_ARGS__); } \
+                else if (*type == typeid (const typ*      )) {$ PRINT_ (" = " #fmt _ (**(typ**) object) __VA_ARGS__); } \
+                else if (*type == typeid (      typ* const)) {$ PRINT_ (" = " #fmt _ (**(typ**) object) __VA_ARGS__); } \
+                else if (*type == typeid (const typ* const)) {$ PRINT_ (" = " #fmt _ (**(typ**) object) __VA_ARGS__); }
 
             if (0) ;
             PRINT_VAL_ ("%s", char*)  PRINT_VAL_ ('%c', unsigned char)   PRINT_VAL_ (%s,   bool, ? "true" : "false")
@@ -10409,10 +10540,10 @@ $   if (mangledName)
 $               PRINT_ (", what(): \"%s\"" _ e->what());
                 }
             else
-                { $ err = 1; }
+                {$ err = 1; }
             }
         else
-            { $ err = 2; }
+            {$ err = 2; }
         }
 
 $   *(unsigned long long*) _txDumpExceptionObjJmp = 0;
@@ -10433,7 +10564,7 @@ $       err = 0;
         }
 
 $   if (err)
-        { $ PRINT_ (" = ???"); }
+        {$ PRINT_ (" = ???"); }
 
 $   PRINT_ ((object? "%sего адрес 0x%p." : "%sего адрес NULL.")_ ((typeName || mangledName)? ", " : "")_ object);
 
@@ -10458,7 +10589,7 @@ $1  _txLocCur.trace = 0;
 $   const int maxFrames = 62;  // MS says: < 63
 $   static char trace [(MAX_PATH + 1024+1) * maxFrames] = "";
 
-    if (framesToSkip == -1) { $ return trace; }
+    if (framesToSkip == -1) {$ return trace; }
 
 $   static void* capture [maxFrames] = {};
 $   int frames = _txStackWalk (framesToSkip + !context, SIZEARR (capture), capture, NULL, context, thread);
@@ -10478,8 +10609,8 @@ $       const char*             module = NULL;
 $       const char*             source = NULL;
 $       bool                    inTX   = false;
 
-        if (addr)                { $ inTX = _txSymGetFromAddr ((char*) addr - 1, &sym, &line, &module);          }
-        if (readSource && !inTX) { $        _txSymGetFromAddr ((void*) 1,        NULL, NULL,  NULL, &source, 2); }
+        if (addr)                {$ inTX = _txSymGetFromAddr ((char*) addr - 1, &sym, &line, &module);          }
+        if (readSource && !inTX) {$        _txSymGetFromAddr ((void*) 1,        NULL, NULL,  NULL, &source, 2); }
 
 $       int nl = 0;
 $       while (s > trace && s[-1] == '\n') { s--; nl++; }
@@ -10487,24 +10618,24 @@ $       while (s > trace && s[-1] == '\n') { s--; nl++; }
         #if !defined (_TX_FULL_STACKTRACE)
 
 $       if (! ((sym && *sym->Name) || (line && ((line->FileName && *line->FileName) || line->LineNumber))))
-            { $ continue; }
+            {$ continue; }
 
         #endif
 
 $       PRINT_ ("%s#%2d 0x%p" _ ((n)? ((source || nl)? "\n\n" : "\n") : "")_ i _ addr);
 $       n++;
 
-        if ((uintptr_t) addr ==  0)         { $ PRINT_ (" [Неверный фрейм]");        break; }
-        if ((uintptr_t) addr == -1)         { $ PRINT_ (" [Странный фрейм]");        break; }
-        if ((uintptr_t) addr == 0xBAADF00D) { $ PRINT_ (" [Мусор от LocalAlloc()]"); break; }
+        if ((uintptr_t) addr ==  0)         {$ PRINT_ (" [Неверный фрейм]");        break; }
+        if ((uintptr_t) addr == -1)         {$ PRINT_ (" [Странный фрейм]");        break; }
+        if ((uintptr_t) addr == 0xBAADF00D) {$ PRINT_ (" [Мусор от LocalAlloc()]"); break; }
 
-        if (module)                         { $ PRINT_ (" in %s%s"     _ module _ ((sym && *sym->Name)? ": " : "")); }
-        if (sym  && *sym->Name)             { $ PRINT_ ("%s()"         _ sym->Name);                                 }
-        if (line && line->FileName)         { $ PRINT_ (" at %s"       _ line->FileName);                            }
-        if (line && line->LineNumber)       { $ PRINT_ (" (%u)"        _ line->LineNumber);                          }
-        if (source)                         { $ PRINT_ (":\n\n" "%s\n" _ source);                                    }
+        if (module)                         {$ PRINT_ (" in %s%s"     _ module _ ((sym && *sym->Name)? ": " : "")); }
+        if (sym  && *sym->Name)             {$ PRINT_ ("%s()"         _ sym->Name);                                 }
+        if (line && line->FileName)         {$ PRINT_ (" at %s"       _ line->FileName);                            }
+        if (line && line->LineNumber)       {$ PRINT_ (" (%u)"        _ line->LineNumber);                          }
+        if (source)                         {$ PRINT_ (":\n\n" "%s\n" _ source);                                    }
 
-        if (sym && strcmp (sym->Name , "main") == 0) { $ break; }
+        if (sym && strcmp (sym->Name , "main") == 0) {$ break; }
         }
 
     #if defined (_MSC_VER)
@@ -10569,7 +10700,7 @@ $       Win32::WOW64_CONTEXT wow64ctx = {};
 $       wow64ctx.ContextFlags |= WOW64_CONTEXT_FULL;
 
 $       if (!Win32::Wow64GetThreadContext (thread, &wow64ctx))  // In WINE, after EXIT_PROCESS_DEBUG_EVENT
-            { $ return 0; }
+            {$ return 0; }
 
 $       cpu = IMAGE_FILE_MACHINE_I386;
 
@@ -10618,12 +10749,12 @@ $       DWORD64 prev = frame.AddrStack.Offset;
 $           break;
             }
 
-        if (n < 0) { $ continue; }
+        if (n < 0) {$ continue; }
 
 $       void* addr = (void*) frame.AddrPC.Offset;
 
-        if (frame.AddrFrame.Offset == 0)   { $ addr = 0;          }  // Bad frame
-        if (frame.AddrStack.Offset < prev) { $ addr = (void*) -1; }  // Strange frame
+        if (frame.AddrFrame.Offset == 0)   {$ addr = 0;          }  // Bad frame
+        if (frame.AddrStack.Offset < prev) {$ addr = (void*) -1; }  // Strange frame
 
 $       assert (0 <= n && n < (int) szCapture);
 
@@ -10689,14 +10820,14 @@ $       memset (sMod, 0, sizeof (sMod));
 
 $       SetLastError (0);
 
-        mod = 0;  { $ mod = _TX_CALL (MinGW::SymGetModuleBase64, (process, (uintptr_t) addr)); if (mod) (void) RES_(m); }
-        if (!mod) { $ mod = _TX_CALL (Win32::SymGetModuleBase64, (process, (uintptr_t) addr)); if (mod) (void) RES_(M); }
-        if (!mod) { $ DBG_("SymGetModuleBase64() failed"); }
+        mod = 0;  {$ mod = _TX_CALL (MinGW::SymGetModuleBase64, (process, (uintptr_t) addr)); if (mod) (void) RES_(m); }
+        if (!mod) {$ mod = _TX_CALL (Win32::SymGetModuleBase64, (process, (uintptr_t) addr)); if (mod) (void) RES_(M); }
+        if (!mod) {$ DBG_("SymGetModuleBase64() failed"); }
 
 $       GetModuleFileName ((HMODULE)(ptrdiff_t) mod, sMod, MAX_PATH);
 
 $       char* ext = strrchr (sMod, '.');
-        if (ext) { $ _strlwr_s (ext, sizeof (sMod) - (ext-sMod)); }
+        if (ext) {$ _strlwr_s (ext, sizeof (sMod) - (ext-sMod)); }
 
 $       *module = sMod;
 $       done = true;
@@ -10718,7 +10849,7 @@ $       (_TX_CALL (MinGW::SymFromAddr, (process, (uintptr_t) addr, &ofs, sym)) &
         (_TX_CALL (Win32::SymFromAddr, (process, (uintptr_t) addr, &ofs, sym)) && RES_(Y)) ||
             DBG_("SymFromAddr (0x%p) failed", addr);
 
-        if (strcmp (sym->Name, "??") == 0) { $ *sym->Name = 0; }
+        if (strcmp (sym->Name, "??") == 0) {$ *sym->Name = 0; }
 
 $       *symbol = sym;
 $       done = true;
@@ -10754,10 +10885,10 @@ $           _txReadSource (buf, sizeof (buf) - 1, line64.FileName,
 $           *source = buf;
             }
 
-        if (!*source || !**source) { $ *source = NULL; }
+        if (!*source || !**source) {$ *source = NULL; }
 
-        if (*source) { $ (void) RES_(S); }
-        else         { $ DBG_("_txReadSource (\"%s\") failed", line64.FileName); }
+        if (*source) {$ (void) RES_(S); }
+        else         {$ DBG_("_txReadSource (\"%s\") failed", line64.FileName); }
 
 $       done = true;
         }
@@ -10807,19 +10938,19 @@ $1  _txLocCur.trace = 0;
 
 $   assert (buf);
 
-    if (!file || !*file) { $ return 0; }
+    if (!file || !*file) {$ return 0; }
 
-    if (linStart < 1) { $ linStart = 1;       }
-    if (linEnd == -1) { $ linEnd   = INT_MAX; }
+    if (linStart < 1) {$ linStart = 1;       }
+    if (linEnd == -1) {$ linEnd   = INT_MAX; }
 
 $   FILE* f = NULL;
 $   fopen_s (&f, file, "r");
-    if (!f) { $ return 0; }
+    if (!f) {$ return 0; }
 
 $   int n = 1;
     while (!feof (f))
         {
-        if (n >= linStart) { $ break; }
+        if (n >= linStart) {$ break; }
         while (!feof (f) && fgetc (f) != '\n')
             ;
 $       n++;
@@ -10831,27 +10962,27 @@ $   char* s = buf;
 
 $   while (!feof (f) && SZ_ > 0)
         {
-        if (n > linEnd || _txNOP (SZ_) < 0) { $ break; }
+        if (n > linEnd || _txNOP (SZ_) < 0) {$ break; }
 
         if (linMark != INT_MIN)
-            { $ s += _tx_snprintf_s (s, SZ_, "%s%5d: ", ((n == linMark)? "=>" : "  "), n); }
+            {$ s += _tx_snprintf_s (s, SZ_, "%s%5d: ", ((n == linMark)? "=>" : "  "), n); }
 
 $       int c = 0;
 $       while (!feof (f) && SZ_ > 0 && (c = fgetc (f)) != '\n') *s++ = (char) c;
-        if (c == EOF) { $ s--; }
+        if (c == EOF) {$ s--; }
 
-        if (SZ_ > 0) { $ *s++ = '\n'; }
+        if (SZ_ > 0) {$ *s++ = '\n'; }
 $       n++;
         }
 
     if (n <= linEnd && SZ_ <= 0)
-        { $ s += _tx_snprintf_s (s, size - (s - buf), "..."); }
+        {$ s += _tx_snprintf_s (s, size - (s - buf), "..."); }
 
     #undef SZ_
 
 $   fclose (f);
 
-    if (s > buf && s[-1] == '\n') { $ s--; }
+    if (s > buf && s[-1] == '\n') {$ s--; }
 $   *s = 0;
 
 $   return (s - buf);
@@ -10866,7 +10997,7 @@ $1  _txLocCur.trace = 0;
 $   const int maxFrames = 62;  // TX says too: < 63
 $   static char trace [(MAX_PATH + 1024+1) * maxFrames] = "";
 
-    if (framesToSkip == -1) { $ return trace; }
+    if (framesToSkip == -1) {$ return trace; }
 
 $   memset (trace, 0, sizeof (trace));
 $   char* s = trace;
@@ -10879,7 +11010,7 @@ $   const _txLoc* loc = &_txLocCur;
 
 $   for (int i = -framesToSkip; loc && i < maxFrames; i++, loc = loc->prev)
         {
-        if (i < 0) { $ continue; }
+        if (i < 0) {$ continue; }
 
         if (loc->func || loc->file || loc->line)
             {
@@ -11029,7 +11160,7 @@ const char* _txProcessError (const char file[], int line, const char func[], uns
     if (*_txLogName) do
         {
         FILE* log = NULL; fopen_s (&log, _txLogName, "a");
-        if (!log) { $ break; }
+        if (!log) {$ break; }
 
         fprintf (log,     "\n" "--------------------------------------------------\n"
                                "%s\n"
@@ -11554,9 +11685,14 @@ int txGetExtentY (HDC dc /*= txDC()*/)
 
 //-----------------------------------------------------------------------------------------------------------------
 
-bool txDestroyWindow()
+bool txDestroyWindow (HWND wnd /*= txWindow()*/)
     {
-$1  if (!txWindow()) return false;
+$1  if (!wnd || !txWindow()) return false;
+
+$   if (wnd != txWindow())
+        {
+$       return !!SendNotifyMessage (txWindow(), _TX_WM_DESTROYWND, 0, (LPARAM) wnd);
+        }
 
 $   if (SendNotifyMessage (txWindow(), (_txMain? WM_CLOSE : WM_DESTROY), 0, 0) == 0) return false;
 
@@ -11589,7 +11725,7 @@ $       return (HPEN) NULL;
         }
 
 $   if (txGDI (Win32::SetTextColor (dc, color), dc) == CLR_INVALID)
-        { $ return (HPEN) NULL; }
+        {$ return (HPEN) NULL; }
 
 $   return pen;
     }
@@ -11991,7 +12127,7 @@ $   txAutoLock _lock;
 $   _txCanvas_UserDCs->push_back (dc);
 
 $   if (_txCanvas_UserDCs->size() >= _TX_BUFSIZE)
-        { $ txNotifyIcon (NIIF_WARNING, NULL, "Вы загрузили уже %d HDC, системе может стать плохо.", (int) _txCanvas_UserDCs->size()); }
+        {$ txNotifyIcon (NIIF_WARNING, NULL, "Вы загрузили уже %d HDC, системе может стать плохо.", (int) _txCanvas_UserDCs->size()); }
 
 $   return dc;
     }
@@ -12039,7 +12175,7 @@ $   std::string file = filename;
 $   unsigned time    = GetTickCount();
 
 $   if ((long) (time - loadTimes [file]) < _TX_TIMEOUT)
-        { $ txNotifyIcon (NIIF_WARNING, NULL, "Вы загружаете \"%s\" слишком часто, программа будет тормозить.", filename); }
+        {$ txNotifyIcon (NIIF_WARNING, NULL, "Вы загружаете \"%s\" слишком часто, программа будет тормозить.", filename); }
 
 $   loadTimes [file] = time;
 
@@ -12384,7 +12520,7 @@ $   int lock = _txCanvas_RefreshLock;
 $   _txCanvas_RefreshLock = 0;
 
 $   HWND wnd = txWindow();
-    if (wnd) { $ RedrawWindow (wnd, NULL, NULL, RDW_INVALIDATE | RDW_INTERNALPAINT | RDW_UPDATENOW) asserted; }
+    if (wnd) {$ RedrawWindow (wnd, NULL, NULL, RDW_INVALIDATE | RDW_INTERNALPAINT | RDW_UPDATENOW) asserted; }
 
 $   Sleep (ROUND ((time >= 0)? time : 0));
 
@@ -12402,8 +12538,8 @@ bool txLock (bool wait /*= true*/)
     {
 $1  if (_txCanvas_RefreshLock <= 0 || _txExit) Sleep (0);
 
-$   if (wait) { $ return      EnterCriticalSection (&_txCanvas_LockBackBuf), true; }
-    else      { $ return !!TryEnterCriticalSection (&_txCanvas_LockBackBuf);       }
+$   if (wait) {$ return      EnterCriticalSection (&_txCanvas_LockBackBuf), true; }
+    else      {$ return !!TryEnterCriticalSection (&_txCanvas_LockBackBuf);       }
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -12660,21 +12796,22 @@ $   return -1;
 
 //-----------------------------------------------------------------------------------------------------------------
 
-int txPlayVideo (const char* fileName, double zoom /*= 0*/, HWND wnd /*= txWindow()*/)
+ptrdiff_t txPlayVideo (int x, int y, int width, int height, const char fileName[], double zoom /*= 0*/,
+                       HWND wnd /*= txWindow()*/)
     {
 $1  if (wnd && wnd == txWindow() && _TX_TXWINDOW_FAILED()) return -1;
 
-    #define PROCESS_UID_  "TXLib[%08lX%08lX]::txPlayVideo()"
+$   int time = GetTickCount();
 
 $   FILETIME startTime = {}, null = {};
 $   GetProcessTimes (GetCurrentProcess(), &startTime, &null, &null, &null);
+$   char processUID [64] = "";
+$   _snprintf_s (processUID, sizeof (processUID) - 1, "TXLib[%08lX%08lX]::txPlayVideo",
+                 startTime.dwHighDateTime, startTime.dwLowDateTime) < (int) sizeof (processUID) asserted;
 
 $   if (!fileName)
         {
-$       char cmd [64] = "";
-$       _snprintf_s (cmd, sizeof (cmd) - 1, PROCESS_UID_, startTime.dwHighDateTime, startTime.dwLowDateTime) < sizeof (cmd) asserted;
-
-$       txTaskKill ("vlc.exe", cmd, 0);  // Kill by command line pattern
+$       txTaskKill ("vlc.exe", processUID, 0);  // Kill by command line pattern
 $       return 0;
         }
 
@@ -12687,65 +12824,172 @@ $       if (*vlcPath) strncat_s (vlcPath, sizeof (vlcPath) - 1, "\\",      sizeo
 $       strncat_s               (vlcPath, sizeof (vlcPath) - 1, "vlc.exe", sizeof ("vlc.exe"));
 
 $       if (_access (vlcPath, 0) != 0)
-            {
-$           txOutputDebugPrintf ("\a" "Не найден видеопроигрыватель VideoLAN (%s). Cкачайте его с сайта VideoLAN.org и установите. "
-                                      "Может потребоваться перезагрузка. Без этого видео воспроизводиться не будет... :(\n\n"
-                                      "--\n" "Всегда Ваша, функция txPlayVideo()...", vlcPath);
-            }
+            {$ txOutputDebugPrintf ("\a" "Не найден видеопроигрыватель VideoLAN (%s). Cкачайте его с сайта "
+                                         "VideoLAN.org и установите. Может потребоваться перезагрузка. "
+                                         "Без этого видео воспроизводиться не будет... :(\n\n"
+                                         "--\n" "Всегда Ваша, функция txPlayVideo()...", vlcPath); }
         }
 
-    if (_access (vlcPath, 0) != 0) { $ return INT_MIN; }
+    if (_access (vlcPath, 0) != 0) {$ return INT_MIN; }
+
+$   const char* errPos = "ВНЕЗАПНО";
 
 $   bool async = false;
     if (*fileName == '\a') {$ async = true; fileName++; }
 
 $   if (*fileName && !strstr (fileName, "://") && _access (fileName, 0) != 0)
         {
-$       txNotifyIcon (NIIF_ERROR, "txPlayVideo() сообщает", "Не найден файл \"%s\"", fileName);
+$       txNotifyIcon (NIIF_ERROR, "txPlayVideo() сообщает", "\n" "%s",
+                                   strstr (_txError (NULL, 0, NULL, 0, "\f" "Не найден файл \"%s\"", fileName), errPos));
 $       return INT_MIN+1;
+        }
+
+$   volatile HWND child = NULL;
+$   if (wnd == txWindow())
+        {
+$       ATOM wndClass = txRegisterClass ("txPlayVideo", _txPlayVideo_WndProc, 0, NULL_BRUSH, 1);
+
+$       static int number = 1;
+$       CREATESTRUCT createData = { NULL, NULL, (HMENU) (size_t) number++, txWindow(), height, width, y, x,
+                                    WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE, __func__, (const char*) wndClass };
+$       child = txCreateExtraWindow (createData);
+$       if (!child)
+            {
+$           txNotifyIcon (NIIF_ERROR, "txPlayVideo() сообщает", "\n" "%s",
+                                       strstr (_txError (NULL, 0, NULL, 0, "\f" "Не могу создать окно для видео :("), errPos));
+$           return INT_MIN+3;
+            }
+
+$       BringWindowToTop (child);
+
+$       wnd = child;
         }
 
     if (!zoom && !wnd) {$ zoom = 1; }
 
-$   size_t sz = 0;
-$   char tempDir [MAX_PATH] = "";
-$   getenv_s (&sz, tempDir, sizeof (tempDir), "TEMP");
-
 $   char sZoom [64] = "--autoscale";
-    if (zoom) {$ _snprintf_s (sZoom, sizeof (sZoom) - 1, "--no-autoscale --zoom=%.10g", zoom) < sizeof (sZoom) asserted; }
+    if (zoom) {$ _snprintf_s (sZoom, sizeof (sZoom) - 1, "--no-autoscale --zoom=%.10g", zoom) < (int) sizeof (sZoom) asserted; }
 
 $   char cmd [MAX_PATH*2 + 1024] = "";
 
-$   _snprintf_s (cmd, sizeof (cmd) - 1, "cmd.exe /c start /min%s \"\" \"%s\" \"%s\" vlc://quit"
-                 " %s --drawable-hwnd=%llu --video-title=\"" PROCESS_UID_ "\" --no-embedded-video"
+$   _snprintf_s (cmd, sizeof (cmd) - 1, "\"%s\" \"%s\" vlc://quit"
+                 " %s --drawable-hwnd=%llu --video-title=\"%s\" --no-embedded-video"
 
                  " --live-caching=500 --network-caching=500 --quiet-synchro"
 
                  " --ignore-config --reset-config --no-one-instance --play-and-exit"
                  " --intf=dummy --dummy-quiet --no-video-deco --no-video-title-show --no-stats --no-sub-autodetect-file"
-                 " --no-disable-screensaver --no-snapshot-preview --no-auto-preparse --no-mouse-events --no-keyboard-events"
+                 " --no-disable-screensaver --no-snapshot-preview --no-auto-preparse --no-mouse-events --no-keyboard-events",
 
-                 " > %s\\nul 2> %s\\nul",
+                 vlcPath, fileName, sZoom, (unsigned long long) wnd, processUID) < (int) sizeof (cmd) asserted;
 
-                 (async? "" : " /wait"), vlcPath, fileName, sZoom,
-                 (unsigned long long) wnd, startTime.dwHighDateTime, startTime.dwLowDateTime,
-                 tempDir, tempDir) < sizeof (cmd) asserted;
+$   txOutputDebugPrintf ("txPlayVideo(): Starting (%s)...\n\n", cmd);
 
-$   txOutputDebugPrintf ("txPlayVideo(): system (%s)...\n", cmd);
+$   bool  ok  = true;
+$   DWORD ret = 0;
 
-    if (wnd == txWindow()) {$ txBegin(); }
+$   while (*fileName)
+        {
+$       PROCESS_INFORMATION vlc   = {};
+$       STARTUPINFO         start = { sizeof (start) };
 
-$   int time = GetTickCount();
-$   int res = (*fileName)? system (cmd) : 0;
+$       if (!CreateProcess (NULL, cmd, NULL, NULL, true, 0, NULL, NULL, &start, &vlc))
+            {
+$           txNotifyIcon (NIIF_ERROR, "txPlayVideo() сообщает", "\n" "%s",
+                                       strstr (_txError (NULL, 0, NULL, 0, "\f" "Ошибка запуска VideoLAN (%s)", cmd), errPos));
+$           ok = false;
+$           break;
+            }
+
+        if (child)
+            {
+$           assert (wnd == child);
+$           SetWindowLong (wnd, GWLP_USERDATA, (long)(uintptr_t) vlc.hProcess);
+            }
+
+        if (!async)
+            {
+$           WaitForSingleObject (vlc.hProcess, INFINITE);
+$           GetExitCodeProcess  (vlc.hProcess, &ret) asserted;
+            }
+
+$       if (!child)
+            {
+$           CloseHandle (vlc.hProcess) asserted;
+            }
+
+$       CloseHandle (vlc.hThread) asserted;
+
+$       break;
+        }
+
+$   if (!*fileName && wnd)
+        {$ txDestroyWindow (wnd); }
+
 $   time = GetTickCount() - time;
 
-    if (wnd == txWindow()) {$ txEnd(); }
-
-    if (res != 0) {$ txNotifyIcon (NIIF_ERROR, "txPlayVideo() сообщает", "Ошибка вызова system (%s): %d", cmd, res); }
-
-$   return (res == 0)? time : -res;
+$   return (ok)? (async? (ptrdiff_t) wnd : time) : - (int) ret;
 
     #undef PROCESS_UID_
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+ptrdiff_t txPlayVideo (const char fileName[], double zoom /*= 0*/, HWND wnd /*= txWindow()*/)
+    {
+$1   RECT rect = {};
+$   GetClientRect (wnd, &rect);
+
+$   return txPlayVideo (0, 0, rect.right, rect.bottom, fileName, zoom, wnd);
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+LRESULT CALLBACK _txPlayVideo_WndProc (HWND wnd, UINT msg, WPARAM wpar, LPARAM lpar)
+    {
+    const UINT_PTR checkTimer = 1;
+
+    switch (msg)
+        {
+        case WM_CREATE:
+            {
+$1          SetTimer  (wnd, checkTimer, 5*_txWindowUpdateInterval, NULL) asserted;
+            }
+            break;
+
+        case WM_DESTROY:
+            {
+$1          KillTimer (wnd, checkTimer) asserted;
+
+$           HANDLE vlc = (HANDLE)(uintptr_t) GetWindowLong (wnd, GWLP_USERDATA);
+
+$           if (vlc)
+                {
+$               Win32::TerminateProcess (vlc, 0);
+
+$               CloseHandle (vlc) asserted;
+
+$               SetWindowLong (wnd, GWLP_USERDATA, 0);
+                }
+            }
+            break;
+
+        case WM_TIMER:
+            {
+            HANDLE vlc = (HANDLE)(uintptr_t) GetWindowLong (wnd, GWLP_USERDATA);
+
+            if (vlc && WaitForSingleObject (vlc, 0) != WAIT_TIMEOUT)
+                {
+$1              DestroyWindow (wnd) asserted;
+                }
+            }
+            break;
+
+        default:
+            break;
+        }
+
+    return DefWindowProc (wnd, msg, wpar, lpar);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -12862,7 +13106,7 @@ $   char* typeName = NULL;
 
 $   int err = 1;
 $   typeName = ::abi::__cxa_demangle (mangledName, 0, 0, &err); (void) err;
-    if (typeName) { $ return typeName; }
+    if (typeName) {$ return typeName; }
 
     #endif
 
@@ -12875,7 +13119,7 @@ $       flags = 0x2800;  // UNDNAME_32_BIT_DECODE | UNDNAME_TYPE_ONLY
         }
 
 $   typeName = _TX_CALL (Win32::__unDName, (NULL, mangledName, 0, malloc, free, flags));
-    if (typeName) { $ return typeName; }
+    if (typeName) {$ return typeName; }
 
 $   return strdup (mangledName);
     }
@@ -12954,7 +13198,7 @@ $1  static LARGE_INTEGER time0 = {}; if (!time0.QuadPart) QueryPerformanceCounte
 $          LARGE_INTEGER time  = {};                      QueryPerformanceCounter (&time);
 
 $   if (time.QuadPart - time0.QuadPart == 0)
-        { $ return 0; }
+        {$ return 0; }
 
 $   LARGE_INTEGER freq = {}; QueryPerformanceFrequency (&freq);
 
@@ -13154,7 +13398,7 @@ $   unsigned new87 = 0x0008001C;  // _EM_INVALID | _EM_DENORMAL | _EM_ZERODIVIDE
 
 $   unsigned old87 = 0;
 $   if (_controlfp_s (&old87, 0, 0) == 0)
-        { $ (void) _controlfp_s (&old87, old87  & ~new87, 0x0008001F); }  // _MCW_EM
+        {$ (void) _controlfp_s (&old87, old87  & ~new87, 0x0008001F); }  // _MCW_EM
 
     #else
 
@@ -13449,7 +13693,7 @@ $   return pw;
 //!          @tbr
 //!          @tr <tt> $$$$            </tt> @td Печать местоположения в коде.
 //!          @tr <tt> $$$$_           </tt> @td Печать местоположения в коде (только имя функции).
-//!          @tr <tt> $meow           </tt> @td То же, что и $$$$
+//!          @tr <tt> $meow (msg)     </tt> @td То же, что и $$$$, но еще и печатает сообщение @c msg.
 //!          @tbr
 //!          @tr <tt> $test (cond)    </tt> @td Печать результата теста различным цветом в зависимости от условия @c cond.
 //!          @tr <tt> $unittest (code, expected) </tt> @td Печать результата <b>юнит-теста</b> @c code с ожидаемым результатом @c expected.
@@ -13506,7 +13750,7 @@ $   return pw;
 //!          $r  // red
 //!          double xy = $$( pow (x, y) );
 //!
-//!          $meow
+//!          $meow (Computing hypothenuse...)
 //!          double h  = $$(( $(x) = x*x, y = y*y, sqrt ($(x+y)) ));
 //!
 //!          $$$$ $$P
@@ -13645,9 +13889,9 @@ $   return pw;
 #define $Do( cmd )         ::std::cerr << "\n[" __TX_FILELINE__ ": " #cmd "]...\n";                                                                     \
                            txMessageBox ( "\n[" __TX_FILELINE__ ": " #cmd "]...\n", __TX_FUNCTION__);                                                   cmd
 
-#define $$$$             { txOutputDebugPrintf ("\f\n"); { $s $l txOutputDebugPrintf ("\f" "[%s (%d) %s]", __FILE__, __LINE__, __TX_FUNCTION__); } txOutputDebugPrintf ("\f\n"); }
-#define $$$$_            { txOutputDebugPrintf ("\f\n"); { $s $l txOutputDebugPrintf ("\f" "[" "(%d) %s]",           __LINE__, __func__);        } txOutputDebugPrintf ("\f\n"); }
-#define $meow            $$$$
+#define $$$$             { txOutputDebugPrintf ("\f\n"); { $sl txOutputDebugPrintf ("\f" "[%s (%d) %s]",      __FILE__, __LINE__, __TX_FUNCTION__);         } txOutputDebugPrintf ("\f\n"); }
+#define $$$$_            { txOutputDebugPrintf ("\f\n"); { $sl txOutputDebugPrintf ("\f" "[" "(%d) %s]",                __LINE__, __func__);                } txOutputDebugPrintf ("\f\n"); }
+#define $meow( msg,... ) { txOutputDebugPrintf ("\f\n"); { $sc txOutputDebugPrintf ("\f" "[%s (%d) %s] " msg, __FILE__, __LINE__, __func__, ##__VA_ARGS__); } txOutputDebugPrintf ("\f\n"); }
 
 #define $n               { ::std::cerr << "\n";   }
 #define $nn              { ::std::cerr << "\n\n"; }
@@ -13672,7 +13916,7 @@ $   return pw;
 #define $$b              DebugBreak()
 #define $$p              $p
 #define $$P              txMessageBox (__TX_FILELINE__, __TX_FUNCTION__);
-#define $p               {{ $sy; fprintf (stderr, "[%s %s: Нажмите любую клавишу для продолжения]", __TX_FILELINE__, __TX_FUNCTION__); } $P; fprintf (stderr, "\n"); }
+#define $p               { $sy; { fprintf (stderr, "[%s %s: Нажмите любую клавишу для продолжения]", __TX_FILELINE__, __func__); } $P; fprintf (stderr, "...\n"); }
 #define $P               ((int(*)()) (_getch)) ();  // Avoid "return value not used"
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -13918,6 +14162,7 @@ std::ostream& operator << (std::ostream& stream, const RECT& rect)
 #define txColor(...)                   ( _txLocCurSet(), txColor               (__VA_ARGS__) )
 #define txCreateCompatibleDC(...)      ( _txLocCurSet(), txCreateCompatibleDC  (__VA_ARGS__) )
 #define txCreateDIBSection(...)        ( _txLocCurSet(), txCreateDIBSection    (__VA_ARGS__) )
+#define txCreateExtraWindow(...)       ( _txLocCurSet(), txCreateExtraWindow   (__VA_ARGS__) )
 #define txCreateWindow(...)            ( _txLocCurSet(), txCreateWindow        (__VA_ARGS__) )
 #define txDC(...)                      ( _txLocCurSet(), txDC                  (__VA_ARGS__) )
 #define txDeleteDC(...)                ( _txLocCurSet(), txDeleteDC            (__VA_ARGS__) )
@@ -13966,6 +14211,7 @@ std::ostream& operator << (std::ostream& stream, const RECT& rect)
 #define txQueryPerformance(...)        ( _txLocCurSet(), txQueryPerformance    (__VA_ARGS__) )
 #define txRGB2HSL(...)                 ( _txLocCurSet(), txRGB2HSL             (__VA_ARGS__) )
 #define txRectangle(...)               ( _txLocCurSet(), txRectangle           (__VA_ARGS__) )
+#define txRegisterClass(...)           ( _txLocCurSet(), txRegisterClass       (__VA_ARGS__) )
 #define txRegQuery(...)                ( _txLocCurSet(), txRegQuery            (__VA_ARGS__) )
 #define txRedrawWindow(...)            ( _txLocCurSet(), txRedrawWindow        (__VA_ARGS__) )
 #define txSaveImage(...)               ( _txLocCurSet(), txSaveImage           (__VA_ARGS__) )
@@ -14063,36 +14309,190 @@ using ::std::wstring;
 #endif
 
 //-----------------------------------------------------------------------------------------------------------------
-                                                                                                                   
-#if defined (_MSC_VER)                                                                                             
-                                                                                                                   
-    #pragma warning (pop)                                                                                          
-                                                                                                                   
-#endif                                                                                                             
-                                                                                                                   
-#if defined (__INTEL_COMPILER)                                                                                     
-                                                                                                                   
-    #pragma warning (default:  174)    // Remark: expression has no effect                                         
-    #pragma warning (default:  304)    // Remark: access control not specified ("public" by default)               
-    #pragma warning (default:  444)    // Remark: destructor for base class "..." is not virtual                   
-    #pragma warning (default:  522)    // Remark: function redeclared "inline" after being called                  
+
+#if defined (_MSC_VER)
+
+    #pragma warning (pop)
+
+#endif
+
+#if defined (__INTEL_COMPILER)
+
+    #pragma warning (default:  174)    // Remark: expression has no effect
+    #pragma warning (default:  304)    // Remark: access control not specified ("public" by default)
+    #pragma warning (default:  444)    // Remark: destructor for base class "..." is not virtual
+    #pragma warning (default:  522)    // Remark: function redeclared "inline" after being called
     #pragma warning (default: 1684)    // Conversion from pointer to same-sized integral type (potential portability problem)
-                                                                                                                   
-    #pragma warning (disable:  981)    // Remark: operands are evaluated in unspecified order                      
-                                                                                                                   
-#endif                                                                                                             
-                                                                                                                   
-//! @endcond                                                                                                       
-//}                                                                                                                
+
+    #pragma warning (disable:  981)    // Remark: operands are evaluated in unspecified order
+
+#endif
+
+//! @endcond
+//}
 //-----------------------------------------------------------------------------------------------------------------
-                                                                                                                   
-#endif // __TXLIB_H_INCLUDED                                                                                       
-                                                                                                                   
+
+#endif // __TXLIB_H_INCLUDED
+
 //=================================================================================================================
-// EOF                                                                                                             
+// EOF
 //=================================================================================================================
                                                                                                                    
-                                                    
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                             
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
