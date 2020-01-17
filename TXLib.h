@@ -1,5 +1,5 @@
 //=================================================================================================================
-//           [These sections are for folding control  in Code::Blocks]         [$Date: 2020-01-16 08:25:58 +0400 $]
+//           [These sections are for folding control  in Code::Blocks]         [$Date: 2020-01-17 04:48:05 +0400 $]
 //           [Best viewed with "Fold all on file open" option enabled]         [Best screen/page width = 120 chars]
 //
 //           [If RUSSIAN CHARS below are UNREADABLE, check this file codepage.   It should be 1251, NOT UTF-8 etc.]
@@ -9,9 +9,9 @@
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 155 $
+//!          $Version: 00173a, Revision: 156 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2020-01-16 08:25:58 +0400 $
+//!          $Date: 2020-01-17 04:48:05 +0400 $
 //!
 //!          TX Library -- компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -133,9 +133,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 155, 2020-01-16 08:25:58 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 155, 2020-01-16 08:25:58 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 155, 2020-01-16 08:25:58 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 156, 2020-01-17 04:48:05 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 156, 2020-01-17 04:48:05 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 156, 2020-01-17 04:48:05 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -496,7 +496,6 @@
 #else
 
     #define     __attribute__( attr )
-
     #define     _txNOP( value )        ( value )
 
 #endif
@@ -570,71 +569,71 @@
 
     #pragma warning (push, 4)                   // Set maximum warning level. This 'push' is to set the level only. It will NOT be popped.
 
-    #pragma warning (disable:  4616)            // #pragma warning: warning number 'n' not a valid compiler warning
+    #pragma warning (disable:    4616)          // #pragma warning: warning number 'n' not a valid compiler warning
 
-    #pragma warning (disable:  4514)            // Unreferenced inline function has been removed
-    #pragma warning (disable:  4710)            // Function not inlined
-    #pragma warning (disable:  4786)            // Identifier was truncated to '255' characters in the debug information
+    #pragma warning (disable:    4514)          // Unreferenced inline function has been removed
+    #pragma warning (disable:    4710)          // Function not inlined
+    #pragma warning (disable:    4786)          // Identifier was truncated to '255' characters in the debug information
 
-    #pragma warning (default:  4616)            // #pragma warning: warning number 'n' not a valid compiler warning
+    #pragma warning (default:    4616)          // #pragma warning: warning number 'n' not a valid compiler warning
 
     // These warning settings for TXLib.h only and will be re-enabled at end of file:
 
     #pragma warning (push)
 
-    #pragma warning (disable:  4616)            // #pragma warning: warning number 'n' not a valid compiler warning
+    #pragma warning (disable:    4616)          // #pragma warning: warning number 'n' not a valid compiler warning
 
-    #pragma warning (disable:  4091)            // 'typedef ': ignored on left of '' when no variable is declared
-    #pragma warning (disable:  4124)            // Using __fastcall with stack checking is ineffective
-    #pragma warning (disable:  4127)            // Conditional expression is constant
-    #pragma warning (disable:  4191)            // 'type cast': unsafe conversion from 'type1' to 'type2'. Calling this function through the result pointer may cause your program to fail
-    #pragma warning (disable:  4200)            // Nonstandard extension used: zero-sized array in struct/union
-    #pragma warning (disable:  4351)            // New behavior: elements of array will be default initialized
-    #pragma warning (disable:  4481)            // Nonstandard extension used: override specifier 'override'
-    #pragma warning (disable:  4555)            // result of expression not used
-    #pragma warning (disable:  4611)            // Interaction between '_setjmp' and C++ object destruction is non-portable
-    #pragma warning (disable:  4702)            // Unreachable code
-    #pragma warning (disable:  5045)            // Compiler will insert Spectre mitigation for memory load if /Qspectre switch specified
-    #pragma warning (disable:  6269)            // Possibly incorrect order of operations: dereference ignored
-    #pragma warning (disable:  6326)            // Potential comparison of a constant with another constant
-    #pragma warning (disable: 26135)            // Missing locking annotation
-    #pragma warning (disable: 26400)            // Do not assign the result of an allocation or a function call with an owner<T> return value to a raw pointer, use owner<T> instead (i.11).
-    #pragma warning (disable: 26401)            // Do not delete a raw pointer that is not an owner<T> (i.11).
-    #pragma warning (disable: 26409)            // Avoid calling new and delete explicitly, use std::make_unique<T> instead (r.11).
-    #pragma warning (disable: 26426)            // Global initializer calls a non-constexpr function 'name' (i.22).
-    #pragma warning (disable: 26429)            // Symbol 'name' is never tested for nullness, it can be marked as not_null (f.23).
-    #pragma warning (disable: 26430)            // Symbol 'buf' is not tested for nullness on all paths (f.23).
-    #pragma warning (disable: 26432)            // If you define or delete any default operation in the type 'struct 'name', define or delete them all (c.21).
-    #pragma warning (disable: 26433)            // Function 'name' should be marked with 'override' (c.128).
-    #pragma warning (disable: 26438)            // Avoid 'goto' (es.76).
-    #pragma warning (disable: 26440)            // Function 'name' can be declared 'noexcept' (f.6).
-    #pragma warning (disable: 26446)            // Prefer to use gsl::at() instead of unchecked subscript operator (bounds.4).
-    #pragma warning (disable: 26447)            // The function is declared 'noexcept' but calls function 'name' which may throw exceptions (f.6).
-    #pragma warning (disable: 26448)            // Consider using gsl::finally if final action is intended (gsl.util).
-    #pragma warning (disable: 26451)            // Arithmetic overflow: Using operator 'op' on a n-byte value and then casting the result to a m-byte value. Cast the value to the wider type before calling operator 'op' to avoid overflow (io.2).
-    #pragma warning (disable: 26455)            // Default constructor may not throw. Declare it 'noexcept' (f.6).
-    #pragma warning (disable: 26461)            // The pointer argument 'name' for function 'name' can be marked as a pointer to const (con.3).
-    #pragma warning (disable: 26462)            // The value pointed to by 'name' is assigned only once, mark it as a pointer to const (con.4).
-    #pragma warning (disable: 26475)            // Do not use function style C-casts (es.49).
-    #pragma warning (disable: 26477)            // Use 'nullptr' rather than 0 or NULL (es.47).
-    #pragma warning (disable: 26481)            // Don't use pointer arithmetic. Use span instead (bounds.1).
-    #pragma warning (disable: 26482)            // Only index into arrays using constant expressions (bounds.2).
-    #pragma warning (disable: 26483)            // Value n is outside the bounds (0, 0) of variable 'name'. Only index into arrays using constant expressions that are within bounds of the array (bounds.2).
-    #pragma warning (disable: 26485)            // Expression 'expr': No array to pointer decay (bounds.3).
-    #pragma warning (disable: 26486)            // Don't pass a pointer that may be invalid to a function. Parameter n 'name' in call to 'name' may be invalid (lifetime.3).
-    #pragma warning (disable: 26487)            // Don't return a pointer 'name' that may be invalid (lifetime.4).
-    #pragma warning (disable: 26488)            // Do not dereference a potentially null pointer: 'expr'. 'name' was null at line n (lifetime.1).
-    #pragma warning (disable: 26489)            // Don't dereference a pointer that may be invalid: 'expr'. 'name' may have been invalidated at line n (lifetime.1).
-    #pragma warning (disable: 26490)            // Don't use reinterpret_cast (type.1).
-    #pragma warning (disable: 26492)            // Don't use const_cast to cast away const or volatile (type.3).
-    #pragma warning (disable: 26493)            // Don't use C-style casts (type.4).
-    #pragma warning (disable: 26496)            // The variable 'name' is assigned only once, mark it as const (con.4).
-    #pragma warning (disable: 26812)            // The enum type 'type' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).
-    #pragma warning (disable: 26814)            // The const variable 'name' can be computed at compile-time. Consider using constexpr (con.5).
-    #pragma warning (disable: 28125)            // The function must be called from within a try/except block
-    #pragma warning (disable: 28159)            // Consider using another function instead
+    #pragma warning (disable:    4091)          // 'typedef ': ignored on left of '' when no variable is declared
+    #pragma warning (disable:    4124)          // Using __fastcall with stack checking is ineffective
+    #pragma warning (disable:    4127)          // Conditional expression is constant
+    #pragma warning (disable:    4191)          // 'type cast': unsafe conversion from 'type1' to 'type2'. Calling this function through the result pointer may cause your program to fail
+    #pragma warning (disable:    4200)          // Nonstandard extension used: zero-sized array in struct/union
+    #pragma warning (disable:    4351)          // New behavior: elements of array will be default initialized
+    #pragma warning (disable:    4481)          // Nonstandard extension used: override specifier 'override'
+    #pragma warning (disable:    4555)          // result of expression not used
+    #pragma warning (disable:    4611)          // Interaction between '_setjmp' and C++ object destruction is non-portable
+    #pragma warning (disable:    4702)          // Unreachable code
+    #pragma warning (disable:    5045)          // Compiler will insert Spectre mitigation for memory load if /Qspectre switch specified
+    #pragma warning (disable:    6269)          // Possibly incorrect order of operations: dereference ignored
+    #pragma warning (disable:    6326)          // Potential comparison of a constant with another constant
+    #pragma warning (disable:   26135)          // Missing locking annotation
+    #pragma warning (disable:   26400)          // Do not assign the result of an allocation or a function call with an owner<T> return value to a raw pointer, use owner<T> instead (i.11).
+    #pragma warning (disable:   26401)          // Do not delete a raw pointer that is not an owner<T> (i.11).
+    #pragma warning (disable:   26409)          // Avoid calling new and delete explicitly, use std::make_unique<T> instead (r.11).
+    #pragma warning (disable:   26426)          // Global initializer calls a non-constexpr function 'name' (i.22).
+    #pragma warning (disable:   26429)          // Symbol 'name' is never tested for nullness, it can be marked as not_null (f.23).
+    #pragma warning (disable:   26430)          // Symbol 'buf' is not tested for nullness on all paths (f.23).
+    #pragma warning (disable:   26432)          // If you define or delete any default operation in the type 'struct 'name', define or delete them all (c.21).
+    #pragma warning (disable:   26433)          // Function 'name' should be marked with 'override' (c.128).
+    #pragma warning (disable:   26438)          // Avoid 'goto' (es.76).
+    #pragma warning (disable:   26440)          // Function 'name' can be declared 'noexcept' (f.6).
+    #pragma warning (disable:   26446)          // Prefer to use gsl::at() instead of unchecked subscript operator (bounds.4).
+    #pragma warning (disable:   26447)          // The function is declared 'noexcept' but calls function 'name' which may throw exceptions (f.6).
+    #pragma warning (disable:   26448)          // Consider using gsl::finally if final action is intended (gsl.util).
+    #pragma warning (disable:   26451)          // Arithmetic overflow: Using operator 'op' on a n-byte value and then casting the result to a m-byte value. Cast the value to the wider type before calling operator 'op' to avoid overflow (io.2).
+    #pragma warning (disable:   26455)          // Default constructor may not throw. Declare it 'noexcept' (f.6).
+    #pragma warning (disable:   26461)          // The pointer argument 'name' for function 'name' can be marked as a pointer to const (con.3).
+    #pragma warning (disable:   26462)          // The value pointed to by 'name' is assigned only once, mark it as a pointer to const (con.4).
+    #pragma warning (disable:   26475)          // Do not use function style C-casts (es.49).
+    #pragma warning (disable:   26477)          // Use 'nullptr' rather than 0 or NULL (es.47).
+    #pragma warning (disable:   26481)          // Don't use pointer arithmetic. Use span instead (bounds.1).
+    #pragma warning (disable:   26482)          // Only index into arrays using constant expressions (bounds.2).
+    #pragma warning (disable:   26483)          // Value n is outside the bounds (0, 0) of variable 'name'. Only index into arrays using constant expressions that are within bounds of the array (bounds.2).
+    #pragma warning (disable:   26485)          // Expression 'expr': No array to pointer decay (bounds.3).
+    #pragma warning (disable:   26486)          // Don't pass a pointer that may be invalid to a function. Parameter n 'name' in call to 'name' may be invalid (lifetime.3).
+    #pragma warning (disable:   26487)          // Don't return a pointer 'name' that may be invalid (lifetime.4).
+    #pragma warning (disable:   26488)          // Do not dereference a potentially null pointer: 'expr'. 'name' was null at line n (lifetime.1).
+    #pragma warning (disable:   26489)          // Don't dereference a pointer that may be invalid: 'expr'. 'name' may have been invalidated at line n (lifetime.1).
+    #pragma warning (disable:   26490)          // Don't use reinterpret_cast (type.1).
+    #pragma warning (disable:   26492)          // Don't use const_cast to cast away const or volatile (type.3).
+    #pragma warning (disable:   26493)          // Don't use C-style casts (type.4).
+    #pragma warning (disable:   26496)          // The variable 'name' is assigned only once, mark it as const (con.4).
+    #pragma warning (disable:   26812)          // The enum type 'type' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).
+    #pragma warning (disable:   26814)          // The const variable 'name' can be computed at compile-time. Consider using constexpr (con.5).
+    #pragma warning (disable:   28125)          // The function must be called from within a try/except block
+    #pragma warning (disable:   28159)          // Consider using another function instead
 
-    #pragma warning (default:  4616)            // #pragma warning: warning number 'n' not a valid compiler warning
+    #pragma warning (default:    4616)          // #pragma warning: warning number 'n' not a valid compiler warning
 
     #define _tx_thread          __declspec (thread)
 
@@ -653,12 +652,12 @@
 
 #if  defined (__INTEL_COMPILER)
 
-    #pragma warning (disable:  174)             // Remark: expression has no effect
-    #pragma warning (disable:  304)             // Remark: access control not specified ("public" by default)
-    #pragma warning (disable:  444)             // Remark: destructor for base class "..." is not virtual
-    #pragma warning (disable:  522)             // Remark: function "..." redeclared "inline" after being called
-    #pragma warning (disable:  981)             // Remark: operands are evaluated in unspecified order
-    #pragma warning (disable: 1684)             // Conversion from pointer to same-sized integral type (potential portability problem)
+    #pragma warning (disable:    174)           // Remark: expression has no effect
+    #pragma warning (disable:    304)           // Remark: access control not specified ("public" by default)
+    #pragma warning (disable:    444)           // Remark: destructor for base class "..." is not virtual
+    #pragma warning (disable:    522)           // Remark: function "..." redeclared "inline" after being called
+    #pragma warning (disable:    981)           // Remark: operands are evaluated in unspecified order
+    #pragma warning (disable:   1684)           // Conversion from pointer to same-sized integral type (potential portability problem)
 
 #endif
 
@@ -700,8 +699,11 @@
 //-----------------------------------------------------------------------------------------------------------------
 
 #define _USE_MATH_DEFINES              1        // Math.h's M_PI etc.
+#define __STDC_FORMAT_MACROS           1        // PRIu64 and other PR... macros
 #define __STDC_WANT_LIB_EXT1__         1        // String and output *_s functions
+
 #define _ALLOW_RTCc_IN_STL             1        // MSVC C2338: /RTCc rejects conformant code, so it isn't supported by libc.
+
 #if defined (_DEBUG)
 #define _SECURE_SCL                    1        // Enable checked STL iterators to throw an exception on incorrect use
 #define _HAS_ITERATOR_DEBUGGING        1
@@ -776,6 +778,7 @@ namespace std { enum nomeow_t { nomeow }; }     // Vital addition to the C++ sta
 #include <time.h>
 #include <float.h>
 #include <limits.h>
+#include <stdint.h>
 
 #include <vector>
 #include <string>
@@ -825,8 +828,14 @@ namespace std { enum nomeow_t { nomeow }; }     // Vital addition to the C++ sta
 
 #endif
 
+#if defined (_GCC_VER) || defined (_MSC_VER) && (_MSC_VER >= 1800)
+#include <inttypes.h>
+#endif
+
+//-----------------------------------------------------------------------------------------------------------------
+
 #if defined (TX_USE_SPEAK) //--------------------------------------------------------------------------------------
-#include <SAPI.h>          // <== ЕСЛИ ЗДЕСЬ ОШИБКА, ТО У ВАС НЕТ ФАЙЛА SAPI.h. No SAPI.h file, TXLib is not guilty :(
+#include <SAPI.h>          // <== ЕСЛИ ЗДЕСЬ ОШИБКА, ТО У ВАС НЕТ ФАЙЛА SAPI.h. No SAPI.h file, TXLib isn't guilty :(
 #endif                     //--------------------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -870,32 +879,44 @@ namespace std { enum nomeow_t { nomeow }; }     // Vital addition to the C++ sta
 
     #undef   __STRICT_ANSI__
 
-    typedef  void                                        _exception;
+    typedef  void                      _exception;
 
-    #define _O_TEXT                                      O_TEXT
-    #define _fdopen                                      fdopen
-    #define _flushall()                                  fflush (NULL)
-    #define _getcwd                                      getcwd
-    #define _getpid                                      getpid
-    #define _stricmp                                     strcasecmp
-    #define _strlwr                                      strlwr
-    #define _strnicmp                                    strncasecmp
-    #define _unlink                                      unlink
-    #define _vsnprintf                                   vsnprintf
-    #define _access                                      access
+    #define _O_TEXT                    O_TEXT
+    #define _fdopen                    fdopen
+    #define _flushall()                fflush (NULL)
+    #define _getcwd                    getcwd
+    #define _getpid                    getpid
+    #define _stricmp                   strcasecmp
+    #define _strlwr                    strlwr
+    #define _strnicmp                  strncasecmp
+    #define _unlink                    unlink
+    #define _vsnprintf                 vsnprintf
+    #define _access                    access
 
-    #define getch                                        _getch
-    #define putch                                        _putch
-    #define kbhit                                        _kbhit
+    #define getch                      _getch
+    #define putch                      _putch
+    #define kbhit                      _kbhit
 
 #endif
 
 #if defined (IN)                                // IN and OUT are defined in WinDef.h to support Microsoft SAL.
-#undef IN                                       // Remove them because these names are often confused with the
+    #undef  IN                                  // Remove them because these names are often confused with the
 #endif                                          // user's code.
 
 #if defined (IN)
-#undef OUT
+    #undef  OUT
+#endif
+
+#define     _tx_nodiscard              __attribute__ (( warn_unused_result        ))
+#define     _tx_printfy( s, f )        __attribute__ (( format (printf, (s), (f)) ))
+
+#if !defined (PRId64)
+    #define PRId64                     "I64d"
+    #define PRIi64                     "I64i"
+    #define PRIo64                     "I64o"
+    #define PRIu64                     "I64u"
+    #define PRIx64                     "I64x"
+    #define PRIX64                     "I64X"
 #endif
 
 //}
@@ -3588,13 +3609,14 @@ bool txPlaySound (const char filename[] = NULL, DWORD mode = SND_ASYNC);
 //! @param   width     Ширина видео. Если 0, то равно ширине окна. <i>Также см. предупреждение ниже.</i>
 //! @param   height    Высота видео. Если 0, то равно высоте окна. <i>Также см. предупреждение ниже.</i>
 //! @param   fileName  Имя видеофайла или любого другого источника, с которым работает VideoLAN (rtsp://, http:// и т.д.).
-//!                    Если имя -- пустая строка @c (""), то проводится проверка на наличие видеопроигрывателя.
+//!                    Если имя -- пустая строка @c (""), то проводится только проверка на наличие видеопроигрывателя.
 //! @param   zoom   <i>Масштаб изображения. Необязателен. Если не указан, то равен 0 (Автомасштабирование).</i>
+//! @param   gain   <i>Громкость звука, от 0 до 8 (800%). Необязательна. Если не указана, то равна 1 (100%).</i>
 //! @param   wnd    <i>Окно, в котором воспроизводится видео. Необязательно. Если не указано, то используется
 //!                    окно TXLib.</i>
 //!
-//! @return  Время воспроизведения в миллисекундах (если не указана опция @c \\a). Если равно 0, то все ОК,
-//!          но видео не проигрывалось. Если меньше 0, то видео не запустилось. :( См. коды ошибок ниже.
+//! @return  Время воспроизведения в миллисекундах (если не указана опция @c \\a). Если меньше или равно 0,
+//!          то видео не запустилось. :( См. коды ошибок ниже.
 //!          @nn
 //!          Если указана опция @c \\a, то возвращаемое значение -- дескриптор (HWND) окна видеопотока
 //!          (см. "Асинхронное воспроизведение").
@@ -3621,10 +3643,10 @@ bool txPlaySound (const char filename[] = NULL, DWORD mode = SND_ASYNC);
 //!          @nn
 //!          В случае асинхронного воспрооизведения возвращаемым значением функции txPlayVideo() будет не
 //!          время ее работы, а дескриптор окна видеопотока (HWND). С его помощью можно контролировать это
-//!          окно, его положение, размер, видимость и другие свойства. См. функции
+//!          окно, его положение на экране, размеры, видимость и другие свойства. См. функции
 //!          <a href="https://www.google.com/search?q=MoveWindow+function+Win32+apps">MoveWindow</a>(),
 //!          <a href="https://www.google.com/search?q=ShowWindow+function+Win32+apps">ShowWindow</a>()
-//!          и другие в MSDN. Гуглите. Также см. пример использования.
+//!          и многие другие в MSDN. Гуглите. Также см. пример использования.
 //!          @nn
 //!          Досрочно прервать асинхронное воспроизведение можно, уничтожив окно видеопотока с помощью
 //!          функции txDestroyWindow().
@@ -3636,12 +3658,15 @@ bool txPlaySound (const char filename[] = NULL, DWORD mode = SND_ASYNC);
 //!          видео @c x, @c y и его размеры @c width, @c height игнорируются. В этом слчае видеопоток будет
 //!          занимать всю клиентскую область окна, указанного параметром @c wnd. См. пример использования.
 //!
-//! @note    <b>Воспроизведение требует установки внешней программы @c VideoLAN версии 3.0.8 или новее.</b>
-//!          Ее можно скачать с официального сайта <a href=http://videolan.org><b>VideoLAN.org</b></a>.
-//!          После установки может потребоваться перезагрузка Windows. Без установки @c VideoLAN видео
-//!          воспроизводиться не будет и выведется сообщение об ошибке.
+//! @note    <b>Воспроизведение требует установки внешней программы @c VideoLAN @c (vlc.exe) версии 3.0.8 или
+//!          новее.</b> Ее можно скачать с официального сайта <a href=http://videolan.org><b>VideoLAN.org</b></a>.
+//!          Без установки @c VideoLAN видео воспроизводиться не будет и выведется сообщение об ошибке.
+//!          @nn
+//!          <b>Если после установки VideoLAN программа @c (vlc.exe) все равно не найдена</b> и выводится
+//!          сообщение об этой ошибке, то установите <b>не 64-битную</b> версию VideoLAN, <b>а 32-битную
+//!          @c (x86).</b>
 //!
-//! @see     <a href=https://www.youtube.com/watch?v=z_AbfPXTKms><b>Кот Мару</b></a>, txPlaySound(), txSpeak(),
+//! @see     <a href=https://www.youtube.com/watch?v=z_AbfPXTKms><b>Кот Мару!</b></a>, txPlaySound(), txSpeak(),
 //!          txMessageBox(), txOutputDebugPrintf()
 //!
 //! @usage @code
@@ -3658,11 +3683,11 @@ bool txPlaySound (const char filename[] = NULL, DWORD mode = SND_ASYNC);
 //!              txDrawText (0, 0, txGetExtentX(), txGetExtentY(), "Press ESC to stop!");
 //!              txSleep();
 //!
-//!              if (txPlayVideo ("") < 0) return TX_ERROR ("А чего вы хотели?"), 1;
+//!              if (txPlayVideo ("") <= 0) return TX_ERROR ("А чего вы хотели? VideoLAN не найден..."), 1;
 //!
 //!              txPlayVideo ("\a" MARU_ON_YOUTUBE);
 //!
-//!              txPlayVideo (580, 330, 200, 150, MARU_ON_YOUTUBE);
+//!              txPlayVideo (580, 330, 200, 150, MARU_ON_YOUTUBE, 0, 0);
 //!
 //!              // Для тех, кто [добился] дождался...
 //!
@@ -3672,9 +3697,9 @@ bool txPlaySound (const char filename[] = NULL, DWORD mode = SND_ASYNC);
 //!              HWND notepad = FindWindow ("Notepad", NULL);
 //!              if (!notepad) return 1;
 //!
-//!              txPlayVideo ("\a" MARU_ON_YOUTUBE, 0, notepad);
+//!              txPlayVideo ("\a" MARU_ON_YOUTUBE, 0, 1, notepad);
 //!
-//!              HWND wnd = (HWND) txPlayVideo (0, 330, 200, 150, "\a" MARU_ON_YOUTUBE);
+//!              HWND wnd = (HWND) txPlayVideo (0, 330, 200, 150, "\a" MARU_ON_YOUTUBE, 0, 0);
 //!
 //!              for (double t = 0; !GetAsyncKeyState (VK_ESCAPE); t += dt)
 //!                  {
@@ -3694,7 +3719,8 @@ bool txPlaySound (const char filename[] = NULL, DWORD mode = SND_ASYNC);
 //! @endcode
 //}----------------------------------------------------------------------------------------------------------------
 
-ptrdiff_t txPlayVideo (int x, int y, int width, int height, const char fileName[], double zoom = 0, HWND wnd = txWindow());
+ptrdiff_t txPlayVideo (int x, int y, int width, int height, const char fileName[],
+                       double zoom = 0, double gain = 1, HWND wnd = txWindow());
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
@@ -3703,6 +3729,7 @@ ptrdiff_t txPlayVideo (int x, int y, int width, int height, const char fileName[
 //! @param   fileName  Имя видеофайла или любого другого источника, с которым работает VideoLAN (rtsp://, http:// и т.д.).
 //!                    Если имя -- пустая строка @c (""), то проводится проверка на наличие видеопроигрывателя.
 //! @param   zoom   <i>Масштаб изображения. Необязателен. Если не указан, то равен 0 (Автомасштабирование).</i>
+//! @param   gain   <i>Громкость звука, от 0 до 8 (800%). Необязательна. Если не указана, то равна 1 (100%).</i>
 //! @param   wnd    <i>Окно, в котором воспроизводится видео. Необязательно. Если не указано, то используется
 //!                    окно TXLib.</i>
 //!
@@ -3711,7 +3738,7 @@ ptrdiff_t txPlayVideo (int x, int y, int width, int height, const char fileName[
 //! См. описание в функции txPlayVideo() выше.
 //}----------------------------------------------------------------------------------------------------------------
 
-ptrdiff_t txPlayVideo (const char fileName[], double zoom = 0, HWND wnd = txWindow());
+ptrdiff_t txPlayVideo (const char fileName[], double zoom = 0, double gain = 1, HWND wnd = txWindow());
 
 //{----------------------------------------------------------------------------------------------------------------
 //! @ingroup Misc
@@ -6907,14 +6934,11 @@ const int        _TX_IDM_ABOUT                            =   40000,       // Ид
 
 //-----------------------------------------------------------------------------------------------------------------
 
-#define nodiscard_     __attribute__ ((warn_unused_result))
-#define printfy_(s,f)  __attribute__ ((format (printf, s, f)))
-
 int              _txInitialize();
 void             _txCleanup();
 
 HWND             _txCanvas_CreateWindow      (SIZE* size);
-inline bool      _txCanvas_OK() nodiscard_;
+inline bool      _txCanvas_OK() _tx_nodiscard;
 
 bool             _txCanvas_OnCREATE          (HWND wnd);
 bool             _txCanvas_OnDESTROY         (HWND wnd);
@@ -6936,31 +6960,32 @@ LRESULT CALLBACK _txCanvas_WndProc           (HWND wnd, UINT msg, WPARAM wpar, L
 int              _txCanvas_SetRefreshLock    (int count);
 
 HDC              _txBuffer_Create            (HWND wnd = NULL, const POINT* size = NULL, HBITMAP bmap = NULL,
-                                              RGBQUAD** pixels = NULL) nodiscard_;
+                                              RGBQUAD** pixels = NULL) _tx_nodiscard;
 bool             _txBuffer_Delete            (HDC* dc);
 bool             _txBuffer_Select            (HGDIOBJ obj, HDC dc = txDC());
 
 HWND             _txConsole_Attach();
-bool             _txConsole_OK() nodiscard_;
+bool             _txConsole_OK() _tx_nodiscard;
 bool             _txConsole_Detach           (bool activate);
 bool             _txConsole_Draw             (HDC dc);
 bool             _txConsole_SetUnicodeFont();
 
 ATOM              txRegisterClass            (const char classId[], WNDPROC wndProc, unsigned style, int backBrush, int wndExtra);
 HWND              txCreateExtraWindow        (CREATESTRUCT createData);
-HICON            _txCreateTXIcon             (int size) nodiscard_;
+HICON            _txCreateTXIcon             (int size) _tx_nodiscard;
 int              _txSetFinishedText          (HWND wnd);
 void             _txPauseBeforeTermination   (HWND canvas);
-int              _txIsParentWaitable         (DWORD* parentPID = NULL) nodiscard_;
+int              _txIsParentWaitable         (DWORD* parentPID = NULL) _tx_nodiscard;
 
 LRESULT CALLBACK _txPlayVideo_WndProc        (HWND wnd, UINT msg, WPARAM wpar, LPARAM lpar);
+const char*      _txPlayVideo_FindVLC() _tx_nodiscard;
 
-PROCESSENTRY32*  _txFindProcess              (unsigned pid = GetCurrentProcessId()) nodiscard_;
+PROCESSENTRY32*  _txFindProcess              (unsigned pid = GetCurrentProcessId()) _tx_nodiscard;
 bool             _txKillProcess              (DWORD pid);
 bool             _txGetCommandLine           (wchar_t cmdLine[], size_t szCmdLine, unsigned pid = _getpid());
 int              _txGetInput();
-bool             _txInDll()   nodiscard_;
-const char*      _txAppInfo() nodiscard_;
+bool             _txInDll()   _tx_nodiscard;
+const char*      _txAppInfo() _tx_nodiscard;
 
 bool             _txCreateShortcut           (const char shortcutName[],
                                               const char fileToLink[], const char args[] = NULL, const char workDir[] = NULL,
@@ -6971,14 +6996,14 @@ bool             _txCreateShortcut           (const char shortcutName[],
 void*            _tx_DLGTEMPLATE_Create      (void* globalMem, size_t bufsize, DWORD style, DWORD exStyle,
                                               WORD controls, short x, short y, short cx, short cy,
                                               const char caption[], const char font[], WORD fontsize,
-                                              const char menu[]) nodiscard_;
+                                              const char menu[]) _tx_nodiscard;
 
 void*            _tx_DLGTEMPLATE_Add         (void* dlgTemplatePtr, size_t bufsize, DWORD style, DWORD exStyle,
                                               short x, short y, short cx, short cy,
                                               WORD id, const char wclass[], const char caption[]);
 
 const char*      _txError                    (const char file[] = NULL, int line = 0, const char func[] = NULL, unsigned color = 0,
-                                              const char msg[] = NULL, ...) printfy_(5, 6);
+                                              const char msg[] = NULL, ...) _tx_printfy (5, 6);
 const char*      _txProcessError             (const char file[], int line, const char func[], unsigned color,
                                               const char msg[], va_list args);
 void             _txOnTerminate();
@@ -6996,7 +7021,7 @@ void             _txOnInvalidParam           (const wchar_t* expr, const wchar_t
                                               unsigned line, uintptr_t);
 int              _txOnAllocHook              (int type, void* data, size_t size, int use, long request,
                                               const unsigned char* file, int line);
-int              _txOnRTCFailure             (int type, const char* file, int line, const char* module, const char* format, ...) printfy_(5, 6);
+int              _txOnRTCFailure             (int type, const char* file, int line, const char* module, const char* format, ...) _tx_printfy (5, 6);
 int              _txOnErrorReport            (int type, const char* message, int* ret);
 
 void             _txOnCExit();
@@ -7024,7 +7049,7 @@ int              _txStackWalk                (int framesToSkip, size_t szCapture
                                               CONTEXT* context = NULL, HANDLE thread = GetCurrentThread());
 const char*      _txCaptureStackBackTraceTX  (int framesToSkip = 0, bool readSource = false);
 
-const char*      _txSymPrintFromAddr         (void* addr = NULL, const char format[] = NULL, ...) printfy_(2, 3);
+const char*      _txSymPrintFromAddr         (void* addr = NULL, const char format[] = NULL, ...) _tx_printfy (2, 3);
 bool             _txSymGetFromAddr           (void* addr, Win32::SYMBOL_INFO** symbol = NULL,
                                               Win32::IMAGEHLP_LINE64** line = NULL, const char** module = NULL,
                                               const char** source = NULL, int context = 2);
@@ -7037,7 +7062,7 @@ uintptr_t        _txSetProcAddress           (const char funcName[], uintptr_t n
 bool             _txIsBadReadPtr             (const void* address);
 bool             _txCheckSourceCP            (int needCP = _TX_CP, bool verbose = true);
 
-ptrdiff_t        _tx_snprintf_s              (char stream[], ptrdiff_t size, const char format[], ...) printfy_(3, 4);
+ptrdiff_t        _tx_snprintf_s              (char stream[], ptrdiff_t size, const char format[], ...) _tx_printfy (3, 4);
 ptrdiff_t        _tx_vsnprintf_s             (char stream[], ptrdiff_t size, const char format[], va_list arg);
 
 int               txSetLocale();
@@ -7047,12 +7072,9 @@ void              txReopenStdio();
 
 int              _getch();
 int              _putch (int ch);
-int              _kbhit() nodiscard_;
+int              _kbhit() _tx_nodiscard;
 
 #endif
-
-#undef nodiscard_
-#undef printfy_
 
 //-----------------------------------------------------------------------------------------------------------------
 // There are macros for __FILE__ and __LINE__ to work properly.
@@ -7481,7 +7503,6 @@ _tx_FARPROC _txDllImport (const char dllFileName[], const char funcName[], bool 
 int txRegQuery (const char* keyName, const char* valueName, void* value, size_t szValue)
     {
     if (_TX_ARGUMENT_FAILED (keyName))   return 0;
-    if (_TX_ARGUMENT_FAILED (valueName)) return 0;
 
     HKEY hive = NULL;
 
@@ -12713,8 +12734,8 @@ $   return -1;
 
 //-----------------------------------------------------------------------------------------------------------------
 
-ptrdiff_t txPlayVideo (int x, int y, int width, int height, const char fileName[], double zoom /*= 0*/,
-                       HWND wnd /*= txWindow()*/)
+intptr_t txPlayVideo (int x, int y, int width, int height, const char fileName[],
+                      double zoom /*= 0*/, double gain /*= 1*/, HWND wnd /*= txWindow()*/)
     {
 $1  if (wnd && wnd == txWindow() && _TX_TXWINDOW_FAILED()) return -1;
 
@@ -12731,40 +12752,17 @@ $       _snprintf_s (processUID, sizeof (processUID) - 1, "TXLib[%08X%08X]::txPl
 
 $   if (!fileName)
         {
-$       txTaskKill ("vlc.exe", processUID, 0);  // Kill by command line pattern
+$       txTaskKill ("vlc.exe", processUID, 0);  // Kill'em all, by command line pattern
 $       return 0;
         }
 
-$   static char vlcPath [MAX_PATH] = "";
-$   if (!*vlcPath)
-        {
-$       txRegQuery ("HKLM\\Software\\VideoLAN\\VLC", "InstallDir", vlcPath, sizeof (vlcPath));
+$   const char* errPos = "ВНЕЗАПНО";
 
-$       if (*vlcPath) strncat_s (vlcPath, sizeof (vlcPath) - 1, "\\",      sizeof ("\\"));
-$       strncat_s               (vlcPath, sizeof (vlcPath) - 1, "vlc.exe", sizeof ("vlc.exe"));
-
-$       if (_access (vlcPath, 0) != 0)
-            {$ txOutputDebugPrintf ("\a" "Не найден видеопроигрыватель VideoLAN (%s). Cкачайте его с сайта "
-                                         "VideoLAN.org и установите. Может потребоваться перезагрузка. "
-                                         "Без этого видео воспроизводиться не будет... :(\n\n"
-                                         "--\n" "Всегда Ваша, функция txPlayVideo()...", vlcPath); }
-        }
-
-    if (_access (vlcPath, 0) != 0) {$ return INT_MIN; }
+$   static const char* vlcPath = _txPlayVideo_FindVLC();
+    if (vlcPath && _access (vlcPath, 0) != 0) {$ return INT_MIN; }
 
 $   bool async = false;
     if (*fileName == '\a') {$ async = true; fileName++; }
-
-    if (!*fileName) {$ return 0; }
-
-$   const char* errPos = "ВНЕЗАПНО";
-
-$   if (!strstr (fileName, "://") && _access (fileName, 0) != 0)
-        {
-$       txNotifyIcon (NIIF_ERROR, "txPlayVideo() сообщает", "\n" "%s",
-                                   strstr (_txError (NULL, 0, NULL, 0, "\f" "Не найден файл \"%s\"", fileName), errPos));
-$       return INT_MIN+1;
-        }
 
 $   if ((!width || !height) && wnd)
         {
@@ -12775,8 +12773,10 @@ $       GetClientRect (wnd, &rect);
         if (!height) {$ height = rect.bottom; }
         }
 
+    // Create a child window to hold the video stream
+
 $   volatile HWND child = NULL;
-$   if (wnd == txWindow())
+$   if (wnd && (wnd == txWindow()))
         {
 $       ATOM wndClass = txRegisterClass ("txPlayVideo", _txPlayVideo_WndProc, 0, NULL_BRUSH, 1);
 
@@ -12796,22 +12796,18 @@ $       BringWindowToTop (child);
 $       wnd = child;
         }
 
+    // Build the command line
+
     if (!zoom && !wnd) {$ zoom = 1; }
 
 $   char sZoom [64] = "--autoscale";
     if (zoom) {$ _snprintf_s (sZoom, sizeof (sZoom) - 1, "--no-autoscale --zoom=%.10g", zoom) < (int) sizeof (sZoom) asserted; }
 
-    #ifndef __CYGWIN__
-        #define LLU_ "%I64u"
-    #else
-        #define LLU_ "%Lu"
-    #endif
-
-$   char cmd [MAX_PATH*2 + 1024] = "";
+$   static char cmd [MAX_PATH*2 + 1024] = "";
 
 $   _snprintf_s (cmd, sizeof (cmd) - 1, "\"%s\" \"%s\" vlc://quit"
 
-                 " %s --drawable-hwnd=" LLU_ " --video-title=\"%s\" --no-embedded-video"
+                 " %s --gain=%.10g --drawable-hwnd=%" PRIu64 " --video-title=\"%s\" --no-embedded-video"
 
                  " --live-caching=500 --network-caching=500 --quiet-synchro"
 
@@ -12819,11 +12815,26 @@ $   _snprintf_s (cmd, sizeof (cmd) - 1, "\"%s\" \"%s\" vlc://quit"
                  " --intf=dummy --dummy-quiet --no-video-deco --no-video-title-show --no-stats --no-sub-autodetect-file"
                  " --no-disable-screensaver --no-snapshot-preview --no-auto-preparse --no-mouse-events --no-keyboard-events",
 
-                 vlcPath, fileName, sZoom, (unsigned long long) wnd, processUID) < (int) sizeof (cmd) asserted;
+                 vlcPath, (*fileName? fileName : "fileName"), sZoom, gain, (uint64_t) wnd, processUID) < (int) sizeof (cmd) asserted;
 
-    #undef LLU_
+$   txOutputDebugPrintf ("txPlayVideo (%d, %d, %d, %d, \"%s\", %lg, %lg, %p): [%s]\n\n", x, y, width, height,
+                                                                                          fileName, zoom, gain, wnd, cmd);
+$   if (!*fileName)
+        {
+        if (child) {$ txDestroyWindow (child); }
+$       return (intptr_t) cmd;
+        }
 
-$   txOutputDebugPrintf ("txPlayVideo(): Starting (%s)...\n\n", cmd);
+$   if (!strstr (fileName, "://") && _access (fileName, 0) != 0)
+        {
+$       txNotifyIcon (NIIF_ERROR, "txPlayVideo() сообщает", "\n" "%s",
+                                   strstr (_txError (NULL, 0, NULL, 0, "\f" "Не найден файл \"%s\"", fileName), errPos));
+
+        if (child) {$ txDestroyWindow (child); }
+$       return INT_MIN+1;
+        }
+
+    // Run VLC, run
 
 $   PROCESS_INFORMATION vlc   = {};
 $   STARTUPINFO         start = { sizeof (start) };
@@ -12851,14 +12862,14 @@ $           CloseHandle (vlc.hProcess) asserted;
 
 $       CloseHandle (vlc.hThread) asserted;
 
-$       return (async? (ptrdiff_t) wnd : (ret == 0)? time - GetTickCount() : - (int) ret);
+$       return (async? (intptr_t) wnd : (ret == 0)? time - GetTickCount() : - (int) ret);
         }
     else
         {
 $       txNotifyIcon (NIIF_ERROR, "txPlayVideo() сообщает", "\n" "%s",
                                    strstr (_txError (NULL, 0, NULL, 0, "\f" "Ошибка запуска VideoLAN (%s)", cmd), errPos));
-$       if (wnd)
-            {$ txDestroyWindow (wnd); }
+$       if (child)
+            {$ txDestroyWindow (child); }
 
 $       return INT_MIN+4;
         }
@@ -12871,9 +12882,9 @@ $   return 0;
 //-----------------------------------------------------------------------------------------------------------------
 
 inline
-ptrdiff_t txPlayVideo (const char fileName[], double zoom /*= 0*/, HWND wnd /*= txWindow()*/)
+ptrdiff_t txPlayVideo (const char fileName[], double zoom /*= 0*/, double gain /*= 0*/, HWND wnd /*= txWindow()*/)
     {
-$1  return txPlayVideo (0, 0, 0, 0, fileName, zoom, wnd);
+$1  return txPlayVideo (0, 0, 0, 0, fileName, zoom, gain, wnd);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -12923,6 +12934,51 @@ $1              DestroyWindow (wnd) asserted;
         }
 
     return DefWindowProc (wnd, msg, wpar, lpar);
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+const char* _txPlayVideo_FindVLC()
+    {
+$1  static char vlc [MAX_PATH] = "";
+
+$   if (txRegQuery ("HKLM\\Software\\VideoLAN\\VLC", NULL, vlc, sizeof (vlc)))
+        {
+        if (_access (vlc, 0) == 0) {$ return vlc; }
+        }
+
+$   if (txRegQuery ("HKLM\\Software\\VideoLAN\\VLC", "InstallDir", vlc, sizeof (vlc)))
+        {
+$       strncat_s (vlc, sizeof (vlc) - 1, "\\vlc.exe", INT_MAX);
+
+        if (_access (vlc, 0) == 0) {$ return vlc; }
+        }
+
+$   strncpy_s (vlc, sizeof (vlc), "C:\\Program Files\\VideoLAN\\VLC\\vlc.exe", UINT_MAX);
+        {
+        if (_access (vlc, 0) == 0) {$ return vlc; }
+        }
+
+$   strncpy_s (vlc, sizeof (vlc), "C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe", UINT_MAX);
+        {
+        if (_access (vlc, 0) == 0) {$ return vlc; }
+        }
+
+$   if (SearchPath (NULL, "vlc.exe", NULL, sizeof (vlc), vlc, NULL))
+        {
+        if (_access (vlc, 0) == 0) {$ return vlc; }
+        }
+
+$   if (SearchPath (NULL, "vlc.bat", NULL, sizeof (vlc), vlc, NULL))
+        {
+        if (_access (vlc, 0) == 0) {$ return vlc; }
+        }
+
+$   txOutputDebugPrintf ("\a" "Не найден видеопроигрыватель VideoLAN (vlc.exe). Cкачайте его с сайта VideoLAN.org "
+                              "и установите. Без установки VideoLAN видео воспроизводиться не будет :(\n\n"
+                              "См. описание функции txPlayVideo() в TXLib Help.\n\n"
+                              "--\n" "Всегда Ваша, функция " /* как бы */ "txPlayVideo()");
+$   return NULL;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -14206,91 +14262,35 @@ using ::std::wstring;
 #endif
 
 //-----------------------------------------------------------------------------------------------------------------
-
-#if defined (_MSC_VER)
-
-    #pragma warning (pop)
-
-#endif
-
-#if defined (__INTEL_COMPILER)
-
-    #pragma warning (default:  174)    // Remark: expression has no effect
-    #pragma warning (default:  304)    // Remark: access control not specified ("public" by default)
-    #pragma warning (default:  444)    // Remark: destructor for base class "..." is not virtual
-    #pragma warning (default:  522)    // Remark: function redeclared "inline" after being called
+                                                                                                                   
+#if defined (_MSC_VER)                                                                                             
+                                                                                                                   
+    #pragma warning (pop)                                                                                          
+                                                                                                                   
+#endif                                                                                                             
+                                                                                                                   
+#if defined (__INTEL_COMPILER)                                                                                     
+                                                                                                                   
+    #pragma warning (default:  174)    // Remark: expression has no effect                                         
+    #pragma warning (default:  304)    // Remark: access control not specified ("public" by default)               
+    #pragma warning (default:  444)    // Remark: destructor for base class "..." is not virtual                   
+    #pragma warning (default:  522)    // Remark: function redeclared "inline" after being called                  
     #pragma warning (default: 1684)    // Conversion from pointer to same-sized integral type (potential portability problem)
-
-    #pragma warning (disable:  981)    // Remark: operands are evaluated in unspecified order
-
-#endif
-
-//! @endcond
-//}
+                                                                                                                   
+    #pragma warning (disable:  981)    // Remark: operands are evaluated in unspecified order                      
+                                                                                                                   
+#endif                                                                                                             
+                                                                                                                   
+//! @endcond                                                                                                       
+//}                                                                                                                
 //-----------------------------------------------------------------------------------------------------------------
-
-#endif // __TXLIB_H_INCLUDED
-
+                                                                                                                   
+#endif // __TXLIB_H_INCLUDED                                                                                       
+                                                                                                                   
 //=================================================================================================================
-// EOF
+// EOF                                                                                                             
 //=================================================================================================================
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                                                                                                                   
-                             
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                                                                                                  
 
 
 
