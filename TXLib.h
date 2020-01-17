@@ -1,5 +1,5 @@
 //=================================================================================================================
-//           [These sections are for folding control  in Code::Blocks]         [$Date: 2020-01-17 04:48:05 +0400 $]
+//           [These sections are for folding control  in Code::Blocks]         [$Date: 2020-01-17 21:41:25 +0400 $]
 //           [Best viewed with "Fold all on file open" option enabled]         [Best screen/page width = 120 chars]
 //
 //           [If RUSSIAN CHARS below are UNREADABLE, check this file codepage.   It should be 1251, NOT UTF-8 etc.]
@@ -9,9 +9,9 @@
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 156 $
+//!          $Version: 00173a, Revision: 157 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2020-01-17 04:48:05 +0400 $
+//!          $Date: 2020-01-17 21:41:25 +0400 $
 //!
 //!          TX Library -- компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -133,9 +133,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 156, 2020-01-17 04:48:05 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 156, 2020-01-17 04:48:05 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 156, 2020-01-17 04:48:05 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 157, 2020-01-17 21:41:25 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 157, 2020-01-17 21:41:25 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 157, 2020-01-17 21:41:25 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -670,12 +670,31 @@
     #error
     #error ---------------------------------------------------------------------------------------
     #endif
-    #error TXLib.h: This version/revision will NOT work with GCC < 4.7.2 or MS Visual Studio < 2010, sorry.
+    #error TXLib.h: This version will NOT work with GCC < 4.7.2 or MS Visual Studio < 2010, sorry.
     #error
     #error Please use TXLib.h previous stable version/revision OR upgrade your compiler.
     #error ---------------------------------------------------------------------------------------
     #error
 
+#endif
+
+//-----------------------------------------------------------------------------------------------------------------
+
+#if defined (_GCC_VER) && (_GCC_VER >= 492)
+#if defined (TX_USE_SPEAK) && !__has_include (<SAPI.h>)
+
+    #ifdef __GNUC__
+    #error
+    #error ---------------------------------------------------------------------------------------
+    #endif
+    #error You have defined TX_USE_SPEAK, but your compiler do NOT have the library <SAPI.h>.
+    #error
+    #error Please use compiler library set with SAPI.h included. SAPI is Microsoft Speech API
+    #error nesessary for txSpeak() to work.
+    #error ---------------------------------------------------------------------------------------
+    #error
+
+#endif
 #endif
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -851,7 +870,7 @@ namespace std { enum nomeow_t { nomeow }; }     // Vital addition to the C++ sta
     #define  __STRICT_ANSI__                    // Redefine back
 #endif
 
-#if !defined (_MEMORY_S_DEFINED) && !defined (_TRUNCATE) || defined (__CYGWIN__)
+#if !defined (_TRUNCATE) || defined (__CYGWIN__) || defined (_MEMORY_S_DEFINED)
 
     #define  strncpy_s( dest, sizeof_dest, src, count )  ( strncpy ((dest), (src), MIN ((count), (sizeof_dest))) )
     #define  wcsncpy_s( dest, sizeof_dest, src, count )  ( wcsncpy ((dest), (src), MIN ((count), (sizeof_dest))) )
@@ -910,13 +929,23 @@ namespace std { enum nomeow_t { nomeow }; }     // Vital addition to the C++ sta
 #define     _tx_nodiscard              __attribute__ (( warn_unused_result        ))
 #define     _tx_printfy( s, f )        __attribute__ (( format (printf, (s), (f)) ))
 
-#if !defined (PRId64)
+#if !defined (PRId64) || \
+     defined (_GCC_VER) && (_GCC_VER == 492) && !defined (_WIN64) // Dev-CPP 5.11: TDM-GCC 4.9.2 MinGW64 with -m32
+
+    #undef  PRId64
+    #undef  PRIi64
+    #undef  PRIo64
+    #undef  PRIu64
+    #undef  PRIx64
+    #undef  PRIX64
+
     #define PRId64                     "I64d"
     #define PRIi64                     "I64i"
     #define PRIo64                     "I64o"
     #define PRIu64                     "I64u"
     #define PRIx64                     "I64x"
     #define PRIX64                     "I64X"
+
 #endif
 
 //}
@@ -10668,6 +10697,8 @@ $   assert (cpu);
 
 $   _txSymGetFromAddr ((void*) 1);
 
+    if (setjmp (_txDumpExceptionObjJmp) != 0) {$ return 0; }
+
 $   int  frames = 0;
 $   for (frames = -framesToSkip; frames < (int) szCapture; frames++)
         {
@@ -10695,6 +10726,8 @@ $       assert (0 <= frames && frames < (int) szCapture);
 
 $       capture[frames] = addr;
         }
+
+$   *(unsigned long long*) _txDumpExceptionObjJmp = 0;
 
 $   return frames;
     }
@@ -11057,7 +11090,8 @@ const char* _txProcessError (const char file[], int line, const char func[], uns
 
                 PRINT_ (". %s\n", ::std::uncaught_exception()? "std::uncaught_exception(): true." : "");
 
-    if (_txLocCur.inTX > 0 && file && !(_txLocCur.line == line && _stricmp (_txLocCur.file, file) == 0))
+    if (_txLocCur.inTX > 0 && file && !(_txLocCur.line == line && _stricmp (_txLocCur.file, file) == 0) &&
+       (_txLocCur.file || _txLocCur.line || _txLocCur.func))
                 PRINT_ ("From: %s (%d) %s.\n", _txLocCur.file, _txLocCur.line, _txLocCur.func);
 
     txOutputDebugPrintf ("\r" "%s - ERROR: %s\n", _TX_VERSION, what);
@@ -12756,10 +12790,19 @@ $       txTaskKill ("vlc.exe", processUID, 0);  // Kill'em all, by command line 
 $       return 0;
         }
 
-$   const char* errPos = "ВНЕЗАПНО";
-
 $   static const char* vlcPath = _txPlayVideo_FindVLC();
-    if (vlcPath && _access (vlcPath, 0) != 0) {$ return INT_MIN; }
+
+$   if (!vlcPath || _access (vlcPath, 0) != 0)
+        {
+$       static int once = false;
+
+$       if (*fileName && !once++)
+            {$ txOutputDebugPrintf ("\a" "Не найден видеопроигрыватель VideoLAN (vlc.exe). Cкачайте его с сайта VideoLAN.org "
+                                    "и установите. Без установки VideoLAN видео воспроизводиться не будет :(\n\n"
+                                    "--\n" "Всегда Ваша, функция " /* как бы */ "txPlayVideo()...\n"
+                                    "P.S. См. мое описание в TXLib Help."); }
+$       return INT_MIN;
+        }
 
 $   bool async = false;
     if (*fileName == '\a') {$ async = true; fileName++; }
@@ -12774,6 +12817,8 @@ $       GetClientRect (wnd, &rect);
         }
 
     // Create a child window to hold the video stream
+
+$   const char* errPos = "ВНЕЗАПНО";
 
 $   volatile HWND child = NULL;
 $   if (wnd && (wnd == txWindow()))
@@ -12866,7 +12911,7 @@ $       return (async? (intptr_t) wnd : (ret == 0)? time - GetTickCount() : - (i
         }
     else
         {
-$       txNotifyIcon (NIIF_ERROR, "txPlayVideo() сообщает", "\n" "%s",
+$       txNotifyIcon (NIIF_ERROR, "txPlayVideo() сообщает", "%s",
                                    strstr (_txError (NULL, 0, NULL, 0, "\f" "Ошибка запуска VideoLAN (%s)", cmd), errPos));
 $       if (child)
             {$ txDestroyWindow (child); }
@@ -12940,44 +12985,40 @@ $1              DestroyWindow (wnd) asserted;
 
 const char* _txPlayVideo_FindVLC()
     {
-$1  static char vlc [MAX_PATH] = "";
+$1  static char vlcPath [MAX_PATH] = "";
 
-$   if (txRegQuery ("HKLM\\Software\\VideoLAN\\VLC", NULL, vlc, sizeof (vlc)))
+$   if (txRegQuery ("HKLM\\Software\\VideoLAN\\VLC", NULL, vlcPath, sizeof (vlcPath)))
         {
-        if (_access (vlc, 0) == 0) {$ return vlc; }
+        if (_access (vlcPath, 0) == 0) {$ return vlcPath; }
         }
 
-$   if (txRegQuery ("HKLM\\Software\\VideoLAN\\VLC", "InstallDir", vlc, sizeof (vlc)))
+$   if (txRegQuery ("HKLM\\Software\\VideoLAN\\VLC", "InstallDir", vlcPath, sizeof (vlcPath)))
         {
-$       strncat_s (vlc, sizeof (vlc) - 1, "\\vlc.exe", INT_MAX);
+$       strncat_s (vlcPath, sizeof (vlcPath) - 1, "\\vlc.exe", INT_MAX);
 
-        if (_access (vlc, 0) == 0) {$ return vlc; }
+        if (_access (vlcPath, 0) == 0) {$ return vlcPath; }
         }
 
-$   strncpy_s (vlc, sizeof (vlc), "C:\\Program Files\\VideoLAN\\VLC\\vlc.exe", UINT_MAX);
+$   strncpy_s (vlcPath, sizeof (vlcPath), "C:\\Program Files"    "\\VideoLAN\\VLC\\vlc.exe", UINT_MAX);
         {
-        if (_access (vlc, 0) == 0) {$ return vlc; }
+        if (_access (vlcPath, 0) == 0) {$ return vlcPath; }
         }
 
-$   strncpy_s (vlc, sizeof (vlc), "C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe", UINT_MAX);
+$   strncpy_s (vlcPath, sizeof (vlcPath), "C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe", UINT_MAX);
         {
-        if (_access (vlc, 0) == 0) {$ return vlc; }
+        if (_access (vlcPath, 0) == 0) {$ return vlcPath; }
         }
 
-$   if (SearchPath (NULL, "vlc.exe", NULL, sizeof (vlc), vlc, NULL))
+$   if (SearchPath (NULL, "vlc.exe", NULL, sizeof (vlcPath), vlcPath, NULL))
         {
-        if (_access (vlc, 0) == 0) {$ return vlc; }
+        if (_access (vlcPath, 0) == 0) {$ return vlcPath; }
         }
 
-$   if (SearchPath (NULL, "vlc.bat", NULL, sizeof (vlc), vlc, NULL))
+$   if (SearchPath (NULL, "vlc.bat", NULL, sizeof (vlcPath), vlcPath, NULL))
         {
-        if (_access (vlc, 0) == 0) {$ return vlc; }
+        if (_access (vlcPath, 0) == 0) {$ return vlcPath; }
         }
 
-$   txOutputDebugPrintf ("\a" "Не найден видеопроигрыватель VideoLAN (vlc.exe). Cкачайте его с сайта VideoLAN.org "
-                              "и установите. Без установки VideoLAN видео воспроизводиться не будет :(\n\n"
-                              "См. описание функции txPlayVideo() в TXLib Help.\n\n"
-                              "--\n" "Всегда Ваша, функция " /* как бы */ "txPlayVideo()");
 $   return NULL;
     }
 
@@ -14262,35 +14303,94 @@ using ::std::wstring;
 #endif
 
 //-----------------------------------------------------------------------------------------------------------------
-                                                                                                                   
-#if defined (_MSC_VER)                                                                                             
-                                                                                                                   
-    #pragma warning (pop)                                                                                          
-                                                                                                                   
-#endif                                                                                                             
-                                                                                                                   
-#if defined (__INTEL_COMPILER)                                                                                     
-                                                                                                                   
-    #pragma warning (default:  174)    // Remark: expression has no effect                                         
-    #pragma warning (default:  304)    // Remark: access control not specified ("public" by default)               
-    #pragma warning (default:  444)    // Remark: destructor for base class "..." is not virtual                   
-    #pragma warning (default:  522)    // Remark: function redeclared "inline" after being called                  
+
+#if defined (_MSC_VER)
+
+    #pragma warning (pop)
+
+#endif
+
+#if defined (__INTEL_COMPILER)
+
+    #pragma warning (default:  174)    // Remark: expression has no effect
+    #pragma warning (default:  304)    // Remark: access control not specified ("public" by default)
+    #pragma warning (default:  444)    // Remark: destructor for base class "..." is not virtual
+    #pragma warning (default:  522)    // Remark: function redeclared "inline" after being called
     #pragma warning (default: 1684)    // Conversion from pointer to same-sized integral type (potential portability problem)
-                                                                                                                   
-    #pragma warning (disable:  981)    // Remark: operands are evaluated in unspecified order                      
-                                                                                                                   
-#endif                                                                                                             
-                                                                                                                   
-//! @endcond                                                                                                       
-//}                                                                                                                
+
+    #pragma warning (disable:  981)    // Remark: operands are evaluated in unspecified order
+
+#endif
+
+//! @endcond
+//}
 //-----------------------------------------------------------------------------------------------------------------
-                                                                                                                   
-#endif // __TXLIB_H_INCLUDED                                                                                       
-                                                                                                                   
+
+#endif // __TXLIB_H_INCLUDED
+
 //=================================================================================================================
-// EOF                                                                                                             
+// EOF
 //=================================================================================================================
-                                                                                                                  
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                              
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
