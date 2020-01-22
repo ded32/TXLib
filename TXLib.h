@@ -1,5 +1,5 @@
 //=================================================================================================================
-//           [These sections are for folding control  in Code::Blocks]         [$Date: 2020-01-21 22:28:03 +0400 $]
+//           [These sections are for folding control  in Code::Blocks]         [$Date: 2020-01-22 07:38:22 +0400 $]
 //           [Best viewed with "Fold all on file open" option enabled]         [Best screen/page width = 120 chars]
 //
 //           [If RUSSIAN CHARS below are UNREADABLE, check this file codepage.   It should be 1251, NOT UTF-8 etc.]
@@ -9,9 +9,9 @@
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 159 $
+//!          $Version: 00173a, Revision: 160 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2020-01-21 22:28:03 +0400 $
+//!          $Date: 2020-01-22 07:38:22 +0400 $
 //!
 //!          TX Library -- компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -115,7 +115,7 @@
 //!            Версия библиотеки в целочисленном формате: старшее слово -- номер версии, младшее -- номер ревизии,
 //!            в двоично-десятичном формате. Например, @c 0x172a0050 -- версия @c 0.172a, ревизия @c 50.
 //! @code
-//!            #define _TX_VERSION "TXLib [Ver: 1.73a, Rev: 105, Date: 2020-01-21 00:00:00 +0300]"  //
+//!            #define _TX_VERSION "TXLib [Ver: 1.73a, Rev: 105, Date: 2020-01-22 00:00:00 +0300]"  //
 //!            #define _TX_AUTHOR  "Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru)"             //  ПРИМЕР
 //!            #define _TX_VER      0x173a0000                                                      //
 //! @endcode
@@ -133,9 +133,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 159, 2020-01-21 22:28:03 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 159, 2020-01-21 22:28:03 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 159, 2020-01-21 22:28:03 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 160, 2020-01-22 07:38:22 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 160, 2020-01-22 07:38:22 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 160, 2020-01-22 07:38:22 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -567,19 +567,19 @@
     // *,-cert-dcl50-cpp,-cert-dcl58-cpp,-cert-err52-cpp,-cert-err58-cpp,-cert-flp30-c,-cert-msc30-c,-cert-msc32-c,
     // -cert-msc50-cpp,-cert-msc51-cpp,-clang-analyzer-core.DivideZero,-cppcoreguidelines-avoid-c-arrays,
     // -cppcoreguidelines-avoid-goto,-cppcoreguidelines-avoid-magic-numbers,-cppcoreguidelines-macro-usage,
-    // -cppcoreguidelines-owning-memory,-cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+    // -cppcoreguidelines-owning-memory,-cppcoreguidelines-pro-bounds-array-to-pointer-decay,-cppcoreguidelines-no-malloc,
     // -cppcoreguidelines-pro-bounds-constant-array-index,-cppcoreguidelines-pro-bounds-pointer-arithmetic,
     // -cppcoreguidelines-pro-type-const-cast,-cppcoreguidelines-pro-type-cstyle-cast,-cppcoreguidelines-pro-type-union-access,
     // -cppcoreguidelines-pro-type-vararg,-fuchsia-default-arguments-calls,-fuchsia-default-arguments-declarations,
-    // -fuchsia-overloaded-operator,-google-build-using-namespace,-google-global-names-in-headers,
+    // -fuchsia-overloaded-operator,-google-build-using-namespace,-google-global-names-in-headers,-google-runtime-int,
     // -google-readability-braces-around-statements,-google-readability-casting,-google-readability-namespace-comments,
     // -hicpp-avoid-c-arrays,-hicpp-avoid-goto,-hicpp-braces-around-statements,-hicpp-deprecated-headers,-hicpp-no-array-decay,
-    // -hicpp-signed-bitwise,-hicpp-use-equals-delete,-hicpp-use-nullptr,-hicpp-vararg,-llvm-include-order,
-    // -llvm-namespace-comment,-misc-non-private-member-variables-in-classes,-modernize-avoid-c-arrays,
-    // -modernize-deprecated-headers,-modernize-raw-string-literal,-modernize-use-default-member-init,
+    // -hicpp-signed-bitwise,-hicpp-use-equals-delete,-hicpp-use-nullptr,-hicpp-vararg,-llvm-include-order,-hicpp-no-malloc,
+    // -llvm-namespace-comment,-misc-non-private-member-variables-in-classes,-modernize-avoid-c-arrays,-modernize-use-auto,
+    // -modernize-deprecated-headers,-modernize-raw-string-literal,-modernize-use-default-member-init,-hicpp-use-auto,
     // -modernize-use-equals-delete,-modernize-use-nullptr,-modernize-use-trailing-return-type,-modernize-use-using,
     // -readability-braces-around-statements,-readability-else-after-return,-readability-implicit-bool-conversion,
-    // -readability-isolate-declaration,-readability-magic-numbers,-readability-named-parameter
+    // -readability-isolate-declaration,-readability-magic-numbers,-readability-named-parameter,-modernize-loop-convert
     //}
 
     //}
@@ -622,6 +622,8 @@
     #pragma warning (disable:   26135)          // Missing locking annotation
     #pragma warning (disable:   26400)          // Do not assign the result of an allocation or a function call with an owner<T> return value to a raw pointer, use owner<T> instead (i.11).
     #pragma warning (disable:   26401)          // Do not delete a raw pointer that is not an owner<T> (i.11).
+    #pragma warning (disable:   26403)          // Reset or explicitly delete an owner<T> pointer 'name' (r.3).
+    #pragma warning (disable:   26408)          // Avoid malloc() and free(), prefer the nothrow version of new with delete (r.10).
     #pragma warning (disable:   26409)          // Avoid calling new and delete explicitly, use std::make_unique<T> instead (r.11).
     #pragma warning (disable:   26426)          // Global initializer calls a non-constexpr function 'name' (i.22).
     #pragma warning (disable:   26429)          // Symbol 'name' is never tested for nullness, it can be marked as not_null (f.23).
@@ -653,6 +655,7 @@
     #pragma warning (disable:   26492)          // Don't use const_cast to cast away const or volatile (type.3).
     #pragma warning (disable:   26493)          // Don't use C-style casts (type.4).
     #pragma warning (disable:   26496)          // The variable 'name' is assigned only once, mark it as const (con.4).
+    #pragma warning (disable:   26497)          // The function 'name' could be marked constexpr if compile-time evaluation is desired (f.4).
     #pragma warning (disable:   26812)          // The enum type 'type' is unscoped. Prefer 'enum class' over 'enum' (Enum.3).
     #pragma warning (disable:   26814)          // The const variable 'name' can be computed at compile-time. Consider using constexpr (con.5).
     #pragma warning (disable:   28125)          // The function must be called from within a try/except block
@@ -943,6 +946,7 @@ namespace std { enum nomeow_t { nomeow }; }     // Vital addition to the C++ sta
     #define _unlink                    unlink
     #define _vsnprintf                 vsnprintf
     #define _access                    access
+    #define _strdup                    strdup
 
     #define getch                      _getch
     #define putch                      _putch
@@ -5408,14 +5412,26 @@ int            _txWatchdogTimeout         = 10*_TX_TIMEOUT;
 //!
 //! @note    _TX_ALLOW_TRACE и TX_TRACE задаются @b перед включением TXLib.h в программу.
 //!
+//! @title   Уровни трассировки: @table
+//!          @tr  1  @td  Regular functions
+//!          @tr  2  @td  Reserved
+//!          @tr  3  @td  Init/Cleanup
+//!          @tr  4  @td  Init/Cleanup, misc functions
+//!          @tr  5  @td  Error handling, entry points
+//!          @tr  6  @td  Error handling, main part
+//!          @tr  7  @td  Error handling, misc functions
+//!          @tr  8  @td  Canvas worker thread
+//!          @tr  9  @td  Reserved
+//! @endtable
+//!
 //! @usage @code
-//!          // Для просмотра трассы запустить DbgView ДО запуска программы!
+//!          // Для просмотра трассы запустите DbgView ДО запуска программы!
 //!
-//!          #define  _TX_ALLOW_TRACE    // Трассировать только входы в функции.
+//!          #define  _TX_ALLOW_TRACE 1  // Трассировать только обычные функции TXLib (уровень 1).
 //!          #include "TXLib.h"
 //!
-//!          #define  _TX_ALLOW_TRACE 1  // Трассировать все строки TXLib.
-//!          #include "TXLib.h"
+//!          #define  _DEBUG             // Не трассировать, но собирать информацию о вызовах
+//!          #include "TXLib.h"          // функций TXLib для возможной трассировки стека.
 //! @endcode
 //!
 //! @hideinitializer
@@ -5516,77 +5532,100 @@ struct _txFuncEntry
 
 #define _txLocCurSet()  __txLocCurSet (__FILE__, __LINE__, __TX_FUNCTION__)
 
+#define _txLvlSet(lvl)  { _txLocCur.trace = (lvl); }
+
+//{----------------------------------------------------------------------------------------------------------------
+
+#if defined ($0)
+    #undef   $0
+    #endif
+
+#if defined ($1)
+    #undef   $1
+    #endif
+
+#if defined ($2)
+    #undef   $2
+    #endif
+
+#if defined ($3)
+    #undef   $3
+    #endif
+
+#if defined ($4)
+    #undef   $4
+    #endif
+
+#if defined ($5)
+    #undef   $5
+    #endif
+
+#if defined ($6)
+    #undef   $6
+    #endif
+
+#if defined ($7)
+    #undef   $7
+    #endif
+
+#if defined ($8)
+    #undef   $8
+    #endif
+
+#if defined ($9)
+    #undef   $9
+    #endif
+
+#if defined ($)
+    #undef   $
+    #endif
+
+#if defined ($$)
+    #undef   $$
+    #endif
+
+//}
 //-----------------------------------------------------------------------------------------------------------------
 
 #if defined (_TX_ALLOW_TRACE)
 
-    #if !defined ($1) && (_TX_ALLOW_TRACE +0 >= 0)
-    #define       $1    _txFuncEntry __txFuncEntry; { _txLocCurSet(); TX_TRACE; }
-    #endif
+    #define _txEntry(lvl)  _txFuncEntry __txFuncEntry; { if (lvl) _txLvlSet (lvl); $;              }
 
-    #if !defined ($2) && (_TX_ALLOW_TRACE +2 <  2)
-    #define       $2    $1                          { _txLocCur.trace = 0;      }
-    #endif
+    #define  $           { _txLocCurSet(); if (_txLocCur.trace <= _TX_ALLOW_TRACE+0) { TX_TRACE; } }
 
-    #if !defined ($3) && (_TX_ALLOW_TRACE +2 <  2)
-    #define       $3    $1                          { _txLocCur.trace = 0;      }
-    #endif
-
-    #if !defined ($4) && (_TX_ALLOW_TRACE +2 <  2)
-    #define       $4    $1                          { _txLocCur.trace = 0;      }
-    #endif
-
-    #if !defined ($5) && (_TX_ALLOW_TRACE +2 <  2)
-    #define       $5    $1                          { _txLocCur.trace = 0;      }
-    #endif
-
-    #if !defined ($)  && (_TX_ALLOW_TRACE +0 >= 1)
-    #define       $                                 { _txLocCurSet(); TX_TRACE; }
-    #endif
-
-    #define       $$                                { __txFuncEntry.restore();  }
+    #define  $$          { __txFuncEntry.restore();                                                }
 
 #elif defined (_DEBUG)
 
-    #if !defined ($1)
-    #define       $1    _txFuncEntry __txFuncEntry; { _txLocCurSet();           }
-    #endif
+    #define _txEntry(lvl)  _txFuncEntry __txFuncEntry; {                           $;              }
 
-    #if !defined ($)
-    #define       $                                 { _txLocCurSet();           }
-    #endif
+    #define  $           { _txLocCurSet();                                                         }
 
-    #define       $$                                { __txFuncEntry.restore();  }
+    #define  $$          { __txFuncEntry.restore();                                                }
+
+#else
+
+    #define _txEntry(lvl)  ;
+    #define  $             ;
+    #define  $$            ;
 
 #endif
 
-#if !defined     ($1)
-    #define       $1    ;
-    #endif
+//{----------------------------------------------------------------------------------------------------------------
 
-#if !defined     ($2)
-    #define       $2    ;
-    #endif
+#define      $0            _txEntry (0)  // (Log level unchanged)
+#define      $1            _txEntry (1)  // Regular functions
+#define      $2            _txEntry (2)  // Resvd
+#define      $3            _txEntry (3)  // Init/Cleanup
+#define      $4            _txEntry (4)  // Init/Cleanup, misc functions
+#define      $5            _txEntry (5)  // Error handling, entry points
+#define      $6            _txEntry (6)  // Error handling, main part
+#define      $7            _txEntry (7)  // Error handling, misc functions
+#define      $8            _txEntry (8)  // Canvas worker thread
+#define      $9            _txEntry (9)  // Resvd
 
-#if !defined     ($3)
-    #define       $3    ;
-    #endif
-
-#if !defined     ($4)
-    #define       $4    ;
-    #endif
-
-#if !defined     ($5)
-    #define       $5    ;
-    #endif
-
-#if !defined     ($)
-    #define       $     ;
-    #endif
-
-#if !defined     ($$)
-    #define       $$    ;
-    #endif
+//}
+//-----------------------------------------------------------------------------------------------------------------
 
 //! @endcond
 //! @}
@@ -5708,7 +5747,7 @@ $1      return (cs_ != NULL);
 //}----------------------------------------------------------------------------------------------------------------
 
 //  private:
-    CRITICAL_SECTION* cs_ = NULL;
+    CRITICAL_SECTION* cs_;
 
 //{----------------------------------------------------------------------------------------------------------------
 //! Такой вот копирайт.
@@ -5949,7 +5988,7 @@ struct txDialog
 //}----------------------------------------------------------------------------------------------------------------
 
     private:
-    const Layout* layout_ = NULL;
+    const Layout* layout_;
     };
 
 //! @}
@@ -6162,9 +6201,7 @@ const char* txInputBox (const char* text, const char* caption, const char* input
     //-------------------------------------------------------------------------------------------------------------
     struct inputDlg : txDialog
         {
-        typedef inputDlg this_t;
-
-        char str [1024] = {};
+        char str [1024];
 
         //---------------------------------------------------------------------------------------------------------
 
@@ -6195,9 +6232,15 @@ const char* txInputBox (const char* text, const char* caption, const char* input
         // Конец внутреннего класса диалога
         //---------------------------------------------------------------------------------------------------------
 
+        #if defined (_GCC_VER) && (_GCC_VER >= 530) || defined (_MSC_VER) && (_MSC_VER >= 1900)
+
+        typedef inputDlg this_t;
+
         private:
                 inputDlg   (const this_t&) _tx_delete;
         this_t& operator = (const this_t&) _tx_delete;
+
+        #endif
         };
 
     //-------------------------------------------------------------------------------------------------------------
@@ -7031,16 +7074,10 @@ HICON            _txCreateTXIcon             (int size) tx_nodiscard;
 int              _txSetFinishedText          (HWND wnd);
 void             _txPauseBeforeTermination   (HWND canvas);
 int              _txIsParentWaitable         (DWORD* parentPID = NULL) tx_nodiscard;
+int              _txGetInput();
 
 LRESULT CALLBACK _txPlayVideo_WndProc        (HWND wnd, UINT msg, WPARAM wpar, LPARAM lpar);
 const char*      _txPlayVideo_FindVLC() tx_nodiscard;
-
-PROCESSENTRY32*  _txFindProcess              (unsigned pid = GetCurrentProcessId()) tx_nodiscard;
-bool             _txKillProcess              (DWORD pid);
-bool             _txGetCommandLine           (wchar_t cmdLine[], size_t szCmdLine, unsigned pid = _getpid());
-int              _txGetInput();
-bool             _txInDll()   tx_nodiscard;
-const char*      _txAppInfo() tx_nodiscard;
 
 bool             _txCreateShortcut           (const char shortcutName[],
                                               const char fileToLink[], const char args[] = NULL, const char workDir[] = NULL,
@@ -7113,9 +7150,14 @@ intptr_t         _txReadSource               (char buf[], intptr_t size, const c
 
 uintptr_t        _txSetProcAddress           (const char funcName[], uintptr_t newFunc, const char dllName[] = NULL,
                                               int useHotPatching = false, HMODULE module = NULL, bool debug = false);
-
+bool             _txInDll() tx_nodiscard;
+PROCESSENTRY32*  _txFindProcess              (unsigned pid = GetCurrentProcessId()) tx_nodiscard;
+bool             _txKillProcess              (DWORD pid);
 bool             _txIsBadReadPtr             (const void* address);
 bool             _txCheckSourceCP            (int needCP = _TX_CP, bool verbose = true);
+bool             _txGetCommandLine           (wchar_t cmdLine[], size_t szCmdLine, unsigned pid = _getpid());
+IMAGE_NT_HEADERS*_txGetNtHeaders             (HMODULE module = GetModuleHandle (NULL)) tx_nodiscard;
+const char*      _txAppInfo() tx_nodiscard;
 
 intptr_t         _tx_snprintf_s              (char stream[], intptr_t size, const char format[], ...) tx_printfy (3, 4);
 intptr_t         _tx_vsnprintf_s             (char stream[], intptr_t size, const char format[], va_list arg);
@@ -7314,7 +7356,7 @@ int _txInitialize()
     _txMainThreadId = GetCurrentThreadId();
     _txMainThread   = OpenThread (THREAD_ALL_ACCESS, false, _txMainThreadId);
 
-$1  _txIsDll = _txInDll();
+$3  _txIsDll = _txInDll();
 
 $   if (!_txIsDll)
         {
@@ -7340,9 +7382,9 @@ $           _TX_CALL  (Win32::AddVectoredExceptionHandler, (1, (PVECTORED_EXCEPT
 $           _txPrevUEFilter = SetUnhandledExceptionFilter  (   (LPTOP_LEVEL_EXCEPTION_FILTER) _txUnhandledExceptionFilter);
             }
 
-$       ::std::set_terminate   (_txOnTerminate);
-$       Win32::set_unexpected  (_txOnUnexpected);
-$       ::std::set_new_handler (_txOnNewHandlerAnsi);
+$       ::std::set_terminate             (_txOnTerminate);
+$       ::std::set_new_handler           (_txOnNewHandlerAnsi);
+$       _TX_CALL (Win32::set_unexpected, (_txOnUnexpected));
 
         #if defined (_CLANG_VER) && !defined (_MSC_VER)
 $       ::std::__libcpp_debug_function = _txLibCppDebugFunction;
@@ -7442,7 +7484,7 @@ $   return 1;
 
 bool _txCheckSourceCP (int needCP /*= _TX_CP*/, bool verbose /*= true*/)
     {
-$1  const char* sCodePage = NULL;
+$3  const char* sCodePage = NULL;
 $   int codePage = 0;
 
 $   switch (((unsigned const char*) "А") [0])
@@ -7555,7 +7597,7 @@ _tx_FARPROC _txDllImport (const char dllFileName[], const char funcName[], bool 
                                            dllName, (arch? "\" / \"" : ""), dllArch);
     if (!dll) return NULL;
 
-    auto addr = (_tx_FARPROC) GetProcAddress (dll, funcName);
+    _tx_FARPROC addr = (_tx_FARPROC) GetProcAddress (dll, funcName);
 
     if (!addr && required) TX_ERROR ("\a" "Cannot import \"%s\" from library \"%s%s%s\".",
                                            funcName, dllName, (arch? "\" / \"" : ""), dllArch);
@@ -7746,7 +7788,7 @@ $   _txBuffer_Select (font, _txCanvas_BackBuf[1]);
 
 $   if (con.dwCursorPosition.X) _putch ('\n');
 
-$   auto delta = (short) (con.dwCursorPosition.Y - con.srWindow.Top);
+$   short delta = (short) (con.dwCursorPosition.Y - con.srWindow.Top);
 
 $   con.srWindow.Top    = (short) (con.srWindow.Top    + delta);
 $   con.srWindow.Bottom = (short) (con.srWindow.Bottom + delta);
@@ -7797,7 +7839,7 @@ void _txOnCExit()
     OutputDebugString ("\n");
     txOutputDebugPrintf ("%s - WARNING: %s() called\n", _TX_VERSION, __func__);
 
-$1  _txCleanup();
+$5  _txCleanup();
 
     txOutputDebugPrintf ("%s - WARNING: calling Win32::_cexit()\n", _TX_VERSION);
     _TX_CALLv (Win32::_cexit, ());
@@ -7813,7 +7855,7 @@ void _txOnExit (int retcode)
         txOutputDebugPrintf ("%s - WARNING: %s (%d) called\n", _TX_VERSION, __func__, retcode);
         }
 
- $1 _txCleanup();
+$5  _txCleanup();
 
     if (retcode != 0)
         txOutputDebugPrintf ("%s - WARNING: calling Win32::exit (%d)\n", _TX_VERSION, retcode);
@@ -7831,7 +7873,7 @@ void _txOnExitProcess (unsigned retcode)
         txOutputDebugPrintf ("%s - WARNING: %s (%u) called\n", _TX_VERSION, __func__, retcode);
         }
 
-$1  _txCleanup();
+$5  _txCleanup();
 
     if (retcode != 0)
         txOutputDebugPrintf ("%s - WARNING: calling Win32::ExitProcess (%u)\n", _TX_VERSION, retcode);
@@ -7849,7 +7891,7 @@ bool _txOnTerminateProcess (HANDLE process, unsigned retcode)
         txOutputDebugPrintf ("%s - WARNING: %s (0x%p, %u) called\n", _TX_VERSION, __func__, process, retcode);
         }
 
-$1  _txCleanup();
+$5  _txCleanup();
 
     if (retcode != 0)
         txOutputDebugPrintf ("%s - WARNING: calling Win32::TerminateProcess (0x%p, %u)\n", _TX_VERSION, process, retcode);
@@ -7864,7 +7906,7 @@ void _txOnFatalExit (int retcode)
     OutputDebugString ("\n");
     txOutputDebugPrintf ("%s - WARNING: %s (%d) called\n", _TX_VERSION, __func__, retcode);
 
-$1  _txCleanup();
+$5  _txCleanup();
 
     txOutputDebugPrintf ("%s - WARNING: calling Win32::FatalExit (%d)\n", _TX_VERSION, retcode);
     _TX_CALLv (Win32::FatalExit, (retcode));
@@ -7880,7 +7922,7 @@ void _txOnFatalAppExitA (unsigned action, const char message[])
     OutputDebugString ("\n");
     txOutputDebugPrintf ("%s - WARNING: %s (%u, \"%s\") called\n", _TX_VERSION, __func__, action, message);
 
-$1  _txCleanup();
+$5  _txCleanup();
 
     txOutputDebugPrintf ("%s - WARNING: calling Win32::FatalAppExitA (%u, %s)\n", _TX_VERSION, action, message);
     _TX_CALLv (Win32::FatalAppExitA, (action, message));
@@ -7896,7 +7938,7 @@ BOOL WINAPI _txOnConsoleCtrlEvent (DWORD type)
     OutputDebugString ("\n");
     txOutputDebugPrintf ("%s - WARNING: %s (0x%04lX) called\n", _TX_VERSION, __func__, (unsigned long) type);
 
-$1  switch (type)
+$5  switch (type)
         {
         case CTRL_LOGOFF_EVENT:
         case CTRL_SHUTDOWN_EVENT: $ _txExit = true;
@@ -7918,7 +7960,7 @@ void _txCleanup()
     if (!_txInitialized) return;
     else _txInitialized = false;
 
-$1  _txRunning = false;
+$3  _txRunning = false;
 $   _txConsole_IsBlinking = false;
 
 $   HWND canvas     = txWindow();
@@ -8022,7 +8064,7 @@ int _txSetFinishedText (HWND wnd)
         {
         static LRESULT getWindowText (HWND window, wchar_t text[], size_t size)
             {
-$1          memset (text, 0, size * sizeof (*text));
+$3          memset (text, 0, size * sizeof (*text));
 
 $           return SendMessageTimeoutW (window, WM_GETTEXT, (WPARAM) size, (LPARAM) text, SMTO_BLOCK | SMTO_ABORTIFHUNG, _TX_TIMEOUT, NULL);
             }
@@ -8036,19 +8078,19 @@ $1          return SendMessageTimeoutW (window, WM_SETTEXT, 0,             (LPAR
 $1  static wchar_t title [_TX_BUFSIZE+15] = L"TXLib";
 
 $   tools::getWindowText (wnd, title, _TX_BUFSIZE-1);
-$   int len = (int) wcslen (title); if (len >= _TX_BUFSIZE) len = _TX_BUFSIZE-1;
+$   int len = (int) wcslen (title); if (len >= (int)_TX_BUFSIZE) len = _TX_BUFSIZE-1;
 
 $   MultiByteToWideChar (_TX_CP, 0, " [ЗАВЕРШЕНО]", -1, title + len, (int)_TX_BUFSIZE - len);
 
 $   tools::setWindowText (wnd, title);
 $   tools::getWindowText (wnd, title, _TX_BUFSIZE-1);
-$   if (len <= _TX_BUFSIZE-1-2 && title [len+2] == (wchar_t) 0x0417 /* 'З' */) return 0;
+$   if (len <= (int)_TX_BUFSIZE-1-2 && title [len+2] == (wchar_t) 0x0417 /* 'З' */) return 0;
 
 $   MultiByteToWideChar (_TX_CP, 0, " [FINISHED]",  -1, title + len, (int)_TX_BUFSIZE - len);
 
 $   tools::setWindowText (wnd, title);
 $   tools::getWindowText (wnd, title, _TX_BUFSIZE-1);
-$   if (len <= _TX_BUFSIZE-1-2 && title [len+2] == /* 'F' */ (wchar_t) 0x0046) return 1;
+$   if (len <= (int)_TX_BUFSIZE-1-2 && title [len+2] == /* 'F' */ (wchar_t) 0x0046) return 1;
 
 $   return 2;
     }
@@ -8057,7 +8099,7 @@ $   return 2;
 
 void _txPauseBeforeTermination (HWND canvas)
     {
-$1  while (_kbhit()) (void)_getch();
+$3  while (_kbhit()) (void)_getch();
 
 $   CONSOLE_SCREEN_BUFFER_INFO con = {{0}};
 $   bool kbRedir = !GetConsoleScreenBufferInfo (GetStdHandle (STD_OUTPUT_HANDLE), &con);
@@ -8105,7 +8147,7 @@ $   fprintf (stderr, "\n");
 
 int _txGetInput()
     {
-$1  HANDLE con = GetStdHandle (STD_INPUT_HANDLE);
+$4  HANDLE con = GetStdHandle (STD_INPUT_HANDLE);
 
 $   DWORD nChars = 0;
 $   if (GetConsoleMode (con, &nChars) == 0 &&
@@ -8136,7 +8178,7 @@ $   return EOF;
 
 int _txIsParentWaitable (DWORD* parentPID /*= NULL*/)
     {
-$1  PROCESSENTRY32* info = _txFindProcess();
+$4  PROCESSENTRY32* info = _txFindProcess();
 $   if (!info) return 0;
 
 $   info = _txFindProcess (info->th32ParentProcessID);
@@ -8178,7 +8220,7 @@ $   return 0;
 
 void _txWatchdogTerminator (void* timeout)  // Or Watchcat? Possibly will change in future versions
     {
-$1  if (_TX_ARGUMENT_FAILED (timeout)) return;
+$3  if (_TX_ARGUMENT_FAILED (timeout)) return;
 
 $   Sleep (*(int*) timeout);
 
@@ -8209,7 +8251,7 @@ $   Win32::TerminateProcess (GetCurrentProcess(), EXIT_FAILURE);
 
 PROCESSENTRY32* _txFindProcess (unsigned pid /*= GetCurrentProcessId()*/)
     {
-$1  static PROCESSENTRY32 info = { sizeof (info) };
+$4  static PROCESSENTRY32 info = { sizeof (info) };
 $   if (!pid) return &info;
 
 $   HANDLE sshot = CreateToolhelp32Snapshot (TH32CS_SNAPPROCESS, 0);
@@ -8229,7 +8271,7 @@ $   return &info;
 
 bool _txKillProcess (DWORD pid)
     {
-$1  if (_TX_ARGUMENT_FAILED (pid)) return false;
+$3  if (_TX_ARGUMENT_FAILED (pid)) return false;
 
 $   HANDLE token = INVALID_HANDLE_VALUE;
 $   OpenProcessToken (GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &token) asserted;
@@ -8264,7 +8306,7 @@ int txTaskKill (const char i[] /*= NULL*/,
     #define cmdLineSubstr doYouWantToFindSomethingInTheCommandLineIDidSomethingForYouToFindSomethingInTheCommandLineMaybeYouWillFindSomeInterestingInTheCommandLineSoIDidSomethingForYouInTheCommandLine
     #define pid           x  // Another great name, isn't it?
 
-$1  if (_TX_ARGUMENT_FAILED (name && cmdLineSubstr && pid)) return false;
+$3  if (_TX_ARGUMENT_FAILED ((name || cmdLineSubstr || pid) && "Вот такие тут интересные имена встречаются...")) return false;
 
 $   wchar_t cmdLineSubstrW[_TX_BUFSIZE] = L"";
     if (cmdLineSubstr) {$ MultiByteToWideChar (_TX_CP, 0, cmdLineSubstr, -1, cmdLineSubstrW, sizearr (cmdLineSubstrW)); }
@@ -8277,21 +8319,21 @@ $   int killed = 0;
 $   PROCESSENTRY32 info = { sizeof (info) };
 $   for (bool ok = !!Process32First (sshot, &info); ok; ok = !!Process32Next (sshot, &info))
         {
-$       bool kill = false;
+        bool kill = false;
 
         if (!kill && pid  && info.th32ParentProcessID        == pid) {$ kill = true; }
 
         if (!kill && name && _stricmp (info.szExeFile, name) == 0)   {$ kill = true; }
 
-$       if (!kill)
+        if (!kill)
             {
-$           wchar_t cmdLineW[_TX_BUFSIZE] = L"";
-$           _txGetCommandLine (cmdLineW, sizearr (cmdLineW), info.th32ProcessID);
+            wchar_t cmdLineW[_TX_BUFSIZE] = L"";
+            if (!_txGetCommandLine (cmdLineW, sizearr (cmdLineW), info.th32ProcessID)) { continue; }
 
             if (*cmdLineW && stristrw (cmdLineW, cmdLineSubstrW))    {$ kill = true; }
             }
 
-$       if (kill)
+        if (kill)
             {
 $           if (_txKillProcess (info.th32ProcessID))
                 {$ killed++; }
@@ -8311,7 +8353,7 @@ $   return killed;
 
 bool _txGetCommandLine (wchar_t cmdLine[], size_t szCmdLine, unsigned pid /*= _getpid()*/)
     {
-$1  if (_TX_ARGUMENT_FAILED (cmdLine))        return false;
+$4  if (_TX_ARGUMENT_FAILED (cmdLine))        return false;
 $   if (_TX_ARGUMENT_FAILED (szCmdLine >= 2)) return false;
 
 $   if (pid == (unsigned) _getpid())
@@ -8328,19 +8370,34 @@ $   Win32::NtQueryInformationProcess (proc, 0 /*ProcessBasicInformation*/, &pbi,
 
     // Should use ReadProcessMemory() because the info is actually in another address space
 
+$   bool ok = true;
+
 $   Win32::PEB peb = {};
-    if (pbi.PebBaseAddress)        {$ ReadProcessMemory (proc, pbi.PebBaseAddress,        &peb,    sizeof (peb),    NULL) asserted; }
+    if (ok && pbi.PebBaseAddress)        {$ ok &= !!ReadProcessMemory (proc, pbi.PebBaseAddress,        &peb,    sizeof (peb),    NULL); }
 
 $   Win32::RTL_USER_PROCESS_PARAMETERS params = {};
-    if (peb.ProcessParameters)     {$ ReadProcessMemory (proc, peb.ProcessParameters,     &params, sizeof (params), NULL) asserted; }
+    if (ok && peb.ProcessParameters)     {$ ok &= !!ReadProcessMemory (proc, peb.ProcessParameters,     &params, sizeof (params), NULL); }
 
 $   *cmdLine = 0;
-    if (params.CommandLine.Buffer) {$ ReadProcessMemory (proc, params.CommandLine.Buffer, cmdLine,
-                                                         MIN  (params.CommandLine.Length + 2, (int) (szCmdLine * sizeof (*cmdLine)) - 2),
-                                                         NULL) asserted; }
+    if (ok && params.CommandLine.Buffer) {$ ok &= !!ReadProcessMemory (proc, params.CommandLine.Buffer, cmdLine,
+                                                                       MIN  (params.CommandLine.Length + 2, (int) (szCmdLine * sizeof (*cmdLine)) - 2),
+                                                                       NULL); }
 $   CloseHandle (proc) asserted;
 
-$   return true;
+$   return ok;
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+#define RVA_(type, module, addr)  ( (type) ((uintptr_t) (module) + (uintptr_t) (addr)) )
+
+IMAGE_NT_HEADERS* _txGetNtHeaders (HMODULE module /*= GetModuleHandle (NULL)*/)
+    {
+$4  IMAGE_DOS_HEADER* dosHdr = RVA_ (IMAGE_DOS_HEADER*, module, 0);
+$   IMAGE_NT_HEADERS* ntHdr  = RVA_ (IMAGE_NT_HEADERS*, module, dosHdr->e_lfanew);
+
+$   return (dosHdr->e_magic  == IMAGE_DOS_SIGNATURE &&
+            ntHdr->Signature == IMAGE_NT_SIGNATURE)? ntHdr : NULL;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -8348,9 +8405,9 @@ $   return true;
 // TXLib continues to hack the reality to make your life better, sweeter and easier
 
 uintptr_t _txSetProcAddress (const char funcName[], uintptr_t newFunc, const char dllName[] /*= NULL*/, int useHotPatching /*= false*/,
-                        HMODULE module /*= NULL*/, bool debug /*= false*/)
+                             HMODULE module /*= NULL*/, bool debug /*= false*/)
     {
-$2  if (debug) txOutputDebugPrintf ("_txSetProcAddress (%s, 0x%p, %s, 0x%p):\n", funcName, (void*) newFunc, dllName, module);
+$4  if (debug) txOutputDebugPrintf ("_txSetProcAddress (%s, 0x%p, %s, 0x%p):\n", funcName, (void*) newFunc, dllName, module);
 
 $   if (_TX_ARGUMENT_FAILED (funcName)) return 0;
 $   if (_TX_ARGUMENT_FAILED (newFunc))  return 0;
@@ -8384,16 +8441,11 @@ $       return (uintptr_t) oldFunc;
 //  For PE structure and Import Table format, e.g. see https://books.google.ru/books?id=ifQPC86G66sC&pg=PA255
 //  and below through Figure 5-5, and/or http://www.brokenthorn.com/Resources/OSDevPE.html.
 
-    #define RVA_(type, addr)  ( (type) ((uintptr_t) module + (uintptr_t) (addr)) )
-
-$   IMAGE_DOS_HEADER* dosHdr = RVA_ (IMAGE_DOS_HEADER*, 0);
-$   IMAGE_NT_HEADERS* ntHdr  = RVA_ (IMAGE_NT_HEADERS*, dosHdr->e_lfanew);
-
-$   if (dosHdr->e_magic   != IMAGE_DOS_SIGNATURE ||
-        ntHdr ->Signature != IMAGE_NT_SIGNATURE) return 0;
+$   IMAGE_NT_HEADERS* ntHdr = _txGetNtHeaders (module);
+    if (!ntHdr || (ntHdr ->OptionalHeader.Magic != IMAGE_NT_OPTIONAL_HDR_MAGIC)) {$ return 0; }
 
 $   DWORD impOffset = ntHdr->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress;
-$   IMAGE_IMPORT_DESCRIPTOR* desc = RVA_ (IMAGE_IMPORT_DESCRIPTOR*, impOffset);
+$   IMAGE_IMPORT_DESCRIPTOR* desc = RVA_ (IMAGE_IMPORT_DESCRIPTOR*, module, impOffset);
 
 $   if (desc == (IMAGE_IMPORT_DESCRIPTOR*) ntHdr) return 0;
 
@@ -8405,19 +8457,19 @@ $   bool   found   = false;
 
     for (; desc->Name; desc++)
         {
-$       impDll = RVA_ (char*, desc->Name);
+$       impDll = RVA_ (char*, module, desc->Name);
 $       if (dllName && _stricmp (impDll, dllName) != 0) continue;
 
-$       for (thunk0 = RVA_ (IMAGE_THUNK_DATA*, desc->OriginalFirstThunk),
-             thunk1 = RVA_ (IMAGE_THUNK_DATA*, desc->FirstThunk);
+$       for (thunk0 = RVA_ (IMAGE_THUNK_DATA*, module, desc->OriginalFirstThunk),
+             thunk1 = RVA_ (IMAGE_THUNK_DATA*, module, desc->FirstThunk);
 
              thunk0 && thunk1 && thunk1->u1.Function;
 
              thunk0++,
              thunk1++)
             {
-            impName = (char*) RVA_ (IMAGE_IMPORT_BY_NAME*, thunk0->u1.AddressOfData) -> Name;
-            impPtr  = (void**)(uintptr_t)                 &thunk1->u1.Function;  // Should change it, so this is ptr
+            impName = (char*) RVA_ (IMAGE_IMPORT_BY_NAME*, module, thunk0->u1.AddressOfData) -> Name;
+            impPtr  = (void**)(uintptr_t)                         &thunk1->u1.Function;  // Should change it, so this is ptr
 
             if (debug) txOutputDebugPrintf ("[0x%p] %s!%s\n", *impPtr, impDll, impName);
 
@@ -8444,15 +8496,15 @@ $   *(uintptr_t*) impPtr = newFunc;
 $   VirtualProtect (impPtr, sizeof (*impPtr), rights, &rights);
 
 $   return (uintptr_t) oldFunc;
-
-    #undef RVA_
     }
+
+#undef RVA_
 
 //-----------------------------------------------------------------------------------------------------------------
 
 bool _txInDll()
     {
-$1  MODULEENTRY32 mod = { sizeof (mod) };
+$4  MODULEENTRY32 mod = { sizeof (mod) };
 
 $   HANDLE sshot = CreateToolhelp32Snapshot (TH32CS_SNAPMODULE, 0);
 $   assert (sshot); if (!sshot) return false;
@@ -8463,12 +8515,9 @@ $   for (bool ok = !!Module32First (sshot, &mod); ok; ok = !!Module32Next (sshot
         {
 $       if (!mod.modBaseAddr) continue;
 
-$       auto dosHdr = (IMAGE_DOS_HEADER*)  mod.modBaseAddr;
-$       auto ntHdr  = (IMAGE_NT_HEADERS*) (mod.modBaseAddr + dosHdr->e_lfanew);
+$       IMAGE_NT_HEADERS* ntHdr = _txGetNtHeaders ((HMODULE) mod.modBaseAddr);
 
-$       inDll = (dosHdr->e_magic  == IMAGE_DOS_SIGNATURE &&
-                 ntHdr->Signature == IMAGE_NT_SIGNATURE  &&
-                (ntHdr->FileHeader.Characteristics & IMAGE_FILE_DLL) != 0);
+$       inDll = ntHdr && ((ntHdr->FileHeader.Characteristics & IMAGE_FILE_DLL) != 0);
 
 $       if (In (std::nomeow, (BYTE*)(uintptr_t)_txInDll, mod.modBaseAddr, mod.modBaseAddr + mod.modBaseSize))
             {$ break; }
@@ -8476,6 +8525,19 @@ $       if (In (std::nomeow, (BYTE*)(uintptr_t)_txInDll, mod.modBaseAddr, mod.mo
 
 $   CloseHandle (sshot);
 $   return inDll;
+    }
+
+//-----------------------------------------------------------------------------------------------------------------
+
+bool _txIsConsoleSubsystem()
+    {
+$4  IMAGE_NT_HEADERS* ntHdr = _txGetNtHeaders();
+
+$   return  ntHdr &&
+            ntHdr ->OptionalHeader.Magic == IMAGE_NT_OPTIONAL_HDR_MAGIC &&
+
+           (ntHdr ->OptionalHeader.Subsystem == IMAGE_SUBSYSTEM_WINDOWS_CUI ||
+            ntHdr ->OptionalHeader.Subsystem == IMAGE_SUBSYSTEM_POSIX_CUI);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -8511,7 +8573,7 @@ unsigned WINAPI _txCanvas_ThreadProc (void* data)
     #define GCL_HICONSM_   GCLP_HICONSM
     #define GCL_HCURSOR_   GCLP_HCURSOR
 
-$1  _txCanvas_ThreadId = GetCurrentThreadId();
+$8  _txCanvas_ThreadId = GetCurrentThreadId();
 
 $   if (_TX_ARGUMENT_FAILED (data)) return false;
 
@@ -8586,7 +8648,7 @@ $   return true;
 
 HWND _txCanvas_CreateWindow (const SIZE* sizePtr)
     {
-$1  if (_TX_ARGUMENT_FAILED (sizePtr)) return NULL;
+$8  if (_TX_ARGUMENT_FAILED (sizePtr)) return NULL;
 
 $   bool centered = false;
     if (sizePtr->cx < 0 && sizePtr->cy < 0) {$ centered = true; }
@@ -8620,7 +8682,7 @@ $   return txWindow();
 
 ATOM txRegisterClass (const char classId[], WNDPROC wndProc, unsigned style, int backBrush, int wndExtra)
     {
-$   static char name[_TX_BUFSIZE] = "";
+$8  static char name[_TX_BUFSIZE] = "";
 $   _tx_snprintf_s (name, sizeof (name) - 1, "/*---[TXLib]-[%s]------------ "
                                              _TX_VERSION "  " __FILE__ "  WndClass %08lX "
                                              "-------------[%s]-[TXLib]---*/",
@@ -8656,7 +8718,7 @@ inline bool _txCanvas_OK()
 
 int _txCanvas_SetRefreshLock (int count)
     {
-$1  int oldCount = _txCanvas_RefreshLock;
+$8  int oldCount = _txCanvas_RefreshLock;
 
 $   _txCanvas_RefreshLock = count;
 
@@ -8672,7 +8734,7 @@ $   return oldCount;
 
 HICON _txCreateTXIcon (int size)
     {
-$1  if (_TX_ARGUMENT_FAILED (size == 32 || size == 16)) return NULL;
+$8  if (_TX_ARGUMENT_FAILED (size == 32 || size == 16)) return NULL;
 
 $   const unsigned char image32 [32*32+1] =
         "00000000000000000000000000000000""0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0""0F0000000000000000000000000000F0""0F0000000000000000000000000000F0"
@@ -8738,7 +8800,7 @@ LRESULT CALLBACK _txCanvas_WndProc (HWND wnd, UINT msg, WPARAM wpar, LPARAM lpar
 
 #endif
 
-$1  if (msg == WM_KEYDOWN && wpar == VK_F12 &&
+$8  if (msg == WM_KEYDOWN && wpar == VK_F12 &&
         GetKeyState (VK_SHIFT) && GetKeyState (VK_CONTROL) && GetKeyState (VK_MENU))
         {
 $       _txCanvas_OnCmdABOUT (wnd,      wpar);
@@ -8802,7 +8864,7 @@ $   return DefWindowProc (wnd, msg, wpar, lpar);
 
 bool _txCanvas_OnCREATE (HWND wnd)
     {
-$1  if (_TX_ARGUMENT_FAILED (wnd)) return false;
+$8  if (_TX_ARGUMENT_FAILED (wnd)) return false;
 
 $   _txCanvas_BackBuf[0] = _txBuffer_Create (wnd, NULL, NULL, &_txCanvas_Pixels); assert (_txCanvas_BackBuf[0]);
 $   _txCanvas_BackBuf[1] = _txBuffer_Create (wnd, NULL, NULL, NULL);              assert (_txCanvas_BackBuf[1]);
@@ -8823,7 +8885,7 @@ $   return true;
 
 bool _txCanvas_OnDESTROY (HWND wnd)
     {
-$1  if (_TX_ARGUMENT_FAILED (wnd)) return false;
+$8  if (_TX_ARGUMENT_FAILED (wnd)) return false;
 
     // Инициируем остановку цикла сообщений
 
@@ -8848,7 +8910,7 @@ $   if (_txCanvas_UserDCs && !_txCanvas_UserDCs->empty())
 $       txNotifyIcon (NIIF_ERROR, NULL, "Вы забыли освободить %d HDC.", (int) _txCanvas_UserDCs->size());
 $       Sleep (_TX_TIMEOUT);
 
-$       for (auto&& dc : *_txCanvas_UserDCs) _txBuffer_Delete (&dc);
+$       for (size_t i = 0; i < _txCanvas_UserDCs->size(); i++) _txBuffer_Delete (&_txCanvas_UserDCs->at (i));
 $       _txCanvas_UserDCs->clear();
         }
 
@@ -8875,7 +8937,7 @@ $   return true;
 
 bool _txCanvas_OnCLOSE (HWND wnd)
     {
-$1  if (_TX_ARGUMENT_FAILED (wnd)) return false;
+$8  if (_TX_ARGUMENT_FAILED (wnd)) return false;
 $   if (!_txCanvas_OK())           return false;
 
 $   if (_txMain && _txRunning &&
@@ -8889,7 +8951,7 @@ $   return true;
 
 bool _txCanvas_OnTIMER (HWND wnd, WPARAM)
     {
-$1  if (_TX_ARGUMENT_FAILED (wnd)) return false;
+$8  if (_TX_ARGUMENT_FAILED (wnd)) return false;
 
 $   if (_txCanvas_RefreshLock > 0 || !_txRunning) return false;
 
@@ -8903,7 +8965,7 @@ $   return true;
 
 bool _txCanvas_OnPAINT (HWND wnd)
     {
-$1  if (_TX_ARGUMENT_FAILED (wnd)) return false;
+$8  if (_TX_ARGUMENT_FAILED (wnd)) return false;
 $   if (!_txCanvas_OK())           return false;
 
 $   bool forceRedraw = GetAsyncKeyState (VK_MENU)  && GetAsyncKeyState (VK_CONTROL) &&
@@ -8964,7 +9026,7 @@ $   return true;
 
 bool _txCanvas_OnKEYDOWN (HWND, WPARAM vk, LPARAM info)
     {
-$1  INPUT_RECORD evt = {0};
+$8  INPUT_RECORD evt = {0};
 
 $   evt.EventType                        = KEY_EVENT;
 $   evt.Event.KeyEvent.bKeyDown          = true;
@@ -8986,7 +9048,7 @@ $   return false;
 
 bool _txCanvas_OnCHAR (HWND, WPARAM ch, LPARAM info)
     {
-$1  INPUT_RECORD evt = {0};
+$8  INPUT_RECORD evt = {0};
 
 $   evt.EventType                        = KEY_EVENT;
 $   evt.Event.KeyEvent.bKeyDown          = true;
@@ -9006,7 +9068,7 @@ $   return true;
 
 bool _txCanvas_OnMOUSEMOVE (HWND wnd, WPARAM buttons, LPARAM coords)
     {
-$1  if (_TX_ARGUMENT_FAILED (wnd)) return false;
+$8  if (_TX_ARGUMENT_FAILED (wnd)) return false;
 $   if (!_txCanvas_OK())           return false;
 
 $   if (_txMousePos.x == -1 && _txMousePos.y == -1)
@@ -9026,7 +9088,7 @@ $   return true;
 
 bool _txCanvas_OnMOUSELEAVE (HWND)
     {
-$1  _txMousePos.x   = -1;
+$8  _txMousePos.x   = -1;
 $   _txMousePos.y   = -1;
 $   _txMouseButtons = 0;
 
@@ -9037,7 +9099,7 @@ $   return true;
 
 bool _txCanvas_OnCREATEWND (HWND, WPARAM, LPARAM lpar)
     {
-$1  if (_TX_ARGUMENT_FAILED (lpar)) return false;
+$8  if (_TX_ARGUMENT_FAILED (lpar)) return false;
 
 $   const CREATESTRUCT* create = (CREATESTRUCT*) lpar;
 
@@ -9054,7 +9116,7 @@ $   return true;
 
 bool _txCanvas_OnDESTROYWND (HWND, WPARAM, LPARAM lpar)
     {
-$1  if (_TX_ARGUMENT_FAILED (lpar)) return false;
+$8  if (_TX_ARGUMENT_FAILED (lpar)) return false;
 
 $   DestroyWindow ((HWND) lpar);
 
@@ -9065,7 +9127,7 @@ $   return false;
 
 bool _txCanvas_OnCmdCONSOLE (HWND wnd, WPARAM cmd)
     {
-$1  if (_TX_ARGUMENT_FAILED (wnd)) return false;
+$8  if (_TX_ARGUMENT_FAILED (wnd)) return false;
 
 $   HWND console = Win32::GetConsoleWindow();
 $   if (!console) return false;
@@ -9084,7 +9146,7 @@ $   return true;
 
 bool _txCanvas_OnCmdABOUT (HWND, WPARAM)
     {
-$1  //{ Overriding the missing names, if the set is uncomplete
+$8  //{ Overriding the missing names, if the set is uncomplete
 
     #if defined (__MODULE)
         #define ABOUT_NAME_    __MODULE
@@ -9152,7 +9214,7 @@ $   return true;
 
 HWND _txConsole_Attach()
     {
-$1  HWND console    =   Win32::GetConsoleWindow();
+$1  HWND console = Win32::GetConsoleWindow();
 
 $   if (!console)
         {
@@ -9170,9 +9232,8 @@ $   if (done) return console;
 
 $   _txConsole_SetUnicodeFont();                  // Впечатлительным лучше сюда не смотреть.
 
-    #ifndef _CONSOLE
-$   txReopenStdio();                              // Переоткрываем потоки ввода-вывода, если subsystem != console
-    #endif
+$   if (!_txIsConsoleSubsystem())
+        {$ txReopenStdio(); }                     // Переоткрываем потоки ввода-вывода, если subsystem != console
 
     // That's all, folks
 
@@ -9210,7 +9271,7 @@ $       _wsetlocale (LC_NUMERIC, L"C");           // L"C" (see above)
 
     #endif
 
-    return codePage;
+$   return codePage;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -9269,7 +9330,7 @@ $   return !!FreeConsole();
 
 bool _txConsole_Draw (HDC dc)
     {
-$1  if (_TX_HDC_FAILED (dc)) return false;
+$8  if (_TX_HDC_FAILED (dc)) return false;
 
 $   HANDLE out = GetStdHandle (STD_OUTPUT_HANDLE);
 
@@ -9824,7 +9885,7 @@ $   _TX_UNEXPECTED ("\a"
 int _txOnNewHandler (size_t size)
     {
     txOutputDebugPrintf ("%s - WARNING: %s (0x%p) called\n", _TX_VERSION, __func__, (void*)(uintptr_t) size);
-$1
+$5
 $   _TX_UNEXPECTED ("operator new: Ошибка выделения %llu байт памяти.\n\n"
                     "С помощью _set_new_handler() вы можете сами обработать эту ошибку "
                     "и где-нибудь найти недостающую память.", (unsigned long long) size);
@@ -9838,7 +9899,7 @@ $   return 0;
 void _txOnSecurityError (int code, void* addr)
     {
     txOutputDebugPrintf ("%s - WARNING: %s (%d, 0x%p) called\n", _TX_VERSION, __func__, code, addr);
-$1
+$5
 $   _TX_UNEXPECTED ("\a"
                     "Ошибка переполнения буфера %d (_SECERR_BUFFER_OVERRUN). Ставьте ассерты!\n\n"
                     "С помощью _set_security_error_handler() вы можете сами обработать эту ошибку "
@@ -9850,7 +9911,7 @@ $   _TX_UNEXPECTED ("\a"
 void _txOnPureCall()
     {
     txOutputDebugPrintf ("%s - WARNING: %s() called\n", _TX_VERSION, __func__);
-$1
+$5
 $   _TX_UNEXPECTED ("\a"
                     "Вызвана чисто виртуальная функция. Такое бывает, например, в конструкторах "
                     "или деструкторах базовых классов - не вызывайте там таких функций.\n\n"
@@ -9864,7 +9925,7 @@ void _txOnInvalidParam (const wchar_t* wExpr, const wchar_t* wFunc, const wchar_
     {
     txOutputDebugPrintf ("%s - WARNING: %s (%S, %S, %S, %d, 0x%p) called\n", _TX_VERSION, __func__, wExpr, wFunc, wFile, line, addr);
 
-$1  char expr [_TX_BUFSIZE/2] = "[Unknowm expr]",
+$5  char expr [_TX_BUFSIZE/2] = "[Unknowm expr]",
          func [_TX_BUFSIZE/2] = "[Unknowm func]",
          file [MAX_PATH]      = "[Unknowm file]";
 
@@ -9883,7 +9944,7 @@ $$  _txError (file, (int) line, func, 0, "\a"
 
 void _txLibCppDebugFunction (std::__libcpp_debug_info const& info)
     {
-$1  assert (&info);
+$5  assert (&info);
 
 $$  _txError (info.__file_, info.__line_, NULL, 0, "\a"
               "Оказалось неверно, что %s (%s). Не надо так.\n\n"
@@ -9900,7 +9961,7 @@ int _txOnRTCFailure (int type, const char* file, int line, const char* module, c
     {
     txOutputDebugPrintf ("%s - WARNING: %s (%d, %s, %d, %s, %s) called\n", _TX_VERSION, __func__, type, file, line, module, format);
 
-$1  static long running = 0;
+$5  static long running = 0;
 $   while (InterlockedExchange (&running, 1)) Sleep (0);
 
     // Disable all RTC failures
@@ -10056,7 +10117,7 @@ long WINAPI _txUnhandledExceptionFilter (EXCEPTION_POINTERS* exc)
             }
         else
             {
-$1          _txClearJmp();
+$6          _txClearJmp();
 
             _TX_UNEXPECTED ("\t\a"
                             "%s"
@@ -10074,7 +10135,7 @@ $1          _txClearJmp();
 
 LPTOP_LEVEL_EXCEPTION_FILTER WINAPI _txOnSetUnhandledExceptionFilter (LPTOP_LEVEL_EXCEPTION_FILTER filter)
     {
-$1  _txPrevUEFilter = filter;
+$6  _txPrevUEFilter = filter;
 
     return (LPTOP_LEVEL_EXCEPTION_FILTER) _txUnhandledExceptionFilter;
     }
@@ -10109,7 +10170,7 @@ long _txOnExceptionSEH (EXCEPTION_POINTERS* exc, const char func[])
     txOutputDebugPrintf ("%s - WARNING: #%ld: %s (code 0x%08lX, addr 0x%p) called\n",
                          _TX_VERSION, _txSENumber, func, (unsigned long) code, addr);
 
-$1  if (*(unsigned long long*) _txDumpExceptionObjJmp)
+$6  if (*(unsigned long long*) _txDumpExceptionObjJmp)
         {
 $       longjmp (_txDumpExceptionObjJmp, 1);
         }
@@ -10164,7 +10225,7 @@ $   return EXCEPTION_CONTINUE_SEARCH;
 
 intptr_t _txDumpExceptionSEH (char what[], intptr_t size, const EXCEPTION_RECORD* exc, const char func[])
     {
-$1  assert (what);
+$6  assert (what);
 $   assert (size >= 0);
     assert (exc); if (!exc) {$ return 0; }
 $   assert (func);
@@ -10294,7 +10355,7 @@ $           PRINT_ (", ошибка ввода-вывода:");
 
 $           if (params >= 3)
                 {
-$               auto ntstatus = (unsigned long) info[2];
+$               unsigned long ntstatus = (unsigned long) info[2];
 
 $               PRINT_ (" 0x%lX (", ntstatus);
 
@@ -10363,7 +10424,7 @@ $   return s - what;
 intptr_t _txDumpExceptionCPP (char what[], intptr_t size,
                               unsigned code /*= 0*/, unsigned params /*= 0*/, const ULONG_PTR info[] /*= NULL*/)
     {
-$1  assert (what);
+$6  assert (what);
 $   assert (size >= 0);
 
 $   char* s = what;
@@ -10495,7 +10556,7 @@ $   return (s - what);
 
 intptr_t _txDumpExceptionObj (char what[], intptr_t size, void* object, size_t sizeObj, const std::type_info* type)
     {
-$1  assert (what);
+$6  assert (what);
 $   assert (size > 0);
 
 $   static char*  s     = NULL; s     = what;
@@ -10553,7 +10614,7 @@ $   if (mangledName)
             PRINT_VAL_ ( %ld, long)   PRINT_VAL_ ( %lu, unsigned long)   PRINT_VAL_ ('%c', char)
             PRINT_VAL_ ("%s", std::string, .c_str())
 
-            else if (auto e = dynamic_cast <std::exception*> ( (std::exception* ) object))
+            else if (std::exception* e = dynamic_cast <std::exception*> ( (std::exception* ) object))
                 {
 $               PRINT_ (", what(): \"%s\"", e->what());
                 }
@@ -10568,7 +10629,7 @@ $   _txClearJmp();
 
 $   if (err && object && szObj)
         {
-$       auto buf = (const unsigned char*) object;
+$       const unsigned char* buf = (const unsigned char*) object;
 
 $       if (szObj >= 64) szObj = 64;
 
@@ -10602,7 +10663,7 @@ $   return s - what;
 const char* _txCaptureStackBackTrace (int framesToSkip /*= 0*/, bool readSource /*= true*/,
                                       CONTEXT* context /*= NULL*/, HANDLE thread /*= GetCurrentThread()*/)
     {
-$2  const int maxFrames = 62;  // MS says: < 63
+$6  const int maxFrames = 62;  // MS says: < 63
 $   static char trace [(MAX_PATH + 1024+1) * maxFrames] = "";
 
     if (framesToSkip == -1) {$ return trace; }
@@ -10679,7 +10740,7 @@ $   return trace;
 int _txStackWalk (int framesToSkip, size_t szCapture, void* capture[], unsigned long* /*backTraceHash*/,
                   CONTEXT* context /*= NULL*/, HANDLE thread /* = GetCurrentThread()*/)
     {
-$2  namespace MinGW = Win32::MinGW;
+$6  namespace MinGW = Win32::MinGW;
 
 $   assert (capture);
 
@@ -10797,7 +10858,7 @@ bool _txSymGetFromAddr (void* addr, Win32::SYMBOL_INFO** symbol /*= NULL*/,
                         Win32::IMAGEHLP_LINE64** line /*= NULL*/, const char** module /*= NULL*/,
                         const char** source /*= NULL*/, int context /*= 2*/)
     {
-$2  static HANDLE process = NULL;
+$7  static HANDLE process = NULL;
 
     #if defined (_DEBUG) && (_DEBUG +0 > 1)
 $   char res[10] = "";
@@ -10842,7 +10903,7 @@ $       *module = sMod;
         }
 
 $   static char buffer [_TX_BUFSIZE] = "";
-$   static auto sym = (Win32::SYMBOL_INFO*) buffer;
+$   static Win32::SYMBOL_INFO* sym = (Win32::SYMBOL_INFO*) buffer;
 
 $   if (symbol)
         {
@@ -10923,7 +10984,7 @@ $   return false;
 intptr_t _txReadSource (char buf[], intptr_t size, const char file[],
                         int linStart /*= 0*/, int linEnd /*= INT_MIN*/, int linMark /*= INT_MIN*/)
     {
-$2  assert (buf);
+$7  assert (buf);
 
     if (!file || !*file) {$ return 0; }
 
@@ -10979,7 +11040,7 @@ $   return (s - buf);
 
 const char* _txCaptureStackBackTraceTX (int framesToSkip /*= 0*/, bool readSource /*= false*/)
     {
-$2  const int maxFrames = 62;  // TX says too: < 63
+$6  const int maxFrames = 62;  // TX says too: < 63
 $   static char trace [(MAX_PATH + 1024+1) * maxFrames] = "";
 
     if (framesToSkip == -1) {$ return trace; }
@@ -11280,7 +11341,7 @@ int _txOnErrorReport (int type, const char* text, int* ret)
 
 int txMessageBox (const char text[], const char header[], unsigned flags /*= MB_ICONINFORMATION | MB_OKCANCEL*/)
     {
-$2  static wchar_t textW   [_TX_BIGBUFSIZE * sizeof (wchar_t)] = L"[NULL text]";
+$5  static wchar_t textW   [_TX_BIGBUFSIZE * sizeof (wchar_t)] = L"[NULL text]";
 $   static wchar_t headerW [_TX_BUFSIZE    * sizeof (wchar_t)] = L"[NULL header]";
 
     if (text)   {$ MultiByteToWideChar (_TX_CP, 0, text,   -1, textW,   sizearr (textW))   || memset (textW,   0, sizeof (textW));   }
@@ -11312,7 +11373,7 @@ $1  HWND wnd = GetForegroundWindow();
 
 bool txNotifyIcon (unsigned flags, const char title[], const char format[], ...)
     {
-$2  if (_TX_ARGUMENT_FAILED (format)) return false;
+$5  if (_TX_ARGUMENT_FAILED (format)) return false;
 
 $   va_list arg; va_start (arg, format);
 $   bool ok = true;
@@ -11627,14 +11688,14 @@ inline unsigned txVersionNumber()
 
 inline HWND txWindow()
     {
-$1  return _txCanvas_Window;
+$0  return _txCanvas_Window;
     }
 
 //-----------------------------------------------------------------------------------------------------------------
 
 inline HDC& txDC()
     {
-$1  return _txCanvas_BackBuf[0];
+$0  return _txCanvas_BackBuf[0];
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -11648,7 +11709,7 @@ inline RGBQUAD* txVideoMemory()
 
 POINT txGetExtent (HDC dc /*= txDC()*/)
     {
-$1  static POINT err = {-1, -1};
+$0  static POINT err = {-1, -1};
 
 $   if (_TX_DEFAULT_HDC_FAILED (dc)) return err;
 
@@ -12153,8 +12214,8 @@ HDC txLoadImage (const char filename[], unsigned imageFlags /*= IMAGE_BITMAP*/, 
     {
 $1  if (_TX_ARGUMENT_FAILED (filename && *filename)) return NULL;
 
-$   auto image = (HBITMAP) Win32::LoadImage ((loadFlags & LR_LOADFROMFILE)? NULL : GetModuleHandle (NULL),
-                                              filename, imageFlags, 0, 0, loadFlags);
+$   HBITMAP image = (HBITMAP) Win32::LoadImage ((loadFlags & LR_LOADFROMFILE)? NULL : GetModuleHandle (NULL),
+                                                 filename, imageFlags, 0, 0, loadFlags);
 $   if (!image) return NULL;
 
 $   HDC dc = txCreateCompatibleDC (0, 0, image);
@@ -12186,8 +12247,8 @@ $   if (!ok) return false;
 $   if (!_txCanvas_UserDCs) return ok;
 
 $   txAutoLock _lock;
-$   auto i  = std::find (_txCanvas_UserDCs->begin(), _txCanvas_UserDCs->end(), dc);
-$   if  (i != _txCanvas_UserDCs->end()) { std::swap (*i, _txCanvas_UserDCs->back()); _txCanvas_UserDCs->pop_back(); }
+$   std::vector <HDC> ::iterator it = std::find (_txCanvas_UserDCs->begin(), _txCanvas_UserDCs->end(), dc);
+$   if  (it != _txCanvas_UserDCs->end()) { std::swap (*it, _txCanvas_UserDCs->back()); _txCanvas_UserDCs->pop_back(); }
 
 $   return ok;
     }
@@ -12381,7 +12442,7 @@ HDC txUseAlpha (HDC image)
     {
 $1  if (_TX_HDC_FAILED (image)) return NULL;
 
-$   auto bitmap = (HBITMAP) Win32::GetCurrentObject (image, OBJ_BITMAP);
+$   HBITMAP bitmap = (HBITMAP) Win32::GetCurrentObject (image, OBJ_BITMAP);
 $   if (!bitmap) return NULL;
 
 $   DIBSECTION dib = {{0}};
@@ -12397,7 +12458,7 @@ $   bool isDIB = (dib.dsBm.bmPlanes        == 1                    &&
                   dib.dsBm.bmBits);
 $   if (!isDIB)
         {
-$       buf = new (std::nothrow) RGBQUAD [size.x * size.y] {};
+$       buf = new (std::nothrow) RGBQUAD [size.x * size.y];
 $       if (!buf) return NULL;
 
 $       Win32::GetDIBits (image, bitmap, 0, size.y, buf, &info, DIB_RGB_COLORS) asserted;
@@ -12444,7 +12505,7 @@ $   BITMAPINFOHEADER info = { sizeof (info), size.x, size.y, 1, (WORD) (sizeof (
 
 $   bool ok = true;
 
-$   auto buf = new (std::nothrow) RGBQUAD [size.x * size.y] {};
+$   RGBQUAD* buf = new (std::nothrow) RGBQUAD [size.x * size.y];
 $   ok &= (buf != NULL);
 
 $   if (ok) Win32::GetDIBits (dc, (HBITMAP) Win32::GetCurrentObject (dc, OBJ_BITMAP), 0, size.y,
@@ -12527,7 +12588,7 @@ $   return 1000.0 * (double) (stop.QuadPart - start.QuadPart) / (double) freq.Qu
 
 bool txLock (bool wait /*= true*/)
     {
-$1  if (_txCanvas_RefreshLock <= 0 || _txExit) Sleep (0);
+$0  if (_txCanvas_RefreshLock <= 0 || _txExit) Sleep (0);
 
 $   if (wait) {$ return      EnterCriticalSection (&_txCanvas_LockBackBuf), true; }
     else      {$ return !!TryEnterCriticalSection (&_txCanvas_LockBackBuf);       }
@@ -12537,7 +12598,7 @@ $   if (wait) {$ return      EnterCriticalSection (&_txCanvas_LockBackBuf), true
 
 bool txUnlock()
     {
-$1  LeaveCriticalSection (&_txCanvas_LockBackBuf);
+$0  LeaveCriticalSection (&_txCanvas_LockBackBuf);
 
 $   if (_txCanvas_RefreshLock <= 0 || _txExit) Sleep (0);
 $   return false;
@@ -12827,7 +12888,7 @@ $   bool async = false;
     if (*fileName == '\a') {$ async = true; fileName++; }
 
 $   RECT rect = {};
-$   GetClientRect (wnd, &rect);
+    if (wnd) {$ GetClientRect (wnd, &rect); }
 
     if (!width)  {$ width  = rect.right;  }
     if (!height) {$ height = rect.bottom; }
@@ -12964,7 +13025,7 @@ $1          SetTimer  (wnd, checkTimer, 5*_txWindowUpdateInterval, NULL) asserte
             {
 $1          KillTimer (wnd, checkTimer) asserted;
 
-$           auto vlc = (HANDLE)(uintptr_t) GetWindowLongPtr (wnd, GWLP_USERDATA);
+$           HANDLE vlc = (HANDLE)(uintptr_t) GetWindowLongPtr (wnd, GWLP_USERDATA);
 
 $           if (vlc)
                 {
@@ -12979,7 +13040,7 @@ $               SetWindowLongPtr (wnd, GWLP_USERDATA, 0);
 
         case WM_TIMER:
             {
-            auto vlc = (HANDLE)(uintptr_t) GetWindowLongPtr (wnd, GWLP_USERDATA);
+            HANDLE vlc = (HANDLE)(uintptr_t) GetWindowLongPtr (wnd, GWLP_USERDATA);
 
             if (vlc && WaitForSingleObject (vlc, 0) != WAIT_TIMEOUT)
                 {
@@ -13089,7 +13150,7 @@ inline bool txDisableAutoPause()
 
 void _txDump (const void* address, const char name[] /*= "_txDump()"*/, bool pause /*= true*/)
     {
-$1  auto p = (const unsigned char*) address;
+$1  const unsigned char* p = (const unsigned char*) address;
 $   unsigned x = 0;
 
 $   unsigned attr = txGetConsoleAttr();
@@ -13165,7 +13226,7 @@ $       flags = 0x2800;  // UNDNAME_32_BIT_DECODE | UNDNAME_TYPE_ONLY
 $   typeName = _TX_CALL (Win32::__unDName, (NULL, mangledName, 0, malloc, free, flags));
     if (typeName) {$ return typeName; }
 
-$   return strdup (mangledName);
+$   return _strdup (mangledName);
     }
 
 //-----------------------------------------------------------------------------------------------------------------
@@ -13190,7 +13251,7 @@ $   POINT size     = {500, 500};
 $   HDC dc = _txBuffer_Create (txWindow(), &size, NULL);
 $   assert (dc); if (!dc) return -1;
 
-$   auto mask = (DWORD) SetThreadAffinityMask (GetCurrentThread(), 1);
+$   DWORD mask = (DWORD) SetThreadAffinityMask (GetCurrentThread(), 1);
 $   assert (mask);
 
 $   LARGE_INTEGER freq = {{0}};
@@ -13505,7 +13566,7 @@ $   if (!layout)  return TX_DEBUG_ERROR ("Не установлен динамический шаблон диал
 
 $   if (!bufsize) bufsize = 1024;
 
-$   auto tmpl = (DLGTEMPLATE*) GlobalAlloc (GPTR, bufsize);
+$   DLGTEMPLATE* tmpl = (DLGTEMPLATE*) GlobalAlloc (GPTR, bufsize);
 $   if (!tmpl) return TX_DEBUG_ERROR ("GlobalAlloc(): Нет памяти для шаблона диалога"), 0;
 
 $   const Layout* dlg = &layout[0];
@@ -13973,7 +14034,6 @@ struct _txDumpVarSuffix
     inline  explicit _txDumpVarSuffix (const char suffix[] = "") : suffix_ (suffix) {}
     inline          ~_txDumpVarSuffix()                          { ::std::cerr << suffix_; }
 
-            _txDumpVarSuffix ()              _tx_delete;
             _txDumpVarSuffix (const this_t&) _tx_delete;
     this_t& operator =       (const this_t&) _tx_delete;
     };
@@ -14355,27 +14415,67 @@ using ::std::wstring;
                                                                                                                    
                                                                                                                    
                                                                                                                    
-                                                                                                         
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                   
 
 
 
