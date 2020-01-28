@@ -1,5 +1,5 @@
 //=================================================================================================================
-//           [These sections are for folding control  in Code::Blocks]         [$Date: 2020-01-22 07:38:22 +0400 $]
+//           [These sections are for folding control  in Code::Blocks]         [$Date: 2020-01-28 22:25:00 +0400 $]
 //           [Best viewed with "Fold all on file open" option enabled]         [Best screen/page width = 120 chars]
 //
 //           [If RUSSIAN CHARS below are UNREADABLE, check this file codepage.   It should be 1251, NOT UTF-8 etc.]
@@ -9,9 +9,9 @@
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 160 $
+//!          $Version: 00173a, Revision: 161 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2020-01-22 07:38:22 +0400 $
+//!          $Date: 2020-01-28 22:25:00 +0400 $
 //!
 //!          TX Library -- компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -115,7 +115,7 @@
 //!            Версия библиотеки в целочисленном формате: старшее слово -- номер версии, младшее -- номер ревизии,
 //!            в двоично-десятичном формате. Например, @c 0x172a0050 -- версия @c 0.172a, ревизия @c 50.
 //! @code
-//!            #define _TX_VERSION "TXLib [Ver: 1.73a, Rev: 105, Date: 2020-01-22 00:00:00 +0300]"  //
+//!            #define _TX_VERSION "TXLib [Ver: 1.73a, Rev: 216, Date: 2020-01-28 00:00:00 +0300]"  //
 //!            #define _TX_AUTHOR  "Copyright (C) Ded (Ilya Dedinsky, http://txlib.ru)"             //  ПРИМЕР
 //!            #define _TX_VER      0x173a0000                                                      //
 //! @endcode
@@ -133,9 +133,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 160, 2020-01-22 07:38:22 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 160, 2020-01-22 07:38:22 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 160, 2020-01-22 07:38:22 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 161, 2020-01-28 22:25:00 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 161, 2020-01-28 22:25:00 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 161, 2020-01-28 22:25:00 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -3295,12 +3295,15 @@ double txQueryPerformance() tx_nodiscard;
 //!
 //! @usage   См. в функции txCreateDIBSection().
 //}----------------------------------------------------------------------------------------------------------------
+//! @cond INTERNAL
 
 #if (__cplusplus >= 201100 || defined (_MSC_VER) && (_MSC_VER >= 1800))
     template <int txFramesToAverage = 5>
 #else
     const     int txFramesToAverage = 5;
 #endif
+
+//! @endcond
 
 double txGetFPS (int minFrames = txFramesToAverage) tx_nodiscard;
 
@@ -5466,7 +5469,7 @@ int            _txWatchdogTimeout         = 10*_TX_TIMEOUT;
 //!              }
 //! @endcode
 //! @code
-//!          #define  TX_TRACE  printf (__TX_FILELINE__ "\n");
+//!          #define  TX_TRACE  printf (__TX_FILELINE__ "\t" __TX_FUNCTION__ "\n");
 //!          #include "TXLib.h"
 //! @endcode
 //!
@@ -8941,8 +8944,10 @@ $8  if (_TX_ARGUMENT_FAILED (wnd)) return false;
 $   if (!_txCanvas_OK())           return false;
 
 $   if (_txMain && _txRunning &&
-        txMessageBox ("Функция main() не завершена. Программа все еще работает. Прервать аварийно?\n\n"
-                      "Лучше подождать, когда main() завершится - это отображается в заголовке окна.",
+        txMessageBox ("Вы что, действительно хотите выйти?\n\n"
+                      "Программа все еще работает, функция main() пока не завершила работу. Лучше подождать, когда она это "
+                      "сделает - это отобразится в заголовке окна. Однако, если программа зависла, ее можно прервать аварийно.\n\n"
+                      "Прервать программу аварийно?",
                       txGetModuleFileName (false), MB_YESNOCANCEL | MB_ICONSTOP) != IDYES) return false;
 $   return true;
     }
@@ -9195,7 +9200,7 @@ $   txMessageBox (text, "About " ABOUT_NAME_, MB_ICONINFORMATION);
     // And a bit of HTTP-code in C++ function:
 
     goto http;
-    http://txlib.ru            // See valuable refs here :)
+    http://sizeof.livejournal.com
 
 $   return true;
 
@@ -12929,15 +12934,15 @@ $   static char cmd [MAX_PATH*2 + 1024] = "";
 
 $   _snprintf_s (cmd, sizeof (cmd) - 1, "\"%s\" \"%s\" vlc://quit"
 
-                 " %s --gain=%.10g --drawable-hwnd=%" PRIu64 " --video-title=\"%s\" --no-embedded-video"
+                 " %s --gain=%.10g --drawable-hwnd=%" PRIu64 " --video-title=\"%s\" --logfile=%s"
 
-                 " --live-caching=500 --network-caching=500 --quiet-synchro"
+                 " --live-caching=500 --network-caching=500 --quiet-synchro --no-embedded-video --file-logging"
 
                  " --ignore-config --reset-config --no-one-instance --play-and-exit"
-                 " --intf=dummy --dummy-quiet --no-video-deco --no-video-title-show --no-stats --no-sub-autodetect-file"
+                 " --intf=dummy --dummy-quiet --quiet --no-video-deco --no-video-title-show --no-stats --no-sub-autodetect-file"
                  " --no-disable-screensaver --no-snapshot-preview --no-auto-preparse --no-mouse-events --no-keyboard-events",
 
-                 vlcPath, (*fileName? fileName : "fileName"), sZoom, gain, (uint64_t) wnd, processUID) < (int) sizeof (cmd) asserted;
+                 vlcPath, (*fileName? fileName : "fileName"), sZoom, gain, (uint64_t) wnd, processUID, _txLogName) < (int) sizeof (cmd) asserted;
 
 $   txOutputDebugPrintf ("txPlayVideo (%d, %d, %d, %d, \"%s\", %lg, %lg, %p): [%s]\n\n", x, y, width, height,
                                                                                           fileName, zoom, gain, wnd, cmd);
@@ -14229,6 +14234,8 @@ std::ostream& operator << (std::ostream& stream, const RECT& rect)
 //           Трассировка вызовов TXAPI
 //=================================================================================================================
 
+#ifndef FOR_DOXYGEN_ONLY
+
 #if defined (_MSC_VER)
 #undef  _txLocCurSet
 #define _txLocCurSet()                 __txLocCurSet (__FILE__, __LINE__, NULL)
@@ -14326,6 +14333,8 @@ std::ostream& operator << (std::ostream& stream, const RECT& rect)
 #define tx_fpreset(...)                ( _txLocCurSet(), tx_fpreset            (__VA_ARGS__) )
 #define _txDump(...)                   ( _txLocCurSet(), _txDump               (__VA_ARGS__) )
 #define _txStackBackTrace(...)         ( _txLocCurSet(), _txStackBackTrace     (__VA_ARGS__) )
+
+#endif
 
 //}
 //=================================================================================================================
@@ -14473,16 +14482,7 @@ using ::std::wstring;
                                                                                                                    
                                                                                                                    
                                                                                                                    
-                                                                                                                   
-                                                                                                                   
-                                                                                                   
-
-
-
-
-
-
-
+                                                                  
 
 
 
