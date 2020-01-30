@@ -10,7 +10,6 @@ $*
 
 Doc/HTML.*
 
-*.chm
 *.log
 *.bak
 *.tmp
