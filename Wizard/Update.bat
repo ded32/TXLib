@@ -35,7 +35,8 @@ for %%1 in (wget md5sum sed wait) do (
 @echo TXLib Update started:  %DATE% %TIME%, Folder %CD%          >> %log% 2>>&1
 @echo.                                                           >> %log% 2>>&1
 
-for %%1 in (%clean%) do %do% del "%%~1"                          >> %log% 2>>&1
+for %%1 in (%clean%) do %do% attrib -h "%%~1"                    >> %log% 2>>&1
+for %%1 in (%clean%) do %do% del       "%%~1"                    >> %log% 2>>&1
 
 %do% %wget% --no-check-certificate %links% -O "TXLib Update.links.tmp" >> %log% 2>>&1
 
@@ -50,7 +51,8 @@ for /f "usebackq tokens=*" %%A in ("TXLib Update.links.tmp") do (
 
 call "TXLib Update"                                              >> %log% 2>>&1
                                                                 
-for %%1 in (%clean%) do %do% del "%%~1"                          >> %log% 2>>&1
+for %%1 in (%clean%) do %do% attrib -h "%%~1"                    >> %log% 2>>&1
+for %%1 in (%clean%) do %do% del       "%%~1"                    >> %log% 2>>&1
                                                                 
 @echo TXLib Update finished: %DATE% %TIME%, Folder %CD%          >> %log% 2>>&1
 @echo TXLib Update finished: %DATE% %TIME%, Folder %CD%                                 

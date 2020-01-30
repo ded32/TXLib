@@ -1,5 +1,5 @@
 //{===========================================================================
-//! @file       Examples/ExampleYours/ExampleYours.txt
+//! @file       Examples/ExampleYours/ExampleYours.cpp
 //!
 //! @brief      Ваш пример использования TXNetwork. Присылайте все на почту vova@txlib.ru.
 //!

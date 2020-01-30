@@ -73,14 +73,14 @@
 
     @code
     #include "TXLib.h"
-    int   main(){                      FFFFF FFFFF FFFFF UU   UU UU   UU UU   UU 
-    txCreateWindow(800,600);           FF    FF    FF    UU   UU UU   UU UU   UU 
-    txLine(320,290,320,220);           FF    FF    FF    UU   UU UU   UU UU   UU 
-     txLine (320, 290,280,350);        FFFFF FFFFF FFFFF UU   UU UU   UU UU   UU 
-      txLine(320, 290,360,350);        FF    FF    FF    UU   UU UU   UU UU   UU 
-     txLine(320,230,270,275);          FF    FF    FF    UU   UU UU   UU UU   UU 
-    txLine(320,230, 400,220);          FF    FF    FF    UU   UU UU   UU UU   UU 
-    txCircle(320,190,30);              FF    FF    FF     UUUUU   UUUUU   UUUUU  
+    int   main(){                      FFFFF FFFFF FFFFF UU  UU UU  UU UU  UU UU  UU  !! !! !!
+    txCreateWindow(800,600);           FF    FF    FF    UU  UU UU  UU UU  UU UU  UU  !! !! !!
+    txLine(320,290,320,220);           FF    FF    FF    UU  UU UU  UU UU  UU UU  UU  !! !! !!
+     txLine (320, 290,280,350);        FFFFF FFFFF FFFFF UU  UU UU  UU UU  UU UU  UU  !! !! !!
+      txLine(320, 290,360,350);        FF    FF    FF    UU  UU UU  UU UU  UU UU  UU  !! !! !!
+     txLine(320,230,270,275);          FF    FF    FF    UU  UU UU  UU UU  UU UU  UU  !! !! !!
+    txLine(320,230, 400,220);          FF    FF    FF    UU  UU UU  UU UU  UU UU  UU
+    txCircle(320,190,30);              FF    FF    FF     UUUU   UUUU   UUUU   UUUU   !! !! !!
       txSelectFont( "Times",60);
     txTextOut(240,400,"Hello, world!");
               return        0;
@@ -215,8 +215,8 @@
       @endcode
 
     - Забывают фигурные скобки:
-      @code                             Правильно: 
-      
+      @code                             Правильно:
+
                                         int main()
       int main()                            {
       txCreateWindow (800, 600);            txCreateWindow (800, 600);
@@ -232,19 +232,19 @@
           {
           txCreateWindow (800, 600);
 
-          txLine (320, 290, 320, 220;   Не закрыта круглая скобка
+          txLine (320, 290, 320, 220;   Ошибка: Не закрыта круглая скобка
           return 0;
           }
       @endcode
       @code
       int main()
       {
-      txCreateWindow {800, 600};        Фигурные скобки вместо круглых
+      txCreateWindow {800, 600};        Ошибка: Фигурные скобки вместо круглых
       return 0;
       }
 
-      txLine (320, 290, 320, 220;       Команда за пределами функции main()
-      }                                 Лишняя скобка
+      txLine (320, 290, 320, 220;       Ошибка: Команда за пределами функции main()
+      }                                 Ошибка: Лишняя скобка
       @endcode
 
     - Помещают команды за пределы фигурных скобок
@@ -255,7 +255,7 @@
       return 0;
       }
 
-      txLine (320, 290, 320, 220);      Команда за пределами функции main()
+      txLine (320, 290, 320, 220);      Ошибка: Команда за пределами функции main()
       @endcode
 
     - Указывают лишние данные в командах или указывают меньше данных (аргументов),
@@ -325,7 +325,7 @@
 
     @section    Tutor_1st_Code        Законченный пример
 
-    @table @tr @b Текст программы @td Примечания @td
+    @table @tr <b>Текст программы</b> @td <b>Примечания</b> @td
     @tr @code
 
     #include "TXLib.h"
@@ -366,7 +366,7 @@
     Выбирается шрифт "Times" размера 60
     Печатается текст "Hello, world!" в точке x=240 y=400
 
-    Возврат успешного кода завершения
+    Возврат успешного кода завершения (0 = нет ошибок)
     Конец функции
 
     @endcode
@@ -374,8 +374,9 @@
 
    Если вам непонятно, что означает та или иная команда в программе, посмотрите в системе
    помощи TXLib Help @ref Tutor_1st "Простейший пример" или помощь по этой команде в разделе
-   @ref Drawing "Рисование". Например, по txLine или txTextOut.
+   @ref Drawing "Рисование". Например, по функциям @ref txLine или @ref txTextOut.
 
+   <hr><br>
    <b>Удачи, и May theSource be with you!</b>
 
 */

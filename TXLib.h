@@ -1,5 +1,5 @@
 //=================================================================================================================
-//           [These sections are for folding control  in Code::Blocks]         [$Date: 2020-01-28 22:25:00 +0400 $]
+//           [These sections are for folding control  in Code::Blocks]         [$Date: 2020-01-30 05:00:00 +0400 $]
 //           [Best viewed with "Fold all on file open" option enabled]         [Best screen/page width = 120 chars]
 //
 //           [If RUSSIAN CHARS below are UNREADABLE, check this file codepage.   It should be 1251, NOT UTF-8 etc.]
@@ -9,9 +9,9 @@
 //! @file    TXLib.h
 //! @brief   Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!          $Version: 00173a, Revision: 161 $
+//!          $Version: 00173a, Revision: 162 $
 //!          $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-//!          $Date: 2020-01-28 22:25:00 +0400 $
+//!          $Date: 2020-01-30 05:00:00 +0400 $
 //!
 //!          TX Library -- компактная библиотека двумерной графики для MS Windows на С++.
 //!          Это небольшая "песочница" для начинающих реализована с целью помочь им в изучении
@@ -133,9 +133,9 @@
 //}----------------------------------------------------------------------------------------------------------------
 //! @{
 
-#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 161, 2020-01-28 22:25:00 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 161, 2020-01-28 22:25:00 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
-#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 161, 2020-01-28 22:25:00 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VER      _TX_v_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 161, 2020-01-30 05:00:00 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_VERSION  _TX_V_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 161, 2020-01-30 05:00:00 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
+#define _TX_AUTHOR   _TX_A_FROM_CVS ($VersionInfo: , TXLib.h, 00173a, 161, 2020-01-30 05:00:00 +0300, "Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru>", $)
 
 //! @cond INTERNAL
 #define _TX_v_FROM_CVS(_1,file,ver,rev,date,auth,_2)  ((0x##ver##u << 16) | 0x##rev##u)
@@ -4501,49 +4501,25 @@ template <typename T> inline T zero() tx_nodiscard;
 //! @ingroup Misc
 //! @brief   Автоматический вызов функции при завершении другой функции (аналог @c __finally)
 //!
-//! @param   param_t  Тип параметра автоматически вызываемой функции.
-//! @param   param    Имя параметра автоматически вызываемой функции.
-//! @param   func     Тело автоматически вызываемой функции (фигурные скобки не обязательны).
+//! @param   func  Тело автоматически вызываемой функции (фигурные скобки не обязательны).
 //!
-//! @par     Макрос <tt>TX_AUTO_FUNC (param_t, param, func)</tt>
-//! @note
-//!        - Для автоматически вызываемой функции допускается только @a один параметр.
-//!        - Его тип @c param_t и имя @c param должны соответствовать определению переменной, доступной в текущей
-//!          области видимости. @n
-//!          Параметр вызываемой функции будет связан с этой переменной через ссылку.
-//!        - Синоним: TX_FINALLY
-//!
-//! @par     Макрос <tt>tx_auto_func (func)</tt>
-//! @note
-//!        - @a Все переменные вызываемой функции связываются с переменными внешней функции по ссылке.
+//! @note  - @a Все переменные вызываемой функции связываются с переменными внешней функции по ссылке.
 //!        - Их названия и типы @a не указываются. Указывается только тело вызываемой функции.
 //!        - Синоним: tx_finally
 //!
 //! @see     txAutoLock
 //!
 //! @usage @code
-//!          void f1()
+//!          void some_func()
 //!              {
 //!              int x = 1;
-//!              TX_AUTO_FUNC (int, x, $(x));              // Will be printed at return
+//!              tx_auto_func ($(x));                      // Will be printed at return
 //!
-//!              FILE* f = fopen (__FILE__".o.txt", "w");  // Will be closed at return
-//!              TX_AUTO_FUNC (FILE*, f, fclose (f));
+//!              FILE* f = fopen (__FILE__".o.txt", "w");
+//!              tx_auto_func (fclose (f));                // Will be closed at return
 //!
 //!              fprintf (f, "start: x = %d\n", x);        // Do some job
 //!              x = 2;                                    // Do some job
-//!              }
-//!
-//!          void f2()                                     // Do the same. For C++0x only
-//!              {
-//!              int x = 1;
-//!              tx_auto_func ($(x));                      // More simple usage
-//!
-//!              FILE* f = fopen (__FILE__".o.txt", "w");
-//!              tx_auto_func (fclose (f));                // More simple usage
-//!
-//!              fprintf (f, "start: x = %d\n", x);
-//!              x = 2;
 //!              }
 //! @endcode
 //!
@@ -4554,6 +4530,8 @@ template <typename T> inline T zero() tx_nodiscard;
 #define  tx_auto_func(    func )  _tx_auto_fun1 ( __LINE__, func )
 #define _tx_auto_fun1( n, func )  _tx_auto_fun2 ( n,        func )
 #define _tx_auto_fun2( n, func )  auto _tx_auto_func_##n = _tx_auto_func ([&]() { func; })
+
+#define tx_finally(...)           tx_auto_func (__VA_ARGS__)
 
 template <typename T>
 struct _tx_auto_func_
@@ -4574,13 +4552,6 @@ _tx_auto_func_<T> _tx_auto_func  (T   func)
     {
     return        _tx_auto_func_ <T> (func);
     }
-
-//{ Compatibility
-
-#define TX_FINALLY( param_t, param, func )  TX_AUTO_FUNC (param_t, param, func)
-#define tx_finally( func )                  tx_auto_func (func)
-
-//}
 
 //! @}
 
@@ -5491,6 +5462,7 @@ void _txTrace (const char file[], int line, const char func[], const char msg[] 
 //{----------------------------------------------------------------------------------------------------------------
 //! @{
 //! @cond INTERNAL
+    #ifndef FOR_DOXYGEN_ONLY
 
 struct _txLoc
     {
@@ -5630,6 +5602,7 @@ struct _txFuncEntry
 //}
 //-----------------------------------------------------------------------------------------------------------------
 
+    #endif // FOR_DOXYGEN_ONLY
 //! @endcond
 //! @}
 //}----------------------------------------------------------------------------------------------------------------
@@ -14482,7 +14455,34 @@ using ::std::wstring;
                                                                                                                    
                                                                                                                    
                                                                                                                    
-                                                                  
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                                                                                                                   
+                         
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
