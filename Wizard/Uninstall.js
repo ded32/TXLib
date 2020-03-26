@@ -13,7 +13,7 @@ function main (argc, argv)
     var cmd = "Setup.js /uninstall ";
     for (var i = 0; i < argc; i++) cmd += argv (i);
 
-    if (!Ask ("В Вашей совести не осталось достаточно места для совершения    \n" +
+    if (!Ask ("В Вашей совести не осталось достаточно места для совершения " +
               "этого поступка."+"\n\n"+"Очистить совесть?  :)")) return;
 
     Shell.Run (cmd);

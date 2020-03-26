@@ -1,15 +1,15 @@
 #------------------------------------------------------------------------------
-# TXLib-Help.dox
+# Doxyfile_HTM
 #
-# $Version: 00173a, Revision: 164 $
+# $Version: 00173a, Revision: 165 $
 # $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-# $Date: 2020-01-30 05:00:00 +0400 $
+# $Date: 2020-03-26 21:07:18 +0400 $
 #
 # Doxyfile 1.7.3
 #------------------------------------------------------------------------------
 
 PROJECT_NAME           = "TX Library"
-PROJECT_NUMBER         = "Help &ndash; $Version: 00173a, Revision: 105 $"
+PROJECT_NUMBER         = "Help &ndash; $Version: 00173a, Revision: 165 $"
 PROJECT_BRIEF          = "<s>&nbsp;ALL&nbsp;</s> Windows graphics in a sandbox"
 PROJECT_LOGO           = "Doc/TXLib.png"
 
@@ -17,7 +17,7 @@ IGNORE_PREFIX          = tx TX TX_ TXLib.h
 PREDEFINED             = _TX_CHECK_RESULT= \
                          _TX_CHECK_FORMAT(n)=
 
-EXCLUDE_PATTERNS       = */_OFF/* */.hg/* */Wizard/* */*_/*
+EXCLUDE_PATTERNS       = */_*/*  */.*/*  */~*/*  */*_/*  */_*  */.*  */~*  */*_  */Wizard/*
 EXCLUDE                = README.txt
 
 EXTRACT_ALL            = NO
@@ -31,8 +31,7 @@ INCLUDED_BY_GRAPH      = NO
 SHOW_NAMESPACES        = NO
 HIDE_SCOPE_NAMES       = YES
 
-# Web = YES, Chm = NO
-GENERATE_TREEVIEW      = NO
+GENERATE_TREEVIEW      = YES
 
 INLINE_SOURCES         = NO
 INLINE_INFO            = NO
@@ -81,7 +80,7 @@ DOXYFILE_ENCODING      = CP1251
 #---------------------------------------------------------------------------
 
 GENERATE_HTML          = YES
-GENERATE_HTMLHELP      = YES
+GENERATE_HTMLHELP      = NO
 DISABLE_INDEX          = YES
 SEARCHENGINE           = NO
 
@@ -96,8 +95,8 @@ GENERATE_XML           = NO
 #---------------------------------------------------------------------------
 
 HTML_HEADER            =
-HTML_FOOTER            =
-HTML_STYLESHEET        = doxygen_.css
+HTML_FOOTER            = Dev\Doxygen_HTM.htm 
+HTML_STYLESHEET        = Dev\Doxygen.css
 
 ALIASES                = "title=<dl><dt>" \
                          "table=</dt><dd><table border=0>" \
@@ -240,7 +239,7 @@ COLS_IN_ALPHA_INDEX    = 5
 
 HTML_OUTPUT            = HTML
 HTML_FILE_EXTENSION    = .htm
-CHM_FILE               = $(PROJECT_NAME).chm
+CHM_FILE               =
 
 TREEVIEW_WIDTH         = 150
 TOC_EXPAND             = NO
@@ -350,9 +349,3 @@ WARN_IF_DOC_ERROR      = YES
 WARN_NO_PARAMDOC       = YES
 WARN_FORMAT            = "$file:$line: $text"
 WARN_LOGFILE           =
-
-
-
-
-
-

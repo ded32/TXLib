@@ -7,7 +7,7 @@
 //!
 //!             Синхронные шарики на многих компьютерах c использованием broadcast'a и UDP.
 //!
-//!             $Copyright: (C) _RedMan_ (Vova Yrovsky) <vova@txlib.ru> $
+//!             $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
 //}===========================================================================
 
 #include "proto.h"

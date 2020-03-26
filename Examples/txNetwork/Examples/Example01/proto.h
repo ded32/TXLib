@@ -5,7 +5,7 @@
 //!
 //!             Библиотека Сети Тупых Художников (TXNetwork).
 //!
-//!             $Copyright: (C) _RedMan_ (Vova Yrovsky) <vova@txlib.ru> $
+//!             $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
 //}===========================================================================
 // proto.h
 

@@ -10,7 +10,7 @@
 //!             Если клиент запускается не на той же машине, что и сервер,
 //!             надо указать @strike на котиков @endstrike IP-адрес сервера в строке IP.
 //!
-//!             $Copyright: (C) _RedMan_ (Vova Yrovsky) <vova@txlib.ru> $
+//!             $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
 //}===========================================================================
 
 #include "proto.h"

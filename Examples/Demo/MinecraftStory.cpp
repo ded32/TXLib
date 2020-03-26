@@ -1004,7 +1004,7 @@ void CreeperDescent()
         Grass (RGB (50, 205, 50), 0);
         Ground (RGB (136, 69, 19));
 
-	Credits();
+        Credits();
 
         txSetColor (TX_BLACK);
         Creeper (500, 0 + 10 * t, 1, RGB (69, 139, 0), 1, TX_BLACK, 1, TX_BLACK);

@@ -1,0 +1,26 @@
+
+*.bat       filter=keywords
+*.cbp       filter=keywords
+*.config    filter=keywords
+*.c         filter=keywords
+*.cpp       filter=keywords
+*.css       filter=keywords
+*.dox       filter=keywords
+*.h         filter=keywords
+*.hpp       filter=keywords
+*.htm       filter=keywords
+*.inf       filter=keywords
+*.ini       filter=keywords
+*.js        filter=keywords
+*.reg       filter=keywords
+*.sample    filter=keywords
+*.script    filter=keywords
+*.template  filter=keywords
+*.txt       filter=keywords
+*.url       filter=keywords
+*.vcproj    filter=keywords
+*.vsdir     filter=keywords
+*.vsz       filter=keywords
+Doxy*       filter=keywords
+
+* -crlf

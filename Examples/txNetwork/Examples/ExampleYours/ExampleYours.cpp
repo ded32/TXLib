@@ -5,7 +5,7 @@
 //!
 //!             Библиотека Сети Тупых Художников (TXNetwork).
 //!
-//!             $Copyright: (C) Your name (Your name) \<Your mail\> $
+//!             $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
 //}===========================================================================
 
 // Тут может быть ваш пример:) Присылайте все на почту vova@txlib.ru.

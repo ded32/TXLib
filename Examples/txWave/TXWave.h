@@ -4,8 +4,8 @@
 //  @mainpage
 //! @brief      Библиотека TXWave - воспроизведение и запись звуков
 //!
-//!             $Version: 00173a, Revision: 164 $
-//!             $Date: 2020-01-30 05:00:00 +0400 $
+//!             $Version: 00173a, Revision: 165 $
+//!             $Date: 2020-03-26 21:07:17 +0400 $
 //!             $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
 //!
 //! @section    Contents Разделы системы помощи
@@ -556,7 +556,7 @@ int _txWaveInit()
 
 //-----------------------------------------------------------------------------------------------------------------
 
-HWAVEOUT txWaveOut (int timeMs /* = INT_MIN */,
+HWAVEOUT txWaveOut (int timeMs /* = -INT_MAX */,
                     double freqL /* =  0 */, double volL /* = 50 */,
                     double freqR /* = -1 */, double volR /* = -1 */,
                     int loops /* = 1 */,
@@ -726,7 +726,7 @@ HWAVEOUT txWaveOut (int timeMs /* = INT_MIN */,
 
 inline HWAVEOUT txWaveOut (const txWaveData_t& data, int loops /* = 1 */)
     {
-    return txWaveOut (INT_MAX, 0,0,0,0, loops, data);
+    return txWaveOut (-INT_MAX, 0,0,0,0, loops, data);
     }
 
 //-----------------------------------------------------------------------------------------------------------------

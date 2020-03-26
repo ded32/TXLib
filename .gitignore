@@ -1,19 +1,6 @@
 syntax: glob
 
-.hg
-.git.*
-.git-*
-.git_*
-_*
-$*
-*$
-
 Doc/HTML.*
-
-*.log
-*.bak
-*.tmp
-*~
 
 *.obj
 *.o

@@ -1,15 +1,15 @@
 #------------------------------------------------------------------------------
-# TXLib-Reference.dox
+# Doxyfile_Ref
 #
-# $Version: 00173a, Revision: 164 $
+# $Version: 00173a, Revision: 165 $
 # $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-# $Date: 2020-01-30 05:00:00 +0400 $
+# $Date: 2020-03-26 21:07:18 +0400 $
 #
 # Doxyfile 1.7.3
 #------------------------------------------------------------------------------
 
 PROJECT_NAME           = "TX Library"
-PROJECT_NUMBER         = "Reference &ndash; $Version: 00173a, Revision: 105 $"
+PROJECT_NUMBER         = "Reference &ndash; $Version: 00173a, Revision: 165 $"
 PROJECT_BRIEF          = "<s>&nbsp;ALL&nbsp;</s> Windows graphics in a sandbox"
 PROJECT_LOGO           = "Doc/TXLib.png"
 
@@ -17,7 +17,7 @@ IGNORE_PREFIX          =
 PREDEFINED             = _TX_CHECK_RESULT= \
                          _TX_CHECK_FORMAT(n)=
 
-EXCLUDE_PATTERNS       = */_OFF/* */.hg/* */Wizard/*
+EXCLUDE_PATTERNS       = */_*/*  */.*/*  */~*/*  */*_/*  */_*  */.*  */~*  */*_  */Wizard/*
 EXCLUDE                = README.txt
 
 EXTRACT_ALL            = YES
@@ -57,18 +57,18 @@ OUTPUT_DIRECTORY       = $(Temp)/Doxygen
 
 #---------------------------------------------------------------------------
 
-#INCLUDE_PATH          = "$(ProgramFiles)/CodeBlocks/MinGW/include"
+#INCLUDE_PATH          = "$(ProgramFiles(x86))/CodeBlocks/MinGW/include"
 
-#INCLUDE_PATH          = "$(ProgramFiles)/Microsoft Visual Studio 10.0/VC/include"             \
-#                        "$(ProgramFiles)/Microsoft Visual Studio 10.0/VC/atlmfc/include"      \
-#                        "$(ProgramFiles)/Microsoft Visual Studio 10.0/VC/PlatformSDK/Include" \
-#                        "$(ProgramFiles)/Microsoft SDKs/Windows/v7.0A/Include"
+#INCLUDE_PATH          = "$(ProgramFiles(x86))/Microsoft Visual Studio 10.0/VC/include"             \
+#                        "$(ProgramFiles(x86))/Microsoft Visual Studio 10.0/VC/atlmfc/include"      \
+#                        "$(ProgramFiles(x86))/Microsoft Visual Studio 10.0/VC/PlatformSDK/Include" \
+#                        "$(ProgramFiles(x86))/Microsoft SDKs/Windows/v7.0A/Include"
 
-HHC_LOCATION           = "$(ProgramFiles)/HTML Help Workshop/hhc.exe"
-DOT_PATH               = "$(ProgramFiles)/ATT/Graphviz/bin"
-PERL_PATH              = "$(ProgramFiles)/Cygwin/usr/bin/perl.exe"
-LATEX_CMD_NAME         = "$(ProgramFiles)/MiKTeX/Main/miktex/bin/latex.exe"
-MAKEINDEX_CMD_NAME     = "$(ProgramFiles)/MiKTeX/Main/miktex/bin/makeindex.exe"
+HHC_LOCATION           = "$(ProgramFiles(x86))/HTML Help Workshop/hhc.exe"
+DOT_PATH               = "$(ProgramFiles(x86))/ATT/Graphviz/bin"
+PERL_PATH              = "$(ProgramFiles(x86))/Cygwin/usr/bin/perl.exe"
+LATEX_CMD_NAME         = "$(ProgramFiles(x86))/MiKTeX/Main/miktex/bin/latex.exe"
+MAKEINDEX_CMD_NAME     = "$(ProgramFiles(x86))/MiKTeX/Main/miktex/bin/makeindex.exe"
 MSCGEN_PATH            =
 
 #---------------------------------------------------------------------------
@@ -97,7 +97,7 @@ GENERATE_XML           = NO
 
 HTML_HEADER            =
 HTML_FOOTER            =
-HTML_STYLESHEET        = doxygen_.css
+HTML_STYLESHEET        = doxygen.css
 
 ALIASES                = "title=<dl><dt>" \
                          "table=</dt><dd><table border=0>" \
