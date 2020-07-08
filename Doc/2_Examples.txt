@@ -73,14 +73,14 @@
 
     @code
     #include "TXLib.h"
-    int   main(){                      FFFFF FFFFF FFFFF UU  UU UU  UU UU  UU UU  UU  !! !! !!
-    txCreateWindow(800,600);           FF    FF    FF    UU  UU UU  UU UU  UU UU  UU  !! !! !!
-    txLine(320,290,320,220);           FF    FF    FF    UU  UU UU  UU UU  UU UU  UU  !! !! !!
-     txLine (320, 290,280,350);        FFFFF FFFFF FFFFF UU  UU UU  UU UU  UU UU  UU  !! !! !!
-      txLine(320, 290,360,350);        FF    FF    FF    UU  UU UU  UU UU  UU UU  UU  !! !! !!
-     txLine(320,230,270,275);          FF    FF    FF    UU  UU UU  UU UU  UU UU  UU  !! !! !!
-    txLine(320,230, 400,220);          FF    FF    FF    UU  UU UU  UU UU  UU UU  UU
-    txCircle(320,190,30);              FF    FF    FF     UUUU   UUUU   UUUU   UUUU   !! !! !!
+    int   main(){                      FFFFF   FFFFF   FFFFF   UU  UU    UU  UU    UU  UU    UU  UU    !!   !!   !!
+    txCreateWindow(800,600);           FF      FF      FF      UU  UU    UU  UU    UU  UU    UU  UU    !!   !!   !!
+    txLine(320,290,320,220);           FF      FF      FF      UU  UU    UU  UU    UU  UU    UU  UU    !!   !!   !!
+     txLine (320, 290,280,350);        FFFFF   FFFFF   FFFFF   UU  UU    UU  UU    UU  UU    UU  UU    !!   !!   !!
+      txLine(320, 290,360,350);        FF      FF      FF      UU  UU    UU  UU    UU  UU    UU  UU    !!   !!   !!
+     txLine(320,230,270,275);          FF      FF      FF      UU  UU    UU  UU    UU  UU    UU  UU    !!   !!   !!
+    txLine(320,230, 400,220);          FF      FF      FF      UU  UU    UU  UU    UU  UU    UU  UU              
+    txCircle(320,190,30);              FF      FF      FF       UUUU      UUUU      UUUU      UUUU     !!   !!   !!
       txSelectFont( "Times",60);
     txTextOut(240,400,"Hello, world!");
               return        0;

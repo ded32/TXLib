@@ -2,9 +2,9 @@
 // Setup script for TX Application Wizard - (c) Ded, 2006-2019
 // Currently supporting: MSVS 2010-2019, CodeBlocks, Dev-CPP, misc. MinGW etc.
 //
-// $Version: 00173a, Revision: 165 $
+// $Version: 00173a, Revision: 166 $
 // $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-// $Date: 2020-03-26 21:07:17 +0400 $
+// $Date: 2020-07-08 18:51:08 +0400 $
 //==================================================================================
 
 var DebugMode    = false;
@@ -50,7 +50,7 @@ function main (argc, argv)
     Debug ("main(): src = '" + src + "'");
 
     try { ProcessRegAndLnk (txFolder, src); } catch (e) {}
-
+    
     if (!FS.FolderExists (src)) return Error ("Cannot find Setup folder '" + src + "'"), 1;
 
     var ok = 0, vsOk = 0, sdkOk = 0, sysOk = 0;
@@ -89,40 +89,40 @@ function main (argc, argv)
 
     var installSuccess = ok && ((Action == "install") && !DebugMode);
 
-    if (vsOk && !sdkOk) Ask ("TXLib предупреждает:" + "\n\n"                                                +
-                             "У вас найдена MS Visual Studio, но нет прав для записи в папку "              +
-                             "'" + Programs32 + "'. Проекты с использованием TX Library могут не работать " +
-                             "не работать для Visual Studio. Это не обязательно, но лучше перезапустите   " +
-                             "установку TXLib с правами администратора."                                    +
-                             "\n\n"                                                                         +
-                             "TXLib warning:" + "\n\n"                                                      +
-                             "MS Visual Studio detected, but TXLib Setup have no rights to write to  "      +
-                             "'" + Programs32 + "'. TX Library projects for Visual Studio may have build "  +
-                             "errors. You'd better run TXLib Setup as Administrator.");
+    if (vsOk && !sdkOk) Echo ("TXLib предупреждает:" + "\n\n"                                                +
+                              "У вас найдена MS Visual Studio, но нет прав для записи в папку "              +
+                              "'" + Programs32 + "'. Проекты с использованием TX Library могут не работать " +
+                              "не работать для Visual Studio. Это не обязательно, но лучше перезапустите   " +
+                              "установку TXLib с правами администратора."                                    +
+                              "\n\n"                                                                         +
+                              "TXLib warning:" + "\n\n"                                                      +
+                              "MS Visual Studio detected, but TXLib Setup have no rights to write to  "      +
+                              "'" + Programs32 + "'. TX Library projects for Visual Studio may have build "  +
+                              "errors. You'd better run TXLib Setup as Administrator.");
 
-    if (!sysOk)         Ask ("TXLib предупреждает:" + "\n\n"                                                +
-                             "У нет прав для записи библиотек Microsoft для поддержки отладки в папку "     +
-                             "'" + Windows + "'. TX Library не сможет помочь вам в отладке ваших "          +
-                             "замечательных проектов. :( Это не обязательно, но лучше перезапустите "       +
-                             "установку TXLib с правами администратора или сами скопируйте библиотеки "     +
-                             "из папки TX\\Windows в папку " + "'" + Windows + "'."                         +
-                             "\n\n"                                                                         +
-                             "TXLib warning:" + "\n\n"                                                      +
-                             "TXLib Setup  have no rights to save Microsoft debug libraries to "            +
-                             "'" + Windows + "' folder. TX Library can not help you to debug your amazing " +
-                             "projects. :( You'd better run TXLib Setup as Administrator, or manually copy "+
-                             "the files from 'TX\\Windows' folder to " + "'" + Windows + "' folder.");
+    if (!sysOk)         Echo ("TXLib предупреждает:" + "\n\n"                                                +
+                              "У нет прав для записи библиотек Microsoft для поддержки отладки в папку "     +
+                              "'" + Windows + "'. TX Library не сможет помочь вам в отладке ваших "          +
+                              "замечательных проектов. :( Это не обязательно, но лучше перезапустите "       +
+                              "установку TXLib с правами администратора или сами скопируйте библиотеки "     +
+                              "из папки TX\\Windows в папку " + "'" + Windows + "'."                         +
+                              "\n\n"                                                                         +
+                              "TXLib warning:" + "\n\n"                                                      +
+                              "TXLib Setup  have no rights to save Microsoft debug libraries to "            +
+                              "'" + Windows + "' folder. TX Library can not help you to debug your amazing " +
+                              "projects. :( You'd better run TXLib Setup as Administrator, or manually copy "+
+                              "the files from 'TX\\Windows' folder to " + "'" + Windows + "' folder.");
 
-    if (installSuccess) Echo ("Установка TXLib почти завершена. Библиотекой уже можно пользоваться.\n\n"    +
-                              "Последний шаг - установка автоматического обновления библиотеки."            +
-                              "\n\n"                                                                        +
-                              "TXLib Setup is almost completed. You may use TX Library right now.\n"        +
+    if (installSuccess) Echo ("Установка TXLib почти завершена. Библиотекой уже можно пользоваться.\n\n"     +
+                              "Последний шаг - установка автоматического обновления библиотеки."             +
+                              "\n\n"                                                                         +
+                              "TXLib Setup is almost completed. You may use TX Library right now.\n"         +
                               "The last step ahead is to setup TXLib Automatic Update.");
 
     if (installSuccess) InstallUpdate (txFolder, src);
 
     if (ok) Echo  ("\n" + "TXLib " + Action + "ed successfully!");
-    else    Error ("\n" + "Cannot find compiler(s) or some errors occured. See log file: '" + LogFile + "'.");
+    else    Error ("\n" + "Cannot find compiler(s) or some errors occured. See log file in %TEMP% folder for details.");
 
     if (installSuccess) Shell.Run (txFolder);
 
@@ -135,9 +135,19 @@ function ProcessRegAndLnk (txFolder, src)
     {
     if (Action == "install")
         {
-        Shell.RegWrite ("HKCU\\Software\\TX Library\\ProductDir", txFolder);
-        Shell.RegWrite ("HKLM\\SOFTWARE\\TX Library\\ProductDir", txFolder);
+        var hive = null;
 
+        try
+            {
+            hive = "HKCU"; Shell.RegWrite ("HKCU\\Software\\TX Library\\ProductDir", txFolder);
+            hive = "HKLM"; Shell.RegWrite ("HKLM\\SOFTWARE\\TX Library\\ProductDir", txFolder);
+            }
+
+        catch (e)
+            {
+            Debug ("WARNING: ProcessRegAndLnk(): Cannot write to Registry: " + hive);
+            }
+            
         CreateShortcut (Desktop + "\\Ярлык для TX.lnk",
                         txFolder, "", "",
                         "Папка TX Library", src + "\\VS\\TX Application.ico", 4);
@@ -177,11 +187,11 @@ function InstallUpdate (txFolder, src)
                         "TXLib automatic update", Windows + "\\shell32.dll, 13", 7);
         }
 
-    if (Ask ("Найти обновления для библиотеки TX Library?\n\n"                       +
-             "Рекомендуется: [Да]." + "\n\n"                                         +
-             "Скорость обновления зависит от скорости вашего Интернет-соединения."   +
-             "\n\n"                                                                  +
-             "Search for the updates for TX Library now? Recommended: [Yes]." + "\n" +
+    if (Ask ("Найти обновления для библиотеки TX Library?\n\n"                     +
+             "Рекомендуется: [Да]." + "\n\n"                                       +
+             "Скорость обновления зависит от скорости вашего Интернет-соединения." +
+             "\n\n"                                                                +
+             "Find updates for TX Library now? Recommended: [Yes]." + "\n"         +
              "Update speed depends on your Internet connection speed."))
         {
         var update = '"' + FS.GetAbsolutePathName (src + "\\UPDATE.bat") + '"';
@@ -613,8 +623,12 @@ function SupportDLLs_CopyFiles (src, dest)
 
 function InjectTXLibH (dest, src)
     {
+//  Debug ("InjectTXLibH (" + dest + ", " + src + ")");
+    
     var txLibH_dest = FS.GetAbsolutePathName (dest + "\\TXLib.h");
     var txLibH_src  = FS.GetAbsolutePathName (src  + "\\..\\..\\..\\TXLib.h");
+    
+//  txLibH_src = ConvertCP (txLibH_src, "CP866", "Windows-1251");
 
     try
         {
@@ -943,7 +957,7 @@ function Echo (msg, timeout)
     var OK          = 0;
     var Information = 64;
 
-    LogFile.WriteLine (msg);
+    if (LogFile != null) LogFile.WriteLine (msg);
 
     if (WScript.FullName.indexOf ("cscript") < 0)
         {
@@ -959,8 +973,8 @@ function Echo (msg, timeout)
 
 function Debug (msg)
     {
-    if (DebugMode) Echo (msg, 300);
-    else LogFile.WriteLine (msg.replace (/\n/g, "\\n").replace (/\r/g, "\n"));
+    if (DebugMode)            Echo (msg, 300);
+    else if (LogFile != null) LogFile.WriteLine (msg.replace (/\n/g, "\\n").replace (/\r/g, "\n"));
     }
 
 //==================================================================================
@@ -968,16 +982,27 @@ function Debug (msg)
 function OpenLog()
     {
     var name    = WScript.ScriptName;
-    var logFile = FS.OpenTextFile (TempDir + "\\~TX" + name.substring (0, name.lastIndexOf (".")) + ".log", 8, true);
     var logDate = new Date;
+    var logFile = null;
 
-    logFile.WriteLine ("\n----------------------------------------------------------");
-    logFile.Write (WScript.ScriptFullName + " ");
-    for (var i = 0; i < WScript.Arguments.length; i++) logFile.Write (WScript.Arguments (i) + " ");
-    logFile.WriteLine (logDate.getFullYear()  + "." + logDate.getMonth()+1 + "." + logDate.getDate() + " " +
-                       logDate.getHours()     + ":" + logDate.getMinutes() + ":" + logDate.getSeconds());
-    logFile.WriteLine (  "----------------------------------------------------------\n");
+    try
+        {
+        logFile = FS.OpenTextFile (TempDir + "\\~TX" + name.substring (0, name.lastIndexOf (".")) + ".log", 8, true);
 
+        logFile.WriteLine ("\n----------------------------------------------------------");
+        logFile.Write (WScript.ScriptFullName + " ");
+        for (var i = 0; i < WScript.Arguments.length; i++) logFile.Write (WScript.Arguments (i) + " ");
+        logFile.WriteLine (logDate.getFullYear()  + "." + logDate.getMonth()+1 + "." + logDate.getDate() + " " +
+                           logDate.getHours()     + ":" + logDate.getMinutes() + ":" + logDate.getSeconds());
+        logFile.WriteLine (  "----------------------------------------------------------\n");
+        }
+
+    catch (e)
+        {
+        if (logFile != null) logFile.Close();
+        logFile = null;
+        }
+    
     return logFile;
     }
 
@@ -987,6 +1012,10 @@ CloseLog (LogFile);
 
 function CloseLog (logFile)
     {
-    logFile.WriteLine ("\n----------------------------------------------------------");
-    logFile.Close();
+    if (logFile != null)
+        {
+        logFile.WriteLine ("\n----------------------------------------------------------");
+        logFile.Close();
+        logFile = null;
+        }
     }

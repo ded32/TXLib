@@ -2,10 +2,10 @@
 //! @file       TXWave.h
 //!
 //  @mainpage
-//! @brief      Библиотека TXWave - воспроизведение и запись звуков
+//! @brief      [TXWave] Библиотека TXWave - воспроизведение и запись звуков
 //!
-//!             $Version: 00173a, Revision: 165 $
-//!             $Date: 2020-03-26 21:07:17 +0400 $
+//!             $Version: 00173a, Revision: 166 $
+//!             $Date: 2020-07-08 18:51:07 +0400 $
 //!             $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
 //!
 //! @section    Contents Разделы системы помощи
@@ -14,13 +14,13 @@
 //!           - @ref Misc    "Разное"
 //!           - @ref Example "Пример работы"
 //!
-//! @page       Example Пример для библиотеки TXWave
+//! @page       Example [TXWave] Пример для библиотеки TXWave
 //! @include    "TXWaveExample.cpp"
 //!
 //              $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
 //-----------------------------------------------------------------------------------------------------------------
-//! @defgroup   Wave Работа со звуком
-//! @defgroup   Misc Разное
+//! @defgroup   Wave [TXWave] Работа со звуком
+//! @defgroup   Misc          Разное
 //}================================================================================================================
 
 #ifndef __TXWAVE_INCLUDED

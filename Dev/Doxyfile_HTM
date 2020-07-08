@@ -1,15 +1,15 @@
 #------------------------------------------------------------------------------
 # Doxyfile_HTM
 #
-# $Version: 00173a, Revision: 165 $
+# $Version: 00173a, Revision: 166 $
 # $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
-# $Date: 2020-03-26 21:07:18 +0400 $
+# $Date: 2020-07-08 18:50:09 +0400 $
 #
 # Doxyfile 1.7.3
 #------------------------------------------------------------------------------
 
 PROJECT_NAME           = "TX Library"
-PROJECT_NUMBER         = "Help &ndash; $Version: 00173a, Revision: 165 $"
+PROJECT_NUMBER         = "Help &ndash; $Version: 00173a, Revision: 166 $"
 PROJECT_BRIEF          = "<s>&nbsp;ALL&nbsp;</s> Windows graphics in a sandbox"
 PROJECT_LOGO           = "Doc/TXLib.png"
 

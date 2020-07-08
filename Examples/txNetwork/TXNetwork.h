@@ -8,7 +8,7 @@
 //! @file       TXNetwork.h
 //!
 //  @mainpage
-//! @brief      Библиотека сети тупых художников TXNetwork
+//! @brief      [TXNetwork] Библиотека сети тупых художников TXNetwork
 //!
 //! @par        Описание
 //!             TXNetwork - Расширение TXLib'a для "работы с сетью", связи между компьютерами по сети.
@@ -81,8 +81,8 @@
 //!          -  @ref Example4      "Четвертый пример"
 //!          -  @ref ExampleYours  "Твой личный пример!"
 //!
-//! @defgroup   TXSocket            Сокет TXNetwork
-//! @defgroup   TXNERCO             Коды ошибок TXNetwork
+//! @defgroup   TXSocket            [TXNetwork] Сокет TXNetwork
+//! @defgroup   TXNERCO             [TXNetwork] Коды ошибок TXNetwork
 //!
 //}=============================================================================
 

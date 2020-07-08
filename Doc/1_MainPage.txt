@@ -7,8 +7,8 @@
 
     @section    MainPage              Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib)
 
-                $Version: 00173a, Revision: 165 $
-                $Date: 2020-03-26 21:07:14 +0400 $
+                $Version: 00173a, Revision: 166 $
+                $Date: 2020-07-08 18:50:09 +0400 $
                 $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
 
     @section    Description           Назначение
@@ -94,8 +94,8 @@
                 или свои библиотеки, среды и языки программирования), не удосуживаясь следить за
                 <a href="http://www.google.ru/search?q=literate+programming">качеством кода обучаемых, за стилем
                 и направлением их мышления,</a> ограничиваясь лишь видимостью обучения.
-                Такие образовательные иллюзии очень вредны. Заметны они становятся достаточно  поздно, когда
-                выясняется, что ученик, легко пишущий небольшие программы (пусть даже логически насыщенные,
+                Такие образовательные иллюзии очень вредны. Заметны они становятся достаточно поздно, когда
+                выясняется, что ученик, легко пишущий небольшие программы (пусть даже алгоритмически насыщенные,
                 олимпиадные), принципиально не способен написать что-то большее, путается в коде, а другие,
                 в том числе и профессионалы, его не понимают в силу спутанности его мышления и неумения внятно
                 выразить мысли на уровне современных стандартов. Чтобы преодолеть этот барьер, воздвигнутый
@@ -142,7 +142,7 @@
 
     @note       Библиотека TXLib состоит из единственного файла и не требует никаких настроек в среде
                 программирования, чтобы облегчить ее установку и работу для начинающих.
-
+                
              -# <a href=https://sourceforge.net/projects/txlib/files/latest/download>Скачайте</a>
                 программу установки, загрузка по ссылке начнется автоматически. Ее имя имеет вид
                 <tt>TXLib-v0173a.rar.exe.</tt> Цифры могут отличаться (это номер версии), расширение
@@ -191,14 +191,35 @@
                 Главное меню - Settings - Editor - (General Settings) - Other Settings - Encoding. Иначе русские
                 буквы в сообщениях TXLib будут отображаться неправильно.
 
+    @section    UsageNotes            Особенности использования
+
+    @note       Файл @c TXLib.h должен быть включен <tt>(\#include)</tt> в программу:
+             -  @b До или вместо файла @c @b windows.h. Либо надо задать @c (\#define) константы @c WINVER и
+                @c _WIN32_IE не ниже @c 0x0500 и отменить @c (\#undef) макросы @c UNICODE и @c _UNICODE.
+             -  @b До или вместо файлов @c @b string.h или @c @b stdio.h, если используется режим строгого
+                соответствия стандарту @b ANSI. Имейте в виду, что эти файлы могут включаться в @c windows.h.
+             -  @b После включения библиотек <a href=http://boost.org><tt>boost</tt></a>, использующих модуль
+                @c @b boost::preprocessor.
+
+    @warning    При использовании вместе с <a href=http://sfml-dev.org><tt>SFML</tt></a> необходимо @b перед
+                включением <tt>(\#include)</tt> в программу задать макрос TX_USE_SFML @c (\#define TX_USE_SFML).
+                TXLib по умолчанию включает режим отладки стандартной библиотеки glibc, а SFML, как правило,
+                собрана без этого режима, что приводит к ложным сообщениям об ошибках, связанным с динамической
+                памятью, например <a href=http://github.com/SFML/SFML/issues/1318>при использовании класса sf::Text.</a>
+
+    @note       Файл библиотеки большой и может компилироваться долго, поэтому обратите внимание на возможность
+                использования прекомпилированной версии в проектах с раздельной компиляцией. См. макрос @ref TX_COMPILED.
+                Также можно определить макрос @c WIN32_LEAN_AND_MEAN @b до включения @c TXLib.h в программу.
+
     @section    PlatformsSupported    Поддерживаемые платформы
 
            - <b>Среды программирования и исполнения + компиляторы</b>
-             -#                     MinGW  GCC 9.2.0 (NUWEN), 64-bit
-             -#                     MinGW  GCC 8.2.0 (NUWEN), 64-bit
-             -#                     MinGW  GCC 7.2.0 (NUWEN), 64-bit
-             -#                     MinGW  GCC 6.3.0 (NUWEN), 64-bit
-             -#                     MinGW  GCC 5.3.0 (NUWEN), 32-bit и 64-bit
+             -#                     MinGW  GCC 9.2.0 (NUWEN 64-bit, TDM-GCC 32-bit и 64-bit)
+             -#                     MinGW  GCC 8.2.0 (NUWEN 64-bit, TDM-GCC и MinGW.org 32-bit и 64-bit)
+             -#                     MinGW  GCC 7.2.0 (NUWEN 64-bit, TDM-GCC 32-bit и 64-bit)
+             -#                     MinGW  GCC 6.3.0 (NUWEN 64-bit, TDM-GCC 32-bit и 64-bit)
+             -#                     MinGW  GCC 5.3.0 (NUWEN и TDM-GCC, 32-bit и 64-bit)
+             -# CodeBlocks 20.03  + MinGW  GCC 8.1.0 (MinGW.org, 32-bit и 64-bit)
              -# CodeBlocks 12.11  + MinGW  GCC 4.8.0 (NUWEN)
              -# CodeBlocks 12.11  + MinGW  GCC 4.7.2 (NUWEN)
              -# Dev-CPP    5.11   + MinGW  GCC 4.9.2 (TDM)
@@ -285,22 +306,6 @@
                 @tr Intel Compiler 13     @td Intel          @td Visual Studio 2010+                @td Debug, Release  @td <i>Не требуются</i>
     @endtable
                 Посмотреть эти зависимости можно утилитой <a href=http://www.dependencywalker.com>Depends.exe</a>.
-
-    @section    UsageNotes            Особенности использования
-
-    @note       Файл @c TXLib.h должен быть включен <tt>(\#include)</tt> в программу:
-             -  @b До или вместо файла @c @b windows.h. Либо надо задать @c (\#define) константы @c WINVER и
-                @c _WIN32_IE не ниже @c 0x0500 и отменить @c (\#undef) макросы @c UNICODE и @c _UNICODE.
-             -  @b До или вместо файлов @c @b string.h или @c @b stdio.h, если используется режим строгого
-                соответствия стандарту @b ANSI. Имейте в виду, что эти файлы могут включаться в @c windows.h.
-             -  @b После включения библиотек <a href=http://boost.org><tt>boost</tt></a>, использующих модуль
-                @c @b boost::preprocessor.
-
-    @warning    При использовании вместе с <a href=http://sfml-dev.org><tt>SFML</tt></a> необходимо @b перед
-                включением <tt>(\#include)</tt> в программу задать макрос TX_USE_SRML @c (\#define TX_USE_SRML).
-                TXLib по умолчанию включает режим отладки стандартной библиотеки glibc, а SFML, как правило,
-                собрана без этого режима, что приводит к ложным сообщениям об ошибках, связанным с динамической
-                памятью, например <a href=http://github.com/SFML/SFML/issues/1318>при использовании класса sf::Text.</a>
 
     @title      Опции командной строки: </dt><dd>
 
@@ -406,15 +411,17 @@
              -# Добавлены всякие шуточки типа макросов txSqr(), _TX_DESTROY_3D, @ref meow, @ref please, @ref мяу,
                 txCatchMouse() и другие. См. хелпы и исходные тексты.
              -# Добавлены недокументированные функции txCreateExtraWindow(), txRegisterClass(), txReopenStdio(),
-                txSetLocale(), txTaskKill(), _txCreateShortcut(), _txSetProcAddress(), _txFindProcess(),
+                txSetLocale(), _txTaskKill(), _txCreateShortcut(), _txSetProcAddress(), _txFindProcess(),
                 _txKillProcess(), _txIsBadReadPtr(), _txGetCommandLine(), _tx_snprintf_s(), _tx_vsnprintf_s(),
                 _getch(), _putch() _kbhit() (три последние @d для Cygwin, их там по умолчанию нет), stristr(),
                 stristrw(), переменная _txLogName, макросы _tx_thread, _TX_ARGUMENT_FAILED() и др., _TX_ON_DEBUG,
                 _TX_UNEXPECTED(), _TX_CALL(), _txWaitFor(), $debug, $printf, $PRINTF и другие.
                 Возможно, вы разберетесь по исходникам, зачем они нужны и как работают. Вот txSetLocale(),
-                например, устанавливает в консоли русский язык, и узнать это можно, только читая вот
+                например, устанавливает в консоли русский язык, а узнать это можно, только читая вот
                 <a href=#VersionHistory>этот</a> раздел документации. Да, недокументированные функции @d
                 это плохо, но они существуют, и надо уметь с ними работать.
+             -# Добавлен режим прекомпиляции, повысилась скорость компиляции в @c g++ @d в ~1.6 раз, в MS Visual
+                Studio - в ~2.5 раз. См. макросы TX_COMPILED и TX_COMPILING.
              -# Обновлена документация. Теперь она занимает не половину файла, как раньше, а где-то треть,
                 но, как ни странно, ее стало больше. @strike Можно очередную задачку про это придумать.
                 (Но не надо.) @endstrike

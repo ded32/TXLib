@@ -1,7 +1,7 @@
 //{===========================================================================
 //! @file       Examples/ExampleYours/ExampleYours.cpp
 //!
-//! @brief      Ваш пример использования TXNetwork. Присылайте все на почту vova@txlib.ru.
+//! @brief      [TXNetwork] Ваш пример использования TXNetwork. Присылайте все на почту vova@txlib.ru.
 //!
 //!             Библиотека Сети Тупых Художников (TXNetwork).
 //!

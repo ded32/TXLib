@@ -6,8 +6,8 @@
 //!
 //!             Библиотека Тупого Художника (The Dumb Artist Library, TX Library, TXLib).
 //!
-//!             $Version: 00173a, Revision: 165 $
-//!             $Date: 2020-03-26 21:07:16 +0400 $
+//!             $Version: 00173a, Revision: 166 $
+//!             $Date: 2020-07-08 18:51:06 +0400 $
 //!             $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
 //              $Copyright: (C) Ded (Ilya Dedinsky, http://txlib.ru) <mail@txlib.ru> $
 //}===========================================================================
